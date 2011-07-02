@@ -9,12 +9,24 @@ use Jet::Context;
 
 has 'data' => (
 	isa => 'HashRef',
-	is => 'ro',
+	is => 'rw',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		my $viewname = 'data.' . $self->basetype . '_view';
+		my $q = qq{
+			SELECT * FFROM
+				$viewname
+			WHERE
+				id = ?
+		};
+		return $self->data($self->schema->single(sql => $q, data => [$self->node_id]));
+	},
 );
 
 has 'node_id' => (
 	isa => 'Int',
-	is => 'ro',
+	is => 'rw',
 );
 has 'basetype' => (
 	isa => 'Str',
@@ -28,21 +40,16 @@ has 'basetype' => (
 
 sub add {
 	my ($self, $args) = @_;
-say STDERR "1", ref $args;
 	return unless ref $args eq 'HASH';
-say STDERR "2";
 	for my $column (qw/title part/) {
 		return unless defined $args->{$column};
 	}
-say STDERR "3";
 
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
-say STDERR "4";
-
 	my %args = %{ $args };
 delete $args{basetype};
-$args{parent_id} = undef;
+# $args{parent_id} = undef;
 	my $viewname = 'data.' . $self->basetype . '_view';
 	my $names = join ',', keys %args;
 	my $values = [ values %args ];
@@ -53,25 +60,20 @@ $args{parent_id} = undef;
 		VALUES
 			($placeholders)
 	};
-use Data::Dumper;
-print STDERR Dumper $q, $values;
-	$schema->insert(sql => $q, data => $values);
+	$self->data($schema->insert(sql => $q, data => $values));
+	$self->node_id($self->data->{id});
 }
 
 sub add_child {
 	my ($self, $args) = @_;
-say STDERR "1", ref $args;
 	return unless ref $args eq 'HASH';
-say STDERR "2";
 	for my $column (qw/basetype title part/) {
 		return unless ($args->{$column});
 	}
-## Check that basetype is valid
-say STDERR "3";
+# XXX Check that basetype is valid
 
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
-say STDERR "4";
 
 	my %args = %{ $args };
 	$args{parent_id} = $self->node_id;
@@ -85,8 +87,6 @@ say STDERR "4";
 		VALUES
 			($placeholders)
 	};
-use Data::Dumper;
-print STDERR Dumper $q, $values;
 	$schema->insert(sql => $q, data => $values);
 }
 

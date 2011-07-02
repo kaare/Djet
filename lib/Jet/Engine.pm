@@ -122,8 +122,6 @@ sub disconnect {
 sub find_node {
 	my ($self, $args) = @_;
 	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ',', map { "$_ = ?"} keys %$args;
-use Data::Dumper;
-say STDERR "-->",$sql, Dumper $args;
 	return $self->single(sql => $sql, data => [ values %$args ]);
 }
 
@@ -144,8 +142,6 @@ sub search_by_sql {
 
 sub single {
 	my ($self, %args) = @_;
-use Data::Dumper;
-print STDERR Dumper \%args;
 	my $sth = $self->dbh->prepare($args{sql}) || return 0;
 
 	unless($sth->execute(@{$args{data}})) {
@@ -155,7 +151,6 @@ print STDERR Dumper \%args;
 		return 0;
 	}
 	my $r = $sth->fetchrow_hashref();
-print STDERR "single ",Dumper $r;
 	$sth->finish();
 	return ( $r );
 }
@@ -203,15 +198,7 @@ sub do {
 sub insert {
 	my ($self, %args) = @_;
 	$args{sql} .= ' RETURNING *';
-	my $res = $self->single(%args);
-use Data::Dumper;
-say STDERR Dumper $res;
-	# my $sth = $self->dbh->prepare($sql) || return 0;
-# 
-	# my $res = $sth->execute(@{$args{data}});
-	# my $retval = $sth->fetch()->[0];
-	# $sth->finish();
-	# return $retval;
+	return $self->single(%args);
 }
 
 sub update {
