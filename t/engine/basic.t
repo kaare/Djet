@@ -18,4 +18,5 @@ ok(my $engine = Jet::Engine->new(dbname => $dbname), 'New Jet Engine');
 ok(my $tables = $engine->data_tables(), 'Data tables');
 use Data::Dumper;
 print STDERR Dumper $tables;
-print STDERR Dumper $tables->{album}->column('test')->column_size, ref $tables->{album}->column('test');
+print STDERR Dumper $tables->{album}->column('albumname');
+print STDERR Dumper $tables->{album}->column('albumname')->column_size, ref $tables->{album}->column('test');

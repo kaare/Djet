@@ -6,13 +6,21 @@ use warnings;
 
 use Test::More tests => 3;
 
-use Jet::Node;
-use Plack::Request;
-
 use_ok('Jet::Engine');
 
-my $node = Jet::Node->new;
-my $env = {a => 1};
-my $req = Plack::Request->new($env);
-ok(my $engine = Jet::Engine->new(request => $req, node => $node), 'Start your engines!');
-ok($engine->go, 'Lift off!');
+my $dbh;
+
+my %ci = (
+	dbname => 'jet_test',
+	username => 'kaare',
+	password => undef,
+	connect_options => {
+		AutoCommit => 1,
+		quote_char => '"',
+		RaiseError => 1,
+		pg_enable_utf8 => 1,
+	},
+);
+
+ok(my $engine = Jet::Engine->new(%ci), 'Start your engines!');
+isa_ok($engine, 'Jet::Engine', 'It\'s a Plane, it\'s a bird. No...');
