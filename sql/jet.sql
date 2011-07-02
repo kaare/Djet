@@ -124,11 +124,13 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	$data->{id} = $node_id;
 	my $keys = join ',', keys %{$data};
 	my $values = join ',', (map {quote_nullable($_)} values %{$data});
-	$q = "INSERT INTO data.$base_name ($keys) VALUES ($values) RETURNING *";
+	$q = "INSERT INTO data.$base_name ($keys) VALUES ($values)";
 	$rv = spi_exec_query($q);
+	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT' and $rv->{processed} == 1;
 
-	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
-	return;
+	# This seems to be the syntax to use for setting id. Strange, but it works
+	$_TD->{new} = {id => $node_id};
+	return MODIFY;
 $$
 LANGUAGE 'plperl' VOLATILE;
 
