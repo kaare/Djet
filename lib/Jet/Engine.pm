@@ -122,7 +122,10 @@ sub disconnect {
 sub find_node {
 	my ($self, $args) = @_;
 	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ',', map { "$_ = ?"} keys %$args;
-	return $self->single(sql => $sql, data => [ values %$args ]);
+	my $node = $self->single(sql => $sql, data => [ values %$args ]);
+	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
+	my $data = $self->single(sql => $sql, data => [ $node->{id} ]);
+	return { %$node, %$data };
 }
 
 sub search_by_sql {

@@ -36,8 +36,8 @@ sub find_node($) {
 	my $c = Jet::Context->instance;
 	my $node_path = [split '/', $uri->path];
 	$node_path = [""] unless @$node_path;
-	my $node = $c->schema->find_node({ node_path =>  $node_path });
-	return Jet::Node->new(node => $node);
+	my $nodedata = $c->schema->find_node({ node_path =>  $node_path });
+	return Jet::Node->new(data => $nodedata);
 }
 
 sub node_notfound($) {
@@ -46,9 +46,9 @@ sub node_notfound($) {
 	my $node_path = [split '/', $uri->path];
 	$node_path = [''] unless @$node_path;
 	pop @$node_path;
-	my $node = $c->schema->resultset('Nodepath')->find({ node_path => { -value => $node_path } });
+	my $nodedata = $c->schema->resultset('Nodepath')->find({ node_path => { -value => $node_path } });
 ## Find path data on the node and see if it matches. ## 
-	return Jet::Node->new($node);
+	return Jet::Node->new(data => $nodedata);
 }
 
 sub page_notfound($) {
@@ -58,13 +58,13 @@ sub page_notfound($) {
 
 sub go {
 	my ($self, $req, $node) = @_;
-	my $c = Jet::Context->instance(module => $node->basetype);
+	my $c = Jet::Context->instance(node => $node);
 	my $status = 200;
 
 	my $query = $req->param('query');
 	my $body = $req->body;
 #	my $recipe = $c->recipe;
-$body = [qw/test/];
+$body = [$node->data->{title}];
 	return $status, $body;
 }
 

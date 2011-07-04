@@ -40,8 +40,8 @@ has 'stash' => (
 	default => sub { {} },
 	lazy => 1,
 );
-has 'module' => (
-	isa => 'Str',
+has 'node' => (
+	isa => 'Jet::Node',
 	is => 'rw',
 #	lazy => 1,
 );

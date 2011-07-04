@@ -78,7 +78,8 @@ CREATE TRIGGER set_modified BEFORE UPDATE ON path FOR EACH ROW EXECUTE PROCEDURE
 
 CREATE OR REPLACE VIEW nodepath AS
 	SELECT
-		b.name base_type, b.id basetype_id, 
+		b.name base_type, b.id basetype_id,
+		n.title,
 		p.*
 	FROM
 		path p

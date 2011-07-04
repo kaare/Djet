@@ -24,7 +24,7 @@ $domain->add($args); #!
 print STDERR Dumper $domain->data;
 $args = {
 	title => 'album',
-	part => 'album1',
+	part => 'album',
 	basetype => 'album',
 	albumname => 'album',
 };
