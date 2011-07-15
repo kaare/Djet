@@ -125,7 +125,7 @@ sub find_node {
 	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ',', map { "$_ = ?"} keys %$args;
 	my $node = $self->single(sql => $sql, data => [ values %$args ]);
 	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
-	my $data = $self->single(sql => $sql, data => [ $node->{id} ]);
+	my $data = $self->single(sql => $sql, data => [ $node->{node_id} ]);
 	return { %$node, %$data };
 }
 
@@ -174,7 +174,6 @@ sub _execute { # XXX Redo. Not pretty
 sub single {
 	my ($self, %args) = @_;
 	my $sth = $self->dbh->prepare($args{sql}) || return 0;
-
 	unless($sth->execute(@{$args{data}})) {
 		my @c = caller;
 		print STDERR "File: $c[1] line $c[2]\n";

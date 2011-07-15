@@ -80,7 +80,7 @@ CREATE OR REPLACE VIEW nodepath AS
 	SELECT
 		b.name base_type, b.id basetype_id,
 		n.title,
-		p.*
+		p.id path_id, p.parent_id, p.part, p.node_path, p.node_id
 	FROM
 		path p
 	LEFT JOIN
