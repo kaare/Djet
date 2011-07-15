@@ -29,6 +29,7 @@ ok(my $result = $engine->search('domain', {id => 1}), 'Search domain');
 my $row = $result->next;
 my $id = $row->get_column('id');
 use Data::Dumper;
-warn Dumper $id;
+warn Dumper $id, $row->get_columns;
+;
 
 done_testing();

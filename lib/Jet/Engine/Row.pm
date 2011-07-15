@@ -34,28 +34,24 @@ Get all row data in array.
 =cut
 
 has 'row_data' => (
-	isa => 'HashRef',
-	is => 'ro',
+    traits    => ['Hash'],
+    is        => 'ro',
+    isa       => 'HashRef',
+    default   => sub { {} },
+    handles   => {
+        set_column     => 'set',
+        get_column     => 'get',
+        has_no_columns => 'is_empty',
+        num_columns    => 'count',
+        delete_column  => 'delete',
+        get_columns    => 'kv',
+    },
 );
 has 'table_name' => (isa => 'Str', is => 'ro');
 has 'schema'     => (
     isa => 'DBIx::Inspector::Driver::Pg',
     is => 'ro',
 );
-
-sub get_column {
-    my ($self, $col) = @_;
-
-    unless ( $col ) {
-        Carp::croak('please specify $col for first argument');
-    }
-
-    if ( exists $self->{row_data}->{$col} ) {
-        return $self->{row_data}->{$col};
-    } else {
-        Carp::croak("Specified colum '$col' not found in row (query: " . ( $self->{sql} || 'unknown' ) . ")" );
-    }
-}
 
 __PACKAGE__->meta->make_immutable;
 
