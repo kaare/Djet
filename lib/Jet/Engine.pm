@@ -7,9 +7,11 @@ use DBI;
 use DBIx::TransactionManager 1.06;
 
 use Jet::Engine::Loader;
-# use Jet::Engine::Row;
-# use Jet::Engine::Iterator;
+use Jet::Engine::Result;
+use Jet::Engine::QueryBuilder;
 # use Jet::Engine::Schema;
+
+with 'Jet::Role::Log';
 
 =head1 Attributes
 
@@ -30,15 +32,6 @@ has 'dbh' => (
 	},
 	lazy => 1,
 );
-has 'data_tables' => (
-	isa => 'HashRef',
-	is => 'ro',
-	default => sub {
-		my $self = shift;
-		$self->_loader->load;
-	},
-	lazy => 1,
-);
 has 'txn_manager' => (
 	isa => 'DBIx::TransactionManager',
 	is => 'ro',
@@ -48,21 +41,29 @@ has 'txn_manager' => (
 	},
 	lazy => 1,
 );
-
-# "Internal" attributes
-has '_loader' => (
-	isa => 'Jet::Engine::Loader',
+has 'schema'       => (
+    isa => 'DBIx::Inspector::Driver::Pg',
+    is => 'ro',
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        my $dbh = $self->dbh;
+        my $loader = Jet::Engine::Loader->new(dbh => $dbh);
+        return $loader->schema;
+    }
+);
+has 'sql_builder' => (
+	isa => 'Jet::Engine::QueryBuilder',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		Jet::Engine::Loader->new(dbh => $self->dbh) or die;
+		Jet::Engine::QueryBuilder->new();
 	},
 	lazy => 1,
 );
 
 __PACKAGE__->meta->make_immutable;
 
-sub schemas {qw/jet data/};
 # forcefully connect
 sub connect {
 	my ($self, @args) = @_;
@@ -128,19 +129,46 @@ sub find_node {
 	return { %$node, %$data };
 }
 
+
+sub search {
+	my ($self, $table_name, $where, $opt) = @_;
+
+	my $table = $self->schema->table( $table_name );
+	if (! $table) {
+		Carp::croak("No such table $table_name");
+	}
+
+	my @column_names = (qw /title parent_id/, map { $_->name } $table->columns ); # XXX view columns should be configurable
+	my ($sql, @binds) = $self->sql_builder->select(
+		"data.$table_name\_view",
+		\@column_names,
+		$where,
+		$opt
+	);
+	$self->search_by_sql($sql, \@binds, $table_name);
+}
+
 sub search_by_sql {
 	my ($self, $sql, $bind, $table_name) = @_;
-	$table_name ||= $self->_guess_table_name( $sql );
+	$table_name ||= $self->_guess_table_name( $sql ); # XXX
 	my $sth = $self->_execute($sql, $bind);
-	my $itr = Jet::Engine::Iterator->new(
-		'Jet::Engine'             => $self,
+
+	my $result = Jet::Engine::Result->new(
+#		Engine           => $self,
 		sth              => $sth,
 		sql              => $sql,
-		row_class        => $self->schema->get_row_class($table_name),
+# 		row_class        => $self->schema->get_row_class($table_name),
 		table_name       => $table_name,
-		suppress_object_creation => $self->suppress_row_objects,
+#		suppress_object_creation => $self->suppress_row_objects,
 	);
-	return wantarray ? $itr->all : $itr;
+	return wantarray ? $result->all : $result;
+}
+
+sub _execute { # XXX Redo. Not pretty
+	my ($self, $sql, $bind) = @_;
+	my $sth = $self->dbh->prepare($sql);
+	$sth->execute(@{$bind || []});
+	return $sth;
 }
 
 sub single {
@@ -171,7 +199,7 @@ sub select_all {
 	}
 	my @result;
 	while( my $r = $sth->fetchrow_hashref) {
-			push(@result,$r);
+		push(@result,$r);
 	}
 	$sth->finish();
 	return ( \@result );
@@ -263,10 +291,10 @@ sub task_id {
 	return $_[0]->{task_id} || confess "No task id";
 }
 
-sub DESTROY {
-	$_[0]->disconnect();
-	return;
-}
+# sub DESTROY {
+	# $_[0]->disconnect();
+	# return;
+# }
 
 #--------------------------------------------------------------------------------
 # for transaction
@@ -292,5 +320,7 @@ sub txn_begin    { $_[0]->txn_manager->txn_begin    }
 sub txn_rollback { $_[0]->txn_manager->txn_rollback }
 sub txn_commit   { $_[0]->txn_manager->txn_commit   }
 sub txn_end      { $_[0]->txn_manager->txn_end      }
+
+__PACKAGE__->meta->make_immutable;
 
 1;
