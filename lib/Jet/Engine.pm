@@ -129,10 +129,8 @@ sub find_node {
 	return { %$node, %$data };
 }
 
-
 sub search {
 	my ($self, $table_name, $where, $opt) = @_;
-
 	my $table = $self->schema->table( $table_name );
 	if (! $table) {
 		Carp::croak("No such table $table_name");
@@ -148,6 +146,16 @@ sub search {
 	$self->search_by_sql($sql, \@binds, $table_name);
 }
 
+sub insert {
+	my ($self, $table_name, $data, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->insert(
+		"data.$table_name\_view",
+		$data,
+		$opt
+	);
+	$self->search_by_sql($sql, \@binds, $table_name);
+}
+
 sub search_by_sql {
 	my ($self, $sql, $bind, $table_name) = @_;
 	$table_name ||= $self->_guess_table_name( $sql ); # XXX
@@ -157,9 +165,7 @@ sub search_by_sql {
 #		Engine           => $self,
 		sth              => $sth,
 		sql              => $sql,
-# 		row_class        => $self->schema->get_row_class($table_name),
 		table_name       => $table_name,
-#		suppress_object_creation => $self->suppress_row_objects,
 	);
 	return wantarray ? $result->all : $result;
 }
@@ -223,12 +229,6 @@ sub do {
 	my $rows = $sth->rows;
 	$sth->finish();
 	return $rows;
-}
-
-sub insert {
-	my ($self, %args) = @_;
-	$args{sql} .= ' RETURNING *';
-	return $self->single(%args);
 }
 
 sub update {

@@ -5,25 +5,19 @@ use Moose;
 
 use Jet::Context;
 
+with 'Jet::Role::Log';
+
 ## 'domain' for testing purposes
 
-has 'data' => (
-	isa => 'HashRef',
+has 'result' => (
+	isa => 'Jet::Engine::Result',
 	is => 'rw',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $viewname = 'data.' . $self->basetype . '_view';
-		my $q = qq{
-			SELECT * FFROM
-				$viewname
-			WHERE
-				id = ?
-		};
-		return $self->data($self->schema->single(sql => $q, data => [$self->node_id]));
+		return $self->schema->select($self->basetype);
 	},
 );
-
 has 'node_id' => (
 	isa => 'Int',
 	is => 'rw',
@@ -47,47 +41,29 @@ sub add {
 
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
-	my %args = %{ $args };
-delete $args{basetype};
-# $args{parent_id} = undef;
-	my $viewname = 'data.' . $self->basetype . '_view';
-	my $names = join ',', keys %args;
-	my $values = [ values %args ];
-	my $placeholders = join ',', ('?') x keys %args;
-	my $q = qq{
-		INSERT INTO
-			$viewname ($names)
-		VALUES
-			($placeholders)
-	};
-	$self->data($schema->insert(sql => $q, data => $values));
-	$self->node_id($self->data->{id});
+	my $opts = {returning => '*'};
+	my $result = $schema->insert($self->basetype, $args, $opts);
+	$self->result($result);
+	$self->node_id($result->next->get_column('id'));
 }
 
 sub add_child {
 	my ($self, $args) = @_;
 	return unless ref $args eq 'HASH';
+
 	for my $column (qw/basetype title part/) {
 		return unless ($args->{$column});
 	}
-# XXX Check that basetype is valid
-
+# XXX TODO Check that basetype is valid
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
-
-	my %args = %{ $args };
-	$args{parent_id} = $self->node_id;
-	my $viewname = 'data.' . delete($args{basetype}) . '_view';
-	my $names = join ',', keys %args;
-	my $values = [ values %args ];
-	my $placeholders = join ',', ('?') x keys %args;
-	my $q = qq{
-		INSERT INTO
-			$viewname ($names)
-		VALUES
-			($placeholders)
-	};
-	$schema->insert(sql => $q, data => $values);
+	my $basetype = delete $args->{basetype};
+	my $opts = {returning => '*'};
+	my $child = $schema->insert($basetype, $args, $opts);
+	return $self->new(
+		result => $child,
+		node_id => $child->next->get_column('id'),
+	);
 }
 
 __PACKAGE__->meta->make_immutable;

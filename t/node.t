@@ -21,7 +21,7 @@ my $args = {
 };
 ok (my $domain = Jet::Node->new(basetype => 'domain'), 'Create domain node');
 $domain->add($args); #! 
-print STDERR Dumper $domain->data;
+print STDERR Dumper $domain->result;
 $args = {
 	title => 'album',
 	part => 'album',
@@ -29,5 +29,6 @@ $args = {
 	albumname => 'album',
 };
 ok (my $album = $domain->add_child($args), 'Add a child');
+print STDERR Dumper $album->result;
 
 $schema->txn_rollback;

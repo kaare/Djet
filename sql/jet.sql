@@ -78,7 +78,7 @@ CREATE TRIGGER set_modified BEFORE UPDATE ON path FOR EACH ROW EXECUTE PROCEDURE
 
 CREATE OR REPLACE VIEW nodepath AS
 	SELECT
-		b.name base_type, b.id basetype_id,
+		b.name base_type, b.id basetype_id, b.parent,
 		n.title,
 		p.id path_id, p.parent_id, p.part, p.node_path, p.node_id
 	FROM
@@ -161,21 +161,25 @@ END
 $$
 LANGUAGE 'plpgsql' VOLATILE;
 
+--
+-- Check that a row has the correct parent type
+--
+
 CREATE OR REPLACE FUNCTION trig_check_basetype() RETURNS trigger AS
 $$
 DECLARE
-	parent int[];
+	parent_array int[];
 	parent_type int;
 BEGIN
 	IF new.parent_id IS NULL THEN
 		RETURN NEW;
 	END IF;
-	SELECT parent INTO parent FROM jet.nodepath WHERE node_id = NEW.id;
+	SELECT parent INTO parent_array FROM jet.nodepath WHERE node_id = NEW.id;
 	SELECT basetype_id INTO parent_type FROM jet.nodepath WHERE node_id = NEW.parent_id;
-	IF parent_type = ANY (parent) THEN
+	IF parent_type = ANY (parent_array) THEN
 		RETURN NEW;
 	ELSE
-		RAISE INFO 'no dice';
+		RAISE INFO 'Can''t insert child type % under parent %', NEW.parent_id, parent_type;
 		RETURN NULL;
 	END IF;
 END
