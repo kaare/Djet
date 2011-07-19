@@ -30,6 +30,5 @@ my $row = $result->next;
 my $id = $row->get_column('id');
 use Data::Dumper;
 warn Dumper $id, $row->get_columns, $row->num_columns;
-;
 
 done_testing();

@@ -30,6 +30,6 @@ print STDERR Dumper $next;
 ok(my $data = $result->all(), 'Get all data');
 print STDERR Dumper $data;
 $sth->execute(@{ []});
-ok($result = Jet::Engine::Result->new(sth => $sth, raw => 0, schema => $schema), 'Cooked Jet Engine Result');
+ok($result = Jet::Engine::Result->new(sth => $sth, raw => 0, schema => $schema, table_name => 'album'), 'Cooked Jet Engine Result');
 ok($data = $result->all(), 'Get all data');
 print STDERR Dumper $data;
