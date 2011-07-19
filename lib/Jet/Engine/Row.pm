@@ -34,23 +34,23 @@ Get all row data in array.
 =cut
 
 has 'row_data' => (
-    traits    => ['Hash'],
-    is        => 'ro',
-    isa       => 'HashRef',
-    default   => sub { {} },
-    handles   => {
-        set_column     => 'set',
-        get_column     => 'get',
-        has_no_columns => 'is_empty',
-        num_columns    => 'count',
-        delete_column  => 'delete',
-        get_columns    => 'kv',
-    },
+	traits    => ['Hash'],
+	is        => 'ro',
+	isa       => 'HashRef',
+	default   => sub { {} },
+	handles   => {
+		set_column     => 'set',
+		get_column     => 'get',
+		has_no_columns => 'is_empty',
+		num_columns    => 'count',
+		delete_column  => 'delete',
+		get_columns    => 'kv',
+	},
 );
 has 'table_name' => (isa => 'Str', is => 'ro');
 has 'schema'     => (
-    isa => 'DBIx::Inspector::Driver::Pg',
-    is => 'ro',
+	isa => 'DBIx::Inspector::Driver::Pg',
+	is => 'ro',
 );
 
 __PACKAGE__->meta->make_immutable;

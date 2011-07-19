@@ -42,15 +42,15 @@ has 'txn_manager' => (
 	lazy => 1,
 );
 has 'schema'       => (
-    isa => 'DBIx::Inspector::Driver::Pg',
-    is => 'ro',
-    lazy => 1,
-    default => sub {
-        my $self = shift;
-        my $dbh = $self->dbh;
-        my $loader = Jet::Engine::Loader->new(dbh => $dbh);
-        return $loader->schema;
-    }
+	isa => 'DBIx::Inspector::Driver::Pg',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		my $dbh = $self->dbh;
+		my $loader = Jet::Engine::Loader->new(dbh => $dbh);
+		return $loader->schema;
+	}
 );
 has 'sql_builder' => (
 	isa => 'Jet::Engine::QueryBuilder',
@@ -311,8 +311,8 @@ sub in_transaction_check {
 }
 
 sub txn_scope {
-    my @caller = caller();
-    $_[0]->txn_manager->txn_scope(caller => \@caller);
+	my @caller = caller();
+	$_[0]->txn_manager->txn_scope(caller => \@caller);
 }
 
 sub txn_begin    { $_[0]->txn_manager->txn_begin    }

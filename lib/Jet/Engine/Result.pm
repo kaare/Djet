@@ -52,8 +52,8 @@ has 'raw'        => (isa => 'Bool', is => 'rw', default => 0);
 has 'sth'        => (isa => 'DBI::st', is => 'ro');
 has 'table_name' => (isa => 'Str', is => 'ro');
 has 'schema'     => (
-    isa => 'DBIx::Inspector::Driver::Pg',
-    is => 'ro',
+	isa => 'DBIx::Inspector::Driver::Pg',
+	is => 'ro',
 );
 
 sub next {
@@ -63,7 +63,7 @@ sub next {
 		$row = $self->sth->fetchrow_hashref('NAME_lc');
 		unless ( $row ) {
 			$self->sth->finish;
-#!!            $self->sth = undef;
+#!!			$self->sth = undef;
 			return;
 		}
 	} else {
@@ -82,12 +82,12 @@ sub next {
 }
 
 sub all {
-    my $self = shift;
-    my @result;
-    while ( my $row = $self->next ) {
-        push @result, $row;
-    }
-    return wantarray ? @result : \@result;
+	my $self = shift;
+	my @result;
+	while ( my $row = $self->next ) {
+		push @result, $row;
+	}
+	return wantarray ? @result : \@result;
 }
 
 __PACKAGE__->meta->make_immutable;
