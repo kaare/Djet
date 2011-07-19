@@ -26,6 +26,15 @@ has schema => (
 		return Jet::Engine->new(%connect_info);
 	},
 );
+has response => (
+	isa => 'Jet::Context::Response',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return Jet::::Context::Response->new;
+	},
+);
 has 'cache' => (
 	isa => 'Object',
 	is => 'rw',
