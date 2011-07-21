@@ -18,5 +18,5 @@ use Jet::Context;
 sub new {
 	my $class = shift;
 	my $config = Jet::Context->instance;
-	$config->stash({a => 1});
+	$config->stash->{a} = 1;
 };
