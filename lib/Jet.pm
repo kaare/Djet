@@ -28,7 +28,11 @@ Experimental module
 sub run_psgi($) {
 	my ($self, $env) = @_;
 	my $c = Jet::Context->instance;
+	# Clear request specific attributes
+	$c->clear;
+
 	$self->handle_request($env);
+	$c->response->render;
 	return [ $c->response->status, $c->response->headers, $c->response->output ];
 }
 
@@ -60,9 +64,10 @@ If not found, it goes one step up from find_node and tries to find something con
 sub find_node($) {
 	my ($self, $uri) = @_;
 	my $c = Jet::Context->instance;
+	my $schema = $c->schema;
 	my $node_path = [split('/', $uri->path) || ''];
-	my $nodedata = $c->schema->find_node({ node_path =>  $node_path });
-	return Jet::Node->new(result => $nodedata) if $nodedata;
+	my $nodedata = $schema->find_node({ node_path =>  $node_path });
+	return Jet::Node->new(result => $schema->_result($nodedata)) if $nodedata;
 
 	# Find node at one level up. See if there is a path expression on that node
 	my $endpath = pop @$node_path;
