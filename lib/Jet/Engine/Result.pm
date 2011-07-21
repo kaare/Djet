@@ -77,8 +77,18 @@ sub next {
 			row_data   => $row,
 #			'Jet::Engine'       => $self->{'Jet::Engine'},
 			table_name => $self->table_name,
+			typetable => $self->_build_typetable($row),
+# Moose::Meta::Class->create_anon_class 
+# then $meta->add_attribute for each column
+# then cache the result of that so you don't do it again next time you run the same query?
 		}
 	);
+}
+
+sub _build_typetable {
+	my ($self, $row) = @_;
+	my @columns = $self->schema->table($self->table_name)->columns;
+	return { map {$_->name => $_} grep {defined $row->{$_->name} } @columns };
 }
 
 sub all {

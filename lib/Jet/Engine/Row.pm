@@ -48,8 +48,8 @@ has 'row_data' => (
 	},
 );
 has 'table_name' => (isa => 'Str', is => 'ro');
-has 'schema'     => (
-	isa => 'DBIx::Inspector::Driver::Pg',
+has 'typetable'     => (
+	isa => 'HashRef',
 	is => 'ro',
 );
 

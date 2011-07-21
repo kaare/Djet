@@ -123,10 +123,13 @@ sub disconnect {
 sub find_node {
 	my ($self, $args) = @_;
 	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ',', map { "$_ = ?"} keys %$args;
-	my $node = $self->single(sql => $sql, data => [ values %$args ]);
+	my $sth = $self->single(sql => $sql, data => [ values %$args ]) || return;
+
+	my $node = $sth->fetchrow_hashref();
+$self->debug($node);
 	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
-	my $data = $self->single(sql => $sql, data => [ $node->{node_id} ]);
-	return { %$node, %$data };
+	return $self->single(sql => $sql, data => [ $node->{node_id} ]);
+#	return { %$node, %$data };
 }
 
 sub search {
@@ -177,6 +180,16 @@ sub _execute { # XXX Redo. Not pretty
 	return $sth;
 }
 
+sub _result { # XXX Redo. Not pretty
+	my ($self, $sth) = @_;
+	return Jet::Engine::Result->new(
+#		Engine           => $self,
+		sth              => $sth,
+		# sql              => $sql,
+		# table_name       => $table_name,
+	);
+}
+
 sub single {
 	my ($self, %args) = @_;
 	my $sth = $self->dbh->prepare($args{sql}) || return 0;
@@ -186,9 +199,10 @@ sub single {
 		print STDERR $args{sql}."\n" if($args{sql});
 		return 0;
 	}
-	my $r = $sth->fetchrow_hashref();
-	$sth->finish();
-	return ( $r );
+	return $sth;
+	# my $r = $sth->fetchrow_hashref();
+	# $sth->finish();
+	# return ( $r );
 }
 
 sub select_all {
