@@ -7,30 +7,24 @@ use Jet::Context;
 
 with 'Jet::Role::Log';
 
-## 'domain' for testing purposes
+=head1 NAME
 
-has 'result' => (
-	isa => 'Jet::Engine::Result',
-	is => 'rw',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		return $self->schema->select($self->basetype);
-	},
-);
-has 'node_id' => (
-	isa => 'Int',
-	is => 'rw',
-);
-has 'basetype' => (
-	isa => 'Str',
+Jet::Node - Represents Jet Nodes
+
+=head1 SYNOPSIS
+
+=head1 ATTRIBUTES
+
+=cut
+
+has row => (
+	isa => 'Jet::Engine::Row',
 	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		return $self->node->{base_type};
-	},
 );
+
+=head1 METHODS
+
+=cut
 
 sub add {
 	my ($self, $args) = @_;
@@ -68,12 +62,20 @@ sub add_child {
 
 __PACKAGE__->meta->make_immutable;
 
-1;
-
 __END__
 
-=head1 NAME
+=head1 AUTHOR
 
-Jet::Node - Represents Jet Nodes
+Kaare Rasmussen, <kaare at cpan dot com>
 
-=head1 SYNOPSIS
+=head1 BUGS 
+
+Please report any bugs or feature requests to my email address listed above.
+
+=head1 COPYRIGHT & LICENSE 
+
+Copyright 2011 Kaare Rasmussen, all rights reserved.
+
+This library is free software; you can redistribute it and/or modify it under the same terms as 
+Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
+have available.

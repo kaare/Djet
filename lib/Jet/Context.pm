@@ -97,7 +97,7 @@ Clear request specific attributes
 
 sub clear {
 	my $self = shift;
-	$self->_response(Jet::::Context::Response->new);
+	$self->_response(Jet::Context::Response->new);
 	$self->_stash({});
 }
 

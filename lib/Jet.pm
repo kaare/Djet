@@ -42,14 +42,11 @@ sub run_psgi($) {
 
 sub handle_request($) {
 	my ($self, $env) = @_;
+	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
 	my $node = $self->find_node($req->uri) || return $self->page_notfound($req->uri);
 
-	my $engine = Jet::Engine->new(
-		request => $req,
-		node => $node,
-	);
-
+	$c->node($node);
 	return $self->go($req, $node);
 }
 
@@ -65,17 +62,19 @@ sub find_node($) {
 	my ($self, $uri) = @_;
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
-	my $node_path = [split('/', $uri->path) || ''];
+	my $node_path = [split('/', $uri->path)] || [''];
+	$node_path = [''] unless @$node_path;
 	my $nodedata = $schema->find_node({ node_path =>  $node_path });
-	return Jet::Node->new(result => $schema->_result($nodedata)) if $nodedata;
+	return Jet::Node->new(row => $nodedata) if $nodedata;
 
 	# Find node at one level up. See if there is a path expression on that node
 	my $endpath = pop @$node_path;
 	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
 	return unless $nodedata and $self->node_path_match($nodedata, $endpath);
 
-## Find path data on the node and see if it matches. ## 
-	return Jet::Node->new(result => $nodedata);
+## XXX Find path data on the node and see if it matches. ## 
+## noget a la if $self->match_path($nodedata, $endpath)
+	return Jet::Node->new(row => $nodedata, endpath => $endpath);
 }
 
 =head2 node_path_match
@@ -107,8 +106,9 @@ Does the actual data processing and rendering for this node
 =cut
 
 sub go {
-	my ($self, $req, $node) = @_;
-	my $c = Jet::Context->instance(node => $node);
+	my ($self, $req) = @_;
+	my $c = Jet::Context->instance;
+	my $node = $c->node;
 	my $code;
 	$code = $node->can('init') && $code;
 	$code = $node->can('data') && $code;

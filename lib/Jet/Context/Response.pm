@@ -57,10 +57,12 @@ sub render {
 sub render_html {
 	my $self = shift;
 	my $c = Jet::Context->instance;
-	my  $tx = Text::Xslate->new();
-	my $node = $c->node;
-	my $template = $c->config->{template_path} . $node->base_type . $c->config->{template_suffix};
-	$tx->render($template, $c->stash);
+	my $row = $c->node->row;
+	my $basetype = $row->get_column('base_type');
+	my $tx = Text::Xslate->new();
+	my $template = $c->config->{config}{template_path} . $basetype . $c->config->{config}{template_suffix};
+	my $output = $tx->render($template, $c->stash);
+	$self->output([ $output ]);
 }
 
 __PACKAGE__->meta->make_immutable;

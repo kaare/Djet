@@ -87,8 +87,9 @@ sub next {
 
 sub _build_typetable {
 	my ($self, $row) = @_;
-	my @columns = $self->schema->table($self->table_name)->columns;
-	return { map {$_->name => $_} grep {defined $row->{$_->name} } @columns };
+return {};
+	# my @columns = $self->schema->table($self->table_name)->columns;
+	# return { map {$_->name => $_} grep {defined $row->{$_->name} } @columns };
 }
 
 sub all {
