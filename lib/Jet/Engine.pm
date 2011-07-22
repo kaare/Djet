@@ -155,7 +155,7 @@ sub insert {
 		$data,
 		$opt
 	);
-	$self->search_by_sql($sql, \@binds, $table_name);
+	return $self->single(sql => $sql, data => \@binds);
 }
 
 sub search_by_sql {
@@ -179,14 +179,9 @@ sub _execute { # XXX Redo. Not pretty
 	return $sth;
 }
 
-sub _result { # XXX Redo. Not pretty
-	my ($self, $sth) = @_;
-	return Jet::Engine::Result->new(
-#		Engine           => $self,
-		sth              => $sth,
-		# sql              => $sql,
-		# table_name       => $table_name,
-	);
+sub row {
+	my ($self, $data, $table_name) = @_;
+	return Jet::Engine::Row->new(row_data => $data, table_name => $table_name);
 }
 
 sub single {

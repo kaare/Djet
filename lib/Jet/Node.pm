@@ -20,6 +20,16 @@ Jet::Node - Represents Jet Nodes
 has row => (
 	isa => 'Jet::Engine::Row',
 	is => 'ro',
+	writer => '_row',
+);
+has basetype => (
+	isa => 'Str',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return $self->row->get_columns('base_type');
+	},
 );
 
 =head1 METHODS
@@ -36,9 +46,8 @@ sub add {
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
 	my $opts = {returning => '*'};
-	my $result = $schema->insert($self->basetype, $args, $opts);
-	$self->result($result);
-	$self->node_id($result->next->get_column('id'));
+	my $row = $schema->insert($self->basetype, $args, $opts);
+	$self->_row($schema->row($row, $self->basetype));
 }
 
 sub add_child {
@@ -55,8 +64,7 @@ sub add_child {
 	my $opts = {returning => '*'};
 	my $child = $schema->insert($basetype, $args, $opts);
 	return $self->new(
-		result => $child,
-		node_id => $child->next->get_column('id'),
+		row => $self->_row($schema->row($child, $basetype)),
 	);
 }
 
