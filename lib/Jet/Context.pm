@@ -6,7 +6,7 @@ use MooseX::Singleton;
 use CHI;
 use Jet::Config;
 use Jet::Engine;
-use Jet::Context::Response;
+use Jet::Response;
 
 =head1 NAME
 
@@ -71,7 +71,7 @@ has cache => (
 	},
 );
 has response => (
-	isa => 'Jet::Context::Response',
+	isa => 'Jet::Response',
 	is => 'ro',
 	writer => '_response',
 );
@@ -97,7 +97,7 @@ Clear request specific attributes
 
 sub clear {
 	my $self = shift;
-	$self->_response(Jet::Context::Response->new);
+	$self->_response(Jet::Response->new);
 	$self->_stash({});
 }
 

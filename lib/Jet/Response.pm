@@ -1,4 +1,4 @@
-package Jet::Context::Response;
+package Jet::Response;
 
 use 5.010;
 use Moose;
@@ -10,7 +10,7 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Context::Response - Response Class for Jet::Context
+Jet::Response - Response Class for Jet::Context
 
 =head1 DESCRIPTION
 
