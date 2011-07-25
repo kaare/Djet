@@ -146,6 +146,20 @@ sub search {
 		$opt
 	);
 	$self->search_by_sql($sql, \@binds, $table_name);
+	my $sth = $self->_execute($sql, \@binds);
+	return $sth->fetchall_arrayref({}),
+}
+
+sub search_nodepath {
+	my ($self, $base_type, $where, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->select(
+		"jet.nodepath",
+		'*',
+		$where,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+	return $sth->fetchall_arrayref({}),
 }
 
 sub insert {
@@ -165,10 +179,11 @@ sub search_by_sql {
 
 	my $result = Jet::Engine::Result->new(
 #		Engine           => $self,
-		sth              => $sth,
-		sql              => $sql,
-		table_name       => $table_name,
+		rows             => $sth->fetchall_arrayref({}),
+		sql                => $sql,
+		table_name  => $table_name,
 	);
+	$sth->finish;
 	return wantarray ? $result->all : $result;
 }
 
@@ -182,6 +197,11 @@ sub _execute { # XXX Redo. Not pretty
 sub row {
 	my ($self, $data, $table_name) = @_;
 	return Jet::Engine::Row->new(row_data => $data, table_name => $table_name);
+}
+
+sub result {
+	my ($self, $data) = @_;
+	return Jet::Engine::Result->new(rows => $data);
 }
 
 sub single {

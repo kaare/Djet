@@ -34,6 +34,10 @@ has basetype => (
 
 =head1 METHODS
 
+=head2 add
+
+Add a new node
+
 =cut
 
 sub add {
@@ -50,6 +54,12 @@ sub add {
 	$self->_row($schema->row($row, $self->basetype));
 }
 
+=head2 add_child
+
+Add a new child node to the current node
+
+=cut
+
 sub add_child {
 	my ($self, $args) = @_;
 	return unless ref $args eq 'HASH';
@@ -57,6 +67,7 @@ sub add_child {
 	for my $column (qw/basetype title part/) {
 		return unless ($args->{$column});
 	}
+	$args->{parent_id} = $self->row->get_column('id');
 # XXX TODO Check that basetype is valid
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
@@ -64,8 +75,45 @@ sub add_child {
 	my $opts = {returning => '*'};
 	my $child = $schema->insert($basetype, $args, $opts);
 	return $self->new(
-		row => $self->_row($schema->row($child, $basetype)),
+		row => $schema->row($child, $basetype),
 	);
+}
+
+=head2 children
+
+Return the children of the current node
+
+=cut
+
+sub children {
+	my ($self, $relation_name, $opt) = @_;
+	my $c = Jet::Context->instance();
+	my $schema = $c->schema;
+	my $base_type = $self->basetype || return;
+
+	my $where = {
+		parent_id => $self->row->get_column('id'),
+	};
+	my $nodes = $schema->search_nodepath($base_type, $where);
+	my %nodes;
+	for my $node (@$nodes) {
+		push @{ $nodes{$node->{base_type}} }, $node;
+	}
+	my @result;
+	while (my ($base_type, $nodes) = each %nodes) {
+		for my $node (@{ $nodes }) {
+			push @result, @{ $schema->search($base_type, $where) };
+		}
+	}
+	return $schema->result(\@result);
+
+# Split in relations (base_type)
+# For hver relation, find id'er
+# For hver relation
+# SELECT * FROM data.$relation
+# WHERE id IN @ids
+
+# stitch et resultobjekt sammen
 }
 
 __PACKAGE__->meta->make_immutable;

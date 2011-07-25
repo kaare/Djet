@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 
 use Jet::Context;
 use Data::Dumper;
@@ -21,7 +21,7 @@ my $args = {
 };
 ok (my $domain = Jet::Node->new(basetype => 'domain'), 'Create domain node');
 $domain->add($args);
-print STDERR Dumper $domain->row;
+print STDERR "domain: ",Dumper $domain->row;
 $args = {
 	title => 'album',
 	part => 'album',
@@ -29,6 +29,14 @@ $args = {
 	albumname => 'album',
 };
 ok (my $album = $domain->add_child($args), 'Add a child');
-print STDERR Dumper $album->row;
+print STDERR "album: ", Dumper $domain->row, $album->row;
+ok (my $children = $domain->children(), 'All children');
+print STDERR Dumper $children;
+ok ($children = $domain->children('album'), 'All album children');
+print STDERR Dumper $children->rows;
+ok ($children = $domain->children('xyzzy'), 'All xyzzy children (none)');
+print STDERR Dumper $children;
 
 $schema->txn_rollback;
+
+done_testing();
