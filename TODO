@@ -1,0 +1,7 @@
+Template searching
+------------------
+- templates/basetypes
+- Standard templates in Jet with File::ShareDir
+- Set path as e.g. Text::Xslate->new( path => \@path );
+
+
