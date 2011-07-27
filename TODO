@@ -1,7 +1,94 @@
+Best Practices
+--------------
+namespace::autoclean
+
 Template searching
 ------------------
 - templates/basetypes
 - Standard templates in Jet with File::ShareDir
 - Set path as e.g. Text::Xslate->new( path => \@path );
 
+Stash
+-----
+- node
+  - row
+  - basetype
 
+Relations
+---------
+$node->children						all children
+$node->children('basetype')			all children with that basetype
+$node->children([qw/type1 type2])	more basetypes
+$node->children('basetype', $opt)	with options
+
+$node->parent						most nodes have only one parent
+$node->parent						all parents
+$node->parents('basetype')			all parents with that basetype
+$node->parents([qw/type1 type2])	more basetypes
+$node->parents('basetype', $opt)	with options
+
+$opt
+	order_by
+	limit
+
+REST
+----
+- Init: Examine headers. accept_content_type.
+  Set context->rest->accept_types (arrayref)
+  Set context->rest->type (no 1 from accepted list)
+- Process: ability to check or set context->rest->type
+  Some processing depens on REST type
+- Response render: Find the renderer from context->rest->type
+
+Search
+------
+- PostgreSQL FTS
+
+Transactions
+------------
+- Specify a way to start / commit / abort transactions
+
+Caching
+-------
+- Mark page as cachable
+  Render first time
+  Get from cache and compare expiration time
+
+Jet Schema
+----------
+- basetype
+  pathmatch - a regex to match the endpath (see Jet.pm)
+  templatename - relative/absolute?
+  response types we can/can't handle
+  "traits" like menu, breadcrumbs for each REST type
+- node
+  cache time (interval)
+
+Engine class
+------------
+- delete, update
+- clean out unused methods
+
+Result class
+------------
+- Row maker - insert column accessors
+  Perhaps use cases from some other classses
+  Moose::Meta::Class->create_anon_class 
+  then $meta->add_attribute for each column
+  then cache the result of that so you don't do it again next time you run the same query
+
+Plack
+-----
+- Authentication
+  http://search.cpan.org/dist/Plack-Middleware-Auth-Form/
+  ACL for images still a problem
+- Image handling
+  http://search.cpan.org/dist/Plack-Middleware-Image-Scale/
+
+Testing
+-------
+- Test database creation
+  Use Family::Photo schema
+- Coverage is low
+- Coverate report
+- POD coverage

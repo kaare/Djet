@@ -82,9 +82,6 @@ sub next {
 	};
 	$row->{table_name} = $table_name if $table_name;
 	return Jet::Engine::Row->new($row);
-# Moose::Meta::Class->create_anon_class 
-# then $meta->add_attribute for each column
-# then cache the result of that so you don't do it again next time you run the same query
 }
 
 =head2 my @ary = $result->all;
