@@ -72,6 +72,7 @@ sub next {
 	my $row_data;
 	state $rowno // 0; # /
 	return unless $self->rows;
+
 	$row_data = $self->rows->[$rowno++] || return;
 	return $row_data if $self->raw;
 

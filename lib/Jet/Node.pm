@@ -28,7 +28,7 @@ has basetype => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return $self->row->get_columns('base_type');
+		return $self->row->get_column('base_type');
 	},
 );
 
@@ -92,7 +92,7 @@ sub children {
 	my $base_type = $self->basetype || return;
 
 	my $where = {
-		parent_id => $self->row->get_column('id'),
+		parent_id => $self->row->get_column('path_id'),
 	};
 	my $nodes = $schema->search_nodepath($base_type, $where);
 	my %nodes;

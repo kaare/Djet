@@ -61,6 +61,7 @@ sub render_html {
 	my $basetype = $row->get_column('base_type');
 	my $tx = Text::Xslate->new();
 	my $template = $c->config->{config}{template_path} . $basetype . $c->config->{config}{template_suffix};
+	$c->stash->{node} = $c->node;
 	my $output = $tx->render($template, $c->stash);
 	$self->output([ $output ]);
 }
