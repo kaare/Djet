@@ -85,6 +85,22 @@ Plack
 - Image handling
   http://search.cpan.org/dist/Plack-Middleware-Image-Scale/
 
+File Upload
+-----------
+- Plack::Request::Upload
+  my $upload = $req->uploads->{field};
+  path - temporary file
+  content_type
+  filename - original filename
+
+Plugins
+-------
+- Readd recipe to jet.basetypes.
+  As a json for now
+- On startup, Look through all jet.basetypes and require the plugin modules.
+  Cache the recipes?
+  A load or register method to init the module
+
 Testing
 -------
 - Test database creation
