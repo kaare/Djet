@@ -44,6 +44,7 @@ sub handle_request($) {
 	my ($self, $env) = @_;
 	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
+	$c->_request($req);
 	my $node = $self->find_node($req->uri) || return $self->page_notfound($req->uri);
 
 	$c->node($node);
@@ -65,7 +66,9 @@ sub find_node($) {
 	my $node_path = [split('/', $uri->path)] || [''];
 	$node_path = [''] unless @$node_path;
 	my $nodedata = $schema->find_node({ node_path =>  $node_path });
-	return Jet::Node->new(row => $nodedata) if $nodedata;
+	return Jet::Node->new(
+		row => $nodedata,
+	) if $nodedata;
 
 	# Find node at one level up. See if there is a path expression on that node
 	my $endpath = pop @$node_path;
@@ -74,7 +77,10 @@ sub find_node($) {
 
 ## XXX Find path data on the node and see if it matches. ## 
 ## noget a la if $self->match_path($nodedata, $endpath)
-	return Jet::Node->new(row => $nodedata, endpath => $endpath);
+	return Jet::Node->new(
+		row => $nodedata,
+		endpath => $endpath
+	);
 }
 
 =head2 node_path_match
@@ -111,7 +117,7 @@ sub go {
 	my $node = $c->node;
 	my $code;
 	$code = $node->can('init') && $code;
-	$code = $node->can('data') && $code;
+	$code = $node->can('data') && $node->data;
 	return;
 }
 

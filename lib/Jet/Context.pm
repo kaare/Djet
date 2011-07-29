@@ -70,6 +70,11 @@ has cache => (
 		return CHI->new( %{ $self->config->{cache} } );
 	},
 );
+has request => (
+	isa => 'Plack::Request',
+	is => 'ro',
+	writer => '_request',
+);
 has response => (
 	isa => 'Jet::Response',
 	is => 'ro',
