@@ -22,11 +22,11 @@ SET search_path TO jet;
 BEGIN;
 
 CREATE TABLE basetype (
-	id						 serial NOT NULL PRIMARY KEY,
-	name					 text UNIQUE,
-	parent					 int[],
+	id								 serial NOT NULL PRIMARY KEY,
+	name						 text UNIQUE,
+	parent						 int[],
 	created					 timestamp default now(),
-	modified				 timestamp
+	modified					 timestamp
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
@@ -36,30 +36,35 @@ COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE node (
-	id						 serial NOT NULL PRIMARY KEY,
-	basetype_id				 int REFERENCES basetype(id)
-							 ON DELETE restrict
-							 ON UPDATE restrict,
-	title					 text,
+	id								 serial NOT NULL PRIMARY KEY,
+	basetype_id			 int REFERENCES basetype(id)
+									 ON DELETE restrict
+									 ON UPDATE restrict,
+	title					 		 text,
+	fts					         tsvector, 
+	searchable				 text[],
 	created					 timestamp default now(),
-	modified				 timestamp
+	modified					 timestamp
 );
 
 COMMENT ON TABLE node IS 'Node';
 COMMENT ON COLUMN node.basetype_id IS 'The Basetype of the Node';
+COMMENT ON COLUMN node.title IS 'The Node Title';
+COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of the searchable columns';
+COMMENT ON COLUMN node.searchable IS 'Array of column names of searchable columns for the current node';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE path (
-	id						 serial NOT NULL PRIMARY KEY,
-	parent_id				 int REFERENCES path(id)
-							 ON DELETE restrict
-							 ON UPDATE restrict,
-	part					 text,
+	id								 serial NOT NULL PRIMARY KEY,
+	parent_id					 int REFERENCES path(id)
+									 ON DELETE restrict
+									 ON UPDATE restrict,
+	part							 text,
 	node_path				 text[],
 	node_id					 int REFERENCES node,
 	created					 timestamp default now(),
-	modified				 timestamp,
+	modified					 timestamp,
 	UNIQUE (parent_id, part),
 	UNIQUE (node_path)
 );
