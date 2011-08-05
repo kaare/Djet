@@ -107,6 +107,7 @@ sub children {
 	}
 	return $schema->result(\@result);
 
+# XXX
 # Split in relations (base_type)
 # For hver relation, find id'er
 # For hver relation

@@ -91,6 +91,7 @@ Check a node and see if there is a match for the given "extra" path
 
 sub node_path_match {
 	my ($self, $nodedata, $endpath) = @_;
+	return 1; # XXX Testing
 }
 
 =head2 page_notfound
@@ -115,9 +116,33 @@ sub go {
 	my ($self, $req) = @_;
 	my $c = Jet::Context->instance;
 	my $node = $c->node;
-	my $code;
-	$code = $node->can('init') && $code;
-	$code = $node->can('data') && $node->data;
+# XXX
+	my $steps = [
+		{
+			plugin => 'Findnode',
+			in => {
+				id => 'workalbum_id',
+			},
+		},
+		{
+			plugin => 'File::Upload',
+			in => {
+				parent_id => 'workalbum_id',
+			},
+		},
+	];
+# XXX
+	for my $step (@$steps) {
+		my $plugin_name = "Jet::Plugin::$step->{plugin}";
+		eval "require $plugin_name" or next;
+
+		my $plugin = $plugin_name->new(
+			in => $step->{in},
+		);
+		$plugin->can('setup') && $plugin->setup;
+		$plugin->can('data') && $plugin->data;
+	}
+# XXX
 	return;
 }
 

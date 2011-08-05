@@ -5,12 +5,8 @@ use Moose;
 
 use Jet::Context;
 
-has 'request' => (
-	isa => 'Plack::Request',
-	is => 'ro',
-);
-has 'node' => (
-	isa => 'Jet::Node',
+has 'in' => (
+	isa => 'HashRef',
 	is => 'ro',
 );
 
