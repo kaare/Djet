@@ -46,6 +46,9 @@ Search
   A tsvector column on jet.node
 - Checkbox for a column: "searchable"
   If checked, a fts column on the node is updated with this column's content.
+- Insert, update triggers on _view
+  loop through searchable and update fts
+  Only update if there has been any change in the seachable columns
 - http://search.cpan.org/dist/Search-Tools/
 
 Transactions
@@ -68,6 +71,7 @@ Jet Schema
   "traits" like menu, breadcrumbs for each REST type
 - node
   cache time (interval)
+- update, delete data_view triggers
 
 Engine class
 ------------
@@ -128,6 +132,9 @@ Testing
 -------
 - Test database creation
   Use Family::Photo schema
+- path creation
+  move a node, see the path change ripple through the tree
+  update/delete a leaf node, a stem node, a root node
 - Coverage is low
 - Coverate report
 - POD coverage
