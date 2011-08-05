@@ -1,5 +1,6 @@
 INSERT INTO jet.basetype (name) VALUES ('domain');
 INSERT INTO jet.basetype (name,parent) VALUES ('album','{1}');
+INSERT INTO jet.basetype (name,parent, searchable) VALUES ('photo','{2}', '{"filename","metadata"}');
 
 -- SET search_path=jet,public;
 

@@ -25,6 +25,8 @@ CREATE TABLE basetype (
 	id						 serial NOT NULL PRIMARY KEY,
 	name					 text UNIQUE,
 	parent					 int[],
+	recipe					 text,
+	searchable				 text[],
 	created					 timestamp default now(),
 	modified				 timestamp
 );
@@ -32,6 +34,8 @@ CREATE TABLE basetype (
 COMMENT ON TABLE basetype IS 'Node Base Type';
 COMMENT ON COLUMN basetype.name IS 'Base Name';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
+COMMENT ON COLUMN basetype.recipe IS 'Ingredients and steps for cooking a node';
+COMMENT ON COLUMN basetype.searchable IS 'Array of column names of searchable columns for the basetype';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
@@ -41,12 +45,15 @@ CREATE TABLE node (
 							 ON DELETE restrict
 							 ON UPDATE restrict,
 	title					 text,
+	fts						 tsvector,
 	created					 timestamp default now(),
 	modified				 timestamp
 );
 
 COMMENT ON TABLE node IS 'Node';
 COMMENT ON COLUMN node.basetype_id IS 'The Basetype of the Node';
+COMMENT ON COLUMN node.title IS 'The Node Title';
+COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of the searchable columns';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
@@ -98,21 +105,32 @@ CREATE OR REPLACE VIEW nodepath AS
 CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	my ($base_name) = split '_', $_TD->{relname} or return SKIP;
 
-	my $q = "SELECT id FROM jet.basetype WHERE name = ".quote_literal($base_name);
+	# jet.basetype
+	my $q = "SELECT * FROM jet.basetype WHERE name = ".quote_literal($base_name);
 	my $rv = spi_exec_query($q);
 	unless ($rv->{status} eq 'SPI_OK_SELECT' and $rv->{processed} == 1) {
 		elog(ERROR,"Basetype $base_name not found in jet.basetype");
 		return SKIP;
 	}
 
-	my $data;
+	# jet.node
+	my ($data, $fts);
 	$data->{$_} = $_TD->{new}{$_} for keys %{ $_TD->{new} };
-	my $base_id = $rv->{rows}->[0]->{id};
-	$q = "INSERT INTO jet.node (basetype_id, title) VALUES ($base_id, ".quote_nullable($data->{title}).") RETURNING id";
+	my $base_row = $rv->{rows}->[0];
+	my $base_id = $base_row->{id};
+	my $searchable = $base_row->{searchable};
+	$fts = join ' ', map {$data->{$_}} grep {$data->{$_}} @$searchable; # Find searchable columns with content
+	$q = "INSERT INTO jet.node (basetype_id, title, fts) VALUES ($base_id, " .
+		quote_nullable($data->{title}) .
+		", to_tsvector('" .
+		quote_nullable($fts) .
+		"')) RETURNING id";
 	$rv = spi_exec_query($q);
 	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
 
+	# jet.path
 	my $node_id = $rv->{rows}->[0]->{id};
+	$data->{part} ||= $node_id; # We use the node_id if there is no part supplied
 	$q = qq{INSERT INTO "jet"."path" (node_id, parent_id, part) VALUES ($node_id, } 
 		. quote_nullable($data->{parent_id}) . ',' 
 		. quote_nullable($data->{part})
@@ -120,6 +138,7 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	$rv = spi_exec_query($q);
 	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
 
+	# data.<table>
 	my @jetcols = qw/title part node_path parent_id/; # columns to remove from data table
 	delete $data->{$_} for @jetcols;
 	$data->{id} = $node_id;
@@ -146,13 +165,17 @@ $$
 $$
 LANGUAGE sql;
 
+--
+-- Update the node path recursively down the tree
+--
+
 CREATE OR REPLACE FUNCTION trig_update_node_path() RETURNS trigger AS
 $$
 BEGIN
 	IF TG_OP = 'UPDATE' THEN
 		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.id != OLD.id OR NEW.part != OLD.part) THEN
 			-- update all nodes that are children of this one including this one
-			UPDATE path SET node_path = jet.get_calculated_node_path(id)
+			UPDATE jet.path SET node_path = jet.get_calculated_node_path(id)
 				WHERE OLD.node_path @> path.node_path;
 		END IF;
 	ELSIF TG_OP = 'INSERT' THEN
@@ -177,6 +200,9 @@ BEGIN
 		RETURN NEW;
 	END IF;
 	SELECT parent INTO parent_array FROM jet.nodepath WHERE node_id = NEW.id;
+	IF parent_array IS NULL THEN
+		RETURN NEW;
+	END IF;
 	SELECT basetype_id INTO parent_type FROM jet.nodepath WHERE node_id = NEW.parent_id;
 	IF parent_type = ANY (parent_array) THEN
 		RETURN NEW;
@@ -191,12 +217,22 @@ LANGUAGE 'plpgsql' VOLATILE;
 -- Path triggers
 
 -- for postgreSQL 9.0 -- you can use this syntax to save unnecessary check of trigger function
-CREATE TRIGGER trig01_check_basetype AFTER INSERT OR UPDATE OF parent_id
-	ON path FOR EACH ROW
-	EXECUTE PROCEDURE trig_check_basetype();
+CREATE TRIGGER
+	trig01_check_basetype
+AFTER INSERT OR UPDATE OF
+	parent_id
+ON
+	path
+FOR EACH ROW EXECUTE PROCEDURE
+	trig_check_basetype();
 
-CREATE TRIGGER trig01_update_node_path AFTER INSERT OR UPDATE OF id, parent_id, part
-	ON path FOR EACH ROW
-	EXECUTE PROCEDURE trig_update_node_path();
+CREATE TRIGGER
+	trig01_update_node_path
+AFTER INSERT OR UPDATE OF
+	id, parent_id, part
+ON
+	path
+FOR EACH ROW EXECUTE PROCEDURE
+	trig_update_node_path();
 
 COMMIT;
