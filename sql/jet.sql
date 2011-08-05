@@ -28,7 +28,7 @@ CREATE TABLE basetype (
 	recipe					 text,
 	searchable				 text[],
 	created					 timestamp default now(),
-	modified				 timestamp
+	modified					 timestamp
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
@@ -47,7 +47,7 @@ CREATE TABLE node (
 	title					 text,
 	fts						 tsvector,
 	created					 timestamp default now(),
-	modified				 timestamp
+	modified					 timestamp
 );
 
 COMMENT ON TABLE node IS 'Node';
@@ -58,15 +58,15 @@ COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE path (
-	id						 serial NOT NULL PRIMARY KEY,
-	parent_id				 int REFERENCES path(id)
-							 ON DELETE restrict
-							 ON UPDATE restrict,
-	part					 text,
+	id								 serial NOT NULL PRIMARY KEY,
+	parent_id					 int REFERENCES path(id)
+									 ON DELETE restrict
+									 ON UPDATE restrict,
+	part							 text,
 	node_path				 text[],
 	node_id					 int REFERENCES node,
 	created					 timestamp default now(),
-	modified				 timestamp,
+	modified					 timestamp,
 	UNIQUE (parent_id, part),
 	UNIQUE (node_path)
 );

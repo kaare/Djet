@@ -94,6 +94,10 @@ Plack
 - Image handling
   http://search.cpan.org/dist/Plack-Middleware-Image-Scale/
 
+Modules
+-------
+- Jet::Config -> Jet::Context::Config
+
 File Upload
 -----------
 - Plack::Request::Upload
@@ -104,15 +108,27 @@ File Upload
 
 Plugins
 -------
-- Readd recipe to jet.basetypes.
-  As a json for now
-- On startup, Look through all jet.basetypes and require the plugin modules.
-  Cache the recipes?
-  A load or register method to init the module
 - Upload -> File::Upload
   Refactor hash directory handling
   Config option for base dir
-- Consider a way to ->register plugins for each basetype upon startup instead
+- Packaging
+  The plugins themselves
+  basetype definitions - including recipes - and a script to insert them into the database
+- Admin
+  Administration should just be another plugin
+  Or perhaps a recipe with several plugins
+
+Recipes
+-------
+- Ingredients list and procedure (steps)
+  Ingredient list: Mapping of external data to the requirement of the plugins
+- Readd recipe to jet.basetypes.
+  As a json for now
+- On startup, Look through all jet.basetypes and 'compile' the recipes
+  require the plugin modules
+  name the recipe
+  cache the recipe in context->recipes
+  A load or register method to init the plugin methods
 
 Data Repository
 ---------------
