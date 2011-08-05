@@ -64,10 +64,10 @@ sub add_child {
 	my ($self, $args) = @_;
 	return unless ref $args eq 'HASH';
 
-	for my $column (qw/basetype title part/) {
+	for my $column (qw/basetype title/) {
 		return unless ($args->{$column});
 	}
-	$args->{parent_id} = $self->row->get_column('id');
+	$args->{parent_id} = $self->row->get_column('path_id');
 # XXX TODO Check that basetype is valid
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
