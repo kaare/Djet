@@ -101,13 +101,16 @@ has response => (
 has stash => (
 	isa       => 'HashRef',
 	is        => 'ro',
-	writer => '_stash',
+	clearer => 'clear_stash',
+	predicate => 'has_stash',
 	lazy => 1,
 	default => 	sub { {} },
 );
 has node => (
 	isa => 'Jet::Node',
 	is => 'rw',
+	clearer   => 'clear_node',
+	predicate => 'has_node',
 );
 has recipe => (
 	isa       => 'HashRef',
@@ -133,7 +136,8 @@ Clear request specific attributes
 sub clear {
 	my $self = shift;
 	$self->_response(Jet::Response->new);
-	$self->_stash({});
+	$self->clear_stash;
+	$self->clear_recipe;
 }
 
 __PACKAGE__->meta->make_immutable;
