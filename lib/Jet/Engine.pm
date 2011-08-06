@@ -5,6 +5,7 @@ use Moose;
 use MooseX::UndefTolerant;
 use DBI;
 use DBIx::TransactionManager 1.06;
+use JSON;
 
 use Jet::Engine::Loader;
 use Jet::Engine::Result;
@@ -56,8 +57,15 @@ has 'sql_builder' => (
 	isa => 'Jet::Engine::QueryBuilder',
 	is => 'ro',
 	default => sub {
-		my $self = shift;
 		Jet::Engine::QueryBuilder->new();
+	},
+	lazy => 1,
+);
+has 'json' => (
+	isa => 'JSON',
+	is => 'ro',
+	default => sub {
+		JSON->new();
 	},
 	lazy => 1,
 );
@@ -118,6 +126,37 @@ sub disconnect {
 	if ( my $dbh = delete $self->{dbh} ) {
 		$dbh->disconnect;
 	}
+}
+
+sub update_basetype {
+	my ($self, $where, $args) = @_;
+	my $sql = 'UPDATE jet.basetype SET ' .
+		join(',', map { "$_ = ?"} keys(%$args)) .
+		' WHERE ' .
+		join(',', map { "$_ = ?"} keys(%$where));
+	$args->{recipe} = $self->json->encode($args->{recipe}) if $args->{recipe};
+	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
+}
+
+sub get_basetypes {
+	my ($self, $where, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->select(
+		"jet.basetype",
+		'*',
+		$where,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+	my $basetypes = $sth->fetchall_arrayref({});
+	return { map {$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};{$_->{name} => $_} } @$basetypes };
+}
+
+sub find_basetype {
+	my ($self, $args) = @_;
+	my $sql = 'SELECT * FROM jet.basetype WHERE ' . join ',', map { "$_ = ?"} keys %$args;
+	my $basetype = $self->single(sql => $sql, data => [ values %$args ]) || return;
+	$basetype->{recipe} = $self->json->decode($basetype->{recipe}) if $basetype->{recipe};
+	return $basetype;
 }
 
 sub find_node {

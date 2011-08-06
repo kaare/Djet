@@ -116,21 +116,9 @@ sub go {
 	my ($self, $req) = @_;
 	my $c = Jet::Context->instance;
 	my $node = $c->node;
+	my $recipe = $c->recipe;
 # XXX
-	my $steps = [
-		{
-			plugin => 'Findnode',
-			in => {
-				id => 'workalbum_id',
-			},
-		},
-		{
-			plugin => 'File::Upload',
-			in => {
-				parent_id => 'workalbum_id',
-			},
-		},
-	];
+	my $steps = $recipe->{paths}{$c->node->endpath};
 # XXX
 	for my $step (@$steps) {
 		my $plugin_name = "Jet::Plugin::$step->{plugin}";

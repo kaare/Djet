@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use JSON;
+
+use Jet::Engine;
+use Jet::Context;
+
+use Data::Dumper;
+
+sub update_domain_recipe {
+	my $data = {
+		paths => {
+			upload => [
+				{
+					plugin => 'Findnode',
+					in => {
+						id => 'workalbum_id',
+					},
+				},
+				{
+					plugin => 'File::Upload',
+					in => {
+						parent_id => 'workalbum_id',
+					},
+				},
+			],
+		},
+		html_templates => {
+			upload => 'upload',
+		},
+	};
+	say STDERR Dumper( JSON->new->encode($data));
+	update_node($data);
+}
+
+sub update_node {
+	my $recipe = shift;
+	my $c = Jet::Context->instance;
+	my $schema = $c->schema;
+	$schema->update_basetype({name => 'domain'}, {recipe => $recipe});
+	say STDERR Dumper $recipe, $schema->find_basetype({name => 'domain'});
+}
+
+update_domain_recipe;

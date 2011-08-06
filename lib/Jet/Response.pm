@@ -58,9 +58,13 @@ sub render_html {
 	my $self = shift;
 	my $c = Jet::Context->instance;
 	my $row = $c->node->row;
-	my $basetype = $row->get_column('base_type');
+
+	my $node = $c->node;
+	my $recipe = $c->recipe;
+# XXX
+	my $template_name = $recipe->{templates}{$c->node->endpath} || $row->get_column('base_type');
 	my $tx = Text::Xslate->new();
-	my $template = $c->config->{config}{template_path} . $basetype . $c->config->{config}{template_suffix};
+	my $template = $c->config->{config}{template_path} . $template_name . $c->config->{config}{template_suffix};
 	$c->stash->{node} = $c->node;
 	my $output = $tx->render($template, $c->stash);
 	$self->output([ $output ]);

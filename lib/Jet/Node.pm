@@ -22,6 +22,10 @@ has row => (
 	is => 'ro',
 	writer => '_row',
 );
+has endpath => (
+	isa => 'Str',
+	is => 'ro',
+);
 has basetype => (
 	isa => 'Str',
 	is => 'ro',

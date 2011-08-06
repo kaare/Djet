@@ -8,6 +8,8 @@ use Jet::Config;
 use Jet::Engine;
 use Jet::Response;
 
+with 'Jet::Role::Log';
+
 =head1 NAME
 
 Jet::Context - The Context we work in
@@ -40,6 +42,10 @@ The base node
 
 The response object
 
+=head2 recipe
+
+WIP - provide a recipe for a workflow for a base type
+
 =cut
 
 has config => (
@@ -70,6 +76,18 @@ has cache => (
 		return CHI->new( %{ $self->config->{cache} } );
 	},
 );
+has basetypes => (
+	isa       => 'HashRef',
+	is        => 'ro',
+	clearer   => 'clear_basetypes',
+	predicate => 'has_basetypes',
+	lazy => 1,
+	default => 	sub {
+		my $self = shift;
+		my $schema = $self->schema;
+		return $schema->get_basetypes;
+	},
+);
 has request => (
 	isa => 'Plack::Request',
 	is => 'ro',
@@ -91,6 +109,18 @@ has node => (
 	isa => 'Jet::Node',
 	is => 'rw',
 );
+has recipe => (
+	isa       => 'HashRef',
+	is        => 'ro',
+	clearer   => 'clear_recipe',
+	predicate => 'has_recipe',
+	lazy => 1,
+	default => 	sub {
+		my ($self) = @_;
+		my $type = $self->node->basetype;
+		return $self->basetypes->{$type}{recipe};
+	},
+);
 
 =head1 METHODS
 
@@ -104,35 +134,6 @@ sub clear {
 	my $self = shift;
 	$self->_response(Jet::Response->new);
 	$self->_stash({});
-}
-
-=head2 recipe
-
-WIP - provide a recipe for a workflow for a base type
-
-=cut
-
-sub recipe {
-	my ($self) = @_;
-	my @plugins;
-	my $ctrl = Jet::Control->instance;
-	my $type = $ctrl->module;
-	my $typeconf = $ctrl->config->{basetypes}{$type};
-	for my $key (keys %$typeconf) {
-		given ($key) {
-			when ('template') {}
-			default {
-				my $pluginconf = $typeconf->{$key};
-				my $plugin_name = $pluginconf->{plugin};
-				my $private = $self->private($pluginconf);
-				eval "require $plugin_name" or die "Couldn't find plugin $plugin_name";
-				push @plugins, $plugin_name->new(
-					request => $self->request,
-					node => $self->node,
-				);
-			}
-		}
-	}
 }
 
 __PACKAGE__->meta->make_immutable;
