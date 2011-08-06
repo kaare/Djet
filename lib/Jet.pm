@@ -118,7 +118,9 @@ sub go {
 	my $node = $c->node;
 	my $recipe = $c->recipe;
 # XXX
-	my $steps = $recipe->{paths}{$c->node->endpath};
+	my $steps = $c->node->endpath ? 
+		$recipe->{paths}{$c->node->endpath} :
+		$recipe->{steps};
 # XXX
 	for my $step (@$steps) {
 		my $plugin_name = "Jet::Plugin::$step->{plugin}";

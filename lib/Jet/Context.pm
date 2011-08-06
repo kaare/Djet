@@ -118,7 +118,7 @@ has recipe => (
 	default => 	sub {
 		my ($self) = @_;
 		my $type = $self->node->basetype;
-		return $self->basetypes->{$type}{recipe};
+		return $self->basetypes->{$type}{recipe} || {};
 	},
 );
 
