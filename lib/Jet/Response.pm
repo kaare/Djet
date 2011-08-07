@@ -63,8 +63,8 @@ sub render_html {
 	my $recipe = $c->recipe;
 # XXX
 	my $template_name = $c->node->endpath ?
-		$recipe->{templates}{$c->node->endpath} :
-		$recipe->{template};
+		$recipe->{html_templates}{$c->node->endpath} :
+		$recipe->{html_template};
 	$template_name ||= $row->get_column('base_type');
 	my $tx = Text::Xslate->new();
 	my $template = $c->config->{config}{template_path} . $template_name . $c->config->{config}{template_suffix};
