@@ -4,7 +4,7 @@ use 5.010;
 use MooseX::Singleton;
 
 use CHI;
-use Jet::Config;
+use Jet::Context::Config;
 use Jet::Engine;
 use Jet::Response;
 
@@ -49,11 +49,11 @@ WIP - provide a recipe for a workflow for a base type
 =cut
 
 has config => (
-	isa => 'Jet::Config',
+	isa => 'Jet::Context::Config',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
-		return Jet::Config->new;
+		return Jet::Context::Config->new;
 	},
 );
 has schema => (

@@ -1,4 +1,4 @@
-package Jet::Config;
+package Jet::Context::Config;
 
 use 5.010;
 use Moose;
@@ -42,7 +42,7 @@ __END__
 
 =head1 NAME
 
-Jet::Config - Jet Configuration
+Jet::Context::Config - Jet Configuration
 
 =head1 SYNOPSIS
 
