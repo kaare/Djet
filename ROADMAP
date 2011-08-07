@@ -1,0 +1,19 @@
+0.001
+- Family::Photo
+  domain, album, photo basetypes
+  upload
+  move phtos between albums
+- Plugin
+  1st version, not necessarily the one
+0.01
+- Plack
+  User, group validation
+- Code
+  namespace::autoclean
+- Functionality
+  search page
+- Documentation
+  all methods
+  all attributes
+- Tests
+  Family::Photo data structure
