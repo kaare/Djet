@@ -16,20 +16,31 @@ Stash
 
 Relations
 ---------
-$node->children						all children
-$node->children('basetype')			all children with that basetype
-$node->children([qw/type1 type2])	more basetypes
-$node->children('basetype', $opt)	with options
+$node->children 										all children
+$node->children('basetype')						all children with that basetype
+$node->children([qw/type1 type2])			more basetypes
+$node->children('basetype', $opt)			with options
 
-$node->parent						most nodes have only one parent
-$node->parent						all parents
-$node->parents('basetype')			all parents with that basetype
-$node->parents([qw/type1 type2])	more basetypes
-$node->parents('basetype', $opt)	with options
+$node->parent											most nodes have only one parent
+$node->parent											all parents
+$node->parents('basetype')						all parents with that basetype
+$node->parents([qw/type1 type2])			more basetypes
+$node->parents('basetype', $opt)				with options
+
+$node->descendants									all descendants
+$node->descendants('basetype')				all descendants with that basetype
+$node->descendants([qw/type1 type2])	more basetypes
+$node->descendants('basetype', $opt)		with options
 
 $opt
 	order_by
 	limit
+	offset
+
+$node->descendants uses PostgreSQL's WITH RECURSIVE-construct
+
+There might be a case for choosing between returning Jet::Engine::Result and an array of Jet::Node
+Or refactor (and rename) Jet::Engine::Result to return an array of Jet::Engine::Row or Jet::Node;
 
 REST
 ----
@@ -44,12 +55,19 @@ Search
 ------
 - PostgreSQL FTS
   A tsvector column on jet.node
+  fts should be combinable with ACL for searching, so the search result should reflect the user's permissions
 - Checkbox for a column: "searchable"
   If checked, a fts column on the node is updated with this column's content.
 - Insert, update triggers on _view
   loop through searchable and update fts
   Only update if there has been any change in the seachable columns
 - http://search.cpan.org/dist/Search-Tools/
+
+Paging
+------
+- limit, offset
+- CPAN module?
+- http://wiki.postgresql.org/wiki/Count_estimate
 
 Transactions
 ------------
@@ -69,9 +87,17 @@ Jet Schema
   templatename - relative/absolute?
   response types we can/can't handle
   "traits" like menu, breadcrumbs for each REST type
+- path
+  Perhaps active flag, active period(s) - or publish time, expiration time
+  Problem with this is to find out when to apply
+  - For all children?
+  - In all cases?
 - node
   cache time (interval)
 - update, delete data_view triggers
+- Trash
+  Some way to delete a tree by moving it to a "Trash" node.
+  There could be more than one node with the same path part
 
 Engine class
 ------------
