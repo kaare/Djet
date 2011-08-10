@@ -2,7 +2,7 @@
 - Family::Photo
   domain, album, photo basetypes
   upload
-  move phtos between albums
+  move photos between albums
 - Plugin
   1st version, not necessarily the one
 0.01

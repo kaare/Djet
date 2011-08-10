@@ -58,6 +58,22 @@ sub add {
 	$self->_row($schema->row($row, $self->basetype));
 }
 
+=head2 move
+
+Move node to a new parent
+
+=cut
+
+sub move {
+	my ($self, $parent_id) = @_;
+	return unless $parent_id and $self->row;
+
+	my $c = Jet::Context->instance();
+	my $schema = $c->schema;
+	my $opts = {returning => '*'};
+	my $success = $schema->move($self->path_id, $parent_id);
+}
+
 =head2 add_child
 
 Add a new child node to the current node

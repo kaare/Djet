@@ -211,6 +211,18 @@ sub insert {
 	return $self->single(sql => $sql, data => \@binds);
 }
 
+sub move {
+	my ($self, $path_id, $parent_id) = @_;
+	my $sql = qq{UPDATE
+		jet.path
+	SET
+		parent_id=?
+	WHERE
+		id=?
+	};
+	return  $self->_execute($sql, [$parent_id, $path_id]);
+}
+
 sub search_by_sql {
 	my ($self, $sql, $bind, $table_name) = @_;
 	$table_name ||= $self->_guess_table_name( $sql ); # XXX
