@@ -122,15 +122,15 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	$fts = join ' ', map {$data->{$_}} grep {$data->{$_}} @$searchable; # Find searchable columns with content
 	$q = "INSERT INTO jet.node (basetype_id, title, fts) VALUES ($base_id, " .
 		quote_nullable($data->{title}) .
-		", to_tsvector('" .
+		", to_tsvector(" .
 		quote_nullable($fts) .
-		"')) RETURNING id";
+		")) RETURNING id";
 	$rv = spi_exec_query($q);
 	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
 
 	# jet.path
 	my $node_id = $rv->{rows}->[0]->{id};
-	$data->{part} ||= $node_id; # We use the node_id if there is no part supplied
+	$data->{part} //= $node_id; # We use the node_id if there is no part supplied
 	$q = qq{INSERT INTO "jet"."path" (node_id, parent_id, part) VALUES ($node_id, } 
 		. quote_nullable($data->{parent_id}) . ',' 
 		. quote_nullable($data->{part})
