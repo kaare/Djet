@@ -34,6 +34,7 @@ This is the Response class for L<Jet::Context>.
 has status  => (isa => 'Int', is => 'rw', default => 200);
 has headers => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type' => 'text/html; charset="utf-8"' ] });
 has output  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
+has tx      => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new(cache => 0) });
 
 =head1 METHODS
 
@@ -66,10 +67,9 @@ sub render_html {
 		$recipe->{html_templates}{$c->node->endpath} :
 		$recipe->{html_template};
 	$template_name ||= $row->get_column('base_type');
-	my $tx = Text::Xslate->new();
 	my $template = $c->config->{config}{template_path} . $template_name . $c->config->{config}{template_suffix};
 	$c->stash->{node} = $c->node;
-	my $output = $tx->render($template, $c->stash);
+	my $output = $self->tx->render($template, $c->stash);
 	$self->output([ $output ]);
 }
 
