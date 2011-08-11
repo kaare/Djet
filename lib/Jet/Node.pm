@@ -122,7 +122,10 @@ sub children {
 	my @result;
 	while (my ($base_type, $nodes) = each %nodes) {
 		for my $node (@{ $nodes }) {
-			push @result, @{ $schema->search($base_type, $where) };
+			$where = {
+				id => $node->{node_id},
+			};
+			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
 		}
 	}
 	return $schema->result(\@result);
@@ -136,6 +139,21 @@ sub children {
 
 # stitch et resultobjekt sammen
 }
+
+
+# XXX trait
+sub file_location {
+	my $self = shift;
+# XXX use for config	my $c = Jet::Context->instance();
+	my $targetfn = $self->row->get_column('node_id');
+	my $td = substr($targetfn,-4);
+	$td .= '_' x ( 4 - length( $td ) );
+	my $targetdir = substr($td,-2).'/'.substr($td,-4,2);
+	my $targetpath = "$targetdir/$targetfn";
+	my $basedir = '/tmp/'; # XXX Config
+	return $basedir . $targetpath;
+}
+
 
 __PACKAGE__->meta->make_immutable;
 

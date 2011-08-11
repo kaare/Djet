@@ -112,6 +112,12 @@ Result class
   then $meta->add_attribute for each column
   then cache the result of that so you don't do it again next time you run the same query
 
+Node class
+----------
+- children (etc)
+  search can be optimized for the different scenarios
+  right now there's a select for each child even when the search could be smarter
+
 Plack
 -----
 - Authentication
