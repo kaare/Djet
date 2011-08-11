@@ -38,6 +38,17 @@ Set row object creation mode.
 
 has 'raw'        => (isa => 'Bool', is => 'rw', default => 0);
 has 'rows'        => (isa => 'ArrayRef', is => 'ro');
+has 'rowno' => (
+	traits  => ['Counter'],
+	is      => 'ro',
+	isa     => 'Num',
+	default => 0,
+	handles => {
+		inc_rowno   => 'inc',
+		dec_rowno   => 'dec',
+		reset_rowno => 'reset',
+	},
+);
 has 'table_name' => (isa => 'Str', is => 'ro');
 has 'schema'     => (
 	isa => 'DBIx::Inspector::Driver::Pg',
@@ -68,21 +79,26 @@ Get next row data.
 =cut
 
 sub next {
-	my $self = shift;
+	my ($self, $wanted) = @_;
 	my $row_data;
-	state $rowno // 0; # /
 	return unless $self->rows;
 
-	$row_data = $self->rows->[$rowno++] || return;
+	$row_data = $self->rows->[$self->rowno] || return;
+	$self->inc_rowno;
 	return $row_data if $self->raw;
 
 	my $table_name = $row_data->{table_name} || $self->table_name;
-	my $row = {
+	my $row_hash = {
 		row_data  => $row_data,
 		typetable => $self->_build_typetable($row_data),
 	};
-	$row->{table_name} = $table_name if $table_name;
-	return Jet::Engine::Row->new($row);
+	$row_hash->{table_name} = $table_name if $table_name;
+	my $row = Jet::Engine::Row->new($row_hash);
+	return Jet::Node->new(
+		row  => $row,
+	) if $wanted;
+# XXX
+	return $row;
 }
 
 =head2 my @ary = $result->all;
