@@ -5,6 +5,8 @@ use Moose;
 
 use Config::Any;
 
+with 'Jet::Role::Log';
+
 =head1 TODO
 1. Rework config handling 
 2. Work stash into the module

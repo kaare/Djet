@@ -62,8 +62,9 @@ has schema => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
+		my @connect_info = @{ $self->config->{config}{connect_info} };
 		my %connect_info;
-		$connect_info{$_} = shift @{ $self->config->{config}{connect_info} } for qw/dbname username password connect_options/;
+		$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
 		return Jet::Engine->new(%connect_info);
 	},
 );
@@ -137,6 +138,7 @@ sub clear {
 	my $self = shift;
 	$self->_response(Jet::Response->new);
 	$self->clear_stash;
+	$self->clear_node;
 	$self->clear_recipe;
 }
 
