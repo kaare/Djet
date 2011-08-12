@@ -144,14 +144,13 @@ sub children {
 # XXX trait
 sub file_location {
 	my $self = shift;
-# XXX use for config	my $c = Jet::Context->instance();
-	my $targetfn = $self->row->get_column('node_id');
-	my $td = substr($targetfn,-4);
+	my $c = Jet::Context->instance();
+	my $basedir = $c->config->{config}{paths}{image}{url};
+	my $target_id = $self->row->get_column('id');
+	my $td = substr($target_id,-4);
 	$td .= '_' x ( 4 - length( $td ) );
 	my $targetdir = substr($td,-2).'/'.substr($td,-4,2);
-	my $targetpath = "$targetdir/$targetfn";
-	my $basedir = '/tmp/'; # XXX Config
-	return $basedir . $targetpath;
+	return join '/', '', $basedir, $targetdir, $target_id, $self->row->get_column('filename');
 }
 
 
