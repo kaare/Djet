@@ -7,6 +7,11 @@ Template searching
 - templates/basetypes
 - Standard templates in Jet with File::ShareDir
 - Set path as e.g. Text::Xslate->new( path => \@path );
+- Should probably be by type in config file
+  template
+    html
+      path
+      suffix
 
 Stash
 -----

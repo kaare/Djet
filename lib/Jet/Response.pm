@@ -29,12 +29,14 @@ This is the Response class for L<Jet::Context>.
 
 =head2 output
 
+=head2 tx
+
 =cut
 
 has status  => (isa => 'Int', is => 'rw', default => 200);
 has headers => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type' => 'text/html; charset="utf-8"' ] });
 has output  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
-has tx      => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new(cache => 0) });
+has tx      => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new() });
 
 =head1 METHODS
 
