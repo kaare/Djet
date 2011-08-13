@@ -60,11 +60,13 @@ CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE
 CREATE TABLE path (
 	id								 serial NOT NULL PRIMARY KEY,
 	parent_id					 int REFERENCES path(id)
-									 ON DELETE restrict
-									 ON UPDATE restrict,
+									 ON DELETE cascade
+									 ON UPDATE cascade,
 	part							 text,
 	node_path				 text[],
-	node_id					 int REFERENCES node,
+	node_id					 int REFERENCES node
+									 ON DELETE cascade
+									 ON UPDATE cascade,
 	created					 timestamp default now(),
 	modified					 timestamp,
 	UNIQUE (parent_id, part),
