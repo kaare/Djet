@@ -21,8 +21,6 @@ my $parent = Jet::Node->new(
 	my $basedir = $c->config->{config}{paths}{image}{file};
 	my $req = $c->request;
 	for my $upload ($req->uploads->get_all('files')) {
-		debug($upload->filename);
-
 		my $uploadfile = $upload->path;
 		my $photo = {
 			title => $upload->filename,
