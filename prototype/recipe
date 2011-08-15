@@ -31,15 +31,41 @@ sub update_domain_recipe {
 		},
 	};
 	say STDERR Dumper( JSON->new->encode($data));
-	update_node($data);
+	update_node('domain', $data);
+}
+
+sub update_album_recipe {
+	my $data = {
+		steps => [
+			{
+				plugin => 'Filter::Request',
+				in => {
+					method => 'POST',
+					content_type => 'application/json',
+				},
+			},
+			{
+				plugin => 'Node::MoveTo',
+				in => {
+					child_id => 'content.photo_id',
+				},
+			},
+		],
+		html_templates => {
+			upload => 'upload',
+		},
+	};
+	say STDERR Dumper( JSON->new->encode($data));
+	update_node('album', $data);
 }
 
 sub update_node {
-	my $recipe = shift;
+	my ($basetype, $recipe) = @_;
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
-	$schema->update_basetype({name => 'domain'}, {recipe => $recipe});
+	$schema->update_basetype({name => $basetype}, {recipe => $recipe});
 	say STDERR Dumper $recipe, $schema->find_basetype({name => 'domain'});
 }
 
 update_domain_recipe;
+update_album_recipe;
