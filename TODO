@@ -52,6 +52,7 @@ REST
 - Init: Examine headers. accept_content_type.
   Set context->rest->accept_types (arrayref)
   Set context->rest->type (no 1 from accepted list)
+  Set context->rest->content if there's something to deserialize
 - Process: ability to check or set context->rest->type
   Some processing depens on REST type
 - Response render: Find the renderer from context->rest->type
@@ -191,3 +192,14 @@ Testing
 - Coverage is low
 - Coverate report
 - POD coverage
+
+Logging
+-------
+
+Statistics
+----------
+
+Devel mode
+----------
+- Optionally turn on/off some features when developing
+  Text::Xslate cache
