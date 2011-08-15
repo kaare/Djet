@@ -35,6 +35,15 @@ has basetype => (
 		return $self->row->get_column('base_type');
 	},
 );
+has uri => (
+	isa => 'Str',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return join '/', @{ $self->row->get_column('node_path') };
+	},
+);
 
 =head1 METHODS
 
@@ -99,6 +108,22 @@ sub add_child {
 	);
 }
 
+=head2 move_child
+
+Move child node here
+
+=cut
+
+sub move_child {
+	my ($self, $child_id) = @_;
+	return unless $child_id and $self->row;
+
+	my $c = Jet::Context->instance();
+	my $schema = $c->schema;
+	my $opts = {returning => '*'};
+	my $success = $schema->move($child_id, $self->row->get_column('path_id'));
+}
+
 =head2 children
 
 Return the children of the current node
@@ -139,7 +164,6 @@ sub children {
 
 # stitch et resultobjekt sammen
 }
-
 
 # XXX trait
 sub file_location {

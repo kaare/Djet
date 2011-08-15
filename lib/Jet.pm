@@ -30,7 +30,6 @@ sub run_psgi($) {
 	my $c = Jet::Context->instance;
 	# Clear request specific attributes
 	$c->clear;
-
 	$self->handle_request($env);
 	$c->response->render;
 	return [ $c->response->status, $c->response->headers, $c->response->output ];
@@ -130,7 +129,8 @@ sub go {
 			in => $step->{in},
 		);
 		$plugin->can('setup') && $plugin->setup;
-		$plugin->can('data') && $plugin->data;
+		# See if plugin can data and do it. Break out if there's nothing returned
+		$plugin->can('data') && last unless $plugin->data;
 	}
 # XXX
 	return;
