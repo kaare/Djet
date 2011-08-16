@@ -42,7 +42,7 @@ $opt
 	limit
 	offset
 
-$node->descendants uses PostgreSQL's WITH RECURSIVE-construct
+$node->descendants uses PostgreSQL's WITH RECURSIVE-construct or the node_path array (making use of the gin index)
 
 There might be a case for choosing between returning Jet::Engine::Result and an array of Jet::Node
 Or refactor (and rename) Jet::Engine::Result to return an array of Jet::Engine::Row or Jet::Node;
@@ -62,6 +62,7 @@ Search
 - PostgreSQL FTS
   A tsvector column on jet.node
   fts should be combinable with ACL for searching, so the search result should reflect the user's permissions
+  samecase searches? (test necessesity)
 - Checkbox for a column: "searchable"
   If checked, a fts column on the node is updated with this column's content.
 - Insert, update triggers on _view
@@ -104,6 +105,9 @@ Jet Schema
 - Trash
   Some way to delete a tree by moving it to a "Trash" node.
   There could be more than one node with the same path part
+- Recursion detection
+  path1->path2->path3->path1 should be disallowed
+  incl test
 
 Engine class
 ------------
@@ -149,12 +153,16 @@ Plugins
 - Upload -> File::Upload
   Refactor hash directory handling
   Config option for base dir
-- Packaging
-  The plugins themselves
-  basetype definitions - including recipes - and a script to insert them into the database
 - Admin
   Administration should just be another plugin
   Or perhaps a recipe with several plugins
+
+Packages
+--------
+- plugins
+  basetype definitions - including recipes
+  roles/traits
+  an installscript
 
 Recipes
 -------
@@ -199,6 +207,11 @@ Logging
 
 Statistics
 ----------
+
+Exception handling
+-------------------
+- https://metacpan.org/release/HTTP-Exception
+- https://metacpan.org/module/Plack::Middleware::HTTPExceptions
 
 Devel mode
 ----------
