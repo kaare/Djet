@@ -46,7 +46,7 @@ my $req = $c->request;
 use JSON;
 my $content = JSON->new->decode($req->content);
 	my $child_id = $content->{$child_location}; 
-#	$c->node->move_child($child_id)
+	$c->node->move_child($child_id)
 }
 
 no Moose::Role;
