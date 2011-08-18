@@ -42,9 +42,7 @@ sub data {
 	my $self = shift;
 	my $c = Jet::Context->instance();
 	my ($container, $child_location) = split /\./, $self->in->{child_id};
-my $req = $c->request;
-use JSON;
-my $content = JSON->new->decode($req->content);
+	my $content = $c->rest->content;
 	my $child_id = $content->{$child_location}; 
 	$c->node->move_child($child_id)
 }

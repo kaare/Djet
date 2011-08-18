@@ -5,6 +5,7 @@ use MooseX::Singleton;
 
 use CHI;
 use Jet::Context::Config;
+use Jet::Context::Rest;
 use Jet::Engine;
 use Jet::Response;
 
@@ -37,6 +38,14 @@ Where data from the flow is stashed
 =head2 node
 
 The base node
+
+=head2 request
+
+The request
+
+=head2 rest
+
+The rest part of the request
 
 =head2 response
 
@@ -94,6 +103,14 @@ has request => (
 	is => 'ro',
 	writer => '_request',
 );
+has rest => (
+	isa => 'Jet::Context::Rest',
+	is => 'ro',
+	lazy => 1,
+	clearer   => 'clear_rest',
+	predicate => 'has_rest',
+	default => sub { Jet::Context::Rest->new },
+);
 has response => (
 	isa => 'Jet::Response',
 	is => 'ro',
@@ -137,6 +154,7 @@ Clear request specific attributes
 sub clear {
 	my $self = shift;
 	$self->_response(Jet::Response->new);
+	$self->clear_rest;
 	$self->clear_stash;
 	$self->clear_node;
 	$self->clear_recipe;
