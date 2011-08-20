@@ -1,5 +1,12 @@
 Revision history for Jet
 
 {{$NEXT}}
- - First version. Trying to get the structure right
+
+0.001 2011-08-19
+  - Family::Photo
+    domain, album, photo basetypes
+    upload
+    move photos between albums
+  - Plugin
+    1st version, not necessarily "the one"
  
