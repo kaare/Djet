@@ -12,23 +12,28 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-COMMIT;
-
 -- jet schema
 
 CREATE SCHEMA jet;
-SET search_path TO jet;
+
+-- Data schema
+
+COMMIT;
+
+CREATE SCHEMA data;
 
 BEGIN;
 
+SET search_path TO jet;
+
 CREATE TABLE basetype (
-	id						 serial NOT NULL PRIMARY KEY,
-	name					 text UNIQUE,
-	parent					 int[],
-	recipe					 text,
-	searchable				 text[],
-	created					 timestamp default now(),
-	modified					 timestamp
+	id						serial NOT NULL PRIMARY KEY,
+	name					text UNIQUE,
+	parent					int[],
+	recipe					text,
+	searchable				text[],
+	created					timestamp default now(),
+	modified				timestamp
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
@@ -40,14 +45,14 @@ COMMENT ON COLUMN basetype.searchable IS 'Array of column names of searchable co
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE node (
-	id						 serial NOT NULL PRIMARY KEY,
-	basetype_id				 int REFERENCES basetype(id)
-							 ON DELETE restrict
-							 ON UPDATE restrict,
-	title					 text,
-	fts						 tsvector,
-	created					 timestamp default now(),
-	modified					 timestamp
+	id						serial NOT NULL PRIMARY KEY,
+	basetype_id				int REFERENCES basetype(id)
+							ON DELETE restrict
+							ON UPDATE restrict,
+	title					text,
+	fts						tsvector,
+	created					timestamp default now(),
+	modified				timestamp
 );
 
 COMMENT ON TABLE node IS 'Node';
@@ -58,17 +63,17 @@ COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE path (
-	id								 serial NOT NULL PRIMARY KEY,
-	parent_id					 int REFERENCES path(id)
-									 ON DELETE cascade
-									 ON UPDATE cascade,
-	part							 text,
-	node_path				 text[],
-	node_id					 int REFERENCES node
-									 ON DELETE cascade
-									 ON UPDATE cascade,
-	created					 timestamp default now(),
-	modified					 timestamp,
+	id						serial NOT NULL PRIMARY KEY,
+	parent_id				int REFERENCES path(id)
+							ON DELETE cascade
+							ON UPDATE cascade,
+	part					text,
+	node_path				text[],
+	node_id					int REFERENCES node
+							ON DELETE cascade
+							ON UPDATE cascade,
+	created					timestamp default now(),
+	modified				timestamp,
 	UNIQUE (parent_id, part),
 	UNIQUE (node_path)
 );
