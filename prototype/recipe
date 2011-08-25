@@ -8,7 +8,7 @@ use Jet::Context;
 
 use Data::Dumper;
 
-sub update_domain_recipe {
+sub update_person_recipe {
 	my $data = {
 		paths => {
 			upload => [
@@ -31,7 +31,7 @@ sub update_domain_recipe {
 		},
 	};
 	say STDERR Dumper( JSON->new->encode($data));
-	update_node('domain', $data);
+	update_node('person', $data);
 }
 
 sub update_album_recipe {
@@ -56,7 +56,7 @@ sub update_album_recipe {
 		},
 	};
 	say STDERR Dumper( JSON->new->encode($data));
-	update_node('album', $data);
+	update_node('photoalbum', $data);
 }
 
 sub update_node {
@@ -67,5 +67,5 @@ sub update_node {
 	say STDERR Dumper $recipe, $schema->find_basetype({name => 'domain'});
 }
 
-update_domain_recipe;
+update_person_recipe;
 update_album_recipe;

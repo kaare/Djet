@@ -11,7 +11,8 @@ CREATE TABLE person (
 							ON UPDATE cascade,
 	username				text,
 	userlogin				text,
-	password				text
+	password				text,
+	workalbum_id			int REFERENCES jet.node
 );
 
 CREATE VIEW person_view AS
@@ -59,20 +60,5 @@ WHERE
     b.name='usergroup';
 
 CREATE TRIGGER usergroup_view_insert INSTEAD OF INSERT ON usergroup_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
-
---
-
-CREATE TABLE useringroup (
-	userid					int NOT NULL
-							REFERENCES data.person
-							ON DELETE cascade
-							ON UPDATE cascade,
-	groupid					int NOT NULL
-							REFERENCES data.usergroup
-							ON DELETE cascade
-							ON UPDATE cascade,
-	created					timestamp default now(),
-	PRIMARY KEY (userid, groupid)
-);
 
 COMMIT;
