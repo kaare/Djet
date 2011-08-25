@@ -47,6 +47,11 @@ $node->descendants uses PostgreSQL's WITH RECURSIVE-construct or the node_path a
 There might be a case for choosing between returning Jet::Engine::Result and an array of Jet::Node
 Or refactor (and rename) Jet::Engine::Result to return an array of Jet::Engine::Row or Jet::Node;
 
+AAA
+---
+- Users, groups
+- ACL handling
+
 REST
 ----
 - Init: Examine headers. accept_content_type.
@@ -118,7 +123,8 @@ Result class
 ------------
 - Row maker - insert column accessors
   Perhaps use cases from some other classses
-  Moose::Meta::Class->create_anon_class 
+  http://search.cpan.org/dist/Moose/lib/Moose/Meta/Class.pm
+  Moose::Meta::Class->create or ->create_anon_class
   then $meta->add_attribute for each column
   then cache the result of that so you don't do it again next time you run the same query
 
