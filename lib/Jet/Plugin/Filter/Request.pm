@@ -32,7 +32,7 @@ sub data {
 	my $c = Jet::Context->instance();
 	my $method = $self->in->{method};
 	my $content_type = $self->in->{content_type};
-	my $req = $c->request->method;
+	my $req = $c->request;
 	return unless $method eq $req->method;
 	return unless $req->content_type =~ /$content_type/;
 

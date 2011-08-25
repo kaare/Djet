@@ -177,7 +177,6 @@ sub file_location {
 	return join '/', '', $basedir, $targetdir, $target_id, $self->row->get_column('filename');
 }
 
-
 __PACKAGE__->meta->make_immutable;
 
 __END__
