@@ -131,15 +131,14 @@ Return the children of the current node
 =cut
 
 sub children {
-	my ($self, $relation_name, $opt) = @_;
+	my ($self, %opt) = @_;
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
 	my $base_type = $self->basetype || return;
 
-	my $where = {
-		parent_id => $self->row->get_column('path_id'),
-	};
-	my $nodes = $schema->search_nodepath($base_type, $where);
+	my $parent_id = $self->row->get_column('path_id');
+	$opt{parent_id} = $parent_id;
+	my $nodes = $schema->search_nodepath($base_type, \%opt);
 	my %nodes;
 	for my $node (@$nodes) {
 		push @{ $nodes{$node->{base_type}} }, $node;
@@ -147,7 +146,8 @@ sub children {
 	my @result;
 	while (my ($base_type, $nodes) = each %nodes) {
 		for my $node (@{ $nodes }) {
-			$where = {
+			my $where = {
+				parent_id => $parent_id,
 				id => $node->{node_id},
 			};
 			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };

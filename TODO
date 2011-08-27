@@ -21,20 +21,20 @@ Stash
 
 Relations
 ---------
-$node->children 										all children
-$node->children('basetype')						all children with that basetype
+$node->children 							all children
+$node->children('basetype')					all children with that basetype
 $node->children([qw/type1 type2])			more basetypes
 $node->children('basetype', $opt)			with options
 
-$node->parent											most nodes have only one parent
-$node->parent											all parents
-$node->parents('basetype')						all parents with that basetype
+$node->parent								most nodes have only one parent
+$node->parent								all parents
+$node->parents('basetype')					all parents with that basetype
 $node->parents([qw/type1 type2])			more basetypes
-$node->parents('basetype', $opt)				with options
+$node->parents('basetype', $opt)			with options
 
-$node->descendants									all descendants
+$node->descendants							all descendants
 $node->descendants('basetype')				all descendants with that basetype
-$node->descendants([qw/type1 type2])	more basetypes
+$node->descendants([qw/type1 type2])		more basetypes
 $node->descendants('basetype', $opt)		with options
 
 $opt
@@ -113,6 +113,10 @@ Jet Schema
 - Recursion detection
   path1->path2->path3->path1 should be disallowed
   incl test
+- Reintroduce the idea of "components" (or just separate recipe out)
+  A basetype can have several paths
+  A basetype can have several components
+  A component can be active for one specific, more, or all REST types
 
 Engine class
 ------------
