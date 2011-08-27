@@ -45,6 +45,13 @@ sub update_person_recipe {
 					name => 'albums',
 				},
 			},
+			{
+				plugin => 'Node::Uniq',
+				in => {
+					nodes => 'albums',
+					name => 'albums',
+				},
+			},
 		],
 		paths => {
 			upload => [
