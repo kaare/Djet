@@ -10,6 +10,42 @@ use Data::Dumper;
 
 sub update_person_recipe {
 	my $data = {
+		steps => [
+			{
+				plugin => 'Node::Stash',
+				in => {
+					method => 'children',
+					params => {base_type => 'photoalbum'},
+					name => 'photoalbums',
+				},
+			},
+			{
+				plugin => 'Node::Stash',
+				in => {
+					method => 'parents',
+					params => {base_type => 'usergroup'},
+					name => 'parents',
+				},
+			},
+			{
+				plugin => 'Node::Stash',
+				in => {
+					container => 'stash',
+					nodes => 'parents',
+					method => 'children',
+					params => {base_type => 'photoalbum'},
+					name => 'groupalbums',
+				},
+			},
+			{
+				plugin => 'Node::Stitch',
+				in => {
+					nodes => [qw/photoalbums groupalbums/],
+					path => qq{children(base_type => 'photoalbum')},
+					name => 'albums',
+				},
+			},
+		],
 		paths => {
 			upload => [
 				{
