@@ -58,8 +58,8 @@ sub data {
 	given (ref $node) {
 		when ('ARRAY') {
 			for my $nod (@$node) {
-				while (my $n = $nod->next(1)) {
-					@nodes = (@nodes, @{ $n->$method(%$params)->rows });
+				for my $n (@$nod) {
+					@nodes = (@nodes, @{ $n->$method(%$params) });
 				}
 			}
 		};
