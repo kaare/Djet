@@ -58,12 +58,10 @@ sub data {
 	given (ref $node) {
 		when ('ARRAY') {
 			for my $nod (@$node) {
-				for my $n (@$nod) {
-					@nodes = (@nodes, @{ $n->$method(%$params) });
-				}
+				@nodes = (@nodes, @{ $nod->$method(%$params) });
 			}
 		};
-		when ('Jet::Node') { @nodes = $node->$method(%$params) };
+		when ('Jet::Node') { @nodes = @{ $node->$method(%$params) }};
 		when ('Jet::Engine::Result') {
 			while (my $n = $node->next(1)) {
 				@nodes = (@nodes, @{ $n->$method(%$params) });
