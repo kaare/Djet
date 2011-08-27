@@ -165,6 +165,44 @@ sub children {
 # stitch et resultobjekt sammen
 }
 
+=head2 parents
+
+Return the parents of the current node
+
+Required parameters:
+
+base_type
+
+=cut
+
+sub parents {
+	my ($self, %opt) = @_;
+	my $c = Jet::Context->instance();
+	my $schema = $c->schema;
+	my $parent_base_type = $opt{base_type} || return;
+
+	my $node_id = $self->row->get_column('id');
+	my $where = {
+		base_type => $self->basetype,
+		node_id => $node_id,
+	};
+	my $nodes = $schema->search_nodepath($self->basetype, \%opt);
+	my %nodes;
+	for my $node (@$nodes) {
+		push @{ $nodes{$node->{base_type}} }, $node;
+	}
+	my @result;
+	while (my ($base_type, $nodes) = each %nodes) {
+		for my $node (@{ $nodes }) {
+			$where = {
+				id => $node->{node_id},
+			};
+			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
+		}
+	}
+	return $schema->result(\@result);
+}
+
 # XXX trait
 sub file_location {
 	my $self = shift;

@@ -13,8 +13,7 @@ use_ok('Jet::Node');
 my $c = Jet::Context->instance();
 my $schema = $c->schema;
 
-
-my $node_path = [''];
+my $node_path = ['','groups','rasmussen','kaare'];
 my $nodedata = $schema->find_node({ node_path =>  $node_path });
 my $node = Jet::Node->new(
 	row => $nodedata,
@@ -33,5 +32,7 @@ say 'x->' . $xscratch->get_column('title');
 while (my $child = $children->next) {
 	say 'child->'.$child->get_column('title');
 }
+my $parents = $node->parents(base_type => 'usergroup');
+say Dumper $parents;
 
 done_testing();
