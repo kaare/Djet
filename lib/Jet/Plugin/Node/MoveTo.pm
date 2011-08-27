@@ -11,7 +11,8 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Node - Represents Jet Nodes
+Jet::Plugin::Node::MoveTo - Move a node to a new parent
+
 
 =head1 SYNOPSIS
 
@@ -30,11 +31,6 @@ Where to find the child
 =head2 parent_id
 
 Where to find the parent. Default the current parent
-
-=head1 TODO
-
-Waiting for $c->rest with deserialized content. Instead of JSON, the content should be
-my $content = $c->rest->content;
 
 =cut
 
