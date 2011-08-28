@@ -52,6 +52,15 @@ sub update_person_recipe {
 					name => 'albums',
 				},
 			},
+			{
+				plugin => 'Node::Pick',
+				in => {
+					nodes => 'albums',
+					column => 'title',
+					value => 'Scratchpad',
+					name => 'scratch',
+				},
+			},
 		],
 		paths => {
 			upload => [
