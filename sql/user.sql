@@ -19,7 +19,7 @@ CREATE VIEW person_view AS
 SELECT
 	d.*,
 	n.title,
-	p.part,p.node_path,parent_id
+	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	person d
 JOIN
@@ -47,7 +47,7 @@ CREATE VIEW usergroup_view AS
 SELECT
 	d.*,
 	n.title,
-	p.part,p.node_path,parent_id
+	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	usergroup d
 JOIN

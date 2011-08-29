@@ -16,7 +16,7 @@ CREATE VIEW directory_view AS
 SELECT
 	d.*,
 	n.title,
-	p.part,p.node_path,parent_id
+	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	directory d
 JOIN
