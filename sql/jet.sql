@@ -146,7 +146,7 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
 
 	# data.<table>
-	my @jetcols = qw/title part node_path parent_id/; # columns to remove from data table
+	my @jetcols = qw/title part node_path parent_id path_id/; # columns to remove from data table
 	delete $data->{$_} for @jetcols;
 	$data->{id} = $node_id;
 	my $keys = join ',', keys %{$data};
@@ -168,7 +168,7 @@ $$
 		ELSE jet.get_calculated_node_path(s.parent_id) || s.part
 	END
 	FROM jet.path s
-	WHERE s.id = $1;
+	WHERE s.node_id = $1;
 $$
 LANGUAGE sql;
 
@@ -180,13 +180,13 @@ CREATE OR REPLACE FUNCTION trig_update_node_path() RETURNS trigger AS
 $$
 BEGIN
 	IF TG_OP = 'UPDATE' THEN
-		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.id != OLD.id OR NEW.part != OLD.part) THEN
+		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.node_id != OLD.node_id OR NEW.part != OLD.part) THEN
 			-- update all nodes that are children of this one including this one
-			UPDATE jet.path SET node_path = jet.get_calculated_node_path(id)
-				WHERE node_path @> path.node_path;
+--			UPDATE jet.path SET node_path = jet.get_calculated_node_path(node_id)
+--				WHERE node_path @> path.node_path;
 		END IF;
 	ELSIF TG_OP = 'INSERT' THEN
-		UPDATE jet.path SET node_path = jet.get_calculated_node_path(NEW.id) WHERE path.id = NEW.id;
+		UPDATE jet.path SET node_path = jet.get_calculated_node_path(NEW.node_id) WHERE path.node_id = NEW.node_id;
 	END IF;
   RETURN NEW;
 END
@@ -236,7 +236,7 @@ FOR EACH ROW EXECUTE PROCEDURE
 CREATE TRIGGER
 	trig01_update_node_path
 AFTER INSERT OR UPDATE OF
-	id, parent_id, part
+	node_id, parent_id, part
 ON
 	path
 FOR EACH ROW EXECUTE PROCEDURE

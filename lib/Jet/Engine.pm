@@ -212,15 +212,15 @@ sub insert {
 }
 
 sub move {
-	my ($self, $path_id, $parent_id) = @_;
+	my ($self, $node_id, $parent_id) = @_;
 	my $sql = qq{UPDATE
 		jet.path
 	SET
 		parent_id=?
 	WHERE
-		id=?
+		node_id=?
 	};
-	return  $self->_execute($sql, [$parent_id, $path_id]);
+	return  $self->_execute($sql, [$parent_id, $node_id]);
 }
 
 sub search_by_sql {

@@ -121,7 +121,7 @@ sub move_child {
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
 	my $opts = {returning => '*'};
-	my $success = $schema->move($child_id, $self->row->get_column('path_id'));
+	my $success = $schema->move($child_id, $self->row->get_column('id'));
 }
 
 =head2 children
@@ -136,7 +136,7 @@ sub children {
 	my $schema = $c->schema;
 	my $base_type = $self->basetype || return;
 
-	my $parent_id = $self->row->get_column('path_id');
+	my $parent_id = $self->row->get_column('id');
 	$opt{parent_id} = $parent_id;
 	my $nodes = $schema->search_nodepath($base_type, \%opt);
 	my %nodes;
