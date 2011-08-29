@@ -4,6 +4,7 @@ use 5.010;
 use Moose;
 use Data::Serializer;
 use Try::Tiny;
+use HTTP::Headers::Util qw(split_header_words);
 
 use Jet::Context;
 
@@ -39,9 +40,39 @@ has accept_types => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-# $c
-# $c->request->headers
-		return
+		my $c = Jet::Context->instance;
+		my $request = $c->request;
+		my $headers = $request->headers;
+		my %types;
+
+		# First, we use the content type in the HTTP Request.  It wins all.
+		$types{ $request->content_type } = 3 if $request->content_type;
+
+		if ($request->method eq "GET" && $request->param('content-type')) {
+			$types{ $request->param('content-type') } = 2;
+		}
+		if (my $accept_header = $headers->header('accept')) {
+	#        $self->accept_only(1) unless keys %types;
+			my $counter       = 0;
+
+			foreach my $pair ( split_header_words($accept_header) ) {
+				my ( $type, $qvalue ) = @{$pair}[ 0, 3 ];
+				next if $types{$type};
+
+				# cope with invalid (missing required q parameter) header like:
+				# application/json; charset="utf-8"
+				# http://tools.ietf.org/html/rfc2616#section-14.1
+				unless ( defined $pair->[2] && lc $pair->[2] eq 'q' ) {
+					$qvalue = undef;
+				}
+
+				unless ( defined $qvalue ) {
+					$qvalue = 1 - ( ++$counter / 1000 );
+				}
+				$types{$type} = sprintf( '%.3f', $qvalue );
+			}
+		}
+		return [ sort { $types{$b} <=> $types{$a} } keys %types ];
 	},
 );
 has type => (
@@ -50,7 +81,12 @@ has type => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-return 'JSON'; # XXX shortcircuiting until accept_types is in place
+		my $accept_type = $self->accept_types->[0];
+		my @accept_list = (qw/HTML JSON/); # Might be enum?
+		for my $ac (@accept_list) {
+			return $ac if $accept_type =~ m/$ac/i;
+		}
+		return $accept_list[0]; # fallback
 		return $self->accept_types->[0]; # XXX Must be Data::Serializer types
 	},
 );

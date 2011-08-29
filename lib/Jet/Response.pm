@@ -50,7 +50,8 @@ Chooses the output renderer based on the requested response types
 
 sub render {
 	my $self = shift;
-	$self->render_html; # XXX We can only do html for now
+	my $c = Jet::Context->instance;
+	$self->render_html if $c->rest->type eq 'HTML'; # XXX We can only do html for now
 }
 
 =head2 render_html
