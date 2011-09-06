@@ -66,8 +66,12 @@ sub update_person_recipe {
 				plugin => 'Node::New',
 				in => {
 					container => 'rest',
-					title => 'albumname',
 					basetype => 'photoalbum',
+					names => {
+						albumname => 'albumname',
+						part => 'albumname',
+						title => 'albumname',
+					},
 				},
 			},
 		],

@@ -27,18 +27,22 @@ Where to find the parent. Default the current parent
 
 =cut
 
-# XXX TODO names of other data items
-
 sub data {
 	my $self = shift;
 	my $c = Jet::Context->instance();
 	my $container = $self->in->{container} && $self->in->{container} eq 'stash' ? $c->stash : $c;
-	my $title_name = $self->in->{title};
-	my $title = $c->request->param($title_name);
 	my $basetype = $self->in->{basetype};
-	return unless $basetype and $title;
+	my $names = $self->in->{names};
+	return unless $basetype and $names->{title};
 
-	$c->node->add_child({basetype => $basetype, title => $title})
+	my %data;
+	$data{$_} = $c->request->param($names->{$_}) for keys %$names;
+	if ($data{part}) {
+		$data{part} = lc $data{part};
+		$data{part} =~ s/\s+//g;
+	}
+	$data{basetype} //= $basetype;
+	$c->node->add_child(\%data)
 }
 
 no Moose::Role;
