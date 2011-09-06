@@ -61,6 +61,15 @@ sub update_person_recipe {
 					name => 'scratch',
 				},
 			},
+			{
+				verb => 'PUT',
+				plugin => 'Node::New',
+				in => {
+					container => 'rest',
+					title => 'albumname',
+					basetype => 'photoalbum',
+				},
+			},
 		],
 		paths => {
 			upload => [
@@ -91,6 +100,7 @@ sub update_album_recipe {
 		steps => [
 			{
 				plugin => 'Filter::Request',
+				verb => 'POST',
 				in => {
 					method => 'POST',
 					content_type => 'application/json',
