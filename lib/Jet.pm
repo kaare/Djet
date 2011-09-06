@@ -124,7 +124,7 @@ sub go {
 	for my $step (@$steps) {
 		my $plugin_name = "Jet::Plugin::$step->{plugin}";
 		eval "require $plugin_name" or next;
-
+		next if $step->{verb} and !($c->rest->verb ~~ $step->{verb});
 		my $plugin = $plugin_name->new(
 			in => $step->{in},
 		);
