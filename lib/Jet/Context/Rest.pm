@@ -103,6 +103,17 @@ has serializer => (
 		);
 	},
 );
+has verb => (
+	isa => 'Str',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		my $c = Jet::Context->instance;
+		# Methods PUT, DELETE can be tunnelled through POST
+		# XXX For safer handling, add tests for POST method and PUT, DELETE value
+		return $c->request->param('_method') || $c->request->method || '';
+	},
+);
 has content => (
 #	isa => 'Str', # XXX Can we have a constraint?
 	is => 'ro',
