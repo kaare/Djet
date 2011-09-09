@@ -33,9 +33,9 @@ Which nodes to start from
 
 default node
 
-=head2 path
+=head2 params
 
-Path expression to use
+Param expression to use
 
 =head2 name
 

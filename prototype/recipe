@@ -12,6 +12,19 @@ sub update_person_recipe {
 	my $data = {
 		steps => [
 			{
+				verb => 'PUT',
+				plugin => 'Node::New',
+				in => {
+					container => 'rest',
+					basetype => 'photoalbum',
+					names => {
+						albumname => 'albumname',
+						part => 'albumname',
+						title => 'albumname',
+					},
+				},
+			},
+			{
 				plugin => 'Node::Stash',
 				in => {
 					method => 'children',
@@ -61,28 +74,9 @@ sub update_person_recipe {
 					name => 'scratch',
 				},
 			},
-			{
-				verb => 'PUT',
-				plugin => 'Node::New',
-				in => {
-					container => 'rest',
-					basetype => 'photoalbum',
-					names => {
-						albumname => 'albumname',
-						part => 'albumname',
-						title => 'albumname',
-					},
-				},
-			},
 		],
 		paths => {
 			upload => [
-				{
-					plugin => 'Findnode',
-					in => {
-						id => 'workalbum_id',
-					},
-				},
 				{
 					plugin => 'File::Upload',
 					in => {
