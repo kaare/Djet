@@ -11,7 +11,11 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet - Faster than an AWE2
+Jet
+
+=head1 DESCRIPTION
+
+Faster than an AWE2
 
 =head1 SYNOPSIS
 
@@ -126,7 +130,7 @@ sub go {
 		eval "require $plugin_name" or next;
 		next if $step->{verb} and !($c->rest->verb ~~ $step->{verb});
 		my $plugin = $plugin_name->new(
-			in => $step->{in},
+			params => $step,
 		);
 		$plugin->can('setup') && $plugin->setup;
 		# See if plugin can data and do it. Break out if there's nothing returned
