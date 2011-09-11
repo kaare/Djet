@@ -4,7 +4,9 @@ namespace::autoclean
 
 Template searching
 ------------------
-- templates/basetypes
+- Basetype root: templates/basetypes
+- Name: <basetype>/<templatename>, default index.tx
+- Example: templates/basetypes/domain/index.tx
 - Standard templates in Jet with File::ShareDir
 - Set path as e.g. Text::Xslate->new( path => \@path );
 - Should probably be by type in config file
@@ -12,6 +14,7 @@ Template searching
     html
       path
       suffix
+
 
 Stash
 -----
@@ -91,6 +94,8 @@ Caching
 - Mark page as cachable
   Render first time
   Get from cache and compare expiration time
+- Mark recipe step as cacable
+  cache => {name => 'foo', expiration => bar}
 
 Jet Schema
 ----------
@@ -256,6 +261,9 @@ Recipes
   name the recipe
   cache the recipe in context->recipes
   A load or register method to init the plugin methods
+- External help
+  https://metacpan.org/module/PNI
+  https://metacpan.org/module/Thorium
 
 Data Repository
 ---------------
