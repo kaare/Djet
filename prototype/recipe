@@ -14,9 +14,10 @@ sub update_person_recipe {
 			{
 				verb => 'PUT',
 				plugin => 'Node::New',
-				in => {
-					container => 'rest',
+				static => {
 					basetype => 'photoalbum',
+				},
+				content => {
 					names => {
 						albumname => 'albumname',
 						part => 'albumname',
@@ -26,7 +27,7 @@ sub update_person_recipe {
 			},
 			{
 				plugin => 'Node::Stash',
-				in => {
+				static => {
 					method => 'children',
 					params => {base_type => 'photoalbum'},
 					name => 'photoalbums',
@@ -34,7 +35,7 @@ sub update_person_recipe {
 			},
 			{
 				plugin => 'Node::Stash',
-				in => {
+				static => {
 					method => 'parents',
 					params => {base_type => 'usergroup'},
 					name => 'parents',
@@ -42,9 +43,10 @@ sub update_person_recipe {
 			},
 			{
 				plugin => 'Node::Stash',
-				in => {
-					container => 'stash',
+				stash => {
 					nodes => 'parents',
+				},
+				static => {
 					method => 'children',
 					params => {base_type => 'photoalbum'},
 					name => 'groupalbums',
@@ -52,23 +54,29 @@ sub update_person_recipe {
 			},
 			{
 				plugin => 'Node::Stitch',
-				in => {
+				stash => {
 					nodes => [qw/photoalbums groupalbums/],
+				},
+				static => {
 					path => qq{children(base_type => 'photoalbum')},
 					name => 'albums',
 				},
 			},
 			{
 				plugin => 'Node::Uniq',
-				in => {
+				stash => {
 					nodes => 'albums',
+				},
+				static => {
 					name => 'albums',
 				},
 			},
 			{
 				plugin => 'Node::Pick',
-				in => {
+				stash => {
 					nodes => 'albums',
+				},
+				static => {
 					column => 'title',
 					value => 'Scratchpad',
 					name => 'scratch',
@@ -79,7 +87,7 @@ sub update_person_recipe {
 			upload => [
 				{
 					plugin => 'File::Upload',
-					in => {
+					static => {
 						parent_id => 'workalbum_id',
 					},
 				},
@@ -99,14 +107,14 @@ sub update_album_recipe {
 			{
 				plugin => 'Filter::Request',
 				verb => 'POST',
-				in => {
+				static => {
 					method => 'POST',
 					content_type => 'application/json',
 				},
 			},
 			{
 				plugin => 'Node::MoveTo',
-				in => {
+				content => {
 					child_id => 'content.photo_id',
 				},
 			},

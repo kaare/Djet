@@ -45,30 +45,22 @@ What name to use for the result in the stash
 
 sub data {
 	my $self = shift;
-	my $c = Jet::Context->instance();
-	my $stash = $c->stash;
-	# Container is stash or context (default)
-	my $container = $self->in->{container} && $self->in->{container} eq 'stash' ? $c->stash : $c;
-	my $nodes = $self->in->{nodes} || 'node';
-	my $method = $self->in->{method};
-	my $params = $self->in->{params};
-	my $name = $self->in->{name};
+	my $parms = $self->parameters;
+	my $node_name = $parms->{nodes} || 'node';
+	my $method = $parms->{method};
+	my $params = $parms->{params};
+	my $name = $parms->{name};
 	my @nodes;
-	my $node = ref $container eq 'Jet::Context' ? $container->$nodes : $container->{$nodes};
-	given (ref $node) {
+	my $nodes = $self->node;#ref $container eq 'Jet::Context' ? $container->$nodes : $container->{$nodes};
+	given (ref $nodes) {
 		when ('ARRAY') {
-			for my $nod (@$node) {
-				@nodes = (@nodes, @{ $nod->$method(%$params) });
+			for my $node (@$nodes) {
+				@nodes = (@nodes, @{ $node->$method(%$params) });
 			}
 		};
-		when ('Jet::Node') { @nodes = @{ $node->$method(%$params) }};
-		when ('Jet::Engine::Result') {
-			while (my $n = $node->next(1)) {
-				@nodes = (@nodes, @{ $n->$method(%$params) });
-			}
-		};
+		when ('Jet::Node') { @nodes = @{ $nodes->$method(%$params) }};
 	}
-	$stash->{$name} = \@nodes;
+	$self->stash->{$name} = \@nodes;
 }
 
 no Moose::Role;

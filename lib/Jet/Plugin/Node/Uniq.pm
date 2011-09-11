@@ -43,14 +43,12 @@ container should be per node
 
 sub data {
 	my $self = shift;
-	my $c = Jet::Context->instance();
-	my $stash = $c->stash;
-	my $container = $self->in->{container} && $self->in->{container} eq 'container' ? $c : $c->stash;
-	my $nodes = $self->in->{nodes};
-	my $name = $self->in->{name};
+	my $parms = $self->parameters;
+	my $nodes = $parms->{nodes};
+	my $name = $parms->{name};
 	my %node_ids;
-	my @nodes = grep { my $node_id = $_->row->get_column('node_id');my $ok = !defined($node_ids{$node_id}); $node_ids{$node_id} = 1; $ok } @{ $container->{$nodes} };
-	$stash->{$name} = \@nodes;
+	my @nodes = grep { my $node_id = $_->row->get_column('node_id');my $ok = !defined($node_ids{$node_id}); $node_ids{$node_id} = 1; $ok } @{ $nodes };
+	$self->stash->{$name} = \@nodes;
 }
 
 no Moose::Role;

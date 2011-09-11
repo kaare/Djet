@@ -29,20 +29,19 @@ Where to find the parent. Default the current parent
 
 sub data {
 	my $self = shift;
-	my $c = Jet::Context->instance();
-	my $container = $self->in->{container} && $self->in->{container} eq 'stash' ? $c->stash : $c;
-	my $basetype = $self->in->{basetype};
-	my $names = $self->in->{names};
+	my $parms = $self->parameters;
+	my $basetype = $parms->{basetype};
+	my $names = $parms->{names};
 	return unless $basetype and $names->{title};
 
 	my %data;
-	$data{$_} = $c->request->param($names->{$_}) for keys %$names;
+	$data{$_} = $parms->($names->{$_}) for keys %$names;
 	if ($data{part}) {
 		$data{part} = lc $data{part};
 		$data{part} =~ s/\s+//g;
 	}
 	$data{basetype} //= $basetype;
-	$c->node->add_child(\%data)
+	$self->node->add_child(\%data)
 }
 
 no Moose::Role;

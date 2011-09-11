@@ -43,17 +43,16 @@ What name to use for the result in the stash
 
 sub data {
 	my $self = shift;
-	my $c = Jet::Context->instance();
-	my $stash = $c->stash;
-	my $nodes = $self->in->{nodes};
-	my $column = $self->in->{column};
-	my $value = $self->in->{value};
-	my $name = $self->in->{name};
-	return unless $stash->{$nodes} and ref $stash->{$nodes} eq 'ARRAY';
+	my $parms = $self->parameters;
+	my $nodes = $parms->{nodes};
+	my $column = $parms->{column};
+	my $value = $parms->{value};
+	my $name = $parms->{name};
+	return unless $nodes and ref $nodes eq 'ARRAY';
 
 	my $node;
-	$stash->{$nodes} = [ grep {	my $ok = 1;if ($_->row->get_column($column) eq $value){$node = $_;$ok = 0};$ok} @{ $stash->{$nodes} }] ;
-	$stash->{$name} = $node;
+	$self->stash->{$nodes} = [ grep {	my $ok = 1;if ($_->row->get_column($column) eq $value){$node = $_;$ok = 0};$ok} @{ $nodes }] ;
+	$self->stash->{$name} = $node;
 }
 
 no Moose::Role;
