@@ -115,7 +115,7 @@ sub update_album_recipe {
 			{
 				plugin => 'Node::MoveTo',
 				content => {
-					child_id => 'content.photo_id',
+					child_id => 'photo_id',
 				},
 			},
 		],
