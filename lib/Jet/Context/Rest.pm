@@ -114,19 +114,18 @@ has verb => (
 		return $c->request->param('_method') || $c->request->method || '';
 	},
 );
-has content => (
-#	isa => 'Str', # XXX Can we have a constraint?
+has parameters => (
+	isa => 'Hash::MultiValue',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return unless $self->serializer;
-
 		my $c = Jet::Context->instance;
-		my $content = $c->request->content;
 		my $result;
 		try {
-			$result = $self->serializer->raw_deserialize($content)
+			$result = $self->type eq 'HTML' ?
+				$c->request->parameters :
+				Hash::MultiValue->new($self->serializer->raw_deserialize($c->request->content));
 		} catch {
 			warn "Couldn't serialize data with " . $self->type;
 		};

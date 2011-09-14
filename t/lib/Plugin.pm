@@ -20,7 +20,7 @@ sub plugin : Test(7) {
 	$mockrest->mock('verb', sub {
 		return 'POST';
 	});
-	$mockrest->mock('content', sub {
+	$mockrest->mock('parameters', sub {
 		return {
 			child_id => 2,
 			albumname => 'alabuma',

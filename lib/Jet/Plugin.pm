@@ -69,7 +69,7 @@ has 'parameters' => (
 		my $self = shift;
 		my $c = Jet::Context->instance;
 		my $stash = $c->stash;
-		my $content = $c->rest->content;
+		my $content = $c->rest->parameters;
 		my $vars;
 		my $stash_params = $self->params->{stash};
 		$vars->{$_} = $self->_parse_params($stash, $_, $stash_params->{$_}) for keys %$stash_params;
@@ -106,7 +106,7 @@ sub _parse_params {
 	my ($self, $container, $key, $params) = @_;
 	given (ref $params) {
 		when ('') {
-			return $container->{$key};
+			return $container->{$params};
 		}
 		when ('HASH') {
 			my $var;
