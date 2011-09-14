@@ -46,7 +46,9 @@ sub data {
 	my $parms = $self->parameters;
 	my $nodes = $parms->{nodes};
 	my $name = $parms->{name};
-	$self->stash->{$name} = [values @$nodes];
+	my @nodes;
+	@nodes = (@nodes, @$_) for values %$nodes;
+	$self->stash->{$name} = \@nodes;
 }
 
 no Moose::Role;

@@ -47,7 +47,12 @@ sub data {
 	my $nodes = $parms->{nodes};
 	my $name = $parms->{name};
 	my %node_ids;
-	my @nodes = grep { my $node_id = $_->row->get_column('node_id');my $ok = !defined($node_ids{$node_id}); $node_ids{$node_id} = 1; $ok } @{ $nodes };
+	my @nodes = grep {
+		my $node_id = $_->row->get_column('node_id');
+		my $ok = !defined($node_ids{$node_id});
+		$node_ids{$node_id} = 1;
+		$ok
+	} @{ $nodes };
 	$self->stash->{$name} = \@nodes;
 }
 

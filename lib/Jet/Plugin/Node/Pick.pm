@@ -39,6 +39,10 @@ The key value
 
 What name to use for the result in the stash
 
+=head2 remainder
+
+Where to put the rest of the list after the node has been picked
+
 =cut
 
 sub data {
@@ -48,11 +52,20 @@ sub data {
 	my $column = $parms->{column};
 	my $value = $parms->{value};
 	my $name = $parms->{name};
+	my $remainder_name = $parms->{remainder};
 	return unless $nodes and ref $nodes eq 'ARRAY';
 
 	my $node;
-	$self->stash->{$nodes} = [ grep {	my $ok = 1;if ($_->row->get_column($column) eq $value){$node = $_;$ok = 0};$ok} @{ $nodes }] ;
+	my $remainder = [ grep {
+		my $ok = 1;
+		if ($_->row->get_column($column) eq $value) {
+			$node = $_;
+			$ok = 0
+		};
+		$ok
+	} @{ $nodes }];
 	$self->stash->{$name} = $node;
+	$self->stash->{$remainder_name} = $remainder if $remainder;
 }
 
 no Moose::Role;

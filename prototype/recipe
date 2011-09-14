@@ -80,6 +80,7 @@ sub update_person_recipe {
 					column => 'title',
 					value => 'Scratchpad',
 					name => 'scratch',
+					remainder => 'albums',
 				},
 			},
 		],

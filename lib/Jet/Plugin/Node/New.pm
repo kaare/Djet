@@ -34,8 +34,7 @@ sub data {
 	my $names = $parms->{names};
 	return unless $basetype and $names->{title};
 
-	my %data;
-	$data{$_} = $parms->($names->{$_}) for keys %$names;
+	my %data = %$names;
 	if ($data{part}) {
 		$data{part} = lc $data{part};
 		$data{part} =~ s/\s+//g;
