@@ -177,7 +177,7 @@ sub search {
 		Carp::croak("No such table $table_name");
 	}
 
-	my @column_names = (qw /title parent_id/, map { $_->name } $table->columns ); # XXX view columns should be configurable
+	my @column_names = (qw /title node_path parent_id/, map { $_->name } $table->columns ); # XXX view columns should be configurable
 	my ($sql, @binds) = $self->sql_builder->select(
 		"data.$table_name\_view",
 		\@column_names,

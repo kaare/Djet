@@ -6,25 +6,36 @@ use Plack::Builder;
 
 use Jet;
 
-my $machine = Jet->new;
-my $app = sub { $machine->run_psgi(@_) };
+my $app = sub {
+	my $env = shift;
+	if ($env->{'psgix.session'}{user_id}) {
+		my $machine = Jet->new;
+		$machine->run_psgi($env, @_);
+	} else {
+		return [ 302, { 'Location' => '/login', }, [ ] ];
+	}
+};
 
 sub check_pass {
 	my( $username, $pass ) = @_;
-	return $username eq $pass;
+	my $machine = Jet->new;
+	my $person = $machine->login($username, $pass);
+	return unless defined $person;
+	return {user_id => $username, redir_to => join '/', @{ $person->{node_path} }};
 }
 
 builder {
 #	enable 'Debug',
 #		panels =>[qw/ DBITrace Environment Memory ModuleVersions PerlConfig Response Timer/];
 #	enable 'Debug::Profiler::NYTProf';
-#	enable 'Debug::DBIProfile', profile => 2;
+#	enable 'Debug::DBIProfile',
+#		profile => 2;
 #	enable 'InteractiveDebugger';
-#	enable 'Session',
-#		store => 'File';
-#	enable 'Auth::Form',
-#		authenticator => \&check_pass;
-	enable "Plack::Middleware::Static",
+	enable 'Session',
+		store => 'File';
+	enable 'Auth::Form',
+		authenticator => \&check_pass;
+	enable 'Static',
 		path => qr{^/(images|js|css)/}, root => './public/';
 	$app;
 };
