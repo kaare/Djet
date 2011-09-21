@@ -120,24 +120,43 @@ sub go {
 	my $c = Jet::Context->instance;
 	my $node = $c->node;
 	my $recipe = $c->recipe;
-# XXX
 	my $steps = $c->node->endpath ? 
 		$recipe->{paths}{$c->node->endpath} :
 		$recipe->{steps};
-# XXX
 	for my $step (@$steps) {
 		my $plugin_name = "Jet::Plugin::$step->{plugin}";
+		print STDERR "\n$plugin_name: ";
 		eval "require $plugin_name" or next;
+		print STDERR "found ";
 		next if $step->{verb} and !($c->rest->verb ~~ $step->{verb});
+		print STDERR "rest_allowed ";
 		my $plugin = $plugin_name->new(
 			params => $step,
 		);
 		$plugin->can('setup') && $plugin->setup;
+		print STDERR "can ";
 		# See if plugin can data and do it. Break out if there's nothing returned
 		$plugin->can('data') && last unless $plugin->data;
+		print STDERR "executed ";
 	}
-# XXX
 	return;
+}
+
+=head2 login
+
+Checks the person data table and returns true if there is a match
+
+=cut
+
+# XXX Role
+
+sub login {
+	my ($self, $login, $pwd) = @_;
+	my $c = Jet::Context->instance;
+	my $schema = $c->schema;
+	my $person = $schema->search('person', { userlogin =>  $login, password => $pwd  });
+	return unless $person;
+	return $person->[0];
 }
 
 __PACKAGE__->meta->make_immutable;
