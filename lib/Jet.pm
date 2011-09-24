@@ -7,8 +7,6 @@ use Jet::Engine;
 use Jet::Node;
 use Jet::Context;
 
-with 'Jet::Role::Log';
-
 =head1 NAME
 
 Jet
@@ -24,6 +22,21 @@ Experimental module
 =head1 ATTRIBUTES
 
 =head1 METHODS
+
+=head2 BUILD
+
+
+=cut
+
+BEGIN {
+	my $self = shift;
+	with 'Jet::Role::Log';
+	my $c = Jet::Context->instance;
+	my @roles = ref $c->config->options->{role} ? @{ $c->config->options->{role} }: ($c->config->options->{role});
+	with ( map "Jet::Role::$_", @roles );
+}
+
+
 
 =head2 run_psgi
 
@@ -140,23 +153,6 @@ sub go {
 		print STDERR "executed ";
 	}
 	return;
-}
-
-=head2 login
-
-Checks the person data table and returns true if there is a match
-
-=cut
-
-# XXX Role
-
-sub login {
-	my ($self, $login, $pwd) = @_;
-	my $c = Jet::Context->instance;
-	my $schema = $c->schema;
-	my $person = $schema->search('person', { userlogin =>  $login, password => $pwd  });
-	return unless $person;
-	return $person->[0];
 }
 
 __PACKAGE__->meta->make_immutable;
