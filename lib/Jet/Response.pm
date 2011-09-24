@@ -70,7 +70,7 @@ sub render_html {
 		$recipe->{html_templates}{$c->node->endpath} :
 		$recipe->{html_template};
 	$template_name ||= $row->get_column('base_type');
-	my $template = $c->config->{config}{template_path} . $template_name . $c->config->{config}{template_suffix};
+	my $template = $c->config->jet->{template_path} . $template_name . $c->config->jet->{template_suffix};
 	$c->stash->{node} = $c->node;
 	my $output = $self->tx->render($template, $c->stash);
 	$self->output([ $output ]);

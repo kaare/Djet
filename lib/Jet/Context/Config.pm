@@ -28,8 +28,23 @@ has config => (
 			use_ext => 1,
 			flatten_to_hash => 1,
 		});
-		my $config = $config_total->{'etc/jet.conf'};
-		return $config;
+		return $config_total;
+	},
+);
+has jet => (
+	isa => 'HashRef',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		return $self->config->{'etc/jet.conf'};
+	},
+);
+has options => (
+	isa => 'HashRef',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		return $self->config->{'etc/options.conf'};
 	},
 );
 

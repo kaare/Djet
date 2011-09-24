@@ -207,7 +207,7 @@ sub parents {
 sub file_location {
 	my $self = shift;
 	my $c = Jet::Context->instance();
-	my $basedir = $c->config->{config}{paths}{image}{url};
+	my $basedir = $c->config->jet->{paths}{image}{url};
 	my $target_id = $self->row->get_column('id');
 	my $td = substr($target_id,-4);
 	$td .= '_' x ( 4 - length( $td ) );
