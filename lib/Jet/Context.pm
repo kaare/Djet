@@ -71,7 +71,7 @@ has schema => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my @connect_info = @{ $self->config->{config}{connect_info} };
+		my @connect_info = @{ $self->config->jet->{connect_info} };
 		my %connect_info;
 		$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
 		return Jet::Engine->new(%connect_info);
@@ -83,7 +83,7 @@ has cache => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return CHI->new( %{ $self->config->{cache} } );
+		return CHI->new( %{ $self->jet->{cache} } );
 	},
 );
 has basetypes => (

@@ -18,7 +18,7 @@ use Jet::Node;
 my $parent = Jet::Node->new(
 	row => $schema->find_node({ path_id =>  $parent_id })
 );
-	my $basedir = $c->config->{config}{paths}{image}{file};
+	my $basedir = $c->config->jet->{paths}{image}{file};
 	my $req = $c->request;
 	for my $upload ($req->uploads->get_all('files')) {
 		my $uploadfile = $upload->path;
