@@ -47,8 +47,8 @@ $opt
 
 $node->descendants uses PostgreSQL's WITH RECURSIVE-construct or the node_path array (making use of the gin index)
 
-There might be a case for choosing between returning Jet::Engine::Result and an array of Jet::Node
-Or refactor (and rename) Jet::Engine::Result to return an array of Jet::Engine::Row or Jet::Node;
+There might be a case for choosing between returning Jet::Stuff::Result and an array of Jet::Node
+Or refactor (and rename) Jet::Stuff::Result to return an array of Jet::Stuff::Row or Jet::Node;
 
 AAA
 ---
@@ -123,7 +123,7 @@ Jet Schema
   A basetype can have several components
   A component can be active for one specific, more, or all REST types
 
-Engine class
+Stuff class
 ------------
 - delete, update
 - clean out unused methods

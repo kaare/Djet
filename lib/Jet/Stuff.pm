@@ -1,4 +1,4 @@
-package Jet::Engine;
+package Jet::Stuff;
 
 use 5.010;
 use Moose;
@@ -7,10 +7,10 @@ use DBI;
 use DBIx::TransactionManager 1.06;
 use JSON;
 
-use Jet::Engine::Loader;
-use Jet::Engine::Result;
-use Jet::Engine::QueryBuilder;
-# use Jet::Engine::Schema;
+use Jet::Stuff::Loader;
+use Jet::Stuff::Result;
+use Jet::Stuff::QueryBuilder;
+# use Jet::Stuff::Schema;
 
 with 'Jet::Role::Log';
 
@@ -49,15 +49,15 @@ has 'schema'       => (
 	default => sub {
 		my $self = shift;
 		my $dbh = $self->dbh;
-		my $loader = Jet::Engine::Loader->new(dbh => $dbh);
+		my $loader = Jet::Stuff::Loader->new(dbh => $dbh);
 		return $loader->schema;
 	}
 );
 has 'sql_builder' => (
-	isa => 'Jet::Engine::QueryBuilder',
+	isa => 'Jet::Stuff::QueryBuilder',
 	is => 'ro',
 	default => sub {
-		Jet::Engine::QueryBuilder->new();
+		Jet::Stuff::QueryBuilder->new();
 	},
 	lazy => 1,
 );
@@ -117,7 +117,7 @@ sub find_node {
 	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
 	my $data = $self->single(sql => $sql, data => [ $node->{node_id} ]) || return;
 
-	return Jet::Engine::Row->new(row_data => { %$node, %$data }, table_name => $node->{base_type});
+	return Jet::Stuff::Row->new(row_data => { %$node, %$data }, table_name => $node->{base_type});
 }
 
 sub search {
@@ -178,8 +178,8 @@ sub search_by_sql {
 	$table_name ||= $self->_guess_table_name( $sql ); # XXX
 	my $sth = $self->_execute($sql, $bind);
 
-	my $result = Jet::Engine::Result->new(
-#		Engine           => $self,
+	my $result = Jet::Stuff::Result->new(
+#		Stuff           => $self,
 		rows             => $sth->fetchall_arrayref({}),
 		sql                => $sql,
 		table_name  => $table_name,
@@ -197,12 +197,12 @@ sub _execute { # XXX Redo. Not pretty
 
 sub row {
 	my ($self, $data, $table_name) = @_;
-	return Jet::Engine::Row->new(row_data => $data, table_name => $table_name);
+	return Jet::Stuff::Row->new(row_data => $data, table_name => $table_name);
 }
 
 sub result {
 	my ($self, $data) = @_;
-	return Jet::Engine::Result->new(rows => $data);
+	return Jet::Stuff::Result->new(rows => $data);
 }
 
 sub single {

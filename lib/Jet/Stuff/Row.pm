@@ -1,4 +1,4 @@
-package Jet::Engine::Row;
+package Jet::Stuff::Row;
 
 use 5.010;
 use Moose;
@@ -7,11 +7,11 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Engine::Row - Row Class for Jet::Engine
+Jet::Stuff::Row - Row Class for Jet::Stuff
 
 =head1 DESCRIPTION
 
-This is the Row class for L<Jet::Engine>.
+This is the Row class for L<Jet::Stuff>.
 
 =head1 SYNOPSIS
 

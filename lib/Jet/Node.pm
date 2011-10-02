@@ -18,7 +18,7 @@ Jet::Node - Represents Jet Nodes
 =cut
 
 has row => (
-	isa => 'Jet::Engine::Row',
+	isa => 'Jet::Stuff::Row',
 	is => 'ro',
 	writer => '_row',
 );
@@ -153,7 +153,7 @@ sub children {
 			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
 		}
 	}
-	return [ map {Jet::Node->new(row => Jet::Engine::Row->new(row_data => $_))} @result ];
+	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @result ];
 
 # XXX
 # Split in relations (base_type)
@@ -200,7 +200,7 @@ sub parents {
 			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
 		}
 	}
-	return [ map {Jet::Node->new(row => Jet::Engine::Row->new(row_data => $_))} @result ];
+	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @result ];
 }
 
 # XXX trait

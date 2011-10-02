@@ -3,7 +3,6 @@ package Jet;
 use 5.010;
 use Moose;
 use Plack::Request;
-use Jet::Engine;
 use Jet::Node;
 use Jet::Context;
 

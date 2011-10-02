@@ -1,4 +1,4 @@
-package Jet::Engine::Loader;
+package Jet::Stuff::Loader;
 
 use Moose;
 use DBIx::Inspector;

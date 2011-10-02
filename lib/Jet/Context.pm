@@ -6,7 +6,7 @@ use MooseX::Singleton;
 use CHI;
 use Jet::Context::Config;
 use Jet::Context::Rest;
-use Jet::Engine;
+use Jet::Stuff;
 use Jet::Response;
 
 with 'Jet::Role::Log';
@@ -66,7 +66,7 @@ has config => (
 	},
 );
 has schema => (
-	isa => 'Jet::Engine',
+	isa => 'Jet::Stuff',
 	is => 'rw',
 	lazy => 1,
 	default => sub {
@@ -74,7 +74,7 @@ has schema => (
 		my @connect_info = @{ $self->config->jet->{connect_info} };
 		my %connect_info;
 		$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-		return Jet::Engine->new(%connect_info);
+		return Jet::Stuff->new(%connect_info);
 	},
 );
 has cache => (

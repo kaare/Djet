@@ -6,7 +6,7 @@ use warnings;
 
 use Test::More;
 
-use_ok('Jet::Engine');
+use_ok('Jet::Stuff');
 
 my $dbh;
 
@@ -22,13 +22,13 @@ my %ci = (
 	},
 );
 
-ok(my $engine = Jet::Engine->new(%ci), 'Start your engines!');
-isa_ok($engine, 'Jet::Engine', 'It\'s a Plane, it\'s a bird. No...');
+ok(my $stuff = Jet::Stuff->new(%ci), 'Start your stuffs!');
+isa_ok($stuff, 'Jet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
 
-ok(my $rows = $engine->search('domain', {id => 1}), 'Search domain');
+ok(my $rows = $stuff->search('domain', {id => 1}), 'Search domain');
 use Data::Dumper;
 warn Dumper $rows;
-ok(my $result = $engine->result($rows), 'Result');
+ok(my $result = $stuff->result($rows), 'Result');
 warn Dumper $result->rows;
 
 my $row = $result->next;

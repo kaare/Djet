@@ -1,19 +1,19 @@
-package Jet::Engine::Result;
+package Jet::Stuff::Result;
 
 use 5.010;
 use Moose;
 
-use Jet::Engine::Row;
+use Jet::Stuff::Row;
 
 with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Engine::Result - Result Class for Jet::Engine
+Jet::Stuff::Result - Result Class for Jet::Stuff
 
 =head1 DESCRIPTION
 
-This is the Result class for L<Jet::Engine>.
+This is the Result class for L<Jet::Stuff>.
 
 Rows in a result set can be of different types. If table_name is given it is regardes as a default
 
@@ -93,7 +93,7 @@ sub next {
 		typetable => $self->_build_typetable($row_data),
 	};
 	$row_hash->{table_name} = $table_name if $table_name;
-	my $row = Jet::Engine::Row->new($row_hash);
+	my $row = Jet::Stuff::Row->new($row_hash);
 	return Jet::Node->new(
 		row  => $row,
 	) if $wanted;

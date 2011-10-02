@@ -3,7 +3,6 @@
 use 5.010;
 use JSON;
 
-use Jet::Engine;
 use Jet::Context;
 
 use Data::Dumper;
