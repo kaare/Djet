@@ -105,14 +105,7 @@ sub update_album_recipe {
 	my $data = {
 		steps => [
 			{
-				plugin => 'Filter::Request',
 				verb => 'POST',
-				static => {
-					method => 'POST',
-					content_type => 'application/json',
-				},
-			},
-			{
 				plugin => 'Node::MoveTo',
 				content => {
 					child_id => 'photo_id',
