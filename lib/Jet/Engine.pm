@@ -70,56 +70,6 @@ has 'json' => (
 	lazy => 1,
 );
 
-__PACKAGE__->meta->make_immutable;
-
-# forcefully connect
-sub connect {
-	my ($self, @args) = @_;
-
-	$self->in_transaction_check;
-
-	if (@args) {
-		$self->connect_info( \@args );
-	}
-	my $connect_info = $self->connect_info;
-	$connect_info->[3] = {
-		# basic defaults
-		AutoCommit => 1,
-		PrintError => 0,
-		RaiseError => 1,
-		%{ $connect_info->[3] || {} },
-	};
-
-	$self->{dbh} = eval { DBI->connect(@$connect_info) }
-		or Carp::croak("Connection error: " . ($@ || $DBI::errstr));
-	delete $self->{txn_manager};
-
-	if ( my $on_connect_do = $self->on_connect_do ) {
-		if (not ref($on_connect_do)) {
-			$self->do($on_connect_do);
-		} elsif (ref($on_connect_do) eq 'CODE') {
-			$on_connect_do->($self);
-		} elsif (ref($on_connect_do) eq 'ARRAY') {
-			$self->do($_) for @$on_connect_do;
-		} else {
-			Carp::croak('Invalid on_connect_do: '.ref($on_connect_do));
-		}
-	}
-
-	$self->_prepare_from_dbh;
-}
-
-sub reconnect {
-	my $self = shift;
-
-	if ($self->in_transaction) {
-		Carp::confess("Detected disconnected database during a transaction. Refusing to proceed");
-	}
-
-	$self->disconnect();
-	$self->connect(@_);
-}
-
 sub disconnect {
 	my $self = shift;
 	delete $self->{txn_manager};
@@ -282,32 +232,9 @@ sub select_all {
 	return ( \@result );
 }
 
-sub set_bind_type {
-	my ($self,$sth,$data) = @_;
-	for my $i (0..scalar(@$data)-1) {
-		next unless(ref($data->[$i]));
-
-		$sth->bind_param($i+1, undef, $data->[$i]->[1]);
-		$data->[$i] = $data->[$i]->[0];
-	}
-	return;
-}
-
-sub do {
-	my ($self, %args) = @_;
-	my $sth = $self->dbh->prepare($args{sql}) || return 0;
-
-	$sth->execute(@{$args{data}});
-	my $rows = $sth->rows;
-	$sth->finish();
-	return $rows;
-}
-
-sub update {
-	my $self = shift;
-	$self->do(@_);
-	return;
-}
+#
+# Notify methods
+#
 
 sub listen {
 	my ($self, %args) = @_;
@@ -358,17 +285,14 @@ sub set_listen {
 	return $notifies || [0,0];
 }
 
-sub task_id {
-	return $_[0]->{task_id} || confess "No task id";
-}
-
 # sub DESTROY {
 	# $_[0]->disconnect();
 	# return;
 # }
 
-#--------------------------------------------------------------------------------
+#
 # for transaction
+#
 
 sub in_transaction_check {
 	my $self = shift;
