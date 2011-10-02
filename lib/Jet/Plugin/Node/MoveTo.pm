@@ -36,10 +36,9 @@ Where to find the parent. Default the current parent
 
 sub data {
 	my $self = shift;
+	my $parms = $self->parameters;
+	my $child_id = $parms->{child_id};
 	my $c = Jet::Context->instance();
-	my ($container, $child_location) = split /\./, $self->in->{child_id};
-	my $content = $c->rest->content;
-	my $child_id = $content->{$child_location}; 
 	$c->node->move_child($child_id)
 }
 
