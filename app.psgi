@@ -21,7 +21,7 @@ sub check_pass {
 	my $machine = Jet->new;
 	my $person = $machine->login($username, $pass);
 	return unless defined $person;
-	return {user_id => $username, redir_to => join '/', @{ $person->{node_path} }};
+	return {user_id => $username, redir_to => join '/', @{ $person->{node_path} }, ''};
 }
 
 builder {
@@ -31,6 +31,8 @@ builder {
 #	enable 'Debug::DBIProfile',
 #		profile => 2;
 #	enable 'InteractiveDebugger';
+	enable 'Plack::Middleware::AccessLog::Timed',
+		format => '%v %h %l %u %t \"%r\" %>s %b %D';
 	enable 'Session',
 		store => 'File';
 	enable 'Auth::Form',
