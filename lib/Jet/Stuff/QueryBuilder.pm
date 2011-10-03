@@ -1,4 +1,4 @@
-package Jet::Engine::QueryBuilder;
+package Jet::Stuff::QueryBuilder;
 
 use 5.010;
 use Moose;

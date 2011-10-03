@@ -15,7 +15,7 @@ with 'Jet::Role::Log';
    <client_dir>/etc/somethińg
 4. What overrides what?
 5. module might be basenode instead?
-6. recipe may be better in ;Engine, where the current :Engine stuff belongs in Jet ?
+6. recipe may be better in ;Stuff, where the current :Stuff stuff belongs in Jet ?
 =cut
 
 has config => (

@@ -3,7 +3,6 @@ package Jet;
 use 5.010;
 use Moose;
 use Plack::Request;
-use Jet::Engine;
 use Jet::Node;
 use Jet::Context;
 
@@ -25,6 +24,7 @@ Experimental module
 
 =head2 BUILD
 
+Build the Jet with roles
 
 =cut
 
@@ -35,8 +35,6 @@ BEGIN {
 	my @roles = ref $c->config->options->{role} ? @{ $c->config->options->{role} }: ($c->config->options->{role});
 	with ( map "Jet::Role::$_", @roles );
 }
-
-
 
 =head2 run_psgi
 

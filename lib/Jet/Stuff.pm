@@ -1,4 +1,4 @@
-package Jet::Engine;
+package Jet::Stuff;
 
 use 5.010;
 use Moose;
@@ -7,10 +7,10 @@ use DBI;
 use DBIx::TransactionManager 1.06;
 use JSON;
 
-use Jet::Engine::Loader;
-use Jet::Engine::Result;
-use Jet::Engine::QueryBuilder;
-# use Jet::Engine::Schema;
+use Jet::Stuff::Loader;
+use Jet::Stuff::Result;
+use Jet::Stuff::QueryBuilder;
+# use Jet::Stuff::Schema;
 
 with 'Jet::Role::Log';
 
@@ -49,15 +49,15 @@ has 'schema'       => (
 	default => sub {
 		my $self = shift;
 		my $dbh = $self->dbh;
-		my $loader = Jet::Engine::Loader->new(dbh => $dbh);
+		my $loader = Jet::Stuff::Loader->new(dbh => $dbh);
 		return $loader->schema;
 	}
 );
 has 'sql_builder' => (
-	isa => 'Jet::Engine::QueryBuilder',
+	isa => 'Jet::Stuff::QueryBuilder',
 	is => 'ro',
 	default => sub {
-		Jet::Engine::QueryBuilder->new();
+		Jet::Stuff::QueryBuilder->new();
 	},
 	lazy => 1,
 );
@@ -69,56 +69,6 @@ has 'json' => (
 	},
 	lazy => 1,
 );
-
-__PACKAGE__->meta->make_immutable;
-
-# forcefully connect
-sub connect {
-	my ($self, @args) = @_;
-
-	$self->in_transaction_check;
-
-	if (@args) {
-		$self->connect_info( \@args );
-	}
-	my $connect_info = $self->connect_info;
-	$connect_info->[3] = {
-		# basic defaults
-		AutoCommit => 1,
-		PrintError => 0,
-		RaiseError => 1,
-		%{ $connect_info->[3] || {} },
-	};
-
-	$self->{dbh} = eval { DBI->connect(@$connect_info) }
-		or Carp::croak("Connection error: " . ($@ || $DBI::errstr));
-	delete $self->{txn_manager};
-
-	if ( my $on_connect_do = $self->on_connect_do ) {
-		if (not ref($on_connect_do)) {
-			$self->do($on_connect_do);
-		} elsif (ref($on_connect_do) eq 'CODE') {
-			$on_connect_do->($self);
-		} elsif (ref($on_connect_do) eq 'ARRAY') {
-			$self->do($_) for @$on_connect_do;
-		} else {
-			Carp::croak('Invalid on_connect_do: '.ref($on_connect_do));
-		}
-	}
-
-	$self->_prepare_from_dbh;
-}
-
-sub reconnect {
-	my $self = shift;
-
-	if ($self->in_transaction) {
-		Carp::confess("Detected disconnected database during a transaction. Refusing to proceed");
-	}
-
-	$self->disconnect();
-	$self->connect(@_);
-}
 
 sub disconnect {
 	my $self = shift;
@@ -167,7 +117,7 @@ sub find_node {
 	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
 	my $data = $self->single(sql => $sql, data => [ $node->{node_id} ]) || return;
 
-	return Jet::Engine::Row->new(row_data => { %$node, %$data }, table_name => $node->{base_type});
+	return Jet::Stuff::Row->new(row_data => { %$node, %$data }, table_name => $node->{base_type});
 }
 
 sub search {
@@ -228,8 +178,8 @@ sub search_by_sql {
 	$table_name ||= $self->_guess_table_name( $sql ); # XXX
 	my $sth = $self->_execute($sql, $bind);
 
-	my $result = Jet::Engine::Result->new(
-#		Engine           => $self,
+	my $result = Jet::Stuff::Result->new(
+#		Stuff           => $self,
 		rows             => $sth->fetchall_arrayref({}),
 		sql                => $sql,
 		table_name  => $table_name,
@@ -247,12 +197,12 @@ sub _execute { # XXX Redo. Not pretty
 
 sub row {
 	my ($self, $data, $table_name) = @_;
-	return Jet::Engine::Row->new(row_data => $data, table_name => $table_name);
+	return Jet::Stuff::Row->new(row_data => $data, table_name => $table_name);
 }
 
 sub result {
 	my ($self, $data) = @_;
-	return Jet::Engine::Result->new(rows => $data);
+	return Jet::Stuff::Result->new(rows => $data);
 }
 
 sub single {
@@ -282,32 +232,9 @@ sub select_all {
 	return ( \@result );
 }
 
-sub set_bind_type {
-	my ($self,$sth,$data) = @_;
-	for my $i (0..scalar(@$data)-1) {
-		next unless(ref($data->[$i]));
-
-		$sth->bind_param($i+1, undef, $data->[$i]->[1]);
-		$data->[$i] = $data->[$i]->[0];
-	}
-	return;
-}
-
-sub do {
-	my ($self, %args) = @_;
-	my $sth = $self->dbh->prepare($args{sql}) || return 0;
-
-	$sth->execute(@{$args{data}});
-	my $rows = $sth->rows;
-	$sth->finish();
-	return $rows;
-}
-
-sub update {
-	my $self = shift;
-	$self->do(@_);
-	return;
-}
+#
+# Notify methods
+#
 
 sub listen {
 	my ($self, %args) = @_;
@@ -358,17 +285,14 @@ sub set_listen {
 	return $notifies || [0,0];
 }
 
-sub task_id {
-	return $_[0]->{task_id} || confess "No task id";
-}
-
 # sub DESTROY {
 	# $_[0]->disconnect();
 	# return;
 # }
 
-#--------------------------------------------------------------------------------
+#
 # for transaction
+#
 
 sub in_transaction_check {
 	my $self = shift;

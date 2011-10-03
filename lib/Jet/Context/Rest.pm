@@ -125,7 +125,7 @@ has parameters => (
 		try {
 			$result = $self->type eq 'HTML' ?
 				$c->request->parameters :
-				Hash::MultiValue->new($self->serializer->raw_deserialize($c->request->content));
+				Hash::MultiValue->new(%{ $self->serializer->raw_deserialize($c->request->content) });
 		} catch {
 			warn "Couldn't serialize data with " . $self->type;
 		};
