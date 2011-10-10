@@ -9,8 +9,7 @@ use Test::Class::Load 't/lib';
 
 our $dbh;
 
-my $ok = startup(); 
-Test::Class->runtests() if $ok;
+Test::Class->runtests() if startup();
 
 sub db_name {'__jet::test__'};
 

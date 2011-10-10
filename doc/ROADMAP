@@ -1,12 +1,19 @@
 0.01
 - Plack
   User, group validation
+- Basic tests
+  Family::Photo data structure
+- Codebase
+  Cleanup e.g. Engine
+  Extensive method, parameter documentation
+
+0.02
 - Code
   namespace::autoclean
-- Functionality
-  search page
 - Documentation
   all methods
   all attributes
-- Tests
-  Family::Photo data structure
+
+0.xx
+- Functionality
+  search page
