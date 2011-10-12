@@ -135,19 +135,19 @@ sub go {
 		$recipe->{paths}{$c->node->endpath} :
 		$recipe->{steps};
 	for my $step (@$steps) {
-		my $plugin_name = "Jet::Plugin::$step->{plugin}";
-		print STDERR "\n$plugin_name: ";
-		eval "require $plugin_name" or next;
+		my $engine_name = "Jet::Engine::$step->{plugin}";
+		print STDERR "\n$engine_name: ";
+		eval "require $engine_name" or next;
 		print STDERR "found ";
 		next if $step->{verb} and !($c->rest->verb ~~ $step->{verb});
 		print STDERR "rest_allowed ";
-		my $plugin = $plugin_name->new(
+		my $engine = $engine_name->new(
 			params => $step,
 		);
-		$plugin->can('setup') && $plugin->setup;
+		$engine->can('setup') && $engine->setup;
 		print STDERR "can ";
 		# See if plugin can data and do it. Break out if there's nothing returned
-		$plugin->can('data') && last unless $plugin->data;
+		$engine->can('data') && last unless $engine->data;
 		print STDERR "executed ";
 	}
 	return;

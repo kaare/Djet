@@ -1,15 +1,15 @@
-package Jet::Plugin::Node::New;
+package Jet::Engine::Node::Uniq;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Plugin';
+extends 'Jet::Engine';
 
 with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Plugin::Node::New - Add a new node to a parent
+Jet::Node::Uniq - Only pass unique nodes
 
 =head1 SYNOPSIS
 
@@ -17,30 +17,43 @@ Jet::Plugin::Node::New - Add a new node to a parent
 
 =head2 data
 
-Moves a node to a new parent
+Only pass unique nodes
 
 =head1 PARAMETERS
 
-=head2 parent_id
+=head2 container
 
-Where to find the parent. Default the current parent
+What container holds the data to be uniqued 
+
+default stash
+
+=head2 nodes
+
+Which nodes to be uniqued
+
+=head2 name
+
+What name to use for the result in the stash
+
+=head2 TODO
+
+container should be per node
 
 =cut
 
 sub data {
 	my $self = shift;
 	my $parms = $self->parameters;
-	my $basetype = $parms->{basetype};
-	my $names = $parms->{names};
-	return unless $basetype and $names->{title};
-
-	my %data = %$names;
-	if ($data{part}) {
-		$data{part} = lc $data{part};
-		$data{part} =~ s/\s+//g;
-	}
-	$data{basetype} //= $basetype;
-	$self->node->add_child(\%data)
+	my $nodes = $parms->{nodes};
+	my $name = $parms->{name};
+	my %node_ids;
+	my @nodes = grep {
+		my $node_id = $_->row->get_column('node_id');
+		my $ok = !defined($node_ids{$node_id});
+		$node_ids{$node_id} = 1;
+		$ok
+	} @{ $nodes };
+	$self->stash->{$name} = \@nodes;
 }
 
 no Moose::Role;

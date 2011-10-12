@@ -1,9 +1,9 @@
-package Jet::Plugin::Test;
+package Jet::Engine::Test;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Plugin';
+extends 'Jet::Engine';
 
 use Data::Dumper;
 sub BUILD {
@@ -17,6 +17,6 @@ __PACKAGE__->meta->make_immutable;
 __END__
 =head1 NAME
 
-Jet::Plugin - Jet Plugin Base Class
+Jet::Engine - Jet Engine Base Class
 
 =head1 SYNOPSIS

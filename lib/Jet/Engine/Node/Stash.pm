@@ -1,9 +1,9 @@
-package Jet::Plugin::Node::Stash;
+package Jet::Engine::Node::Stash;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Plugin';
+extends 'Jet::Engine';
 
 with 'Jet::Role::Log';
 

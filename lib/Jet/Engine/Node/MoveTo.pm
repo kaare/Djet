@@ -1,17 +1,17 @@
-package Jet::Plugin::Node::MoveTo;
+package Jet::Engine::Node::MoveTo;
 
 use 5.010;
 use Moose;
 use File::Copy;
 use File::Path;
 
-extends 'Jet::Plugin';
+extends 'Jet::Engine';
 
 with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Plugin::Node::MoveTo - Move a node to a new parent
+Jet::Engine::Node::MoveTo - Move a node to a new parent
 
 
 =head1 SYNOPSIS

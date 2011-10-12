@@ -1,4 +1,4 @@
-package Jet::Plugin;
+package Jet::Engine;
 
 use 5.010;
 use Moose;
@@ -9,15 +9,15 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Plugin - Jet Plugin Base Class
+Jet::Engine - Jet Engine Base Class
 
 =head1 SYNOPSIS
 
-Jet::Plugin is the basic building block of all Jet Plugins.
+Jet::Engine is the basic building block of all Jet Engines.
 
-In your plugin you just write
+In your engine you just write
 
-extends 'Jet::Plugin';
+extends 'Jet::Engine';
 
 =head1 ATTRIBUTES
 

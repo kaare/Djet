@@ -1,4 +1,4 @@
-package Plugin;
+package Engine;
 
 use 5.010;
 use strict;
@@ -8,7 +8,7 @@ use Test::MockModule;
 
 use base 'Test::Class';
 
-sub plugin : Test(7) {
+sub engine : Test(7) {
 	my $self = shift;
 	# Setup mock module
 	my $mockrequest = Test::MockModule->new('Plack::Request');
@@ -44,9 +44,9 @@ sub plugin : Test(7) {
 	my $req = Plack::Request->new({});
 	$c->_request($req);
 	# Start testing
-	use_ok('Jet::Plugin');
+	use_ok('Jet::Engine');
 	my $params = {
-		plugin => 'Test::Plugin',
+		engine => 'Test::Engine',
 		content => {
 			child_id => 'photo_id',
 			names => {
@@ -65,8 +65,8 @@ sub plugin : Test(7) {
 			numbers => [qw/one two/],
 		},
 	};
-	ok(my $plugin = Jet::Plugin->new(params => $params), 'New plugin');
-	isa_ok($plugin, 'Jet::Plugin', 'Correct class');
+	ok(my $engine = Jet::Engine->new(params => $params), 'New engine');
+	isa_ok($engine, 'Jet::Engine', 'Correct class');
 	my $expected = {
 		params => {
 			base_type => 'photoalbum'
@@ -85,7 +85,7 @@ sub plugin : Test(7) {
 		method => 'children',
 		nodes => 'parents'
 	};
-	is_deeply($plugin->parameters, $expected, 'Plugin parameters are correct');
+	is_deeply($engine->parameters, $expected, 'Engine parameters are correct');
 };
 
 1;

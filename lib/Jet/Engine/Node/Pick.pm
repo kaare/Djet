@@ -1,15 +1,15 @@
-package Jet::Plugin::Node::Uniq;
+package Jet::Engine::Node::Pick;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Plugin';
+extends 'Jet::Engine';
 
 with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Node::Uniq - Only pass unique nodes
+Jet::Node::Pick - Pick a node from a stash array
 
 =head1 SYNOPSIS
 
@@ -17,27 +17,31 @@ Jet::Node::Uniq - Only pass unique nodes
 
 =head2 data
 
-Only pass unique nodes
+Pick a node from a stash array
+
+The node will be deleted from the array
 
 =head1 PARAMETERS
 
-=head2 container
-
-What container holds the data to be uniqued 
-
-default stash
-
 =head2 nodes
 
-Which nodes to be uniqued
+Which nodes to be Picked together
+
+=head2 column
+
+What column to use as key
+
+=head2 value
+
+The key value
 
 =head2 name
 
 What name to use for the result in the stash
 
-=head2 TODO
+=head2 remainder
 
-container should be per node
+Where to put the rest of the list after the node has been picked
 
 =cut
 
@@ -45,15 +49,23 @@ sub data {
 	my $self = shift;
 	my $parms = $self->parameters;
 	my $nodes = $parms->{nodes};
+	my $column = $parms->{column};
+	my $value = $parms->{value};
 	my $name = $parms->{name};
-	my %node_ids;
-	my @nodes = grep {
-		my $node_id = $_->row->get_column('node_id');
-		my $ok = !defined($node_ids{$node_id});
-		$node_ids{$node_id} = 1;
+	my $remainder_name = $parms->{remainder};
+	return unless $nodes and ref $nodes eq 'ARRAY';
+
+	my $node;
+	my $remainder = [ grep {
+		my $ok = 1;
+		if ($_->row->get_column($column) eq $value) {
+			$node = $_;
+			$ok = 0
+		};
 		$ok
-	} @{ $nodes };
-	$self->stash->{$name} = \@nodes;
+	} @{ $nodes }];
+	$self->stash->{$name} = $node;
+	$self->stash->{$remainder_name} = $remainder if $remainder;
 }
 
 no Moose::Role;
