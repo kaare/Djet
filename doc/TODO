@@ -4,9 +4,6 @@ namespace::autoclean
 
 Template searching
 ------------------
-- Basetype root: templates/basetypes
-- Name: <basetype>/<templatename>, default index.tx
-- Example: templates/basetypes/domain/index.tx
 - Standard templates in Jet with File::ShareDir
 - Set path as e.g. Text::Xslate->new( path => \@path );
 - Should probably be by type in config file
@@ -24,21 +21,12 @@ Stash
 
 Relations
 ---------
-$node->children 							all children
-$node->children('basetype')					all children with that basetype
-$node->children([qw/type1 type2])			more basetypes
-$node->children('basetype', $opt)			with options
-
-$node->parent								most nodes have only one parent
-$node->parent								all parents
-$node->parents('basetype')					all parents with that basetype
-$node->parents([qw/type1 type2])			more basetypes
-$node->parents('basetype', $opt)			with options
-
 $node->descendants							all descendants
 $node->descendants('basetype')				all descendants with that basetype
 $node->descendants([qw/type1 type2])		more basetypes
 $node->descendants('basetype', $opt)		with options
+
+Improvements for ->child(ren), parent(s)
 
 $opt
 	order_by
@@ -67,25 +55,16 @@ AAA
 
 REST
 ----
-- Init: Examine headers. accept_content_type.
-  Set context->rest->accept_types (arrayref)
-  Set context->rest->type (no 1 from accepted list)
-  Set context->rest->content if there's something to deserialize
 - Process: ability to check or set context->rest->type
   Some processing depens on REST type
-- Response render: Find the renderer from context->rest->type
 
 Search
 ------
 - PostgreSQL FTS
-  A tsvector column on jet.node
   fts should be combinable with ACL for searching, so the search result should reflect the user's permissions
   samecase searches? (test necessesity)
 - Checkbox for a column: "searchable"
   If checked, a fts column on the node is updated with this column's content.
-- Insert, update triggers on _view
-  loop through searchable and update fts
-  Only update if there has been any change in the seachable columns
 - http://search.cpan.org/dist/Search-Tools/
 
 Paging
@@ -136,7 +115,6 @@ Jet Schema
 Stuff class
 ------------
 - delete, update
-- clean out unused methods
 
 Result class
 ------------
@@ -156,7 +134,6 @@ Node class
 Plack
 -----
 - Authentication
-  http://search.cpan.org/dist/Plack-Middleware-Auth-Form/
   ACL for images still a problem
 - Image handling
   http://search.cpan.org/dist/Plack-Middleware-Image-Scale/
@@ -168,7 +145,6 @@ Modules
 File Upload
 -----------
 - Plack::Request::Upload
-  my $upload = $req->uploads->{field};
   path - temporary file
   content_type
   filename - original filename
@@ -183,76 +159,6 @@ Plugins
   Administration should just be another plugin
   Or perhaps a recipe with several plugins
 
-Plugin overview
----------------
-- Summation
-  - verb => 'POST'
-  - verb => 'PUT'
-  - type => 'HTML' ??
-  - method => 'POST' ??
-  Findnode
-  - id => 'workalbum_id'
-    Removed. Reintroduce?
-  File::Upload
-  - parent_id => 'workalbum_id'
-    $c->node->row->get_column($self->in->{parent_id})
-  Filter::Request
-  - method => 'POST'
-  - content_type => 'application/json'
-    my $method = $self->in->{method};
-    my $content_type = $self->in->{content_type};
-  Node::MoveTo
-  - child_id => 'content.photo_id'
-    my ($container, $child_location) = split /\./, $self->in->{child_id};
-  Node::New
-  - container => 'rest'
-  - basetype => 'photoalbum'
-  - names => {
-        albumname => 'albumname'
-        part => 'albumname'
-        title => 'albumname'
-    }
-	my $container = $self->in->{container} && $self->in->{container} eq 'stash' ? $c->stash : $c;
-	my $basetype = $self->in->{basetype};
-	my $names = $self->in->{names};
-  Node::Pick
-  - nodes => 'albums'
-    References stash nodes
-  - column => 'title'
-    Static value
-  - value => 'Scratchpad'
-    Static value
-  - name => 'scratch'
-    static value
-  Node::Stash
-  - method => 'children'
-    static value
-  - params => {base_type => 'photoalbum'}
-    static hashref
-  - name => 'photoalbums'
-    static value
-  Node::Stitch
-  - nodes => [qw/photoalbums groupalbums/]
-    static arrayref
-  - path => qq{children(base_type => 'photoalbum')}
-    static hashref
-  - name => 'albums'
-    static value
-  Node::Uniq
-  - nodes => 'albums'
-    References stash values
-  - name => 'albums'
-    Stash result name
-- WIP idea
-  static => {
-      nodes => 'albums',
-      name => 'albums',
-      params => {base_type => 'photoalbum'},
-  },
-  stash => {
-      nodes => 'parents',
-  }
-
 Packages
 --------
 - plugins
@@ -262,10 +168,6 @@ Packages
 
 Recipes
 -------
-- Ingredients list and procedure (steps)
-  Ingredient list: Mapping of external data to the requirement of the plugins
-- Readd recipe to jet.basetypes.
-  As a json for now
 - On startup, Look through all jet.basetypes and 'compile' the recipes
   require the plugin modules
   name the recipe

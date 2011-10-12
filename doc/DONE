@@ -1,0 +1,134 @@
+Template searching
+------------------
+- Basetype root: templates/basetypes
+- Name: <basetype>/<templatename>, default index.tx
+- Example: templates/basetypes/domain/index.tx
+
+Relations
+---------
+$node->children 							all children
+$node->children('basetype')					all children with that basetype
+$node->children([qw/type1 type2])			more basetypes
+$node->children('basetype', $opt)			with options
+
+$node->parent								most nodes have only one parent
+$node->parent								all parents
+$node->parents('basetype')					all parents with that basetype
+$node->parents([qw/type1 type2])			more basetypes
+$node->parents('basetype', $opt)			with options
+
+REST
+----
+- Init: Examine headers. accept_content_type.
+  Set context->rest->accept_types (arrayref)
+  Set context->rest->type (no 1 from accepted list)
+  Set context->rest->content if there's something to deserialize
+- Response render: Find the renderer from context->rest->type
+
+Search
+------
+- PostgreSQL FTS
+  A tsvector column on jet.node
+- Insert, update triggers on _view
+  loop through searchable and update fts
+  Only update if there has been any change in the seachable columns
+
+Stuff class
+------------
+- clean out unused methods
+
+Plack
+-----
+- Authentication
+  http://search.cpan.org/dist/Plack-Middleware-Auth-Form/
+
+Modules
+-------
+- Jet::Config -> Jet::Context::Config
+- Jet::Engine -> Jet::Stuff
+- Jet::Plugin -> Jet::Engine
+
+File Upload
+-----------
+- Plack::Request::Upload
+  path - temporary file
+  content_type
+  filename - original filename
+  http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
+
+Plugin overview
+---------------
+- Summation
+  - verb => 'POST'
+  - verb => 'PUT'
+  - type => 'HTML' ??
+  - method => 'POST' ??
+  Findnode
+  - id => 'workalbum_id'
+    Removed. Reintroduce?
+  File::Upload
+  - parent_id => 'workalbum_id'
+    $c->node->row->get_column($self->in->{parent_id})
+  Filter::Request
+  - method => 'POST'
+  - content_type => 'application/json'
+    my $method = $self->in->{method};
+    my $content_type = $self->in->{content_type};
+  Node::MoveTo
+  - child_id => 'content.photo_id'
+    my ($container, $child_location) = split /\./, $self->in->{child_id};
+  Node::New
+  - container => 'rest'
+  - basetype => 'photoalbum'
+  - names => {
+        albumname => 'albumname'
+        part => 'albumname'
+        title => 'albumname'
+    }
+	my $container = $self->in->{container} && $self->in->{container} eq 'stash' ? $c->stash : $c;
+	my $basetype = $self->in->{basetype};
+	my $names = $self->in->{names};
+  Node::Pick
+  - nodes => 'albums'
+    References stash nodes
+  - column => 'title'
+    Static value
+  - value => 'Scratchpad'
+    Static value
+  - name => 'scratch'
+    static value
+  Node::Stash
+  - method => 'children'
+    static value
+  - params => {base_type => 'photoalbum'}
+    static hashref
+  - name => 'photoalbums'
+    static value
+  Node::Stitch
+  - nodes => [qw/photoalbums groupalbums/]
+    static arrayref
+  - path => qq{children(base_type => 'photoalbum')}
+    static hashref
+  - name => 'albums'
+    static value
+  Node::Uniq
+  - nodes => 'albums'
+    References stash values
+  - name => 'albums'
+    Stash result name
+- WIP idea
+  static => {
+      nodes => 'albums',
+      name => 'albums',
+      params => {base_type => 'photoalbum'},
+  },
+  stash => {
+      nodes => 'parents',
+  }
+
+Recipes
+-------
+- Ingredients list and procedure (steps)
+  Ingredient list: Mapping of external data to the requirement of the plugins
+- Read recipe to jet.basetypes.
+  As a json for now
