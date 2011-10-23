@@ -28,6 +28,8 @@ Build the Jet with roles
 
 =cut
 
+# ABSTRACT: A Modern Content Management System
+
 BEGIN {
 	my $self = shift;
 	with 'Jet::Role::Log';

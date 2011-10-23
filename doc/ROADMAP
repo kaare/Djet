@@ -1,4 +1,4 @@
-0.01
+0.002
 - Plack
   User, group validation
 - Basic tests
@@ -7,7 +7,7 @@
   Cleanup e.g. Engine
   Extensive method, parameter documentation
 
-0.02
+0.01
 - Code
   namespace::autoclean
 - Documentation
@@ -15,5 +15,7 @@
   all attributes
 
 0.xx
-- Functionality
+- Engine part
   search page
+  - component thingie
+  - fts searching

@@ -104,13 +104,23 @@ Jet Schema
 - Trash
   Some way to delete a tree by moving it to a "Trash" node.
   There could be more than one node with the same path part
+- Data node
+  A set of typed arrays
+  - int, text, datetime, timestamp, etc
+  - a view that points to the array element
+  - How about fts?
+  - pros
+    Easy to change a node's data definition.
+    No data shuffling.
+    Better performance for schema changes
+  - cons
+    One more level of indirection
+    How to handle array of arrays
+    Indexing made hard
+  Or perhaps use hstore
 - Recursion detection
   path1->path2->path3->path1 should be disallowed
   incl test
-- Reintroduce the idea of "components" (or just separate recipe out)
-  A basetype can have several paths
-  A basetype can have several components
-  A component can be active for one specific, more, or all REST types
 
 Stuff class
 ------------
@@ -142,14 +152,6 @@ Modules
 -------
 - Jet::Config -> Jet::Context::Config
 
-File Upload
------------
-- Plack::Request::Upload
-  path - temporary file
-  content_type
-  filename - original filename
-  http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
-
 Plugins
 -------
 - Upload -> File::Upload
@@ -158,9 +160,15 @@ Plugins
 - Admin
   Administration should just be another plugin
   Or perhaps a recipe with several plugins
+- File Upload
+  http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
 
 Packages
 --------
+- Reintroduce the idea of "components" (or just separate recipe out)
+  A basetype can have several paths
+  A basetype can have several components
+  A component can be active for one specific, more, or all REST types
 - plugins
   basetype definitions - including recipes
   roles/traits
