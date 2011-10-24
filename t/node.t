@@ -5,12 +5,13 @@ use warnings;
 
 use Test::More;
 
-use Jet::Context;
 use Data::Dumper;
 use_ok('Jet::Node');
 
-my $c = Jet::Context->instance();
-my $schema = $c->schema;
+use lib 't/lib';
+use Test;
+
+my $schema = Test::schema;
 
 $schema->txn_begin;
 
@@ -19,22 +20,24 @@ my $args = {
 	part => '',
 	domainname => 'domain',
 };
-ok (my $domain = Jet::Node->new(basetype => 'domain'), 'Create domain node');
-$domain->add($args);
+
+my $nodedata = $schema->find_node({ node_path => [''] });
+ok (my $domain = Jet::Node->new(row => $nodedata,), 'Get domain node');
 print STDERR "domain: ",Dumper $domain->row;
 $args = {
 	title => 'album',
 	part => 'album',
-	basetype => 'album',
+	basetype => 'photoalbum',
 	albumname => 'album',
 };
-ok (my $album = $domain->add_child($args), 'Add a child');
-print STDERR "album: ", Dumper $domain->row, $album->row;
+# ok (my $album = $domain->add_child($args), 'Add a child');
+# print STDERR "album: ", Dumper $domain->row, $album->row;
 ok (my $children = $domain->children(), 'All children');
 print STDERR Dumper $children;
-ok ($children = $domain->children('album'), 'All album children');
-print STDERR Dumper $children->rows;
-ok ($children = $domain->children('xyzzy'), 'All xyzzy children (none)');
+ok ($children = $domain->children(base_type => 'directory'), 'All directory children');
+print STDERR Dumper $children;
+print STDERR ref $children;
+ok ($children = $domain->children(base_type => 'xyzzy'), 'All xyzzy children (none)');
 print STDERR Dumper $children;
 
 $schema->txn_rollback;

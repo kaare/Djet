@@ -6,12 +6,15 @@ use warnings;
 
 use Test::More;
 
-use Jet::Context;
+use DBI;
+use Jet::Stuff;
 use Data::Dumper;
 use_ok('Jet::Node');
 
-my $c = Jet::Context->instance();
-my $schema = $c->schema;
+use lib 't/lib';
+use Test;
+
+my $schema = Test::schema;
 
 my $node_path = ['','groups','rasmussen','kaare'];
 my $nodedata = $schema->find_node({ node_path =>  $node_path });

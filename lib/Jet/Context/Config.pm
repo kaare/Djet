@@ -7,17 +7,6 @@ use Config::Any;
 
 with 'Jet::Role::Log';
 
-=head1 TODO
-1. Rework config handling 
-2. Work stash into the module
-3. Config file structure
-   etc/jet.conf
-   <client_dir>/etc/somethińg
-4. What overrides what?
-5. module might be basenode instead?
-6. recipe may be better in ;Stuff, where the current :Stuff stuff belongs in Jet ?
-=cut
-
 has config => (
 	isa => 'HashRef',
 	is => 'ro',

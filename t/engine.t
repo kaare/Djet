@@ -1,38 +1,84 @@
-#!/usr/bin/env perl
+package Engine;
 
 use 5.010;
 use strict;
 use warnings;
-
 use Test::More;
+use Test::MockModule;
 
-use_ok('Jet::Stuff');
-
-my $dbh;
-
-my %ci = (
-	dbname => 'album',
-	username => 'kaare',
-	password => undef,
-	connect_options => {
-		AutoCommit => 1,
-		quote_char => '"',
-		RaiseError => 1,
-		pg_enable_utf8 => 1,
-	},
-);
-
-ok(my $stuff = Jet::Stuff->new(%ci), 'Start your stuffs!');
-isa_ok($stuff, 'Jet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
-
-ok(my $rows = $stuff->search('domain', {id => 1}), 'Search domain');
-use Data::Dumper;
-warn Dumper $rows;
-ok(my $result = $stuff->result($rows), 'Result');
-warn Dumper $result->rows;
-
-my $row = $result->next;
-my $id = $row->get_column('id');
-warn Dumper $id, $row->get_columns, $row->num_columns;
-
-done_testing();
+	my $mockrequest = Test::MockModule->new('Plack::Request');
+	$mockrequest->mock('param', sub {
+		return 'POST';#{ x => 1 };
+	});
+	use_ok('Plack::Request');
+	my $mockrest = Test::MockModule->new('Jet::Context::Rest');
+	$mockrest->mock('verb', sub {
+		return 'POST';
+	});
+	$mockrest->mock('parameters', sub {
+		return {
+			child_id => 2,
+			albumname => 'alabuma',
+		};
+	});
+	use_ok('Jet::Context::Rest');
+	my $mockcontext = Test::MockModule->new('Jet::Context');
+	$mockcontext->mock('rest', sub {
+		return Jet::Context::Rest->new;
+	});
+	$mockcontext->mock('stash', sub {
+		return {
+			one => 1,
+			two => 2,
+			nodes => 'parents',
+			no_nodes => 'children',
+		}
+	});
+	use_ok('Jet::Context');
+	my $c = Jet::Context->instance;
+	my $req = Plack::Request->new({});
+	$c->_request($req);
+	# Start testing
+	use_ok('Jet::Engine');
+	my $params = {
+		engine => 'Test::Engine',
+		content => {
+			child_id => 'photo_id',
+			names => {
+					albumname => 'albumname',
+					part => 'albumname',
+					title => 'albumname',
+				},
+		},
+		static => {
+			method => 'children',
+			params => {base_type => 'photoalbum'},
+			name => 'groupalbums',
+		},
+		stash => {
+			nodes => 'parents',
+			numbers => [qw/one two/],
+		},
+	};
+	ok(my $engine = Jet::Engine->new(params => $params), 'New engine');
+	isa_ok($engine, 'Jet::Engine', 'Correct class');
+	my $expected = {
+		params => {
+			base_type => 'photoalbum'
+		},
+		names => {
+			part => 'alabuma',
+			albumname => 'alabuma',
+			title => 'alabuma'
+		},
+		numbers => {
+			one => 1,
+			two => 2
+		},
+		name => 'groupalbums',
+		child_id => undef, #2,
+		method => 'children',
+		nodes => undef, #'parents'
+	};
+	is_deeply($engine->parameters, $expected, 'Engine parameters are correct');
+done_testing;

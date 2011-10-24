@@ -20,10 +20,10 @@ ok(my $schema = $loader->schema(), 'Get data schema');
 isa_ok($schema, 'DBIx::Inspector::Driver::Pg', 'Schema is DBIx::Inspector::Driver::Pg');
 use Data::Dumper;
 print STDERR Dumper $schema->tables;
-print STDERR Dumper $schema->table('album');
-print STDERR Dumper $schema->table('album')->columns;
-print STDERR Dumper $schema->table('album')->fk_foreign_keys;
-print STDERR Dumper $schema->table('album')->pk_foreign_keys;
+print STDERR Dumper $schema->table('photoalbum');
+print STDERR Dumper $schema->table('photoalbum')->columns;
+print STDERR Dumper $schema->table('photoalbum')->fk_foreign_keys;
+print STDERR Dumper $schema->table('photoalbum')->pk_foreign_keys;
 # print STDERR Dumper $tables;
 # print STDERR Dumper $tables->{album}->column('sth')->column_size;
 

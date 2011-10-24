@@ -226,3 +226,14 @@ Devel mode
 ----------
 - Optionally turn on/off some features when developing
   Text::Xslate cache
+
+Config
+------
+1. Rework config handling 
+2. Work stash into the module
+3. Config file structure
+   etc/jet.conf
+   <client_dir>/etc/somethińg
+4. What overrides what?
+5. module might be basenode instead?
+6. recipe may be better in ;Stuff, where the current :Stuff stuff belongs in Jet ?
