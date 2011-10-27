@@ -7,14 +7,13 @@ use Test::More;
 
 use_ok 'Jet::Stuff';
 
-# Test
-my $dbname = 'album';
-my $username = undef;
-my $password = undef;
-my %connect_options = ();
+use lib 't/lib';
+use Test;
 
-#ok(my $stuff = Jet::Stuff->new(dbname => $dbname, username => $username, password => $password, connect_options => \%connect_options), 'New Jet Stuff');
-ok(my $stuff = Jet::Stuff->new(dbname => $dbname), 'New Jet Stuff');
+my $db_name = Test::db_name;
+
+# Test
+ok(my $stuff = Jet::Stuff->new(dbname => $db_name), 'New Jet Stuff');
 isa_ok($stuff, 'Jet::Stuff', 'ISA Jet Stuff');
 warn ref $stuff;
 ok(my @tables = $stuff->schema->tables(), 'Data tables');

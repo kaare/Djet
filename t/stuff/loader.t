@@ -8,7 +8,11 @@ use Test::More;
 use_ok 'Jet::Stuff::Loader';
 
 # Test
-my $dsn = 'dbi:Pg:dbname=album';
+use lib 't/lib';
+use Test;
+
+my $db_name = Test::db_name;
+my $dsn = 'dbi:Pg:dbname=' . $db_name;
 my $username = undef;
 my $password = undef;
 my %connect_options = ();
