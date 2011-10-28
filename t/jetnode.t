@@ -8,7 +8,6 @@ use Test::More;
 
 use DBI;
 use Jet::Stuff;
-use Data::Dumper;
 use_ok('Jet::Node');
 
 use lib 't/lib';
@@ -17,20 +16,15 @@ use Test;
 my $schema = Test::schema;
 
 my $node_path = ['','groups','rasmussen','kaare'];
-my $nodedata = $schema->find_node({ node_path =>  $node_path });
-my $node = Jet::Node->new(
-	row => $nodedata,
-) if $nodedata;
-my $children = $node->children;
-my $scratch = $children->[0];
-say ref $scratch, Dumper $scratch, $scratch->uri;
-my $photos = $scratch->children;
-for my $photo (@$photos) {
-	say 'photo->'.$photo->row->get_column('title');
-}
-
-say $scratch->row->get_column('title');
-# my $parents = $node->parents(base_type => 'usergroup');
-# say Dumper $parents;
+ok(my $nodedata = $schema->find_node({ node_path =>  $node_path }), 'Find node');
+ok(my $node = Jet::Node->new(row => $nodedata), 'Nodify data');
+ok(my $children = $node->children, 'Get children');
+ok(my $scratch = $children->[0], 'First child');
+isa_ok($scratch, 'Jet::Node', 'Node type');
+is($scratch->uri, '/groups/rasmussen/kaare/scratch', 'Node uri');
+is($scratch->basetype, 'photoalbum', 'Base type');
+is($scratch->row->get_column('title'), 'Scratchpad', 'Node title');
+ok(my $photos = $scratch->children, 'Get all children (photos)');
+is_deeply($photos, [], 'Empty list');
 
 done_testing();

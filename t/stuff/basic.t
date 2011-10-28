@@ -12,14 +12,20 @@ use Test;
 
 my $db_name = Test::db_name;
 
+my %tables = (
+    tables  => [qw/domain person photo photoalbum usergroup/],
+    columns => [2, 2, 5, 4, 2, 2],
+    fks     => [(0) x 6],
+    pks     => [('id') x 6],
+);
+
 # Test
 ok(my $stuff = Jet::Stuff->new(dbname => $db_name), 'New Jet Stuff');
 isa_ok($stuff, 'Jet::Stuff', 'ISA Jet Stuff');
-warn ref $stuff;
 ok(my @tables = $stuff->schema->tables(), 'Data tables');
-use Data::Dumper;
-print STDERR Dumper @tables;
-# print STDERR Dumper $tables->{album}->column('albumname');
-# print STDERR Dumper $tables->{album}->column('albumname')->column_size, ref $tables->{album}->column('test');
+is(@tables, 6, 'Correct number of tables');
+is($_->columns->all, shift @{$tables{columns}}, 'Table ' .$_->name . ' columns') for @tables;
+is($_->fk_foreign_keys->all, shift @{$tables{fks}}, 'Table ' .$_->name . ' foreign keys') for @tables;
+is($_->primary_key->next->name, shift @{$tables{pks}}, 'Table ' .$_->name . ' primary keys') for @tables;
 
 done_testing();

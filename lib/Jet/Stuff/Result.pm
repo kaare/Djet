@@ -113,6 +113,7 @@ sub all {
 	while ( my $row = $self->next ) {
 		push @result, $row;
 	}
+	$self->reset_rowno;
 	return wantarray ? @result : \@result;
 }
 
