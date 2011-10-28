@@ -162,6 +162,15 @@ Plugins
   Or perhaps a recipe with several plugins
 - File Upload
   http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
+- Data validation
+  https://metacpan.org/module/Data::FormValidator
+  https://metacpan.org/module/FormValidator::Simple
+  https://metacpan.org/module/FormValidator::Lite
+  https://metacpan.org/module/Data::Verifier
+  https://metacpan.org/module/Oogly
+  https://metacpan.org/module/Validation::Class
+- Webshop
+  https://metacpan.org/module/Nitesi
 
 Packages
 --------
