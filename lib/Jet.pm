@@ -5,6 +5,8 @@ use Moose;
 use Plack::Request;
 use Jet::Node;
 use Jet::Context;
+use Try::Tiny;
+use Jet::Exception;
 
 =head1 NAME
 
@@ -48,7 +50,11 @@ sub run_psgi($) {
 	my $c = Jet::Context->instance;
 	# Clear request specific attributes
 	$c->clear;
-	$self->handle_request($env);
+	try {
+		$self->handle_request($env);
+	} catch {
+		$c->response->template('templates/generic/notfound' . $c->config->jet->{template_suffix});
+	};
 	$c->response->render;
 	return [ $c->response->status, $c->response->headers, $c->response->output ];
 }
@@ -64,8 +70,7 @@ sub handle_request($) {
 	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
 	$c->_request($req);
-	my $node = $self->find_node($req->uri) || return $self->page_notfound($req->uri);
-
+	my $node = $self->find_node($req->uri) || Jet::Exception->throw(NotFound => $req->uri);
 	$c->node($node);
 	return $self->go($req, $node);
 }
@@ -113,18 +118,6 @@ sub node_path_match {
 	return 1; # XXX Testing
 }
 
-=head2 page_notfound
-
-Returns 404 per default
-
-=cut
-
-sub page_notfound($) {
-	my ($self, $uri) = @_;
-	my $c = Jet::Context->instance;
-	$c->response->status(404);
-}
-
 =head2 go
 
 Does the actual data processing and rendering for this node
@@ -155,6 +148,11 @@ sub go {
 		$engine->can('data') && last unless $engine->data;
 		print STDERR "executed ";
 	}
+	my $template_name = $c->node->endpath ?
+		$recipe->{html_templates}{$c->node->endpath} :
+		$recipe->{html_template};
+	$template_name ||= $node->row->get_column('base_type');
+	$c->response->template($c->config->jet->{template_path} . $template_name . $c->config->jet->{template_suffix});
 	return;
 }
 
