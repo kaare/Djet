@@ -18,11 +18,9 @@ Faster than an AWE2
 
 Experimental module
 
-=head1 ATTRIBUTES
-
 =head1 METHODS
 
-=head2 BUILD
+=head2 BEGIN
 
 Build the Jet with roles
 
@@ -34,11 +32,14 @@ BEGIN {
 	my $self = shift;
 	with 'Jet::Role::Log';
 	my $c = Jet::Context->instance;
-	my @roles = ref $c->config->options->{role} ? @{ $c->config->options->{role} }: ($c->config->options->{role});
-	with ( map "Jet::Role::$_", @roles );
+	my $config = $c->config->options->{Jet};
+	my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
+	with ( map "Jet::Role::$_", @roles ) if @roles;
 }
 
 =head2 run_psgi
+
+Entry point from psgi
 
 =cut
 
@@ -53,6 +54,8 @@ sub run_psgi($) {
 }
 
 =head2 handle_request
+
+Handle the request
 
 =cut
 

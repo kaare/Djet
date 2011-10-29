@@ -150,14 +150,12 @@ Plack
 
 Plugins
 -------
-- Upload -> File::Upload
-  Refactor hash directory handling
+- Refactor hash directory handling
   Config option for base dir
 - Admin
   Administration should just be another plugin
   Or perhaps a recipe with several plugins
 - File Upload
-  file_location in Jet::Node is a role
   http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
 - Data validation
   https://metacpan.org/module/Data::FormValidator

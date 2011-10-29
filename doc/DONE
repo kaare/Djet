@@ -58,6 +58,7 @@ File Upload
   path - temporary file
   content_type
   filename - original filename
+  file_location in Jet::Node is a role
 
 Recipes
 -------

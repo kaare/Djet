@@ -5,8 +5,6 @@ use Moose;
 
 use Jet::Context;
 
-with 'Jet::Role::Log';
-
 =head1 NAME
 
 Jet::Node - Represents Jet Nodes
@@ -62,6 +60,21 @@ has uri => (
 );
 
 =head1 METHODS
+
+=head2 BEGIN
+
+Build the Jet with roles
+
+=cut
+
+BEGIN {
+	my $self = shift;
+	with 'Jet::Role::Log';
+	my $c = Jet::Context->instance;
+	my $config = $c->config->options->{'Jet::Node'};
+	my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
+	with ( map "Jet::Role::$_", @roles ) if @roles;
+}
 
 =head2 add
 
@@ -217,25 +230,6 @@ sub parents {
 		}
 	}
 	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @result ];
-}
-
-=head2 file_location
-
-Role from Jet::Engine::File::Upload
-
-Get the real location in the file system
-
-=cut
-
-sub file_location {
-	my $self = shift;
-	my $c = Jet::Context->instance();
-	my $basedir = $c->config->jet->{paths}{image}{url};
-	my $target_id = $self->row->get_column('id');
-	my $td = substr($target_id,-4);
-	$td .= '_' x ( 4 - length( $td ) );
-	my $targetdir = substr($td,-2).'/'.substr($td,-4,2);
-	return join '/', '', $basedir, $targetdir, $target_id, $self->row->get_column('filename');
 }
 
 __PACKAGE__->meta->make_immutable;
