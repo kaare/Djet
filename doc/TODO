@@ -148,10 +148,6 @@ Plack
 - Image handling
   http://search.cpan.org/dist/Plack-Middleware-Image-Scale/
 
-Modules
--------
-- Jet::Config -> Jet::Context::Config
-
 Plugins
 -------
 - Upload -> File::Upload
@@ -161,6 +157,7 @@ Plugins
   Administration should just be another plugin
   Or perhaps a recipe with several plugins
 - File Upload
+  file_location in Jet::Node is a role
   http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
 - Data validation
   https://metacpan.org/module/Data::FormValidator

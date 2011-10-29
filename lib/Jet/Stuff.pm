@@ -10,11 +10,40 @@ use JSON;
 use Jet::Stuff::Loader;
 use Jet::Stuff::Result;
 use Jet::Stuff::QueryBuilder;
-# use Jet::Stuff::Schema;
 
 with 'Jet::Role::Log';
 
-=head1 Attributes
+=head1 NAME
+
+Jet::Stuff
+
+=head1 DESCRIPTION
+
+How to save stuff in a Jet
+
+=head1 SYNOPSIS
+
+To be used internally by Jet
+
+=head1 ATTRIBUTES
+
+=head2 Parameters
+
+=head3 dbname
+
+The databasename
+
+=head3 username
+
+For database connectivity
+
+=head3 password
+
+For database connectivity
+
+=head3 connect_options
+
+For database connectivity
 
 =cut
 
@@ -22,6 +51,30 @@ has 'dbname' => (isa => 'Str', is => 'ro');
 has 'username' => (isa => 'Str', is => 'ro');
 has 'password' => (isa => 'Str', is => 'ro');
 has 'connect_options' => (isa => 'HashRef', is => 'ro');
+
+=head2 Helper attributes
+
+=head3 dbh
+
+The actual database handle. You can provide one in the ->new call, or it will be created from the supplied parameters
+
+=head3 txn_manager
+
+The transaction manager
+
+=head3 schema
+
+The database schema
+
+=head3 sql_builder
+
+Helps you write sql
+
+=head3 json
+
+For (de)serializing data
+
+=cut
 
 has 'dbh' => (
 	isa => 'DBI::db',
@@ -70,6 +123,16 @@ has 'json' => (
 	lazy => 1,
 );
 
+=head1 METHODS
+
+=head2 Session type methods
+
+=head3 disconnect
+
+Disconnect from the database
+
+=cut
+
 sub disconnect {
 	my $self = shift;
 	delete $self->{txn_manager};
@@ -77,6 +140,14 @@ sub disconnect {
 		$dbh->disconnect;
 	}
 }
+
+=head2 Manipulating basetypes
+
+=head3 update_basetype
+
+Update Jet's basetype
+
+=cut
 
 sub update_basetype {
 	my ($self, $where, $args) = @_;
@@ -87,6 +158,12 @@ sub update_basetype {
 	$args->{recipe} = $self->json->encode($args->{recipe}) if $args->{recipe};
 	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
 }
+
+=head3 get_basetypes
+
+Get all basetypes
+
+=cut
 
 sub get_basetypes {
 	my ($self, $where, $opt) = @_;
@@ -101,6 +178,12 @@ sub get_basetypes {
 	return { map {$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};{$_->{name} => $_} } @$basetypes };
 }
 
+=head3 find_basetype
+
+Find a basetype
+
+=cut
+
 sub find_basetype {
 	my ($self, $args) = @_;
 	my $sql = 'SELECT * FROM jet.basetype WHERE ' . join ',', map { "$_ = ?"} keys %$args;
@@ -108,6 +191,14 @@ sub find_basetype {
 	$basetype->{recipe} = $self->json->decode($basetype->{recipe}) if $basetype->{recipe};
 	return $basetype;
 }
+
+=head2 Manipulating nodes
+
+=head3 find_node
+
+Find a single node
+
+=cut
 
 sub find_node {
 	my ($self, $args) = @_;
@@ -119,6 +210,12 @@ sub find_node {
 
 	return Jet::Stuff::Row->new(row_data => { %$node, %$data }, table_name => $node->{base_type});
 }
+
+=head3 search
+
+Search tables
+
+=cut
 
 sub search {
 	my ($self, $table_name, $where, $opt) = @_;
@@ -139,6 +236,12 @@ sub search {
 	return $sth->fetchall_arrayref({}),
 }
 
+=head3 search_nodepath
+
+Search in nodepaths
+
+=cut
+
 sub search_nodepath {
 	my ($self, $base_type, $where, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->select(
@@ -151,6 +254,12 @@ sub search_nodepath {
 	return $sth->fetchall_arrayref({}),
 }
 
+=head3 insert
+
+Insert into a data view
+
+=cut
+
 sub insert {
 	my ($self, $table_name, $data, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->insert(
@@ -160,6 +269,12 @@ sub insert {
 	);
 	return $self->single(sql => $sql, data => \@binds);
 }
+
+=head3 move
+
+Move a node in the path tree
+
+=cut
 
 sub move {
 	my ($self, $node_id, $parent_id) = @_;
@@ -172,6 +287,12 @@ sub move {
 	};
 	return  $self->_execute($sql, [$parent_id, $node_id]);
 }
+
+=head3 search_by_sql
+
+Provide your own sql
+
+=cut
 
 sub search_by_sql {
 	my ($self, $sql, $bind, $table_name) = @_;
@@ -188,6 +309,12 @@ sub search_by_sql {
 	return wantarray ? $result->all : $result;
 }
 
+=head3 execute
+
+Prepare and execute
+
+=cut
+
 sub _execute { # XXX Redo. Not pretty
 	my ($self, $sql, $bind) = @_;
 	my $sth = $self->dbh->prepare($sql);
@@ -195,15 +322,33 @@ sub _execute { # XXX Redo. Not pretty
 	return $sth;
 }
 
+=head3 row
+
+Returns a single row
+
+=cut
+
 sub row {
 	my ($self, $data, $table_name) = @_;
 	return Jet::Stuff::Row->new(row_data => $data, table_name => $table_name);
 }
 
+=head3 result
+
+Returns a result object
+
+=cut
+
 sub result {
 	my ($self, $data) = @_;
 	return Jet::Stuff::Result->new(rows => $data);
 }
+
+=head3 single
+
+Returns a single hashref from a query
+
+=cut
 
 sub single {
 	my ($self, %args) = @_;
@@ -212,6 +357,12 @@ sub single {
 	$sth->finish();
 	return $r;
 }
+
+=head3 select_all
+
+Returns all hashrefs from a query
+
+=cut
 
 sub select_all {
 	my ($self, %args) = @_;
@@ -232,9 +383,13 @@ sub select_all {
 	return ( \@result );
 }
 
-#
-# Notify methods
-#
+=head2 Notification methods
+
+=head3 listen
+
+Starts listening to notifications
+
+=cut
 
 sub listen {
 	my ($self, %args) = @_;
@@ -245,6 +400,12 @@ sub listen {
 	}
 }
 
+=head3 unlisten
+
+Stops listening to notifications
+
+=cut
+
 sub unlisten {
 	my ($self, %args) = @_;
 	my $queue = $args{queue} || return undef;
@@ -253,6 +414,12 @@ sub unlisten {
 		$self->{dbh}->do(qq{unlisten "$q";});
 	}
 }
+
+=head3 notify
+
+Send a notification
+
+=cut
 
 sub notify {
 	my ($self, %args) = @_;
@@ -265,12 +432,24 @@ sub notify {
 	);
 }
 
+=head3 get_notification
+
+Get a notification
+
+=cut
+
 sub get_notification {
 	my ($self,$timeout) = @_;
 	my $dbh = $self->dbh;
 	my $notifies = $dbh->func('pg_notifies');
 	return $notifies;
 }
+
+=head3 set_listen
+
+Start a blocking notification recieve loop
+
+=cut
 
 sub set_listen {
 	my ($self,$timeout) = @_;
@@ -290,9 +469,12 @@ sub set_listen {
 	# return;
 # }
 
-#
-# for transaction
-#
+
+=head2 Transaction management methods
+
+=head3 in_transaction_check
+
+=cut
 
 sub in_transaction_check {
 	my $self = shift;
@@ -306,16 +488,58 @@ sub in_transaction_check {
 	}
 }
 
+=head3 txn_scope
+
+get DBIx::TransactionManager::ScopeGuard's instance object
+
+=cut
+
 sub txn_scope {
 	my @caller = caller();
 	$_[0]->txn_manager->txn_scope(caller => \@caller);
 }
 
-sub txn_begin    { $_[0]->txn_manager->txn_begin    }
-sub txn_rollback { $_[0]->txn_manager->txn_rollback }
-sub txn_commit   { $_[0]->txn_manager->txn_commit   }
-sub txn_end      { $_[0]->txn_manager->txn_end      }
+=head3 in_transaction
+
+Checks if we're currently in a transaction
+
+=head3 txn_begin
+
+Start the transaction.
+
+=head3 txn_rollback
+
+Rollback the transaction.
+
+=head3 txn_commit
+
+Commit the transaction.
+
+=head3 txn_end
+
+=cut
+
+sub in_transaction { $_[0]->txn_manager->in_transaction }
+sub txn_begin      { $_[0]->txn_manager->txn_begin      }
+sub txn_rollback   { $_[0]->txn_manager->txn_rollback   }
+sub txn_commit     { $_[0]->txn_manager->txn_commit     }
+sub txn_end        { $_[0]->txn_manager->txn_end        }
 
 __PACKAGE__->meta->make_immutable;
+__END__
 
-1;
+=head1 AUTHOR
+
+Kaare Rasmussen, <kaare at cpan dot com>
+
+=head1 BUGS 
+
+Please report any bugs or feature requests to my email address listed above.
+
+=head1 COPYRIGHT & LICENSE 
+
+Copyright 2011 Kaare Rasmussen, all rights reserved.
+
+This library is free software; you can redistribute it and/or modify it under the same terms as 
+Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
+have available.

@@ -15,6 +15,22 @@ Jet::Node - Represents Jet Nodes
 
 =head1 ATTRIBUTES
 
+=head2 row
+
+The node data found for this node
+
+=head2 endpath
+
+The path found after the node_path
+
+=head2 basetype
+
+The node's basetype
+
+=head2 uri
+
+The node's URI
+
 =cut
 
 has row => (
@@ -203,7 +219,14 @@ sub parents {
 	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @result ];
 }
 
-# XXX trait
+=head2 file_location
+
+Role from Jet::Engine::File::Upload
+
+Get the real location in the file system
+
+=cut
+
 sub file_location {
 	my $self = shift;
 	my $c = Jet::Context->instance();

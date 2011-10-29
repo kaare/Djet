@@ -9,6 +9,20 @@ extends 'Jet::Engine';
 
 with 'Jet::Role::Log';
 
+=head1 NAME
+
+Jet::Engine::File::Upload - A file upload engine part
+
+=head1 SYNOPSIS
+
+=head1 METHODS
+
+=head2 data
+
+Receives a list of filenames and creates children below current node
+
+=cut
+
 sub data {
 	my $self = shift;
 	my $c = Jet::Context->instance();
@@ -42,3 +56,20 @@ my $parent = Jet::Node->new(
 no Moose::Role;
 
 1;
+__END__
+
+=head1 AUTHOR
+
+Kaare Rasmussen, <kaare at cpan dot com>
+
+=head1 BUGS 
+
+Please report any bugs or feature requests to my email address listed above.
+
+=head1 COPYRIGHT & LICENSE 
+
+Copyright 2011 Kaare Rasmussen, all rights reserved.
+
+This library is free software; you can redistribute it and/or modify it under the same terms as 
+Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
+have available.

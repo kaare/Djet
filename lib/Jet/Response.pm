@@ -16,20 +16,23 @@ Jet::Response - Response Class for Jet::Context
 
 This is the Response class for L<Jet::Context>.
 
-=head1 SYNOPSIS
-
-
 =head1 ATTRIBUTES
-
-=over
 
 =head2 status
 
+The response status. Default 200
+
 =head2 headers
+
+The response headers. Default html
 
 =head2 output
 
+The output content.
+
 =head2 tx
+
+The template engine
 
 =cut
 
@@ -39,8 +42,6 @@ has output  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0
 has tx      => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new() });
 
 =head1 METHODS
-
-=over
 
 =head2 render
 
@@ -55,6 +56,8 @@ sub render {
 }
 
 =head2 render_html
+
+Renders the output as HTML
 
 =cut
 
@@ -79,3 +82,19 @@ sub render_html {
 __PACKAGE__->meta->make_immutable;
 
 __END__
+
+=head1 AUTHOR
+
+Kaare Rasmussen, <kaare at cpan dot com>
+
+=head1 BUGS 
+
+Please report any bugs or feature requests to my email address listed above.
+
+=head1 COPYRIGHT & LICENSE 
+
+Copyright 2011 Kaare Rasmussen, all rights reserved.
+
+This library is free software; you can redistribute it and/or modify it under the same terms as 
+Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
+have available.

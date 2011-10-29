@@ -28,11 +28,27 @@ Rows in a result set can be of different types. If table_name is given it is reg
     ...
   }
 
-=head1 Attributes
+=head1 ATTRIBUTES
 
 =head2 raw
 
 Set row object creation mode.
+
+=head2 rows
+
+ArrayRef with the result rows
+
+=head2 rowno
+
+The current row number
+
+=head2 table_name
+
+The current table_name
+
+=head2 schema
+
+The database schema
 
 =cut
 
@@ -56,8 +72,6 @@ has 'schema'     => (
 );
 
 =head1 METHODS
-
-=over
 
 =head2 _build_typetable
 

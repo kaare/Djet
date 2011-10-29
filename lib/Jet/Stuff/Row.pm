@@ -16,8 +16,6 @@ This is the Row class for L<Jet::Stuff>.
 =head1 SYNOPSIS
 
   my $row = Your::Model->search('user',{})->result->next;
-  
-=head1 METHODS
 
 =over
 
@@ -29,7 +27,9 @@ Get next row data.
 
 Get all row data in array.
 
-=head1 Attributes
+=back
+
+=head1 ATTRIBUTES
 
 =cut
 
@@ -56,3 +56,19 @@ has 'typetable'     => (
 __PACKAGE__->meta->make_immutable;
 
 __END__
+
+=head1 AUTHOR
+
+Kaare Rasmussen, <kaare at cpan dot com>
+
+=head1 BUGS 
+
+Please report any bugs or feature requests to my email address listed above.
+
+=head1 COPYRIGHT & LICENSE 
+
+Copyright 2011 Kaare Rasmussen, all rights reserved.
+
+This library is free software; you can redistribute it and/or modify it under the same terms as 
+Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
+have available.

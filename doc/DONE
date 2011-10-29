@@ -17,6 +17,10 @@ $node->parents('basetype')					all parents with that basetype
 $node->parents([qw/type1 type2])			more basetypes
 $node->parents('basetype', $opt)			with options
 
+Modules
+-------
+- Jet::Config -> Jet::Context::Config
+
 REST
 ----
 - Init: Examine headers. accept_content_type.
