@@ -15,6 +15,7 @@ sub db_name {
 sub schema {
 	my $db_name = db_name;
 	ok( my $dbh = DBI->connect(qq{dbi:Pg:dbname=$db_name}), 'Connect to test database');
+	ok($dbh->{pg_server_version} >= 90100, 'Server at least PostgreSQL 9.1');
 	ok(my $schema = Jet::Stuff->new(dbh => $dbh), 'New schema');
 	return $schema;
 }
