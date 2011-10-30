@@ -99,8 +99,7 @@ sub find_node($) {
 	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
 	return unless $nodedata and $self->node_path_match($nodedata, $endpath);
 
-## XXX Find path data on the node and see if it matches. ## 
-## noget a la if $self->match_path($nodedata, $endpath)
+	# We'll save the endpath for later, where we'll see if there is a recipe
 	return Jet::Node->new(
 		row => $nodedata,
 		endpath => $endpath
@@ -129,6 +128,9 @@ sub go {
 	my $c = Jet::Context->instance;
 	my $node = $c->node;
 	my $recipe = $c->recipe;
+	# Check if the endpath was correct
+#	Jet::Exception->throw(NotFound => $req->uri) if $c->node->endpath and !$recipe->{paths}{$c->node->endpath};
+
 	my $steps = $c->node->endpath ? 
 		$recipe->{paths}{$c->node->endpath} :
 		$recipe->{steps};
