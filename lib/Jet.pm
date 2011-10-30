@@ -129,7 +129,7 @@ sub go {
 	my $node = $c->node;
 	my $recipe = $c->recipe;
 	# Check if the endpath was correct
-#	Jet::Exception->throw(NotFound => $req->uri) if $c->node->endpath and !$recipe->{paths}{$c->node->endpath};
+	Jet::Exception->throw(NotFound => $req->uri) if $c->node->endpath and !$recipe->{paths}{$c->node->endpath};
 
 	my $steps = $c->node->endpath ? 
 		$recipe->{paths}{$c->node->endpath} :
