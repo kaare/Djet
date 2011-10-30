@@ -53,7 +53,9 @@ sub run_psgi($) {
 	try {
 		$self->handle_request($env);
 	} catch {
-		$c->response->template('templates/generic/notfound' . $c->config->jet->{template_suffix});
+		my $e = shift;
+		$c->stash->{exception} = $e;
+		$c->response->template('templates/generic/error' . $c->config->jet->{template_suffix});
 	};
 	$c->response->render;
 	return [ $c->response->status, $c->response->headers, $c->response->output ];
@@ -70,7 +72,7 @@ sub handle_request($) {
 	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
 	$c->_request($req);
-	my $node = $self->find_node($req->uri) || Jet::Exception->throw(NotFound => $req->uri);
+	my $node = $self->find_node($req->uri) || Jet::Exception->http_throw(NotFound => { message => $req->uri->as_string });
 	$c->node($node);
 	return $self->go($req, $node);
 }
@@ -129,7 +131,8 @@ sub go {
 	my $node = $c->node;
 	my $recipe = $c->recipe;
 	# Check if the endpath was correct
-	Jet::Exception->throw(NotFound => $req->uri) if $c->node->endpath and !$recipe->{paths}{$c->node->endpath};
+	Jet::Exception->throw(NotFound => { message => $req->uri->as_string })
+		if $c->node->endpath and !$recipe->{paths}{$c->node->endpath};
 
 	my $steps = $c->node->endpath ? 
 		$recipe->{paths}{$c->node->endpath} :
