@@ -25,15 +25,21 @@ Receives a list of filenames and creates children below current node
 
 sub data {
 	my $self = shift;
+	## !! request should be available to any engine part.
+	## It might be a good thing to have a config engine part to avoid this clutter
 	my $c = Jet::Context->instance();
-my $schema = $c->schema;
-my $parent_id = $c->node->row->get_column($self->in->{parent_id});
-use Jet::Node;
-my $parent = Jet::Node->new(
-	row => $schema->find_node({ path_id =>  $parent_id })
-);
 	my $basedir = $c->config->jet->{paths}{image}{file};
 	my $req = $c->request;
+	# !!
+	## !! Should be a separate engine part, or part of Node::Stash
+	my $schema = $c->schema;
+	my $parent_id = $c->node->row->get_column($self->parameters->{parent_id});
+	debug($parent_id);
+	use Jet::Node;
+	my $parent = Jet::Node->new(
+		row => $schema->find_node({ path_id =>  $parent_id })
+	);
+	## !!
 	for my $upload ($req->uploads->get_all('files')) {
 		my $uploadfile = $upload->path;
 		my $photo = {

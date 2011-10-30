@@ -87,6 +87,7 @@ sub update_person_recipe {
 			upload => [
 				{
 					plugin => 'File::Upload',
+					verb => 'POST',
 					static => {
 						parent_id => 'workalbum_id',
 					},

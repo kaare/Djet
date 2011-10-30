@@ -150,12 +150,13 @@ Plack
 
 Plugins
 -------
-- Refactor hash directory handling
-  Config option for base dir
 - Admin
   Administration should just be another plugin
   Or perhaps a recipe with several plugins
 - File Upload
+  See notes within about splitting out functionality
+  Config option for base dir
+  Refactor hash directory handling
   http://xquerywebappdev.wordpress.com/2010/05/21/drag-n-drop-from-desktop-jquery-plugin/
 - Data validation
   https://metacpan.org/module/Data::FormValidator
