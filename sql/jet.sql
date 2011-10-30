@@ -64,7 +64,7 @@ CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE
 
 CREATE TABLE path (
 	id						serial NOT NULL PRIMARY KEY,
-	parent_id				int REFERENCES path(id)
+	parent_id				int REFERENCES node(id)
 							ON DELETE cascade
 							ON UPDATE cascade,
 	part					text,
