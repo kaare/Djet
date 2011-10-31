@@ -125,7 +125,7 @@ sub add_child {
 	for my $column (qw/basetype title/) {
 		return unless ($args->{$column});
 	}
-	$args->{parent_id} = $self->row->get_column('path_id');
+	$args->{parent_id} = $self->row->get_column('node_id');
 # XXX TODO Check that basetype is valid
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;

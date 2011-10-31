@@ -9,12 +9,12 @@ use lib 't/lib';
 use Test;
 use Jet::Context;
 
-use_ok('Jet::Node');
-
 my $schema = Test::schema;
 
 ok($schema->txn_begin, 'Begin transaction');
 my $context = Jet::Context->new(schema => $schema);
+
+use_ok('Jet::Node'); # Has to be AFTER context is set
 
 my $args = {
 	title => 'domain',
