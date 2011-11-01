@@ -293,7 +293,7 @@ Prepare and execute
 
 =cut
 
-sub _execute { # XXX Redo. Not pretty
+sub _execute {
 	my ($self, $sql, $bind) = @_;
 	my $sth = $self->dbh->prepare($sql);
 	$sth->execute(@{$bind || []});

@@ -182,8 +182,8 @@ BEGIN
 	IF TG_OP = 'UPDATE' THEN
 		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.node_id != OLD.node_id OR NEW.part != OLD.part) THEN
 			-- update all nodes that are children of this one including this one
---			UPDATE jet.path SET node_path = jet.get_calculated_node_path(node_id)
---				WHERE node_path @> path.node_path;
+			UPDATE jet.path SET node_path = jet.get_calculated_node_path(node_id)
+				WHERE node_path @> path.node_path;
 		END IF;
 	ELSIF TG_OP = 'INSERT' THEN
 		UPDATE jet.path SET node_path = jet.get_calculated_node_path(NEW.node_id) WHERE path.node_id = NEW.node_id;
