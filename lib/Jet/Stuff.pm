@@ -8,8 +8,8 @@ use DBIx::TransactionManager 1.06;
 use JSON;
 
 use Jet::Stuff::Loader;
-use Jet::Stuff::Result;
 use Jet::Stuff::QueryBuilder;
+use Jet::Stuff::Row;
 
 with 'Jet::Role::Log';
 
@@ -231,7 +231,6 @@ sub search {
 		$where,
 		$opt
 	);
-	$self->search_by_sql($sql, \@binds, $table_name);
 	my $sth = $self->_execute($sql, \@binds);
 	return $sth->fetchall_arrayref({}),
 }
@@ -288,27 +287,6 @@ sub move {
 	return  $self->_execute($sql, [$parent_id, $node_id]);
 }
 
-=head3 search_by_sql
-
-Provide your own sql
-
-=cut
-
-sub search_by_sql {
-	my ($self, $sql, $bind, $table_name) = @_;
-	$table_name ||= $self->_guess_table_name( $sql ); # XXX
-	my $sth = $self->_execute($sql, $bind);
-
-	my $result = Jet::Stuff::Result->new(
-#		Stuff           => $self,
-		rows             => $sth->fetchall_arrayref({}),
-		sql                => $sql,
-		table_name  => $table_name,
-	);
-	$sth->finish;
-	return wantarray ? $result->all : $result;
-}
-
 =head3 execute
 
 Prepare and execute
@@ -331,17 +309,6 @@ Returns a single row
 sub row {
 	my ($self, $data, $table_name) = @_;
 	return Jet::Stuff::Row->new(row_data => $data, table_name => $table_name);
-}
-
-=head3 result
-
-Returns a result object
-
-=cut
-
-sub result {
-	my ($self, $data) = @_;
-	return Jet::Stuff::Result->new(rows => $data);
 }
 
 =head3 single

@@ -8,12 +8,13 @@ use Test::More;
 
 use DBI;
 use Jet::Stuff;
-use_ok('Jet::Node');
 
 use lib 't/lib';
 use Test;
 
 my $schema = Test::schema;
+
+use_ok('Jet::Node'); # Has to be AFTER context is set
 
 my $node_path = ['','groups','rasmussen','kaare'];
 ok(my $nodedata = $schema->find_node({ node_path =>  $node_path }), 'Find node');

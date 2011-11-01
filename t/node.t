@@ -7,14 +7,12 @@ use Test::More;
 use lib 't/lib';
 
 use Test;
-use Jet::Context;
 
 my $schema = Test::schema;
 
-ok($schema->txn_begin, 'Begin transaction');
-my $context = Jet::Context->new(schema => $schema);
+use_ok('Jet::Node'); # Has to be AFTER context is set in Test
 
-use_ok('Jet::Node'); # Has to be AFTER context is set
+ok($schema->txn_begin, 'Begin transaction');
 
 my $args = {
 	title => 'domain',

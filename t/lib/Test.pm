@@ -6,6 +6,7 @@ use warnings;
 	
 use Test::More;
 
+use Jet::Context;
 use Jet::Stuff;
 
 sub db_name {
@@ -17,6 +18,7 @@ sub schema {
 	ok( my $dbh = DBI->connect(qq{dbi:Pg:dbname=$db_name}), 'Connect to test database');
 	ok($dbh->{pg_server_version} >= 90100, 'Server at least PostgreSQL 9.1');
 	ok(my $schema = Jet::Stuff->new(dbh => $dbh), 'New schema');
+	my $context = Jet::Context->new(schema => $schema);
 	return $schema;
 }
 
