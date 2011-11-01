@@ -1,6 +1,11 @@
 Revision history for Jet
 
 {{$NEXT}}
+  - Documentation
+    Initial POD
+  - Remove Stuff::Result
+    Iterator should be on a Jet::Node level, if any
+  - Moved modules around
 
 0.001 2011-08-19
   - Family::Photo

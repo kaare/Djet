@@ -36,7 +36,8 @@ $opt
 $node->descendants uses PostgreSQL's WITH RECURSIVE-construct or the node_path array (making use of the gin index)
 
 There might be a case for choosing between returning Jet::Stuff::Result and an array of Jet::Node
-Or refactor (and rename) Jet::Stuff::Result to return an array of Jet::Stuff::Row or Jet::Node;
+Or refactor (and rename) Jet::Stuff::Result to return an array of Jet::Stuff::Row or Jet::Node.
+- Or perhaps just introduce a generic iterator to handle the results.
 
 Laziness
 --------
@@ -165,8 +166,11 @@ Plugins
   https://metacpan.org/module/Data::Verifier
   https://metacpan.org/module/Oogly
   https://metacpan.org/module/Validation::Class
+- Blog
 - Webshop
   https://metacpan.org/module/Nitesi
+- Accounting
+  http://search.cpan.org/dist/Ledger-Parser/
 
 Packages
 --------

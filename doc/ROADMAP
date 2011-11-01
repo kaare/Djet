@@ -7,7 +7,9 @@
   Cleanup e.g. Engine
   Extensive method, parameter documentation
 
-0.01
+0.01 - CPAN
+- Test
+  Work around PostgreSQL and PostgreSQL version dependency
 - Code
   namespace::autoclean
 - Documentation
@@ -16,6 +18,9 @@
 
 0.xx
 - Engine part
+  Handles in separate module?
+  Component packages
+  base type caching?
   search page
   - component thingie
   - fts searching
