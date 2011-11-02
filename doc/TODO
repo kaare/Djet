@@ -48,6 +48,16 @@ $node->childen('basetype')->children('basetype')
 
 Each can in effect be one sql select, offering vastly better performance
 
+Idea
+----
+- node->children, ->parents, etc returns a Jet::Node::Search object
+- JNO also has ->children, ->parents, etc
+- Building up a search parameter list on the way.
+- Also has ->next, ->all
+- Fires when ->next, ->all is called
+- Returns node(s)
+- Possibly has parameters to in/exclude nodes on the route
+
 AAA
 ---
 - Users, groups
