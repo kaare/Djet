@@ -72,7 +72,7 @@ sub handle_request($) {
 	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
 	$c->_request($req);
-	my $node = $self->find_node($req->uri) || Jet::Exception->http_throw(NotFound => { message => $req->uri->as_string });
+	my $node = $self->find_node($req->path_info) || Jet::Exception->http_throw(NotFound => { message => $req->uri->as_string });
 	$c->node($node);
 	return $self->go($req, $node);
 }
@@ -86,18 +86,18 @@ If not found, it goes one step up from find_node and tries to find something con
 =cut
 
 sub find_node($) {
-	my ($self, $uri) = @_;
+	my ($self, $path) = @_;
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
-	my $node_path = [split('/', $uri->path)] || [''];
-	$node_path = [''] unless @$node_path;
-	my $nodedata = $schema->find_node({ node_path =>  $node_path });
+	my $nodedata = $schema->find_node({ node_path =>  $path });
 	return Jet::Node->new(
 		row => $nodedata,
 	) if $nodedata;
 
 	# Find node at one level up. See if there is a path expression on that node
-	my $endpath = pop @$node_path;
+	$path =~ m|(.*)/(\w+)$|;
+	my $node_path = $1;
+	my $endpath = $2;
 	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
 	return unless $nodedata and $self->node_path_match($nodedata, $endpath);
 

@@ -16,7 +16,7 @@ my $schema = Test::schema;
 
 use_ok('Jet::Node'); # Has to be AFTER context is set
 
-my $node_path = ['','groups','rasmussen','kaare'];
+my $node_path = '/groups/rasmussen/kaare';
 ok(my $nodedata = $schema->find_node({ node_path =>  $node_path }), 'Find node');
 ok(my $node = Jet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $children = $node->children, 'Get children');

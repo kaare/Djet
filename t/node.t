@@ -20,7 +20,7 @@ my $args = {
 	domainname => 'domain',
 };
 
-ok(my $nodedata = $schema->find_node({ node_path => [''] }), 'Get nodedata for domain');
+ok(my $nodedata = $schema->find_node({ node_path => '/' }), 'Get nodedata for domain');
 ok(my $domain = Jet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $row = $domain->row, 'Get node row');
 is($row->table_name, 'domain', 'Tablename');

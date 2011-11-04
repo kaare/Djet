@@ -68,7 +68,7 @@ CREATE TABLE path (
 							ON DELETE cascade
 							ON UPDATE cascade,
 	part					text,
-	node_path				text[],
+	node_path				text UNIQUE,
 	node_id					int REFERENCES node
 							ON DELETE cascade
 							ON UPDATE cascade,
@@ -77,8 +77,6 @@ CREATE TABLE path (
 	UNIQUE (parent_id, part),
 	UNIQUE (node_path)
 );
-
-CREATE INDEX idx_path_gin_idx ON path USING gin(node_path);
 
 COMMENT ON TABLE path IS 'Node path';
 COMMENT ON COLUMN path.parent_id IS 'Parent of this uri';
@@ -164,8 +162,8 @@ LANGUAGE 'plperl' VOLATILE;
 CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text[] AS
 $$
 	SELECT CASE
-		WHEN s.parent_id IS NULL THEN ARRAY[s.part]
-		ELSE jet.get_calculated_node_path(s.parent_id) || s.part
+		WHEN s.parent_id IS NULL THEN s.part
+		ELSE jet.get_calculated_node_path(s.parent_id) || '/' || s.part
 	END
 	FROM jet.path s
 	WHERE s.node_id = $1;
@@ -183,7 +181,7 @@ BEGIN
 		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.node_id != OLD.node_id OR NEW.part != OLD.part) THEN
 			-- update all nodes that are children of this one including this one
 			UPDATE jet.path SET node_path = jet.get_calculated_node_path(node_id)
-				WHERE node_path @> path.node_path;
+				WHERE node_path LIKE path.node_path || '%';
 		END IF;
 	ELSIF TG_OP = 'INSERT' THEN
 		UPDATE jet.path SET node_path = jet.get_calculated_node_path(NEW.node_id) WHERE path.node_id = NEW.node_id;
