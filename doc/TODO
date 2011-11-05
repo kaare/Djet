@@ -222,12 +222,13 @@ Testing
 -------
 - Test database creation
   Use Family::Photo schema
+- pgTAP
+  http://pgtap.org/
 - path creation
   move a node, see the path change ripple through the tree
   update/delete a leaf node, a stem node, a root node
 - Coverage is low
 - Coverate report
-- POD coverage
 - Test plugins 
 
 Logging

@@ -49,13 +49,13 @@ has basetype => (
 		return $self->row->get_column('base_type');
 	},
 );
-has uri => (
+has path => (
 	isa => 'Str',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return join '/', @{ $self->row->get_column('node_path') };
+		return $self->row->get_column('node_path');
 	},
 );
 

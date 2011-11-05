@@ -72,7 +72,7 @@ sub handle_request($) {
 	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
 	$c->_request($req);
-	my $node = $self->find_node($req->path_info) || Jet::Exception->http_throw(NotFound => { message => $req->uri->as_string });
+	my $node = $self->find_node($req->path_info) || Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
 	$c->node($node);
 	return $self->go($req, $node);
 }
@@ -99,24 +99,13 @@ sub find_node($) {
 	my $node_path = $1;
 	my $endpath = $2;
 	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
-	return unless $nodedata and $self->node_path_match($nodedata, $endpath);
+	return unless $nodedata;
 
 	# We'll save the endpath for later, where we'll see if there is a recipe
 	return Jet::Node->new(
 		row => $nodedata,
 		endpath => $endpath
 	);
-}
-
-=head2 node_path_match
-
-Check a node and see if there is a match for the given "extra" path
-
-=cut
-
-sub node_path_match {
-	my ($self, $nodedata, $endpath) = @_;
-	return 1; # XXX Testing
 }
 
 =head2 go

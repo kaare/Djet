@@ -159,11 +159,11 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 $$
 LANGUAGE 'plperl' VOLATILE;
 
-CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text[] AS
+CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text AS
 $$
 	SELECT CASE
-		WHEN s.parent_id IS NULL THEN s.part
-		ELSE jet.get_calculated_node_path(s.parent_id) || '/' || s.part
+		WHEN s.parent_id IS NULL THEN s.part || '/'
+		ELSE jet.get_calculated_node_path(s.parent_id) || s.part || '/'
 	END
 	FROM jet.path s
 	WHERE s.node_id = $1;

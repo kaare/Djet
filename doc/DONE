@@ -60,6 +60,10 @@ File Upload
   filename - original filename
   file_location in Jet::Node is a role
 
+Testing
+-------
+- POD coverage
+
 Recipes
 -------
 - Ingredients list and procedure (steps)

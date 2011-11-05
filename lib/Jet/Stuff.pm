@@ -202,6 +202,7 @@ Find a single node
 
 sub find_node {
 	my ($self, $args) = @_;
+	$args->{node_path} .= '/' unless $args->{node_path} =~ m|/$|;
 	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ',', map { "$_ = ?"} keys %$args;
 	my $node = $self->single(sql => $sql, data => [ values %$args ]) || return;
 
@@ -319,6 +320,7 @@ Returns a single hashref from a query
 
 sub single {
 	my ($self, %args) = @_;
+debug(%args);
 	my $sth = $self->_execute($args{sql}, $args{data});
 	my $r = $sth->fetchrow_hashref();
 	$sth->finish();
