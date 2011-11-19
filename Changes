@@ -1,6 +1,8 @@
 Revision history for Jet
 
 {{$NEXT}}
+
+0.002 2011-11-19
   - Documentation
     Initial POD
   - Remove Stuff::Result

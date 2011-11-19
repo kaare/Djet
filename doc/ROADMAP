@@ -7,14 +7,19 @@
   Cleanup e.g. Engine
   Extensive method, parameter documentation
 
-0.01 - CPAN
-- Test
-  Work around PostgreSQL and PostgreSQL version dependency
+0.00x
 - Code
   namespace::autoclean
 - Documentation
   all methods
   all attributes
+- Sort out split between Stuff and Node generation
+  find_node returns a Jet::Node object
+  "family" methods (parent, child, etc) returns Jet::Node iterator
+  
+0.01 - CPAN
+- Test
+  Work around PostgreSQL and PostgreSQL version dependency
 
 0.xx
 - Engine part

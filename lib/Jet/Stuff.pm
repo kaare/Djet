@@ -320,7 +320,6 @@ Returns a single hashref from a query
 
 sub single {
 	my ($self, %args) = @_;
-debug(%args);
 	my $sth = $self->_execute($args{sql}, $args{data});
 	my $r = $sth->fetchrow_hashref();
 	$sth->finish();
