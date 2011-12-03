@@ -49,6 +49,7 @@ CREATE TABLE node (
 	basetype_id				int REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
+	name					text,
 	title					text,
 	fts						tsvector,
 	created					timestamp default now(),
@@ -57,6 +58,7 @@ CREATE TABLE node (
 
 COMMENT ON TABLE node IS 'Node';
 COMMENT ON COLUMN node.basetype_id IS 'The Basetype of the Node';
+COMMENT ON COLUMN node.name IS 'The Node''s name';
 COMMENT ON COLUMN node.title IS 'The Node Title';
 COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of the searchable columns';
 
