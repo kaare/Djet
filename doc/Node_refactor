@@ -1,0 +1,55 @@
+- New Module, Jet::Node::Box
+  Lazy DB
+  - A way to build up a Jet::Stuff::QueryBuilder
+  Node iterator
+- Jet::Context, new accessor for JNB
+  Every request has a base Node::Box for the request's node
+  - Jet calls JNB->find_node (refactor away from Jet.pm)
+    my $node = $c->nodebox->find_node($req->path_info) || Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
+  - Remove $c->node?
+- Jet::Stuff, No knowledge of Node
+  Stuff is low-level only
+
+- Sort out split between Stuff and Node generation
+  find_node returns a Jet::Node object
+  "family" methods (parent, child, etc) returns Jet::Node iterator
+
+Relations
+---------
+$node->descendants							all descendants
+$node->descendants('basetype')				all descendants with that basetype
+$node->descendants([qw/type1 type2])		more basetypes
+$node->descendants('basetype', $opt)		with options
+
+Improvements for ->child(ren), parent(s)
+
+$opt
+	order_by
+	limit
+	offset
+
+$node->descendants uses PostgreSQL's WITH RECURSIVE-construct or the node_path array (making use of the gin index)
+
+There might be a case for choosing between returning Jet::Stuff::Result and an array of Jet::Node
+Or refactor (and rename) Jet::Stuff::Result to return an array of Jet::Stuff::Row or Jet::Node.
+- Or perhaps just introduce a generic iterator to handle the results.
+
+Laziness
+--------
+Hopefully it will be possible to make relations "lazy", in the sense that they can gather more information before
+actually being used. Examples
+
+$node->parents('basetype')->descendants
+$node->childen('basetype')->children('basetype')
+
+Each can in effect be one sql select, offering vastly better performance
+
+Idea
+----
+- node->children, ->parents, etc returns a Jet::Node::Search object
+- JNO also has ->children, ->parents, etc
+- Building up a search parameter list on the way.
+- Also has ->next, ->all
+- Fires when ->next, ->all is called
+- Returns node(s)
+- Possibly has parameters to in/exclude nodes on the route
