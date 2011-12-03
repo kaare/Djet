@@ -18,7 +18,7 @@ CREATE VIEW person_view AS
 SELECT
 	d.*,
 	b.name basetype,
-	n.title,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	person d
@@ -46,7 +46,7 @@ CREATE VIEW usergroup_view AS
 SELECT
 	d.*,
 	b.name basetype,
-	n.title,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	usergroup d

@@ -17,7 +17,7 @@ ok($schema->txn_begin, 'Begin transaction');
 my $args = {
 	title => 'domain',
 	part => '',
-	domainname => 'domain',
+	name => 'domain',
 };
 
 ok(my $nodedata = $schema->find_node({ node_path => '/' }), 'Get nodedata for domain');
@@ -28,7 +28,7 @@ $args = {
 	title => 'New usergroup',
 	part => 'newusergroup',
 	basetype => 'usergroup',
-	groupname => 'newusergroup',
+	name => 'newusergroup',
 };
 ok(my $grp = $domain->add_child($args), 'Add a child');
 ok($row = $grp->row, 'Get node row');

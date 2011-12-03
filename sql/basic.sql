@@ -15,7 +15,7 @@ CREATE VIEW directory_view AS
 SELECT
 	d.*,
 	b.name basetype,
-	n.title,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	directory d

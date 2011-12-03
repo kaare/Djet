@@ -8,14 +8,13 @@ CREATE TABLE domain (
 	id						int NOT NULL PRIMARY KEY
 	                        REFERENCES jet.node
 							ON DELETE cascade
-							ON UPDATE cascade,
-	domainname				text
-);
+							ON UPDATE cascade);
 
 CREATE OR REPLACE VIEW domain_view AS
 SELECT
 	d.*,
-	n.title,
+	n.name, n.title,
+	b.name basetype,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	data.domain d
@@ -36,14 +35,14 @@ CREATE TABLE photoalbum (
 	id						int NOT NULL PRIMARY KEY
 							REFERENCES jet.node
 							ON DELETE cascade
-							ON UPDATE cascade,
-	albumname				text
+							ON UPDATE cascade
 );
 
 CREATE OR REPLACE VIEW photoalbum_view AS
 SELECT
 	d.*,
-	n.title,
+	b.name basetype,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	photoalbum d
@@ -65,7 +64,6 @@ CREATE TABLE photo (
 	                         REFERENCES jet.node
 									 ON DELETE cascade
 									 ON UPDATE cascade,
-	filename				 text,
 	content_type			 text,
 	metadata				 text
 );
@@ -73,7 +71,8 @@ CREATE TABLE photo (
 CREATE VIEW photo_view AS
 SELECT
 	d.*,
-	n.title,
+	b.name basetype,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	photo d
