@@ -9,7 +9,6 @@ CREATE TABLE person (
 							REFERENCES jet.node
 							ON DELETE cascade
 							ON UPDATE cascade,
-	username				text,
 	userlogin				text,
 	password				text,
 	workalbum_id			int REFERENCES jet.node
@@ -18,7 +17,8 @@ CREATE TABLE person (
 CREATE VIEW person_view AS
 SELECT
 	d.*,
-	n.title,
+	b.name basetype,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	person d
@@ -39,14 +39,14 @@ CREATE TABLE usergroup (
 	id						int NOT NULL PRIMARY KEY
 							REFERENCES jet.node
 							ON DELETE cascade
-							ON UPDATE cascade,
-	groupname				text
+							ON UPDATE cascade
 );
 
 CREATE VIEW usergroup_view AS
 SELECT
 	d.*,
-	n.title,
+	b.name basetype,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	usergroup d

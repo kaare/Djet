@@ -8,14 +8,14 @@ CREATE TABLE directory (
 	id						int NOT NULL PRIMARY KEY
 							REFERENCES jet.node
 							ON DELETE cascade
-							ON UPDATE cascade,
-	directoryname			text
+							ON UPDATE cascade
 );
 
 CREATE VIEW directory_view AS
 SELECT
 	d.*,
-	n.title,
+	b.name basetype,
+	n.name, n.title,
 	p.id path_id, p.part,p.node_path,parent_id
 FROM
 	directory d

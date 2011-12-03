@@ -49,6 +49,7 @@ CREATE TABLE node (
 	basetype_id				int REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
+	name					text,
 	title					text,
 	fts						tsvector,
 	created					timestamp default now(),
@@ -57,6 +58,7 @@ CREATE TABLE node (
 
 COMMENT ON TABLE node IS 'Node';
 COMMENT ON COLUMN node.basetype_id IS 'The Basetype of the Node';
+COMMENT ON COLUMN node.name IS 'The Node''s name';
 COMMENT ON COLUMN node.title IS 'The Node Title';
 COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of the searchable columns';
 
@@ -91,7 +93,7 @@ CREATE TRIGGER set_modified BEFORE UPDATE ON path FOR EACH ROW EXECUTE PROCEDURE
 CREATE OR REPLACE VIEW nodepath AS
 	SELECT
 		b.name base_type, b.id basetype_id, b.parent,
-		n.title,
+		n.name, n.title,
 		p.id path_id, p.parent_id, p.part, p.node_path, p.node_id
 	FROM
 		path p
@@ -125,7 +127,8 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	my $base_id = $base_row->{id};
 	my $searchable = $base_row->{searchable};
 	$fts = join ' ', map {$data->{$_}} grep {$data->{$_}} @$searchable; # Find searchable columns with content
-	$q = "INSERT INTO jet.node (basetype_id, title, fts) VALUES ($base_id, " .
+	$q = "INSERT INTO jet.node (basetype_id, name, title, fts) VALUES ($base_id, " .
+		quote_nullable($data->{name}) . ", " .
 		quote_nullable($data->{title}) .
 		", to_tsvector(" .
 		quote_nullable($fts) .
@@ -144,7 +147,7 @@ CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
 	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
 
 	# data.<table>
-	my @jetcols = qw/title part node_path parent_id path_id/; # columns to remove from data table
+	my @jetcols = qw/basetype name title part node_path parent_id path_id/; # columns to remove from data table
 	delete $data->{$_} for @jetcols;
 	$data->{id} = $node_id;
 	my $keys = join ',', keys %{$data};
