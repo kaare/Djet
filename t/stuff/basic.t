@@ -14,7 +14,7 @@ my $db_name = Test::db_name;
 
 my %tables = (
     tables  => [qw/domain person photo photoalbum usergroup/],
-    columns => [2, 2, 5, 4, 2, 2],
+    columns => [1, 1, 4, 3, 1, 1],
     fks     => [(0) x 6],
     pks     => [('id') x 6],
 );

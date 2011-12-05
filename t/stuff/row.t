@@ -21,6 +21,6 @@ ok(my $row = $stuff->row($rows->[0], 'domain'), 'Get 1st row as an object');
 is($row->get_column('title'), 'Family Photo', 'The row title');
 is($row->get_column('id'), 1, 'Row id');
 ok($row->get_columns, 'Get columns');
-is($row->num_columns, 5, 'Number of columns');
+is($row->num_columns, 4, 'Number of columns');
 
 done_testing();
