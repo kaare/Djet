@@ -32,13 +32,9 @@ sub data {
 	my $req = $c->request;
 	# !!
 	## !! Should be a separate engine part, or part of Node::Stash
-	my $schema = $c->schema;
+	my $box = $c->nodebox;
 	my $parent_id = $c->node->row->get_column($self->parameters->{parent_id});
-	debug($parent_id);
-	use Jet::Node;
-	my $parent = Jet::Node->new(
-		row => $schema->find_node({ path_id =>  $parent_id })
-	);
+	my $parent = $box->find_node({ node_id =>  $parent_id });
 	## !!
 	for my $upload ($req->uploads->get_all('files')) {
 		my $uploadfile = $upload->path;
@@ -46,7 +42,7 @@ sub data {
 			title => $upload->filename,
 			basetype => 'photo',
 			content_type => $upload->content_type,
-			filename => $upload->filename,
+			name => $upload->filename,
 		};
 		my $photo_node = $parent->add_child($photo);
 		my $target_id = $photo_node->row->get_column('id');

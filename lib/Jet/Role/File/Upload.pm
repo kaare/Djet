@@ -27,7 +27,7 @@ sub file_location {
 	my $td = substr($target_id,-4);
 	$td .= '_' x ( 4 - length( $td ) );
 	my $targetdir = substr($td,-2).'/'.substr($td,-4,2);
-	return join '/', '', $basedir, $targetdir, $target_id, $self->row->get_column('filename');
+	return join '/', '', $basedir, $targetdir, $target_id, $self->row->get_column('name');
 }
 
 1;
