@@ -1,17 +1,24 @@
-Best Practices
---------------
-namespace::autoclean
+Framework
+---------
+- Context
+  https://metacpan.org/module/DBIx::Connector
+- encoding
+  https://metacpan.org/release/utf8-all
+- Best Practices
+  namespace::autoclean
 
-Template searching
-------------------
-- Standard templates in Jet with File::ShareDir
-- Set path as e.g. Text::Xslate->new( path => \@path );
-- Should probably be by type in config file
+Template
+--------
+- Searching
+  Standard templates in Jet with File::ShareDir
+  Set path as e.g. Text::Xslate->new( path => \@path );
+  Should probably be by type in config file
   template
     html
       path
       suffix
-
+- Javascript
+  http://search.cpan.org/dist/HTML-JQuery/
 
 Stash
 -----
@@ -59,6 +66,7 @@ Idea
 - Returns node(s)
 - Possibly has parameters to in/exclude nodes on the route
 
+
 AAA
 ---
 - Users, groups
@@ -67,7 +75,7 @@ AAA
 REST
 ----
 - Process: ability to check or set context->rest->type
-  Some processing depens on REST type
+  Some processing depends on REST type
 
 Search
 ------
@@ -76,12 +84,16 @@ Search
   samecase searches? (test necessesity)
 - Checkbox for a column: "searchable"
   If checked, a fts column on the node is updated with this column's content.
-- http://search.cpan.org/dist/Search-Tools/
+- CPAN
+  http://search.cpan.org/dist/Search-Tools/
+  https://metacpan.org/release/Data-SearchEngine
+  Write a specific Pg fts engine
 
 Paging
 ------
 - limit, offset
 - CPAN module?
+  Probably https://metacpan.org/module/Data::Paginator
 - http://wiki.postgresql.org/wiki/Count_estimate
 
 Transactions
@@ -216,20 +228,27 @@ Data Repository
   Add "fields" from base types
   DDL to create tables in the data schema
   DDL to add/update /delete columns when fields change
+  https://metacpan.org/module/DBIx::RunSQL
 - Will make it possible/easier to make a row maker
 
 Testing
 -------
 - Test database creation
   Use Family::Photo schema
+- CPAN
+  https://metacpan.org/module/Test::Routine
 - pgTAP
   http://pgtap.org/
 - path creation
   move a node, see the path change ripple through the tree
   update/delete a leaf node, a stem node, a root node
 - Coverage is low
-- Coverate report
 - Test plugins 
+
+Documentation
+-------------
+- Coverage report
+- http://cloc.sourceforge.net/
 
 Logging
 -------

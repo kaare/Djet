@@ -21,7 +21,7 @@ sub check_pass {
 	my $machine = Jet->new;
 	my $person = $machine->login($username, $pass);
 	return unless defined $person;
-	return {user_id => $username, redir_to => join '/', @{ $person->{node_path} }, ''};
+	return {user_id => $username, redir_to => join '/', $person->{node_path}, ''};
 }
 
 builder {
