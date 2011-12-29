@@ -202,8 +202,8 @@ Find a single node
 
 sub find_node {
 	my ($self, $args) = @_;
-	$args->{node_path} .= '/' unless $args->{node_path} =~ m|/$|;
-	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ',', map { "$_ = ?"} keys %$args;
+	$args->{node_path} .= '/' if $args->{node_path} and !($args->{node_path} =~ m|/$|);
+	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ' AND ', map { "$_ = ?"} keys %$args;
 	my $node = $self->single(sql => $sql, data => [ values %$args ]) || return;
 
 	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
@@ -236,6 +236,24 @@ sub search {
 	return $sth->fetchall_arrayref({}),
 }
 
+=head3 find_nodepath
+
+Find a nodepath
+
+=cut
+
+sub find_nodepath {
+	my ($self, $where, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->select(
+		"jet.nodepath",
+		'*',
+		$where,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+	return Jet::Stuff::Row->new(row_data => $sth->fetchrow_hashref);
+}
+
 =head3 search_nodepath
 
 Search in nodepaths
@@ -243,7 +261,7 @@ Search in nodepaths
 =cut
 
 sub search_nodepath {
-	my ($self, $base_type, $where, $opt) = @_;
+	my ($self, $where, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->select(
 		"jet.nodepath",
 		'*',
