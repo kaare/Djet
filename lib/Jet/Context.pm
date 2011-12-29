@@ -6,6 +6,7 @@ use MooseX::Singleton;
 use CHI;
 use Jet::Context::Config;
 use Jet::Context::Rest;
+use Jet::Node::Box;
 use Jet::Stuff;
 use Jet::Response;
 
@@ -35,9 +36,9 @@ Any cache to be used
 
 Where data from the flow is stashed
 
-=head2 node
+=head2 nodebox
 
-The base node
+The base nodebox
 
 =head2 request
 
@@ -123,6 +124,12 @@ has stash => (
 	predicate => 'has_stash',
 	lazy => 1,
 	default => 	sub { {} },
+);
+has nodebox => (
+	isa => 'Jet::Node::Box',
+	is => 'ro',
+	lazy => 1,
+	default => sub {Jet::Node::Box->new},
 );
 has node => (
 	isa => 'Jet::Node',

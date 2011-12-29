@@ -3,7 +3,6 @@ package Jet;
 use 5.010;
 use Moose;
 use Plack::Request;
-use Jet::Node;
 use Jet::Context;
 use Try::Tiny;
 use Jet::Exception;
@@ -72,40 +71,9 @@ sub handle_request($) {
 	my $c = Jet::Context->instance;
 	my $req = Plack::Request->new($env);
 	$c->_request($req);
-	my $node = $self->find_node($req->path_info) || Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
+	my $node = $c->nodebox->find_node_path($req->path_info) || Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
 	$c->node($node);
 	return $self->go($req, $node);
-}
-
-=head2 find_node
-
-Accepts an url and returns a Jet::Node if the url points to a valid path in the system.
-
-If not found, it goes one step up from find_node and tries to find something consistent with the path
-
-=cut
-
-sub find_node($) {
-	my ($self, $path) = @_;
-	my $c = Jet::Context->instance;
-	my $schema = $c->schema;
-	my $nodedata = $schema->find_node({ node_path =>  $path });
-	return Jet::Node->new(
-		row => $nodedata,
-	) if $nodedata;
-
-	# Find node at one level up. See if there is a path expression on that node
-	$path =~ m|(.*)/(\w+)$|;
-	my $node_path = $1;
-	my $endpath = $2;
-	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
-	return unless $nodedata;
-
-	# We'll save the endpath for later, where we'll see if there is a recipe
-	return Jet::Node->new(
-		row => $nodedata,
-		endpath => $endpath
-	);
 }
 
 =head2 go
@@ -140,6 +108,7 @@ sub go {
 		print STDERR "can ";
 		# See if plugin can data and do it. Break out if there's nothing returned
 		$engine->can('data') && last unless $engine->data;
+
 		print STDERR "executed ";
 	}
 	my $template_name = $c->node->endpath ?

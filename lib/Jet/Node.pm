@@ -25,9 +25,9 @@ The path found after the node_path
 
 The node's basetype
 
-=head2 uri
+=head2 path
 
-The node's URI
+The node's path
 
 =cut
 
@@ -167,7 +167,7 @@ sub children {
 
 	my $parent_id = $self->row->get_column('id');
 	$opt{parent_id} = $parent_id;
-	my $nodes = $schema->search_nodepath($base_type, \%opt);
+	my $nodes = $schema->search_nodepath(\%opt);
 	my %nodes;
 	for my $node (@$nodes) {
 		push @{ $nodes{$node->{base_type}} }, $node;
@@ -215,7 +215,7 @@ sub parents {
 		base_type => $self->basetype,
 		node_id => $node_id,
 	};
-	my $nodes = $schema->search_nodepath($self->basetype, \%opt);
+	my $nodes = $schema->search_nodepath(\%opt);
 	my %nodes;
 	for my $node (@$nodes) {
 		push @{ $nodes{$node->{base_type}} }, $node;
