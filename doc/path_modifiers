@@ -1,0 +1,15 @@
+Path Modifiers
+--------------
+1. Implementation
+  a) For every request, look up each path part and process its modifiers
+  b) When inserting a node, let the database update modifiers from upstream
+     When updating a node, let the database update modifiers downstream
+
+2. Types
+  a) pre - called on the way down
+  b) post - called on the way back up
+
+3. Examples
+  a) Simple
+    1. Breadcrumbs - leave a bc on the stash
+    2. Make a choice based on the path part, e.g. choose language

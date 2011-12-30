@@ -2,10 +2,18 @@ Framework
 ---------
 - Context
   https://metacpan.org/module/DBIx::Connector
+  Context replacement
+  - Split into server process information and per-request information.
+    Process information
+      schema, cache, 
+    Per-request information
+      rest, stash, node, recipe, response
+      Perhaps subclass Plack::Request
 - encoding
   https://metacpan.org/release/utf8-all
 - Best Practices
   namespace::autoclean
+  
 
 Template
 --------
