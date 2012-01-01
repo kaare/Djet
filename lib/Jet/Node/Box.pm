@@ -29,7 +29,16 @@ has nodes => (
 
 =head1 METHODS
 
-=head2 add
+=head2 BUILD
+
+Require Jet::Node. use would make a circular dependency.
+
+=cut
+
+sub BUILD {
+	my $self = shift;
+	require 'Jet/Node.pm';
+}
 
 =head2 find_node
 
@@ -42,7 +51,6 @@ sub find_node($) {
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
 	my $nodedata = $schema->find_nodepath($args);
-require 'Jet/Node.pm';
 	return  $nodedata ? Jet::Node->new(row => $nodedata) : undef;
 }
 
@@ -60,7 +68,6 @@ sub find_node_path($) {
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
 	my $nodedata = $schema->find_node({ node_path =>  $path });
-require 'Jet/Node.pm';
 	return Jet::Node->new(
 		row => $nodedata,
 	) if $nodedata;
