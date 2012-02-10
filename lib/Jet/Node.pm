@@ -72,6 +72,8 @@ BEGIN {
 	with 'Jet::Role::Log';
 	my $c = Jet::Context->instance;
 	my $config = $c->config->options->{'Jet::Node'};
+	return unless $config->{role};
+
 	my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
 	with ( map "Jet::Role::$_", @roles ) if @roles;
 }
