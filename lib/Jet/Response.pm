@@ -40,7 +40,7 @@ has status   => (isa => 'Int', is => 'rw', default => 200);
 has headers  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type' => 'text/html; charset="utf-8"' ] });
 has output   => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
 has template => (isa => 'Str', is => 'rw' );
-has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new() });
+has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new(path => [ qw|templates| ]) });
 
 =head1 METHODS
 
