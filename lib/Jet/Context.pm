@@ -125,7 +125,7 @@ has stash => (
 	lazy => 1,
 	default => 	sub {
 		my $self = shift;
-		return $self->config->{jet}{stash};
+		return $self->config->{jet}{stash} || {};
 	},
 );
 has nodebox => (
