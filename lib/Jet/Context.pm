@@ -123,7 +123,10 @@ has stash => (
 	clearer => 'clear_stash',
 	predicate => 'has_stash',
 	lazy => 1,
-	default => 	sub { {} },
+	default => 	sub {
+		my $self = shift;
+		return $self->config->{jet}{stash};
+	},
 );
 has nodebox => (
 	isa => 'Jet::Node::Box',
