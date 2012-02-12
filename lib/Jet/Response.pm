@@ -5,6 +5,12 @@ use Moose;
 
 use Text::Xslate;
 use Jet::Context;
+use FindBin qw($Bin);
+use Locale::Maketext::Simple (
+	Path		=> "$Bin/locale/",
+	Decode      => 1,
+	Encoding    => 'locale',
+);
 
 with 'Jet::Role::Log';
 
@@ -40,7 +46,21 @@ has status   => (isa => 'Int', is => 'rw', default => 200);
 has headers  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type' => 'text/html; charset="utf-8"' ] });
 has output   => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
 has template => (isa => 'Str', is => 'rw' );
-has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {Text::Xslate->new(path => [ qw|templates| ]) });
+has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {
+	my $tx = Text::Xslate->new(
+		path => [ qw|templates| ],
+		function => {
+			l => sub {
+				return loc(@_);
+			},
+			# l_raw => html_builder {
+				# my $format = shift;
+				# my @args = map { html_escape($_) } @_;
+				# return $i18n->maketext($format, @args);
+			# },
+		},
+	);
+});
 
 =head1 METHODS
 
@@ -67,6 +87,7 @@ sub render_html {
 	my $c = Jet::Context->instance;
 	my $node = $c->node;
 	$c->stash->{node} = $c->node;
+	loc_lang($c->config->{jet}{language});
 	my $output = $self->tx->render($self->template, $c->stash);
 	$self->output([ $output ]);
 }
