@@ -1,5 +1,6 @@
 Template searching
 ------------------
+- Template lookup in <dir>/templates and <jet_root>/templates
 - Basetype root: templates/basetypes
 - Name: <basetype>/<templatename>, default index.tx
 - Example: templates/basetypes/domain/index.tx

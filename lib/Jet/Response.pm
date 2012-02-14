@@ -47,8 +47,9 @@ has headers  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type
 has output   => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
 has template => (isa => 'Str', is => 'rw' );
 has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {
+	my $c = Jet::Context->instance;
 	my $tx = Text::Xslate->new(
-		path => [ qw|templates| ],
+		path => [ map {$_ . '/templates'} ('.', $c->jet_root) ],
 		function => {
 			l => sub {
 				return loc(@_);

@@ -54,7 +54,7 @@ sub run_psgi($) {
 	} catch {
 		my $e = shift;
 		$c->stash->{exception} = $e;
-		$c->response->template('templates/generic/error' . $c->config->jet->{template_suffix});
+		$c->response->template('generic/error' . $c->config->jet->{template_suffix});
 	};
 	$c->response->render;
 	return [ $c->response->status, $c->response->headers, $c->response->output ];

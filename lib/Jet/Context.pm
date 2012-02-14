@@ -20,6 +20,10 @@ Jet::Context - The Context we work in
 
 =head1 Attributes
 
+=head2 jet_root
+
+The path to Jet's root directory
+
 =head2 config
 
 The configuration, as loaded from the configuration files
@@ -58,6 +62,16 @@ WIP - provide a recipe for a workflow for a base type
 
 =cut
 
+has jet_root => (
+	isa => 'Str',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $path = $INC{'Jet.pm'};
+		$path =~ s|lib/+Jet.pm||;
+		return $path;
+	},
+);
 has config => (
 	isa => 'Jet::Context::Config',
 	is => 'ro',
