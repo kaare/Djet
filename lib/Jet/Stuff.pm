@@ -272,6 +272,20 @@ sub search_nodepath {
 	return $sth->fetchall_arrayref({}),
 }
 
+=head3 ft_search_nodepath
+
+Fulltext search in nodepaths
+
+=cut
+
+sub ft_search_nodepath {
+    my ($self, $terms) = @_;
+    my $ftsquery = join ' | ', split /\s+/, $terms;
+    return $self->search_nodepath(
+		"fts @@ to_tsquery('english','$ftsquery')",
+	);
+}
+
 =head3 insert
 
 Insert into a data view
