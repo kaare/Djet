@@ -1,0 +1,28 @@
+0. Tag
+ - Add tag to imply there are big changes coming
+
+1. SQL-tree
+ - Remove anything but basetype, node
+ - Add pathpart to node
+ - Apply Depesz' SQL Tree, using SQL::Tree
+ - Fix code depending on previous structure
+
+2. JSON Columns
+ - Remove data tables/views
+ - Add column names to basetype
+ - Add json column to node
+ - Trigger to update fts w/json columns
+ - Experiment w/best way to find and search nodes using json fts
+ - Could be used to store subtypes, arrays, etc. Some special handling, like adding extra path rows, might be useful there.
+
+3. Archiving
+ - Bit on basetype for archiving/no archiving
+ - Trigger to archive node
+ - Trigger to archive path?
+ - Experiment w/best way to find and display archived data
+
+4. Context
+ - Remove MooseX::Singleton and find a better solution
+ - Some content follows the worker. This is truly singleton.
+ - Some content follows the request. Perhaps the request could be a subclass og Plack::Request.
+ - But there's a need for a global context object. Perhaps all objects should inherit from one generic Jet object (Jet::Base) with some magic.
