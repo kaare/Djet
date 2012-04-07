@@ -46,7 +46,8 @@ has basetype => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return $self->row->get_column('base_type');
+		my $c = Jet::Context->instance();
+		return $c->basetypenames->{$self->row->get_column('basetype_id') };
 	},
 );
 has path => (
@@ -124,16 +125,17 @@ sub add_child {
 	my ($self, $args) = @_;
 	return unless ref $args eq 'HASH';
 
-	for my $column (qw/basetype title/) {
+	$args->{parent_id} = $self->row->get_column('id');
+	my $c = Jet::Context->instance();
+	$args->{basetype_id} ||= $c->basetypes->{delete $args->{basetype}}{id} if $args->{basetype}; # Try to find basetype_id from basetype if that is defined
+	for my $column (qw/basetype_id title/) {
 		return unless ($args->{$column});
 	}
-	$args->{parent_id} = $self->row->get_column('node_id');
-# XXX TODO Check that basetype is valid
-	my $c = Jet::Context->instance();
+
 	my $schema = $c->schema;
 	my $basetype = delete $args->{basetype};
 	my $opts = {returning => '*'};
-	my $child = $schema->insert($basetype, $args, $opts);
+	my $child = $schema->insert($args, $opts);
 	return $self->new(
 		row => $schema->row($child, $basetype),
 	);
@@ -169,31 +171,9 @@ sub children {
 
 	my $parent_id = $self->row->get_column('id');
 	$opt{parent_id} = $parent_id;
-	my $nodes = $schema->search_nodepath(\%opt);
-	my %nodes;
-	for my $node (@$nodes) {
-		push @{ $nodes{$node->{base_type}} }, $node;
-	}
-	my @result;
-	while (my ($base_type, $nodes) = each %nodes) {
-		for my $node (@{ $nodes }) {
-			my $where = {
-				parent_id => $parent_id,
-				id => $node->{node_id},
-			};
-			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
-		}
-	}
-	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @result ];
-
-# XXX
-# Split in relations (base_type)
-# For hver relation, find id'er
-# For hver relation
-# SELECT * FROM data.$relation
-# WHERE id IN @ids
-
-# stitch et resultobjekt sammen
+	$opt{basetype_id} ||= $c->basetypes->{delete $opt{basetype}}{id} if $opt{basetype}; # Try to find basetype_id from basetype if that is defined
+	my $result = $schema->search_node(\%opt);
+	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @$result ];
 }
 
 =head2 parents

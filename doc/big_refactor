@@ -5,6 +5,7 @@
  - Remove anything but basetype, node
  - Add pathpart to node
  - Apply Depesz' SQL Tree, using SQL::Tree
+sqltree --dbtype Pg --drop --table node --pk id --pktype int --parent parent_id --path node_path --path_from part > sql/sqltree.sql
  - Fix code depending on previous structure
 
 2. JSON Columns

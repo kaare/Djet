@@ -196,74 +196,33 @@ sub find_basetype {
 
 =head3 find_node
 
-Find a single node
+Find a node
 
 =cut
 
 sub find_node {
-	my ($self, $args) = @_;
-	$args->{node_path} .= '/' if $args->{node_path} and !($args->{node_path} =~ m|/$|);
-	my $sql = 'SELECT * FROM jet.nodepath WHERE ' . join ' AND ', map { "$_ = ?"} keys %$args;
-	my $node = $self->single(sql => $sql, data => [ values %$args ]) || return;
-
-	$sql = "SELECT * FROM data.$node->{base_type} WHERE id=?";
-	my $data = $self->single(sql => $sql, data => [ $node->{node_id} ]) || return;
-
-	return Jet::Stuff::Row->new(row_data => { %$node, %$data }, table_name => $node->{base_type});
-}
-
-=head3 search
-
-Search tables
-
-=cut
-
-sub search {
-	my ($self, $table_name, $where, $opt) = @_;
-	my $table = $self->schema->table( $table_name );
-	if (! $table) {
-		Carp::croak("No such table $table_name");
-	}
-
-	my @column_names = (qw /title node_path parent_id/, map { $_->name } $table->columns ); # XXX view columns should be configurable
-	my ($sql, @binds) = $self->sql_builder->select(
-		"data.$table_name\_view",
-		\@column_names,
-		$where,
-		$opt
-	);
-	my $sth = $self->_execute($sql, \@binds);
-	return $sth->fetchall_arrayref({}),
-}
-
-=head3 find_nodepath
-
-Find a nodepath
-
-=cut
-
-sub find_nodepath {
 	my ($self, $where, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->select(
-		"jet.nodepath",
+		"jet.node",
 		'*',
 		$where,
 		$opt
 	);
 	my $sth = $self->_execute($sql, \@binds);
-	return Jet::Stuff::Row->new(row_data => $sth->fetchrow_hashref);
+	my $row_data = $sth->fetchrow_hashref || return;
+	return Jet::Stuff::Row->new(row_data => $row_data);
 }
 
-=head3 search_nodepath
+=head3 search_node
 
-Search in nodepaths
+Search in nodes
 
 =cut
 
-sub search_nodepath {
+sub search_node {
 	my ($self, $where, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->select(
-		"jet.nodepath",
+		"jet.node",
 		'*',
 		$where,
 		$opt
@@ -272,46 +231,78 @@ sub search_nodepath {
 	return $sth->fetchall_arrayref({}),
 }
 
-=head3 ft_search_nodepath
+=head3 ft_search_node
 
-Fulltext search in nodepaths
+Fulltext search in nodes
 
 =cut
 
-sub ft_search_nodepath {
+sub ft_search_node {
     my ($self, $terms) = @_;
     my $ftsquery = join ' | ', split /\s+/, $terms;
-    return $self->search_nodepath(
+    return $self->search_node(
 		"fts @@ to_tsquery('english','$ftsquery')",
 	);
 }
 
 =head3 insert
 
-Insert into a data view
+Insert a node
 
 =cut
 
 sub insert {
-	my ($self, $table_name, $data, $opt) = @_;
+	my ($self, $data, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->insert(
-		"data.$table_name\_view",
+		"jet.node",
 		$data,
 		$opt
 	);
 	return $self->single(sql => $sql, data => \@binds);
 }
 
+=head3 update
+
+Update a node
+
+=cut
+
+sub update {
+	my ($self, $data, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->update(
+		"jet.node",
+		$data,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+}
+
+=head3 delete
+
+Delete a node
+
+=cut
+
+sub delete {
+	my ($self, $data, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->delete(
+		"jet.node",
+		$data,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+}
+
 =head3 move
 
-Move a node in the path tree
+Move a node to a new parent in the path tree
 
 =cut
 
 sub move {
 	my ($self, $node_id, $parent_id) = @_;
 	my $sql = qq{UPDATE
-		jet.path
+		jet.node
 	SET
 		parent_id=?
 	WHERE
@@ -340,8 +331,8 @@ Returns a single row
 =cut
 
 sub row {
-	my ($self, $data, $table_name) = @_;
-	return Jet::Stuff::Row->new(row_data => $data, table_name => $table_name);
+	my ($self, $data) = @_;
+	return Jet::Stuff::Row->new(row_data => $data);
 }
 
 =head3 single
@@ -352,6 +343,7 @@ Returns a single hashref from a query
 
 sub single {
 	my ($self, %args) = @_;
+debug(%args);
 	my $sth = $self->_execute($args{sql}, $args{data});
 	my $r = $sth->fetchrow_hashref();
 	$sth->finish();
@@ -538,7 +530,7 @@ Please report any bugs or feature requests to my email address listed above.
 
 =head1 COPYRIGHT & LICENSE 
 
-Copyright 2011 Kaare Rasmussen, all rights reserved.
+Copyright 2012 Kaare Rasmussen, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under the same terms as 
 Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 

@@ -16,22 +16,15 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE SCHEMA jet;
 
--- Data schema
-
-COMMIT;
-
-CREATE SCHEMA data;
-
-BEGIN;
-
 SET search_path TO jet;
 
 CREATE TABLE basetype (
 	id						serial NOT NULL PRIMARY KEY,
 	name					text UNIQUE,
 	parent					int[],
-	recipe					text,
+	columns					text[],
 	searchable				text[],
+	recipe					text,
 	created					timestamp default now(),
 	modified				timestamp
 );
@@ -39,18 +32,24 @@ CREATE TABLE basetype (
 COMMENT ON TABLE basetype IS 'Node Base Type';
 COMMENT ON COLUMN basetype.name IS 'Base Name';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
+COMMENT ON COLUMN basetype.columns IS 'The column definition';
 COMMENT ON COLUMN basetype.recipe IS 'Ingredients and steps for cooking a node';
-COMMENT ON COLUMN basetype.searchable IS 'Array of column names of searchable columns for the basetype';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE node (
 	id						serial NOT NULL PRIMARY KEY,
-	basetype_id				int REFERENCES basetype(id)
+	basetype_id				int NOT NULL REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
+	parent_id				int REFERENCES node(id)
+							ON DELETE cascade
+							ON UPDATE cascade,
+	part					text,
+	node_path				text UNIQUE,
 	name					text,
 	title					text,
+	columns					text[],
 	fts						tsvector,
 	created					timestamp default now(),
 	modified				timestamp
@@ -58,141 +57,42 @@ CREATE TABLE node (
 
 COMMENT ON TABLE node IS 'Node';
 COMMENT ON COLUMN node.basetype_id IS 'The Basetype of the Node';
+COMMENT ON COLUMN node.parent_id IS 'Parent of this uri';
+COMMENT ON COLUMN node.part IS 'Path part';
+COMMENT ON COLUMN node.node_path IS 'Global Path parts';
 COMMENT ON COLUMN node.name IS 'The Node''s name';
 COMMENT ON COLUMN node.title IS 'The Node Title';
+COMMENT ON COLUMN basetype.columns IS 'The actual column data';
 COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of the searchable columns';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
-CREATE TABLE path (
-	id						serial NOT NULL PRIMARY KEY,
-	parent_id				int REFERENCES node(id)
-							ON DELETE cascade
-							ON UPDATE cascade,
-	part					text,
-	node_path				text UNIQUE,
-	node_id					int REFERENCES node
-							ON DELETE cascade
-							ON UPDATE cascade,
-	created					timestamp default now(),
-	modified				timestamp,
-	UNIQUE (parent_id, part),
-	UNIQUE (node_path)
-);
-
-COMMENT ON TABLE path IS 'Node path';
-COMMENT ON COLUMN path.parent_id IS 'Parent of this uri';
-COMMENT ON COLUMN path.node_path IS 'Path part';
-COMMENT ON COLUMN path.node_path IS 'Global Path parts';
-COMMENT ON COLUMN path.node_id IS 'The actual Node';
-
-CREATE TRIGGER set_modified BEFORE UPDATE ON path FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
-
--- Views
-
-CREATE OR REPLACE VIEW nodepath AS
-	SELECT
-		b.name base_type, b.id basetype_id, b.parent,
-		n.title, n.fts,
-		p.id path_id, p.parent_id, p.part, p.node_path, p.node_id
-	FROM
-		path p
-	LEFT JOIN
-		node n
-	ON
-		p.node_id=n.id
-	LEFT JOIN
-		basetype b
-	ON
-		n.basetype_id=b.id
-;
-
 -- Functions
 
-CREATE OR REPLACE FUNCTION data_view_insert() RETURNS trigger AS $$
-	my ($base_name) = split '_', $_TD->{relname} or return SKIP;
-
+CREATE OR REPLACE FUNCTION update_fts() RETURNS trigger AS $$
 	# jet.basetype
-	my $q = "SELECT * FROM jet.basetype WHERE name = ".quote_literal($base_name);
+	my $q = "SELECT * FROM jet.basetype WHERE id = $_TD->{new}{basetype_id}";
 	my $rv = spi_exec_query($q);
 	unless ($rv->{status} eq 'SPI_OK_SELECT' and $rv->{processed} == 1) {
 		elog(ERROR,"Basetype $base_name not found in jet.basetype");
 		return SKIP;
 	}
 
-	# jet.node
-	my ($data, $fts);
-	$data->{$_} = $_TD->{new}{$_} for keys %{ $_TD->{new} };
 	my $base_row = $rv->{rows}->[0];
-	my $base_id = $base_row->{id};
+	my $base_columns = $base_row->{columns};
 	my $searchable = $base_row->{searchable};
-	$fts = join ' ', map {$data->{$_}} grep {$data->{$_}} @$searchable; # Find searchable columns with content
-	$q = "INSERT INTO jet.node (basetype_id, name, title, fts) VALUES ($base_id, " .
-		quote_nullable($data->{name}) . ", " .
-		quote_nullable($data->{title}) .
-		", to_tsvector(" .
-		quote_nullable($fts) .
-		")) RETURNING id";
-	$rv = spi_exec_query($q);
-	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
+	return MODIFY unless @{ $base_columns } and @{ $searchable };
 
-	# jet.path
-	my $node_id = $rv->{rows}->[0]->{id};
-	$data->{part} //= $node_id; # We use the node_id if there is no part supplied
-	$q = qq{INSERT INTO "jet"."path" (node_id, parent_id, part) VALUES ($node_id, } 
-		. quote_nullable($data->{parent_id}) . ',' 
-		. quote_nullable($data->{part})
-		. ") RETURNING id";
-	$rv = spi_exec_query($q);
-	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT_RETURNING' and $rv->{processed} == 1;
-
-	# data.<table>
-	my @jetcols = qw/basetype name title part node_path parent_id path_id/; # columns to remove from data table
-	delete $data->{$_} for @jetcols;
-	$data->{id} = $node_id;
-	my $keys = join ',', keys %{$data};
-	my $values = join ',', (map {quote_nullable($_)} values %{$data});
-	$q = "INSERT INTO data.$base_name ($keys) VALUES ($values)";
-	$rv = spi_exec_query($q);
-	return SKIP unless $rv->{status} eq 'SPI_OK_INSERT' and $rv->{processed} == 1;
-
-	# This seems to be the syntax to use for setting id. Strange, but it works
-	$_TD->{new} = {id => $node_id};
+	my @datacols = @{ $_TD->{new}{columns} };
+	my ($columns, $fts);
+	$columns->{$_} = shift @datacols for @{ $base_columns };
+	$fts = join ' ', map {$columns->{$_}} grep {$columns->{$_}} @$searchable; # Find searchable columns with content
+	$_TD->{new}{fts} = $fts;
 	return MODIFY;
 $$
 LANGUAGE 'plperl' VOLATILE;
 
-CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text AS
-$$
-	SELECT CASE
-		WHEN s.parent_id IS NULL THEN s.part || '/'
-		ELSE jet.get_calculated_node_path(s.parent_id) || s.part || '/'
-	END
-	FROM jet.path s
-	WHERE s.node_id = $1;
-$$
-LANGUAGE sql;
-
---
--- Update the node path recursively down the tree
---
-
-CREATE OR REPLACE FUNCTION trig_update_node_path() RETURNS trigger AS
-$$
-BEGIN
-	IF TG_OP = 'UPDATE' THEN
-		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.node_id != OLD.node_id OR NEW.part != OLD.part) THEN
-			-- update all nodes that are children of this one including this one
-			UPDATE jet.path SET node_path = jet.get_calculated_node_path(node_id)
-				WHERE node_path SIMILAR TO path.node_path || '_+';
-		END IF;
-	ELSIF TG_OP = 'INSERT' THEN
-		UPDATE jet.path SET node_path = jet.get_calculated_node_path(NEW.node_id) WHERE path.node_id = NEW.node_id;
-	END IF;
-  RETURN NEW;
-END
-$$
-LANGUAGE 'plpgsql' VOLATILE;
+CREATE TRIGGER update_fts BEFORE INSERT OR UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE jet.update_fts();
 
 --
 -- Check that a row has the correct parent type
@@ -207,11 +107,11 @@ BEGIN
 	IF new.parent_id IS NULL THEN
 		RETURN NEW;
 	END IF;
-	SELECT parent INTO parent_array FROM jet.nodepath WHERE node_id = NEW.id;
+	SELECT parent INTO parent_array FROM jet.basetype WHERE id = NEW.basetype_id;
 	IF parent_array IS NULL THEN
 		RETURN NEW;
 	END IF;
-	SELECT basetype_id INTO parent_type FROM jet.nodepath WHERE node_id = NEW.parent_id;
+	SELECT basetype_id INTO parent_type FROM jet.node WHERE id = NEW.parent_id;
 	IF parent_type = ANY (parent_array) THEN
 		RETURN NEW;
 	ELSE
@@ -230,17 +130,208 @@ CREATE TRIGGER
 AFTER INSERT OR UPDATE OF
 	parent_id
 ON
-	path
+	node
 FOR EACH ROW EXECUTE PROCEDURE
 	trig_check_basetype();
 
-CREATE TRIGGER
-	trig01_update_node_path
-AFTER INSERT OR UPDATE OF
-	node_id, parent_id, part
-ON
-	path
-FOR EACH ROW EXECUTE PROCEDURE
-	trig_update_node_path();
+
+-- --------------------------------------------------------------------
+-- A hierarchical data (tree) implementation using triggers
+-- inside the database as described here:
+--
+--   http://www.depesz.com/index.php/2008/04/11/my-take-on-trees-in-sql/
+--
+-- Generated by sqltree on Wed Apr  4 20:34:19 2012 for Pg
+-- --------------------------------------------------------------------
+
+DROP TABLE IF EXISTS node_tree;
+
+DROP TRIGGER IF EXISTS node_tree_insert_trigger_1 ON node;
+
+DROP TRIGGER IF EXISTS node_tree_before_update_trigger_1 ON node;
+
+DROP TRIGGER IF EXISTS node_tree_after_update_trigger_1 ON node;
+
+DROP TRIGGER IF EXISTS node_tree_path_before_update_trigger ON node;
+
+CREATE OR REPLACE FUNCTION make_plpgsql()
+RETURNS VOID
+LANGUAGE SQL
+AS $$
+CREATE LANGUAGE plpgsql;
+$$;
+
+SELECT
+    CASE
+    WHEN EXISTS(
+        SELECT 1
+        FROM pg_catalog.pg_language
+        WHERE lanname='plpgsql'
+    )
+    THEN NULL
+    ELSE make_plpgsql()
+    END;
+
+DROP FUNCTION make_plpgsql();
+
+CREATE TABLE node_tree (
+    treeid    SERIAL PRIMARY KEY,
+    parent    int NOT NULL REFERENCES node(id) ON DELETE CASCADE,
+    child     int NOT NULL REFERENCES node(id) ON DELETE CASCADE,
+    depth     INTEGER NOT NULL,
+    UNIQUE (parent, child)
+);
+
+-- --------------------------------------------------------------------
+-- INSERT:
+-- 1. Insert a matching row in node_tree where both parent and child
+-- are set to the id of the newly inserted object. Depth is set to 0 as
+-- both child and parent are on the same level.
+--
+-- 2. Copy all rows that our parent had as its parents, but we modify
+-- the child id in these rows to be the id of currently inserted row,
+-- and increase depth by one.
+-- --------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION ai_node_tree_1() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+BEGIN
+    INSERT INTO jet.node_tree (parent, child, depth)
+        VALUES (NEW.id, NEW.id, 0);
+    INSERT INTO jet.node_tree (parent, child, depth)
+        SELECT x.parent, NEW.id, x.depth + 1
+            FROM jet.node_tree x
+            WHERE x.child = NEW.parent_id;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER ai_node_tree_1 AFTER INSERT ON node
+FOR EACH ROW EXECUTE PROCEDURE ai_node_tree_1();
+
+-- --------------------------------------------------------------------
+-- UPDATE:
+-- --------------------------------------------------------------------
+-- As for moving data around in node freely, we should forbid
+-- moves that would create loops:
+CREATE OR REPLACE FUNCTION bu_node_tree_1() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+BEGIN
+    IF NEW.id <> OLD.id THEN
+        RAISE EXCEPTION 'Changing ids is forbidden.';
+    END IF;
+    IF OLD.parent_id IS NOT DISTINCT FROM NEW.parent_id THEN
+        RETURN NEW;
+    END IF;
+    IF NEW.parent_id IS NULL THEN
+        RETURN NEW;
+    END IF;
+    PERFORM 1 FROM jet.node_tree
+        WHERE ( parent, child ) = ( NEW.id, NEW.parent_id );
+    IF FOUND THEN
+        RAISE EXCEPTION 'Update blocked, because it would create loop in tree.';
+    END IF;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER bu_node_tree_1 BEFORE UPDATE ON node
+FOR EACH ROW EXECUTE PROCEDURE bu_node_tree_1();
+
+CREATE OR REPLACE FUNCTION au_node_tree_1() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+BEGIN
+    IF OLD.parent_id IS NOT DISTINCT FROM NEW.parent_id THEN
+        RETURN NEW;
+    END IF;
+    IF OLD.parent_id IS NOT NULL THEN
+        DELETE FROM jet.node_tree WHERE treeid in (
+            SELECT r2.treeid
+            FROM jet.node_tree r1
+            JOIN jet.node_tree r2 ON r1.child = r2.child
+            WHERE r1.parent = NEW.id AND r2.depth > r1.depth
+        );
+    END IF;
+    IF NEW.parent_id IS NOT NULL THEN
+        INSERT INTO jet.node_tree (parent, child, depth)
+            SELECT r1.parent, r2.child, r1.depth + r2.depth + 1
+            FROM
+                jet.node_tree r1,
+                jet.node_tree r2
+            WHERE
+                r1.child = NEW.parent_id AND
+                r2.parent = NEW.id;
+    END IF;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER au_node_tree_1 AFTER UPDATE ON node
+FOR EACH ROW EXECUTE PROCEDURE au_node_tree_1();
+
+
+
+-- Generate path urls based on part and position in
+-- the tree.
+CREATE OR REPLACE FUNCTION bi_node_path_1()
+RETURNS TRIGGER AS
+$BODY$
+DECLARE
+BEGIN
+    IF NEW.parent_id IS NULL THEN
+        NEW.node_path := NEW.part;
+    ELSE
+        SELECT node_path || '/' || NEW.part INTO NEW.node_path
+        FROM jet.node
+        WHERE id = NEW.parent_id;
+    END IF;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER bi_node_path_1 BEFORE INSERT ON node
+FOR EACH ROW EXECUTE PROCEDURE bi_node_path_1();
+
+CREATE OR REPLACE FUNCTION bu_node_path_1()
+RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    replace_from TEXT := '^';
+    replace_to   TEXT := '';
+BEGIN
+    IF OLD.parent_id IS NOT DISTINCT FROM NEW.parent_id THEN
+        RETURN NEW;
+    END IF;
+    IF OLD.parent_id IS NOT NULL THEN
+        SELECT '^' || node_path || '/' INTO replace_from
+        FROM jet.node
+        WHERE id = OLD.parent_id;
+    END IF;
+    IF NEW.parent_id IS NOT NULL THEN
+        SELECT node_path || '/' INTO replace_to
+        FROM jet.node
+        WHERE id = NEW.parent_id;
+    END IF;
+    NEW.node_path := regexp_replace( NEW.node_path, replace_from, replace_to );
+    UPDATE jet.node
+    SET node_path = regexp_replace(node_path, replace_from, replace_to )
+    WHERE id in (
+        SELECT child
+        FROM jet.node_tree
+        WHERE parent = NEW.id AND depth > 0
+    );
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER bu_node_path_1 BEFORE UPDATE ON node
+FOR EACH ROW EXECUTE PROCEDURE bu_node_path_1();
 
 COMMIT;

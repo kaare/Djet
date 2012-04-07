@@ -20,10 +20,10 @@ my $args = {
 	name => 'domain',
 };
 
-ok(my $nodedata = $schema->find_node({ node_path => '/' }), 'Get nodedata for domain');
+ok(my $nodedata = $schema->find_node({ node_path => '' }), 'Get nodedata for domain');
 ok(my $domain = Jet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $row = $domain->row, 'Get node row');
-is($row->table_name, 'domain', 'Tablename');
+is($row->row_data->{basetype_id}, 1, 'Basetype');
 $args = {
 	title => 'New usergroup',
 	part => 'newusergroup',
@@ -32,12 +32,12 @@ $args = {
 };
 ok(my $grp = $domain->add_child($args), 'Add a child');
 ok($row = $grp->row, 'Get node row');
-is($row->table_name, 'usergroup', 'New table name');
+is($row->row_data->{basetype_id}, 3, 'New table name');
 ok(my $children = $domain->children(), 'All children');
 is(@$children, 2, 'Number of children');
-ok($children = $domain->children(base_type => 'directory'), 'All directory children');
+ok($children = $domain->children(basetype => 'directory'), 'All directory children');
 is(@$children, 1, 'Number of directory children');
-ok($children = $domain->children(base_type => 'xyzzy'), 'All xyzzy children');
+ok($children = $domain->children(basetype => 'xyzzy'), 'All xyzzy children');
 is(@$children, 0, 'Number of xyzzy children (none)');
 
 $schema->txn_rollback;

@@ -47,7 +47,6 @@ has 'row_data' => (
 		get_columns    => 'kv',
 	},
 );
-has 'table_name' => (isa => 'Str', is => 'ro');
 has 'typetable'     => (
 	isa => 'HashRef',
 	is => 'ro',
