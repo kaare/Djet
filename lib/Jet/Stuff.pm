@@ -9,7 +9,6 @@ use JSON;
 
 use Jet::Stuff::Loader;
 use Jet::Stuff::QueryBuilder;
-use Jet::Stuff::Row;
 
 with 'Jet::Role::Log';
 
@@ -209,8 +208,7 @@ sub find_node {
 		$opt
 	);
 	my $sth = $self->_execute($sql, \@binds);
-	my $row_data = $sth->fetchrow_hashref || return;
-	return Jet::Stuff::Row->new(row_data => $row_data);
+	return $sth->fetchrow_hashref;
 }
 
 =head3 search_node
@@ -324,17 +322,6 @@ sub _execute {
 	return $sth;
 }
 
-=head3 row
-
-Returns a single row
-
-=cut
-
-sub row {
-	my ($self, $data) = @_;
-	return Jet::Stuff::Row->new(row_data => $data);
-}
-
 =head3 single
 
 Returns a single hashref from a query
@@ -343,7 +330,6 @@ Returns a single hashref from a query
 
 sub single {
 	my ($self, %args) = @_;
-debug(%args);
 	my $sth = $self->_execute($args{sql}, $args{data});
 	my $r = $sth->fetchrow_hashref();
 	$sth->finish();

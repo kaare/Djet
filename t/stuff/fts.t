@@ -18,13 +18,11 @@ isa_ok($stuff, 'Jet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
 ok(my $rows = $stuff->ft_search_node('test a rossa'), 'Fulltext search');
 is(@$rows, 1, 'Number of rows');
 is($rows->[0]->{title}, 'Family Photo', 'The row title');
-ok(my $row = $stuff->row($rows->[0], 'domain'), 'Get 1st row as an object');
-is($row->get_column('title'), 'Family Photo', 'The row title');
-is($row->get_column('id'), $data->{id}, 'Row id');
-ok(my $columns = $row->get_columns, 'Get columns');
-use Data::Dumper;
-warn Dumper $columns, $row;
-is($row->num_columns, 4, 'Number of columns');
+ok(my $row = $rows->[0], 'Get 1st row as an object');
+is($row->{title}, 'Family Photo', 'The row title');
+is($row->{id}, $data->{id}, 'Row id');
+ok(my %columns = %$row, 'Get columns');
+is(keys %columns, 11, 'Number of columns');
 ok($stuff->delete({id => $data->{id}}), 'Remove dnode');
 
 done_testing();

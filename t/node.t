@@ -23,7 +23,7 @@ my $args = {
 ok(my $nodedata = $schema->find_node({ node_path => '' }), 'Get nodedata for domain');
 ok(my $domain = Jet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $row = $domain->row, 'Get node row');
-is($row->row_data->{basetype_id}, 1, 'Basetype');
+is($row->{basetype_id}, 1, 'Basetype');
 $args = {
 	title => 'New usergroup',
 	part => 'newusergroup',
@@ -32,7 +32,7 @@ $args = {
 };
 ok(my $grp = $domain->add_child($args), 'Add a child');
 ok($row = $grp->row, 'Get node row');
-is($row->row_data->{basetype_id}, 3, 'New table name');
+is($row->{basetype_id}, 3, 'New table name');
 ok(my $children = $domain->children(), 'All children');
 is(@$children, 2, 'Number of children');
 ok($children = $domain->children(basetype => 'directory'), 'All directory children');

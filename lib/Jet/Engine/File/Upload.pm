@@ -33,7 +33,7 @@ sub data {
 	# !!
 	## !! Should be a separate engine part, or part of Node::Stash
 	my $box = $c->nodebox;
-	my $parent_id = $c->node->row->get_column($self->parameters->{parent_id});
+	my $parent_id = $c->node->get_column($self->parameters->{parent_id});
 	my $parent = $box->find_node({ node_id =>  $parent_id });
 	## !!
 	for my $upload ($req->uploads->get_all('files')) {
@@ -45,7 +45,7 @@ sub data {
 			name => $upload->filename,
 		};
 		my $photo_node = $parent->add_child($photo);
-		my $target_id = $photo_node->row->get_column('id');
+		my $target_id = $photo_node->get_column('id');
 		my $td = substr($target_id,-4);
 		$td .= '_' x ( 4 - length( $td ) );
 		my $targetdir = substr($td,-2).'/'.substr($td,-4,2);

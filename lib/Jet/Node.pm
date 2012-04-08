@@ -32,9 +32,18 @@ The node's path
 =cut
 
 has row => (
-	isa => 'Jet::Stuff::Row',
-	is => 'ro',
-	writer => '_row',
+	traits    => ['Hash'],
+	is        => 'ro',
+	isa       => 'HashRef',
+	default   => sub { {} },
+	handles   => {
+		set_column     => 'set',
+		get_column     => 'get',
+		has_no_columns => 'is_empty',
+		num_columns    => 'count',
+		delete_column  => 'delete',
+		get_columns    => 'kv',
+	},
 );
 has endpath => (
 	isa => 'Str',
@@ -47,7 +56,7 @@ has basetype => (
 	default => sub {
 		my $self = shift;
 		my $c = Jet::Context->instance();
-		return $c->basetypenames->{$self->row->get_column('basetype_id') };
+		return $c->basetypenames->{$self->get_column('basetype_id') };
 	},
 );
 has path => (
@@ -56,7 +65,7 @@ has path => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return $self->row->get_column('node_path');
+		return $self->get_column('node_path');
 	},
 );
 
@@ -125,7 +134,7 @@ sub add_child {
 	my ($self, $args) = @_;
 	return unless ref $args eq 'HASH';
 
-	$args->{parent_id} = $self->row->get_column('id');
+	$args->{parent_id} = $self->get_column('id');
 	my $c = Jet::Context->instance();
 	$args->{basetype_id} ||= $c->basetypes->{delete $args->{basetype}}{id} if $args->{basetype}; # Try to find basetype_id from basetype if that is defined
 	for my $column (qw/basetype_id title/) {
@@ -135,9 +144,8 @@ sub add_child {
 	my $schema = $c->schema;
 	my $basetype = delete $args->{basetype};
 	my $opts = {returning => '*'};
-	my $child = $schema->insert($args, $opts);
 	return $self->new(
-		row => $schema->row($child, $basetype),
+		row => $schema->insert($args, $opts),
 	);
 }
 
@@ -154,7 +162,7 @@ sub move_child {
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
 	my $opts = {returning => '*'};
-	my $success = $schema->move($child_id, $self->row->get_column('id'));
+	my $success = $schema->move($child_id, $self->get_column('id'));
 }
 
 =head2 children
@@ -169,11 +177,11 @@ sub children {
 	my $schema = $c->schema;
 	my $base_type = $self->basetype || return;
 
-	my $parent_id = $self->row->get_column('id');
+	my $parent_id = $self->get_column('id');
 	$opt{parent_id} = $parent_id;
 	$opt{basetype_id} ||= $c->basetypes->{delete $opt{basetype}}{id} if $opt{basetype}; # Try to find basetype_id from basetype if that is defined
 	my $result = $schema->search_node(\%opt);
-	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @$result ];
+	return [ map {Jet::Node->new(row =>  $_)} @$result ];
 }
 
 =head2 parents
@@ -192,7 +200,7 @@ sub parents {
 	my $schema = $c->schema;
 	my $parent_base_type = $opt{base_type} || return;
 
-	my $node_id = $self->row->get_column('id');
+	my $node_id = $self->get_column('id');
 	my $where = {
 		base_type => $self->basetype,
 		node_id => $node_id,
@@ -211,7 +219,7 @@ sub parents {
 			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
 		}
 	}
-	return [ map {Jet::Node->new(row => Jet::Stuff::Row->new(row_data => $_))} @result ];
+	return [ map {Jet::Node->new(row => $_)} @result ];
 }
 
 __PACKAGE__->meta->make_immutable;

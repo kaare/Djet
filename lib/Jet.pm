@@ -114,7 +114,7 @@ sub go {
 	my $template_name = $c->node->endpath ?
 		$recipe->{html_templates}{$c->node->endpath} :
 		$recipe->{html_template};
-	$template_name ||= $node->row->get_column('base_type');
+	$template_name ||= $node->get_column('base_type');
 	$c->response->template($c->config->jet->{template_path} . $template_name . $c->config->jet->{template_suffix});
 	return;
 }

@@ -19,14 +19,14 @@ my $node_path = '--test--';
 is(my $nodedata = $schema->find_node({ node_path =>  $node_path }), undef, 'Find no node');
 $node_path = '/groups/rasmussen/kaare';
 ok($nodedata = $schema->find_node({ node_path =>  $node_path }), 'Find node');
-isa_ok($nodedata, 'Jet::Stuff::Row', 'Nodedata type');
+isa_ok($nodedata, 'HASH', 'Nodedata type');
 ok(my $node = Jet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $children = $node->children, 'Get children');
 ok(my $scratch = $children->[0], 'First child');
 isa_ok($scratch, 'Jet::Node', 'Node type');
 is($scratch->path, '/groups/rasmussen/kaare/scratch', 'Node uri');
 is($scratch->basetype, 'photoalbum', 'Base type');
-is($scratch->row->get_column('title'), 'Scratchpad', 'Node title');
+is($scratch->get_column('title'), 'Scratchpad', 'Node title');
 ok(my $photos = $scratch->children, 'Get all children (photos)');
 is_deeply($photos, [], 'Empty list');
 

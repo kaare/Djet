@@ -58,7 +58,7 @@ sub data {
 	my $node;
 	my $remainder = [ grep {
 		my $ok = 1;
-		if ($_->row->get_column($column) eq $value) {
+		if ($_->get_column($column) eq $value) {
 			$node = $_;
 			$ok = 0
 		};
