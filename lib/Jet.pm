@@ -30,7 +30,6 @@ Build the Jet with roles
 # ABSTRACT: A Modern Content Management System
 
 BEGIN {
-	my $self = shift;
 	with 'Jet::Role::Log';
 	my $c = Jet::Context->instance;
 	my $config = $c->config->options->{Jet};

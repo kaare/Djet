@@ -113,19 +113,6 @@ has basetypes => (
 		return $schema->get_basetypes;
 	},
 );
-has basetypenames => (
-	isa   => 'HashRef',
-	is    => 'ro',
-	lazy  => 1, 
-	default => 	sub {
-		my $self = shift;
-		my $schema = $self->schema;
-		my $basetypes = $self->basetypes;
-		my $basetypenames;
-		$basetypenames->{$basetypes->{$_}{id}} = $basetypes->{$_}{name} for keys %$basetypes;
-		return $basetypenames;
-	},
-);
 has request => (
 	isa => 'Plack::Request',
 	is => 'ro',

@@ -68,9 +68,12 @@ sub find_node_path($) {
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
 	my $nodedata = $schema->find_node({ node_path =>  $path });
-	return Jet::Node->new(
+	return unless $nodedata;
+
+	my $baserole = $c->basetypes->{$nodedata->{basetype_id}}->{role};
+	return Jet::Node->with_traits($baserole)->new(
 		row => $nodedata,
-	) if $nodedata;
+	);
 
 	# Find node at one level up. See if there is a path expression on that node
 	$path =~ m|(.*)/(\w+)$|;
@@ -78,8 +81,10 @@ sub find_node_path($) {
 	my $endpath = $2;
 	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
 	return unless $nodedata;
+
+	$baserole = $c->basetypes->{$nodedata->{basetype_id}}->{role};
 	# We'll save the endpath for later, where we'll see if there is a recipe
-	return Jet::Node->new(
+	return Jet::Node->with_traits($baserole)->new(
 		row => $nodedata,
 		endpath => $endpath // '',
 	);

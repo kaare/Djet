@@ -174,7 +174,21 @@ sub get_basetypes {
 	);
 	my $sth = $self->_execute($sql, \@binds);
 	my $basetypes = $sth->fetchall_arrayref({});
-	return { map {$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};{$_->{name} => $_} } @$basetypes };
+	return { map {
+		$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};
+		$_->{role} = $self->_build_base_role($_);
+		{ $_->{id} => $_ }; 
+	} @$basetypes };
+}
+
+sub _build_base_role {
+	my ($self, $basetype) = @_;
+	my $role = Moose::Meta::Role->create_anon_role;
+	my $colidx;
+	for my $column (@{ $basetype->{columns} }) {
+		$role->add_method( "get_$column", sub {my $self = shift;my $cols = $self->get_column('columns');return $cols->[$colidx++]} );
+	}
+	return $role;
 }
 
 =head3 find_basetype

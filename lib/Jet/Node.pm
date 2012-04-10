@@ -31,6 +31,8 @@ The node's path
 
 =cut
 
+with 'MooseX::Traits';
+
 has row => (
 	traits    => ['Hash'],
 	is        => 'ro',
@@ -50,13 +52,13 @@ has endpath => (
 	is => 'ro',
 );
 has basetype => (
-	isa => 'Str',
+	isa => 'HashRef',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
 		my $c = Jet::Context->instance();
-		return $c->basetypenames->{$self->get_column('basetype_id') };
+		return $c->basetypes->{$self->get_column('basetype_id')};
 	},
 );
 has path => (
@@ -78,8 +80,9 @@ Build the Jet with roles
 =cut
 
 BEGIN {
-	my $self = shift;
+	# Logging
 	with 'Jet::Role::Log';
+	# Configuration
 	my $c = Jet::Context->instance;
 	my $config = $c->config->options->{'Jet::Node'};
 	return unless $config->{role};
@@ -175,11 +178,10 @@ sub children {
 	my ($self, %opt) = @_;
 	my $c = Jet::Context->instance();
 	my $schema = $c->schema;
-	my $base_type = $self->basetype || return;
-
 	my $parent_id = $self->get_column('id');
 	$opt{parent_id} = $parent_id;
-	$opt{basetype_id} ||= $c->basetypes->{delete $opt{basetype}}{id} if $opt{basetype}; # Try to find basetype_id from basetype if that is defined
+	# Try to find basetype_id from basetype if that is defined
+	$opt{basetype_id} ||= $c->basetypes->{delete $opt{basetype}}{id} if $opt{basetype};
 	my $result = $schema->search_node(\%opt);
 	return [ map {Jet::Node->new(row =>  $_)} @$result ];
 }

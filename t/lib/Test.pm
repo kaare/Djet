@@ -22,4 +22,7 @@ sub schema {
 	return $schema;
 }
 
+my $c = Jet::Context->instance;
+$c->schema(schema());
+
 1;
