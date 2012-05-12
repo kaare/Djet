@@ -29,13 +29,19 @@ The options part of the config
 
 =cut
 
+has base => (
+	isa => 'Str',
+	is  => 'ro',
+	default => 'etc/',
+);
 has config => (
 	isa => 'HashRef',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
+		chdir $self->base;
 		my $config_total = Config::Any->load_files({
-			files => [glob 'etc/*'],
+			files => [glob '*'],
 			use_ext => 1,
 			flatten_to_hash => 1,
 		});
@@ -47,7 +53,7 @@ has jet => (
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		return $self->config->{'etc/jet.conf'};
+		return $self->config->{'jet.conf'};
 	},
 );
 has options => (
@@ -55,7 +61,7 @@ has options => (
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		return $self->config->{'etc/options.conf'};
+		return $self->config->{'options.conf'};
 	},
 );
 

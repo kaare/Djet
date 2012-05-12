@@ -72,12 +72,18 @@ has jet_root => (
 		return $path;
 	},
 );
+has configbase => (
+	isa => 'Str',
+	is  => 'ro',
+	default => 'etc/',
+);
 has config => (
 	isa => 'Jet::Context::Config',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
-		return Jet::Context::Config->new;
+		my $self = shift;
+		return Jet::Context::Config->new(base => $self->configbase);
 	},
 );
 has schema => (
