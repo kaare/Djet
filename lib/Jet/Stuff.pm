@@ -142,6 +142,23 @@ sub disconnect {
 
 =head2 Manipulating basetypes
 
+=head3 insert_basetype
+
+Insert a Jet basetype
+
+=cut
+
+sub insert_basetype {
+	my ($self, $data, $opt) = @_;
+	my ($sql, @binds) = $self->sql_builder->insert(
+		"jet.basetype",
+		$data,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+}
+
+
 =head3 update_basetype
 
 Update Jet's basetype
@@ -177,7 +194,7 @@ sub get_basetypes {
 	return { map {
 		$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};
 		$_->{role} = $self->_build_base_role($_);
-		{ $_->{id} => $_ }; 
+		{ $_->{id} => $_ };
 	} @$basetypes };
 }
 
