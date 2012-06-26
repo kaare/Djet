@@ -39,12 +39,15 @@ has config => (
 	is => 'ro',
 	default => sub {
 		my $self = shift;
+		my $savedir = qx{pwd};
+		chomp $savedir;
 		chdir $self->base;
 		my $config_total = Config::Any->load_files({
 			files => [glob '*'],
 			use_ext => 1,
 			flatten_to_hash => 1,
 		});
+		chdir $savedir or die 'wtf?';
 		return $config_total;
 	},
 );

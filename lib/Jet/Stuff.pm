@@ -194,7 +194,7 @@ sub get_basetypes {
 	return { map {
 		$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};
 		$_->{role} = $self->_build_base_role($_);
-		{ $_->{id} => $_ };
+		{ $_->{name} => $_ };
 	} @$basetypes };
 }
 

@@ -2,7 +2,7 @@ package Jet;
 
 use 5.010;
 use Moose;
-use Plack::Request;
+use Jet::Request;
 use Jet::Context;
 use Try::Tiny;
 use Jet::Exception;
@@ -68,7 +68,7 @@ Handle the request
 sub handle_request($) {
 	my ($self, $env) = @_;
 	my $c = Jet::Context->instance;
-	my $req = Plack::Request->new($env);
+	my $req = Jet::Request->new($env);
 	$c->_request($req);
 	my $node = $c->nodebox->find_node_path($req->path_info) || Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
 	$c->node($node);
