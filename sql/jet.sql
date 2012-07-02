@@ -37,16 +37,11 @@ COMMENT ON COLUMN basetype.recipe IS 'Ingredients and steps for cooking a node';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
-CREATE TABLE node (
+CREATE TABLE data (
 	id						serial NOT NULL PRIMARY KEY,
 	basetype_id				int NOT NULL REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
-	parent_id				int REFERENCES node(id)
-							ON DELETE cascade
-							ON UPDATE cascade,
-	part					text,
-	node_path				text UNIQUE,
 	name					text,
 	title					text,
 	columns					text[],
@@ -55,85 +50,74 @@ CREATE TABLE node (
 	modified				timestamp
 );
 
+COMMENT ON TABLE data IS 'Data';
+COMMENT ON COLUMN data.basetype_id IS 'The Basetype of the Data';
+COMMENT ON COLUMN data.name IS 'The name';
+COMMENT ON COLUMN data.title IS 'The Title';
+COMMENT ON COLUMN data.columns IS 'The actual column data';
+COMMENT ON COLUMN data.fts IS 'Full Text Search column containing the content of the searchable columns';
+
+CREATE TRIGGER set_modified BEFORE UPDATE ON data FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
+
+CREATE TABLE node (
+	id						serial NOT NULL PRIMARY KEY,
+	data_id					int REFERENCES data(id)
+							ON DELETE cascade
+							ON UPDATE cascade,
+	parent_id				int REFERENCES node(id)
+							ON DELETE cascade
+							ON UPDATE cascade,
+	part					text,
+	node_path				text UNIQUE,
+	created					timestamp default now(),
+	modified				timestamp
+);
+
 COMMENT ON TABLE node IS 'Node';
-COMMENT ON COLUMN node.basetype_id IS 'The Basetype of the Node';
+COMMENT ON COLUMN node.parent_id IS 'Pointer to the data row';
 COMMENT ON COLUMN node.parent_id IS 'Parent of this uri';
 COMMENT ON COLUMN node.part IS 'Path part';
 COMMENT ON COLUMN node.node_path IS 'Global Path parts';
-COMMENT ON COLUMN node.name IS 'The Node''s name';
-COMMENT ON COLUMN node.title IS 'The Node Title';
-COMMENT ON COLUMN basetype.columns IS 'The actual column data';
-COMMENT ON COLUMN node.fts IS 'Full Text Search column containing the content of the searchable columns';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
--- Functions
-
-CREATE OR REPLACE FUNCTION update_fts() RETURNS trigger AS $$
-	# jet.basetype
-	my $q = "SELECT * FROM jet.basetype WHERE id = $_TD->{new}{basetype_id}";
-	my $rv = spi_exec_query($q);
-	unless ($rv->{status} eq 'SPI_OK_SELECT' and $rv->{processed} == 1) {
-		elog(ERROR,"Basetype $base_name not found in jet.basetype");
-		return SKIP;
-	}
-
-	my $base_row = $rv->{rows}->[0];
-	my $base_columns = $base_row->{columns};
-	my $searchable = $base_row->{searchable};
-	return MODIFY unless @{ $base_columns } and @{ $searchable };
-
-	my @datacols = @{ $_TD->{new}{columns} };
-	my ($columns, $fts);
-	$columns->{$_} = shift @datacols for @{ $base_columns };
-	$fts = join ' ', map {$columns->{$_}} grep {$columns->{$_}} @$searchable; # Find searchable columns with content
-	$_TD->{new}{fts} = $fts;
-	return MODIFY;
-$$
-LANGUAGE 'plperl' VOLATILE;
-
-CREATE TRIGGER update_fts BEFORE INSERT OR UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE jet.update_fts();
-
 --
--- Check that a row has the correct parent type
+-- data_node view
 --
 
-CREATE OR REPLACE FUNCTION trig_check_basetype() RETURNS trigger AS
-$$
+CREATE VIEW data_node AS
+SELECT d.id data_id, d.basetype_id, d.name, d.title, d.columns, d.fts, d.created data_created, d.modified data_modified,
+	n.id node_id, n.parent_id, n.part, n.node_path, n.created node_created, n.modified	node_modified
+FROM jet.data d
+JOIN jet.node n ON d.id=n.data_id;
+
+CREATE OR REPLACE FUNCTION data_node_insert() RETURNS trigger AS $$
 DECLARE
-	parent_array int[];
-	parent_type int;
 BEGIN
-	IF new.parent_id IS NULL THEN
-		RETURN NEW;
-	END IF;
-	SELECT parent INTO parent_array FROM jet.basetype WHERE id = NEW.basetype_id;
-	IF parent_array IS NULL THEN
-		RETURN NEW;
-	END IF;
-	SELECT basetype_id INTO parent_type FROM jet.node WHERE id = NEW.parent_id;
-	IF parent_type = ANY (parent_array) THEN
-		RETURN NEW;
-	ELSE
-		RAISE INFO 'Can''t insert child type % under parent %', NEW.parent_id, parent_type;
-		RETURN NULL;
-	END IF;
-END
-$$
-LANGUAGE 'plpgsql' VOLATILE;
+	WITH new_data AS (
+		INSERT INTO jet.data (basetype_id, title, columns, fts) VALUES (NEW.basetype_id, NEW.title, NEW.columns, NEW.fts) RETURNING id
+	)
+	INSERT INTO jet.node (data_id, parent_id, part, node_path) SELECT id, NEW.parent_id, NEW.part, NEW.node_path FROM new_data;
+	RETURN NEW;
+END;
+$$ language plpgsql;
 
--- Path triggers
+CREATE TRIGGER data_node_insert INSTEAD OF INSERT ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_insert();
 
--- for postgreSQL 9.0 -- you can use this syntax to save unnecessary check of trigger function
-CREATE TRIGGER
-	trig01_check_basetype
-AFTER INSERT OR UPDATE OF
-	parent_id
-ON
-	node
-FOR EACH ROW EXECUTE PROCEDURE
-	trig_check_basetype();
+CREATE OR REPLACE FUNCTION data_node_update() RETURNS trigger AS $$
+DECLARE
+BEGIN
+	UPDATE jet.data
+		SET basetype_id=NEW.basetype_id, title=NEW.title, columns=NEW.columns, fts=NEW.fts
+		WHERE id=OLD.data_id;
+	UPDATE jet.node
+		SET parent_id=NEW.parent_id, part=NEW.part, node_path=NEW.node_path
+		WHERE id=OLD.node_id;
+	RETURN NEW;
+END;
+$$ language plpgsql;
 
+CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_update();
 
 -- --------------------------------------------------------------------
 -- A hierarchical data (tree) implementation using triggers
@@ -305,8 +289,13 @@ DECLARE
     replace_from TEXT := '^';
     replace_to   TEXT := '';
 BEGIN
-    IF OLD.parent_id IS NOT DISTINCT FROM NEW.parent_id THEN
+    IF OLD.parent_id IS NOT DISTINCT FROM NEW.parent_id AND OLD.part IS NOT DISTINCT FROM NEW.part THEN
         RETURN NEW;
+    END IF;
+    IF OLD.part IS DISTINCT FROM NEW.part THEN
+        SELECT node_path || '/' || NEW.part INTO NEW.node_path
+        FROM jet.node
+        WHERE id = NEW.parent_id;
     END IF;
     IF OLD.parent_id IS NOT NULL THEN
         SELECT '^' || node_path || '/' INTO replace_from
@@ -319,6 +308,8 @@ BEGIN
         WHERE id = NEW.parent_id;
     END IF;
     NEW.node_path := regexp_replace( NEW.node_path, replace_from, replace_to );
+    replace_from := replace_from || OLD.part;
+    replace_to := replace_to || NEW.part;
     UPDATE jet.node
     SET node_path = regexp_replace(node_path, replace_from, replace_to )
     WHERE id in (

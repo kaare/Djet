@@ -6,8 +6,8 @@ use warnings;
 	
 use Test::More;
 
-use Jet::Context;
-use Jet::Stuff;
+#use Jet::Context;
+#use Jet::Stuff;
 
 sub db_name {
 	return '__jet_test__';
@@ -22,7 +22,7 @@ sub schema {
 	return $schema;
 }
 
-my $c = Jet::Context->instance;
-$c->schema(schema());
+#my $c = Jet::Context->instance;
+#$c->schema(schema());
 
 1;
