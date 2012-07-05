@@ -64,7 +64,7 @@ If not found, it goes one step up from find_node and tries to find something con
 
 sub find_node_path($) {
 	my ($self, $path) = @_;
-#	$path .= '/' unless $path =~ m|/$|;
+	$path =~ s|^/?(.*)$|$1|; # Remove first character if slash
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
 	my $nodedata = $schema->find_node({ node_path =>  $path });
