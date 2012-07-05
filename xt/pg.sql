@@ -14,11 +14,11 @@
 
 -- Load the TAP functions.
 BEGIN;
---    \i pgtap.sql
-CREATE EXTENSION pgtap;
+
+CREATE EXTENSION IF NOT EXISTS pgtap;
 
 -- Plan the tests.
-SELECT plan(2);
+SELECT plan(3);
 
 -- Run the tests.
 PREPARE update_data_node AS UPDATE jet.node SET part='test' WHERE id=4;
