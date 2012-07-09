@@ -1,33 +1,19 @@
--- Basic data tables
+-- Basic Jet basetypes and nodes
 
 BEGIN;
 
-SET search_path TO data;
+SET search_path=jet;
 
-CREATE TABLE directory (
-	id						int NOT NULL PRIMARY KEY
-							REFERENCES jet.node
-							ON DELETE cascade
-							ON UPDATE cascade
-);
+-- Basetypes
 
-CREATE VIEW directory_view AS
-SELECT
-	d.*,
-	b.name basetype,
-	n.name, n.title,
-	p.id path_id, p.part,p.node_path,parent_id
-FROM
-	directory d
-JOIN
-	jet.node n USING (id)
-JOIN
-	jet.path p ON p.node_id=n.id
-JOIN
-	jet.basetype b ON basetype_id = b.id
-WHERE
-    b.name='directory';
+INSERT INTO basetype (name) VALUES ('Jet Config');
+INSERT INTO basetype (name) VALUES ('directory');
+INSERT INTO basetype (name) VALUES ('usergroup');
+INSERT INTO basetype (name,parent,searchable,columns) VALUES ('person','{2,3}','{"userlogin"}','{"userlogin","password"}');
 
-CREATE TRIGGER directory_view_insert INSTEAD OF INSERT ON directory_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
+-- Data Nodes
+
+INSERT INTO data_node (basetype_id,part,name,title) VALUES (2,'jet','Jet Base Directory','Jet Base Directory');
+INSERT INTO data_node (basetype_id,part,title,parent_id,name) VALUES (1,'config','Jet Configuration', 1, 'Jet Configuration');
 
 COMMIT;
