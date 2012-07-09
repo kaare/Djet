@@ -51,7 +51,7 @@ sub find_node($) {
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
 	my $nodedata = $schema->find_nodepath($args);
-	return  $nodedata ? Jet::Node->new(row => $nodedata) : undef;
+	return $nodedata ? Jet::Node->new(row => $nodedata) : undef;
 }
 
 =head2 find_node_path
@@ -68,21 +68,22 @@ sub find_node_path($) {
 	my $c = Jet::Context->instance;
 	my $schema = $c->schema;
 	my $nodedata = $schema->find_node({ node_path =>  $path });
-	return unless $nodedata;
 
-	my $baserole = $c->basetypes->{$nodedata->{basetype_id}}->{role};
-	return Jet::Node->with_traits($baserole)->new(
-		row => $nodedata,
-	);
+	if ($nodedata) {
+		my $baserole = $c->basetypes->{$nodedata->{basetype_id}}->{role};
+		return Jet::Node->with_traits($baserole)->new(
+			row => $nodedata,
+		);
+	}
 
 	# Find node at one level up. See if there is a path expression on that node
-	$path =~ m|(.*)/(\w+)$|;
+	$path =~ m|(.*)/(\w+)/?$|;
 	my $node_path = $1;
 	my $endpath = $2;
 	$nodedata = $c->schema->find_node({ node_path =>  $node_path });
 	return unless $nodedata;
 
-	$baserole = $c->basetypes->{$nodedata->{basetype_id}}->{role};
+	my $baserole = $c->basetypes->{$nodedata->{basetype_id}}->{role};
 	# We'll save the endpath for later, where we'll see if there is a recipe
 	return Jet::Node->with_traits($baserole)->new(
 		row => $nodedata,

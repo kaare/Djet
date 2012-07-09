@@ -194,7 +194,7 @@ sub get_basetypes {
 	return { map {
 		$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};
 		$_->{role} = $self->_build_base_role($_);
-		{ $_->{name} => $_ };
+		{ $_->{id} => $_ };
 	} @$basetypes };
 }
 
@@ -233,7 +233,7 @@ Find a node
 sub find_node {
 	my ($self, $where, $opt) = @_;
 	my ($sql, @binds) = $self->sql_builder->select(
-		"jet.node",
+		"jet.data_node",
 		'*',
 		$where,
 		$opt

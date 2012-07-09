@@ -70,7 +70,8 @@ sub handle_request($) {
 	my $c = Jet::Context->instance;
 	my $req = Jet::Request->new($env);
 	$c->_request($req);
-	my $node = $c->nodebox->find_node_path($req->path_info) || Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
+	my $node = $c->nodebox->find_node_path($req->path_info) ||
+		Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
 	$c->node($node);
 	return $self->go($req, $node);
 }
@@ -113,7 +114,7 @@ sub go {
 	my $template_name = $c->node->endpath ?
 		$recipe->{html_templates}{$c->node->endpath} :
 		$recipe->{html_template};
-	$template_name ||= $node->get_column('base_type');
+	$template_name ||= $node->get_column('node_path');
 	$c->response->template($c->config->jet->{template_path} . $template_name . $c->config->jet->{template_suffix});
 	return;
 }
