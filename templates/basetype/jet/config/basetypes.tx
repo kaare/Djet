@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title><: $node.get_column('title') :> - Basetypes</title>
+	<link rel="stylesheet" href="/css/jet.css">
+
+</head>
+<body>
+<h1><: $node.get_column('title') :> - Basetypes</h1>
+<ul>
+: for $basetypes -> $basetype {
+	<li><: $basetype.name :>
+: }
+</ul>
+</body>
+</html>
