@@ -102,23 +102,26 @@ sub update_person_recipe {
 	update_node('person', $data);
 }
 
-sub update_album_recipe {
+sub update_config_recipe {
 	my $data = {
-		steps => [
-			{
-				verb => 'POST',
-				plugin => 'Node::MoveTo',
-				content => {
-					child_id => 'photo_id',
+		paths => {
+			basetypes => [
+				{
+					part => 'Stash',
+					static => {
+						stashname => 'basetypes',
+						method    => 'get_basetypes',
+						order     => 'id',
+					},
 				},
-			},
-		],
+			],
+		},
 		html_templates => {
-			upload => 'upload',
+			basetypes => 'jet/config/basetypes',
 		},
 	};
 	say STDERR Dumper( JSON->new->encode($data));
-	update_node('photoalbum', $data);
+	update_node('jet_config', $data);
 }
 
 sub update_node {
@@ -129,5 +132,5 @@ sub update_node {
 	say STDERR Dumper $recipe, $schema->find_basetype({name => 'domain'});
 }
 
-update_person_recipe;
-update_album_recipe;
+#update_person_recipe;
+update_config_recipe;

@@ -6,7 +6,7 @@ SET search_path=jet;
 
 -- Basetypes
 
-INSERT INTO basetype (name) VALUES ('Jet Config');
+INSERT INTO basetype (name) VALUES ('jet_config');
 INSERT INTO basetype (name) VALUES ('directory');
 INSERT INTO basetype (name) VALUES ('usergroup');
 INSERT INTO basetype (name,parent,searchable,columns) VALUES ('person','{2,3}','{"userlogin"}','{"userlogin","password"}');
