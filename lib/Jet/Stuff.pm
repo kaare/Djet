@@ -190,7 +190,18 @@ sub get_basetypes {
 		$opt
 	);
 	my $sth = $self->_execute($sql, \@binds);
-	my $basetypes = $sth->fetchall_arrayref({});
+	return $sth->fetchall_arrayref({});
+}
+
+=head3 get_basetypes_href
+
+Get all basetypes as hashref, id is key
+
+=cut
+
+sub get_basetypes_href {
+	my ($self, $where, $opt) = @_;
+	my $basetypes = $self->get_basetypes($where, $opt);
 	return { map {
 		$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};
 		$_->{role} = $self->_build_base_role($_);
