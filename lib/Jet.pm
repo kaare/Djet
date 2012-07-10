@@ -95,7 +95,7 @@ sub go {
 		$recipe->{paths}{$c->node->endpath} :
 		$recipe->{steps};
 	for my $step (@$steps) {
-		my $engine_name = "Jet::Engine::$step->{plugin}";
+		my $engine_name = "Jet::Engine::Part::$step->{part}";
 		print STDERR "\n$engine_name: ";
 		eval "require $engine_name" or next;
 		print STDERR "found ";

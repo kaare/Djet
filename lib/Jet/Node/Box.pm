@@ -15,18 +15,6 @@ Jet::Node::Box - A box of Nodes
 
 =head1 ATTRIBUTES
 
-=head2 nodes
-
-The nodes
-
-=cut
-
-has nodes => (
-	isa => 'ArrayRef[Jet::Node]',
-	is => 'ro',
-	writer => '_node',
-);
-
 =head1 METHODS
 
 =head2 BUILD

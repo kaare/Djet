@@ -116,7 +116,7 @@ has basetypes => (
 	default => 	sub {
 		my $self = shift;
 		my $schema = $self->schema;
-		return $schema->get_basetypes;
+		return $schema->get_basetypes_href;
 	},
 );
 has request => (
@@ -169,7 +169,7 @@ has recipe => (
 	default => 	sub {
 		my ($self) = @_;
 		my $type = $self->node->basetype;
-		return $self->basetypes->{$type}{recipe} || {};
+		return $type->{recipe} || {};
 	},
 );
 
