@@ -1,0 +1,5 @@
+<h2>
+: $exception.reason
+</h2>
+
+: $exception.message
