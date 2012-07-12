@@ -10,7 +10,7 @@
 <h1><: $node.get_column('title') :> - Basetypes</h1>
 <ul>
 : for $basetypes -> $basetype {
-	<li><: $basetype.name :>
+	<li><a href="/jet/config/basetype/<: $basetype.id :>"><: $basetype.name :></a>
 : }
 </ul>
 </body>

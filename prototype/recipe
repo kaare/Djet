@@ -102,7 +102,7 @@ sub update_person_recipe {
 	update_node('person', $data);
 }
 
-sub update_config_recipe {
+sub update_basetype_recipe {
 	my $data = {
 		paths => {
 			basetypes => [
@@ -112,6 +112,20 @@ sub update_config_recipe {
 						stashname => 'basetypes',
 						method    => 'get_basetypes',
 						order     => 'id',
+					},
+				},
+			],
+			basetype => [
+				{
+					part => 'Stash',
+					static => {
+						stashname => 'basetype',
+						method    => 'find_basetype',
+					},
+					content => {
+						where => {
+							id => 'id',
+						},
 					},
 				},
 			],
@@ -134,3 +148,4 @@ sub update_node {
 
 #update_person_recipe;
 update_config_recipe;
+update_basetype_recipe;
