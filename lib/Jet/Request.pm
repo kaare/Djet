@@ -7,9 +7,6 @@ use namespace::autoclean;
 
 extends 'Plack::Request';
 
-use Jet::Node::Box;
-use Jet::Response;
-
 with 'Jet::Role::Log';
 
 =head1 NAME
@@ -20,6 +17,12 @@ Jet::Request - The Jet Request
 
 =head1 Attributes
 
+=head2 rest_parameters
+
+If the request is a "REST" call, the parameters will be here
+
+!WIP!
+
 =cut
 
 has rest => (
@@ -29,46 +32,6 @@ has rest => (
 	clearer   => 'clear_rest',
 	predicate => 'has_rest',
 	default => sub { Jet::Context::Rest->new },
-);
-has response => (
-	isa => 'Jet::Response',
-	is => 'ro',
-	writer => '_response',
-);
-has stash => (
-	isa       => 'HashRef',
-	is        => 'ro',
-	clearer => 'clear_stash',
-	predicate => 'has_stash',
-	lazy => 1,
-	default => 	sub {
-		my $self = shift;
-		return $self->config->{jet}{stash} || {};
-	},
-);
-has nodebox => (
-	isa => 'Jet::Node::Box',
-	is => 'ro',
-	lazy => 1,
-	default => sub {Jet::Node::Box->new},
-);
-has node => (
-	isa => 'Jet::Node',
-	is => 'rw',
-	clearer   => 'clear_node',
-	predicate => 'has_node',
-);
-has recipe => (
-	isa       => 'HashRef',
-	is        => 'ro',
-	clearer   => 'clear_recipe',
-	predicate => 'has_recipe',
-	lazy => 1,
-	default => 	sub {
-		my ($self) = @_;
-		my $type = $self->node->basetype;
-		return $self->basetypes->{$type}{recipe} || {};
-	},
 );
 
 =head1 METHODS

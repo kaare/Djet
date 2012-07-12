@@ -3,7 +3,7 @@ package Jet::Node;
 use 5.010;
 use Moose;
 
-use Jet::Context;
+with 'MooseX::Traits';
 
 =head1 NAME
 
@@ -12,6 +12,10 @@ Jet::Node - Represents Jet Nodes
 =head1 SYNOPSIS
 
 =head1 ATTRIBUTES
+
+=head2 schema
+
+=head2 basetypes
 
 =head2 row
 
@@ -31,8 +35,14 @@ The node's path
 
 =cut
 
-with 'MooseX::Traits';
-
+has schema => (
+	isa => 'Jet::Stuff',
+	is => 'ro',
+);
+has basetypes => (
+	isa       => 'HashRef',
+	is        => 'ro',
+);
 has row => (
 	traits    => ['Hash'],
 	is        => 'ro',
@@ -57,8 +67,7 @@ has basetype => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $c = Jet::Context->instance();
-		return $c->basetypes->{$self->get_column('basetype_id')};
+		return $self->basetypes->{$self->get_column('basetype_id')};
 	},
 );
 has path => (
@@ -79,17 +88,16 @@ Build the Jet with roles
 
 =cut
 
-BEGIN {
-	# Logging
-	with 'Jet::Role::Log';
-	# Configuration
-	my $c = Jet::Context->instance;
-	my $config = $c->config->options->{'Jet::Node'};
-	return unless $config->{role};
+# BEGIN {
+	# # Logging
+	# with 'Jet::Role::Log';
+	# # Configuration
+	# my $config = Jet->config->options->{'Jet::Node'};
+	# return unless $config->{role};
 
-	my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
-	with ( map "Jet::Role::$_", @roles ) if @roles;
-}
+	# my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
+	# with ( map "Jet::Role::$_", @roles ) if @roles;
+# }
 
 =head2 add
 
@@ -104,11 +112,9 @@ sub add {
 		return unless defined $args->{$column};
 	}
 
-	my $c = Jet::Context->instance();
-	my $schema = $c->schema;
 	my $opts = {returning => '*'};
-	my $row = $schema->insert($self->basetype, $args, $opts);
-	$self->_row($schema->row($row, $self->basetype));
+	my $row = $self->schema->insert($self->basetype, $args, $opts);
+	$self->_row($self->schema->row($row, $self->basetype));
 }
 
 =head2 move
@@ -121,10 +127,8 @@ sub move {
 	my ($self, $parent_id) = @_;
 	return unless $parent_id and $self->row;
 
-	my $c = Jet::Context->instance();
-	my $schema = $c->schema;
 	my $opts = {returning => '*'};
-	my $success = $schema->move($self->path_id, $parent_id);
+	my $success = $self->schema->move($self->path_id, $parent_id);
 }
 
 =head2 add_child
@@ -138,17 +142,15 @@ sub add_child {
 	return unless ref $args eq 'HASH';
 
 	$args->{parent_id} = $self->get_column('id');
-	my $c = Jet::Context->instance();
-	$args->{basetype_id} ||= $c->basetypes->{delete $args->{basetype}}{id} if $args->{basetype}; # Try to find basetype_id from basetype if that is defined
+	$args->{basetype_id} ||= $self->basetypes->{delete $args->{basetype}}{id} if $args->{basetype}; # Try to find basetype_id from basetype if that is defined
 	for my $column (qw/basetype_id title/) {
 		return unless ($args->{$column});
 	}
 
-	my $schema = $c->schema;
 	my $basetype = delete $args->{basetype};
 	my $opts = {returning => '*'};
 	return $self->new(
-		row => $schema->insert($args, $opts),
+		row => $self->schema->insert($args, $opts),
 	);
 }
 
@@ -162,10 +164,8 @@ sub move_child {
 	my ($self, $child_id) = @_;
 	return unless $child_id and $self->row;
 
-	my $c = Jet::Context->instance();
-	my $schema = $c->schema;
 	my $opts = {returning => '*'};
-	my $success = $schema->move($child_id, $self->get_column('id'));
+	my $success = $self->schema->move($child_id, $self->get_column('id'));
 }
 
 =head2 children
@@ -176,13 +176,11 @@ Return the children of the current node
 
 sub children {
 	my ($self, %opt) = @_;
-	my $c = Jet::Context->instance();
-	my $schema = $c->schema;
 	my $parent_id = $self->get_column('id');
 	$opt{parent_id} = $parent_id;
 	# Try to find basetype_id from basetype if that is defined
-	$opt{basetype_id} ||= $c->basetypes->{delete $opt{basetype}}{id} if $opt{basetype};
-	my $result = $schema->search_node(\%opt);
+	$opt{basetype_id} ||= $self->basetypes->{delete $opt{basetype}}{id} if $opt{basetype};
+	my $result = $self->schema->search_node(\%opt);
 	return [ map {Jet::Node->new(row =>  $_)} @$result ];
 }
 
@@ -198,8 +196,6 @@ base_type
 
 sub parents {
 	my ($self, %opt) = @_;
-	my $c = Jet::Context->instance();
-	my $schema = $c->schema;
 	my $parent_base_type = $opt{base_type} || return;
 
 	my $node_id = $self->get_column('id');
@@ -207,12 +203,13 @@ sub parents {
 		base_type => $self->basetype,
 		node_id => $node_id,
 	};
-	my $nodes = $schema->search_nodepath(\%opt);
+	my $nodes = $self->schema->search_nodepath(\%opt);
 	my %nodes;
 	for my $node (@$nodes) {
 		push @{ $nodes{$node->{base_type}} }, $node;
 	}
 	my @result;
+	my $schema = $self->schema;
 	while (my ($base_type, $nodes) = each %nodes) {
 		for my $node (@{ $nodes }) {
 			$where = {

@@ -2,10 +2,16 @@ package Jet;
 
 use 5.010;
 use Moose;
-use Jet::Request;
-use Jet::Context;
 use Try::Tiny;
+use CHI;
+
+use Jet::Config;
+use Jet::Stuff;
+use Jet::Request;
+use Jet::Response;
+use Jet::Node;
 use Jet::Exception;
+use Jet::Engine;
 
 =head1 NAME
 
@@ -19,6 +25,19 @@ Faster than an AWE2
 
 Experimental module
 
+=head1 Class Attributes
+
+configbase
+
+=cut
+
+our $jet_root;
+our $configbase;
+our $config;
+our $schema;
+our $cache;
+our $basetypes;
+
 =head1 METHODS
 
 =head2 BEGIN
@@ -30,10 +49,24 @@ Build the Jet with roles
 # ABSTRACT: A Modern Content Management System
 
 BEGIN {
+	# Init "Class Attributes"
+	my $path = $INC{'Jet.pm'};
+	$path =~ s|lib/+Jet.pm||;
+	$jet_root = $path;
+	$configbase = 'etc/';
+	$config = Jet::Config->new(base => $configbase);
+	my @connect_info = @{ $config->jet->{connect_info} };
+	my %connect_info;
+	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
+	$schema = Jet::Stuff->new(%connect_info);
+	$basetypes = $schema->get_basetypes_href;
+	$cache = CHI->new( %{ $config->jet->{cache} } );
+
+	# Roles
 	with 'Jet::Role::Log';
-	my $c = Jet::Context->instance;
-	my $config = $c->config->options->{Jet};
-	my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
+	my $role_config = $config->options->{Jet}{role};
+
+	my @roles = ref $role_config ? @{ $role_config }: ($role_config);
 	with ( map "Jet::Role::$_", @roles ) if @roles;
 }
 
@@ -45,78 +78,81 @@ Entry point from psgi
 
 sub run_psgi($) {
 	my ($self, $env) = @_;
-	my $c = Jet::Context->instance;
-	# Clear request specific attributes
-	$c->clear;
+	my $stash  = {};
+	my $response = Jet::Response->new(
+		jet_root => $jet_root,
+		config => $config,
+		stash  => $stash,
+	);
+	my ($request, $node);
 	try {
-		$self->handle_request($env);
+		$request = Jet::Request->new($env);
+		$node = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
 	} catch {
 		my $e = shift;
-		$c->stash->{exception} = $e;
-		$c->response->template('generic/error' . $c->config->jet->{template_suffix});
-	};
-	$c->response->render;
-	return [ $c->response->status, $c->response->headers, $c->response->output ];
-}
-
-=head2 handle_request
-
-Handle the request
-
-=cut
-
-sub handle_request($) {
-	my ($self, $env) = @_;
-	my $c = Jet::Context->instance;
-	my $req = Jet::Request->new($env);
-	$c->_request($req);
-	my $node = $c->nodebox->find_node_path($req->path_info) ||
-		Jet::Exception->throw(NotFound => { message => $req->uri->as_string });
-	$c->node($node);
-	return $self->go($req, $node);
-}
-
-=head2 go
-
-Does the actual data processing and rendering for this node
-
-=cut
-
-sub go {
-	my ($self, $req) = @_;
-	my $c = Jet::Context->instance;
-	my $node = $c->node;
-	my $recipe = $c->recipe;
-	# Check if the endpath was correct
-	Jet::Exception->throw(NotFound => { message => $req->uri->as_string })
-		if $c->node->endpath and !$recipe->{paths}{$c->node->endpath};
-
-	my $steps = $c->node->endpath ? 
-		$recipe->{paths}{$c->node->endpath} :
-		$recipe->{steps};
-	for my $step (@$steps) {
-		my $engine_name = "Jet::Engine::Part::$step->{part}";
-		print STDERR "\n$engine_name: ";
-		eval "require $engine_name" or next;
-		print STDERR "found ";
-		next if $step->{verb} and !($c->rest->verb ~~ $step->{verb});
-		print STDERR "rest_allowed ";
-		my $engine = $engine_name->new(
-			params => $step,
+		$stash->{exception} = $e;
+		$response->template('generic/error' . $config->jet->{template_suffix});
+		$node = Jet::Node->new(
+			schema => $schema,
+			basetypes => $basetypes,
+			row =>{},
+			endpath => '',
 		);
-		$engine->can('setup') && $engine->setup;
-		print STDERR "can ";
-		# See if plugin can data and do it. Break out if there's nothing returned
-		$engine->can('data') && last unless $engine->data;
+	};
+	my $engine = Jet::Engine->new(
+		config => $config,
+		schema => $schema,
+		cache  => $cache,
+		basetypes => $basetypes,
+		request => $request,
+		node   => $node,
+		stash  => $stash,
+		response => $response,
+	);
+	$engine->init;
+	$engine->run;
+	$engine->render;
+	$response->render;
+	return [ $response->status, $response->headers, $response->output ];
+}
 
-		print STDERR "executed ";
+=head2 find_node_path
+
+Accepts an url and returns a Jet::Node if the url points to a valid path in the system.
+
+If not found, it goes one step up from find_node and tries to find something consistent with the path
+
+=cut
+
+sub find_node_path($) {
+	my ($self, $path) = @_;
+	$path =~ s|^/?(.*?)/?$|$1|; # Remove first and last character if slash(es)
+	my %nodeparams = (
+		schema => $schema,
+		basetypes => $basetypes,
+	);
+	my $nodedata = $schema->find_node({ node_path =>  $path });
+	if ($nodedata) {
+		my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
+		return $baserole ?
+			Jet::Node->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
+			Jet::Node->new(%nodeparams, row => $nodedata);
 	}
-	my $template_name = $c->node->endpath ?
-		$recipe->{html_templates}{$c->node->endpath} :
-		$recipe->{html_template};
-	$template_name ||= $node->get_column('node_path');
-	$c->response->template($c->config->jet->{template_path} . $template_name . $c->config->jet->{template_suffix});
-	return;
+
+	# Find node at one level up. See if there is a path expression on that node
+	$path =~ m|(.*)/(\w+)/?$|;
+	my $node_path = $1;
+	my $endpath = $2;
+	$nodedata = $schema->find_node({ node_path =>  $node_path });
+	return unless $nodedata;
+
+	my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
+	# We'll save the endpath for later, where we'll see if there is a recipe
+	return Jet::Node->with_traits($baserole)->new(
+		%nodeparams,
+		row => $nodedata,
+		endpath => $endpath // '',
+	);
 }
 
 __PACKAGE__->meta->make_immutable;

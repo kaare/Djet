@@ -3,8 +3,6 @@ package Jet::Engine;
 use 5.010;
 use Moose;
 
-use Jet::Context;
-
 with 'Jet::Role::Log';
 
 =head1 NAME
@@ -67,9 +65,8 @@ has 'parameters' => (
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		my $c = Jet::Context->instance;
-		my $stash = $c->stash;
-		my $content = $c->rest->parameters;
+		my $stash = $self->stash;
+		my $content = $self->request->rest->parameters;
 		my $vars;
 		my $stash_params = $self->params->{stash};
 		$vars->{$_} = $self->_parse_params($stash, $_, $stash_params->{$_}) for keys %$stash_params;
@@ -81,25 +78,37 @@ has 'parameters' => (
 	},
 	lazy => 1,
 );
-has 'node' => (
-	isa => 'Jet::Node',
+has config => (
+	isa => 'Jet::Config',
 	is => 'ro',
-	default => sub {
-		my $self = shift;
-		my $c = Jet::Context->instance;
-		return $c->node;
-	},
-	lazy => 1,
+);
+has schema => (
+	isa => 'Jet::Stuff',
+	is => 'rw',
+);
+has cache => (
+	isa => 'Object',
+	is => 'ro',
+);
+has basetypes => (
+	isa       => 'HashRef',
+	is        => 'ro',
 );
 has 'stash' => (
 	isa => 'HashRef',
 	is => 'ro',
-	default => sub {
-		my $self = shift;
-		my $c = Jet::Context->instance;
-		return $c->stash;
-	},
-	lazy => 1,
+);
+has request => (
+	isa => 'Plack::Request',
+	is => 'ro',
+);
+has 'node' => (
+	isa => 'Jet::Node',
+	is => 'ro',
+);
+has response => (
+	isa => 'Jet::Response',
+	is => 'ro',
 );
 
 sub _parse_params {
@@ -119,6 +128,66 @@ sub _parse_params {
 			return $var;
 		}
 	}
+}
+
+=head2 init
+
+Initialization for this node
+
+=cut
+
+sub init {
+}
+
+=head2 run
+
+Does the actual data processing and rendering for this node
+
+=cut
+
+sub run {
+	my ($self) = @_;
+	my $node = $self->node;
+	my $recipe = $node->basetype->{recipe};
+	# Check if the endpath was correct
+	Jet::Exception->throw(NotFound => { message => $self->request->uri->as_string })
+		if $node->endpath and !$recipe->{paths}{$node->endpath};
+
+	my $steps = $node->endpath ?
+		$recipe->{paths}{$node->endpath} :
+		$recipe->{steps};
+	for my $step (@$steps) {
+		my $engine_name = "Jet::Engine::Part::$step->{part}";
+		print STDERR "\n$engine_name: ";
+		eval "require $engine_name" or next;
+		print STDERR "found ";
+		next if $step->{verb} and !($self->request->rest->verb ~~ $step->{verb});
+		print STDERR "rest_allowed ";
+		my $engine = $engine_name->new(
+			params => $step,
+		);
+		$engine->can('setup') && $engine->setup;
+		print STDERR "can ";
+		# See if plugin can data and do it. Break out if there's nothing returned
+		$engine->can('data') && last unless $engine->data;
+
+		print STDERR "executed ";
+	}
+	my $template_name = $node->endpath ?
+		$recipe->{html_templates}{$node->endpath} :
+		$recipe->{html_template};
+	$template_name ||= $node->get_column('node_path');
+	$self->response->template($self->config->jet->{template_path} . $template_name . $self->config->jet->{template_suffix});
+	return;
+}
+
+=head2 render
+
+Render for this node
+
+=cut
+
+sub render {
 }
 
 __PACKAGE__->meta->make_immutable;

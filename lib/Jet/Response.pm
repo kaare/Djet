@@ -4,7 +4,6 @@ use 5.010;
 use Moose;
 
 use Text::Xslate;
-use Jet::Context;
 use FindBin qw($Bin);
 use Locale::Maketext::Simple (
 	Path		=> "$Bin/locale/",
@@ -16,11 +15,11 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Response - Response Class for Jet::Context
+Jet::Response - Response Class for Jet
 
 =head1 DESCRIPTION
 
-This is the Response class for L<Jet::Context>.
+This is the Response class for L<Jet>.
 
 =head1 ATTRIBUTES
 
@@ -42,14 +41,27 @@ The template engine
 
 =cut
 
+has config => (
+	isa => 'Jet::Config',
+	is => 'ro',
+);
+has 'jet_root' => (
+	isa => 'Str',
+	is => 'ro',
+);
+has 'stash' => (
+	isa => 'HashRef',
+	is => 'ro',
+);
+
 has status   => (isa => 'Int', is => 'rw', default => 200);
 has headers  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type' => 'text/html; charset="utf-8"' ] });
 has output   => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
 has template => (isa => 'Str', is => 'rw' );
 has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {
-	my $c = Jet::Context->instance;
+	my $self = shift;
 	my $tx = Text::Xslate->new(
-		path => [ map {$_ . '/templates'} ('.', $c->jet_root) ],
+		path => [ map {$_ . '/templates'} ('.', $self->jet_root) ],
 		function => {
 			l => sub {
 				return loc(@_);
@@ -73,8 +85,7 @@ Chooses the output renderer based on the requested response types
 
 sub render {
 	my $self = shift;
-	my $c = Jet::Context->instance;
-	$self->render_html if $c->rest->type eq 'HTML'; # XXX We can only do html for now
+	$self->render_html;# if $c->rest->type eq 'HTML'; # XXX We can only do html for now
 }
 
 =head2 render_html
@@ -85,11 +96,8 @@ Renders the output as HTML
 
 sub render_html {
 	my $self = shift;
-	my $c = Jet::Context->instance;
-	my $node = $c->node;
-	$c->stash->{node} = $c->node;
-	loc_lang($c->config->{jet}{language});
-	my $output = $self->tx->render($self->template, $c->stash);
+	loc_lang($self->config->{jet}{language});
+	my $output = $self->tx->render($self->template, $self->stash);
 	$self->output([ $output ]);
 }
 

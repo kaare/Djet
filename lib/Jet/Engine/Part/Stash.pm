@@ -30,8 +30,7 @@ sub data {
 	my $order = $parms->{order};
 	my $name = $parms->{stashname};
 	if ($method) {
-		my $c = Jet::Context->instance();
-		my $data = $c->schema->$method($where, $order);
+		my $data = $self->schema->$method($where, $order);
 		$self->stash->{$name} = $data;
 	}
 }
