@@ -78,15 +78,15 @@ Entry point from psgi
 
 sub run_psgi($) {
 	my ($self, $env) = @_;
-	my $stash  = {};
+	my $request = Jet::Request->new($env);
+	my $stash  = {request => $request};
 	my $response = Jet::Response->new(
 		jet_root => $jet_root,
 		config => $config,
 		stash  => $stash,
 	);
-	my ($request, $node);
+	my $node;
 	try {
-		$request = Jet::Request->new($env);
 		$node = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
 	} catch {
 		my $e = shift;
@@ -99,6 +99,7 @@ sub run_psgi($) {
 			endpath => '',
 		);
 	};
+	$stash->{node} = $node;
 	my $engine = Jet::Engine->new(
 		config => $config,
 		schema => $schema,
@@ -144,15 +145,23 @@ sub find_node_path($) {
 	my $node_path = $1;
 	my $endpath = $2;
 	$nodedata = $schema->find_node({ node_path =>  $node_path });
-	return unless $nodedata;
+	if ($nodedata) {
+		my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
+		# We'll save the endpath for later, where we'll see if there is something to do
+		return Jet::Node->with_traits($baserole)->new(
+			%nodeparams,
+			row => $nodedata,
+			endpath => $endpath // '',
+		);
+	}
 
+	# Find Not Found node
+	my $notfound_name = $config->{jet}{nodenames}{notfound};
+	$nodedata = $schema->find_node({ name =>  $notfound_name });
 	my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
-	# We'll save the endpath for later, where we'll see if there is a recipe
-	return Jet::Node->with_traits($baserole)->new(
-		%nodeparams,
-		row => $nodedata,
-		endpath => $endpath // '',
-	);
+	return $baserole ?
+		Jet::Node->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
+		Jet::Node->new(%nodeparams, row => $nodedata);
 }
 
 __PACKAGE__->meta->make_immutable;
