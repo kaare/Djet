@@ -126,7 +126,7 @@ If not found, it goes one step up from find_node and tries to find something con
 
 sub find_node_path($) {
 	my ($self, $path) = @_;
-	$path =~ s|^/?(.*?)/?$|$1|; # Remove first and last character if slash(es)
+	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
 	my %nodeparams = (
 		schema => $schema,
 		basetypes => $basetypes,
