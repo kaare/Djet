@@ -95,7 +95,7 @@ CREATE OR REPLACE FUNCTION data_node_insert() RETURNS trigger AS $$
 DECLARE
 BEGIN
 	WITH new_data AS (
-		INSERT INTO jet.data (basetype_id, title, columns, fts) VALUES (NEW.basetype_id, NEW.title, NEW.columns, NEW.fts) RETURNING id
+		INSERT INTO jet.data (basetype_id, name, title, columns, fts) VALUES (NEW.basetype_id, NEW.name, NEW.title, NEW.columns, NEW.fts) RETURNING id
 	)
 	INSERT INTO jet.node (data_id, parent_id, part, node_path) SELECT id, NEW.parent_id, NEW.part, NEW.node_path FROM new_data;
 	RETURN NEW;
@@ -108,7 +108,7 @@ CREATE OR REPLACE FUNCTION data_node_update() RETURNS trigger AS $$
 DECLARE
 BEGIN
 	UPDATE jet.data
-		SET basetype_id=NEW.basetype_id, title=NEW.title, columns=NEW.columns, fts=NEW.fts
+		SET basetype_id=NEW.basetype_id, name=NEW.name, title=NEW.title, columns=NEW.columns, fts=NEW.fts
 		WHERE id=OLD.data_id;
 	UPDATE jet.node
 		SET parent_id=NEW.parent_id, part=NEW.part, node_path=NEW.node_path
