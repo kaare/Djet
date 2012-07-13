@@ -35,6 +35,46 @@ The response headers. Default html
 
 The output content.
 
+=head1 REQUEST ATTRIBUTES
+
+=head2 type
+
+Default response type is no 1 from accept_types list
+
+Changable, but should be only one of the accepted types
+
+=head2 serializer
+
+The response serializer.
+
+=cut
+
+has type => (
+	isa => 'Str',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		my $request = $self->stash->{request};
+		return $request->accept_types->[0];
+	},
+);
+has serializer => (
+	isa => 'Data::Serializer',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return unless $self->type;
+
+		return Data::Serializer->new(
+			serializer => $self->type,
+		);
+	},
+);
+
+=head1 WORK ATTRIBUTES
+
 =head2 tx
 
 The template engine
