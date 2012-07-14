@@ -18,13 +18,28 @@ CREATE SCHEMA jet;
 
 SET search_path TO jet;
 
+CREATE TABLE engine (
+	id						serial NOT NULL PRIMARY KEY,
+	name					text UNIQUE,
+	recipe					text,
+	created					timestamp default now(),
+	modified				timestamp
+);
+
+COMMENT ON TABLE engine IS 'Jet Engine';
+COMMENT ON COLUMN engine.name IS 'Engine Name';
+COMMENT ON COLUMN engine.recipe IS 'Ingredients and steps for cooking a node';
+
+CREATE TRIGGER set_modified BEFORE UPDATE ON engine FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
+
+
 CREATE TABLE basetype (
 	id						serial NOT NULL PRIMARY KEY,
 	name					text UNIQUE,
 	parent					int[],
 	columns					text[],
 	searchable				text[],
-	recipe					text,
+	engines					int[], -- REFERENCES engine
 	created					timestamp default now(),
 	modified				timestamp
 );
@@ -33,7 +48,6 @@ COMMENT ON TABLE basetype IS 'Node Base Type';
 COMMENT ON COLUMN basetype.name IS 'Base Name';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
 COMMENT ON COLUMN basetype.columns IS 'The column definition';
-COMMENT ON COLUMN basetype.recipe IS 'Ingredients and steps for cooking a node';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 

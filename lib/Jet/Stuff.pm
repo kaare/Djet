@@ -140,6 +140,69 @@ sub disconnect {
 	}
 }
 
+=head2 Manipulating engines
+
+=head3 insert_engine
+
+Insert a Jet engine
+
+=cut
+
+sub insert_engine {
+	my ($self, $data, $opt) = @_;
+	$data->{recipe} = $self->json->encode($data->{recipe}) if $data->{recipe};
+	my ($sql, @binds) = $self->sql_builder->insert(
+		"jet.engine",
+		$data,
+		$opt
+	);
+	my $sth = $self->_execute($sql, \@binds);
+}
+
+=head3 update_engine
+
+Update Jet engine
+
+=cut
+
+sub update_engine {
+	my ($self, $where, $args) = @_;
+	my $sql = 'UPDATE jet.engine SET ' .
+		join(',', map { "$_ = ?"} keys(%$args)) .
+		' WHERE ' .
+		join(',', map { "$_ = ?"} keys(%$where));
+	$args->{recipe} = $self->json->encode($args->{recipe}) if $args->{recipe};
+	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
+}
+
+=head3 find_engine
+
+Find a engine
+
+=cut
+
+sub find_engine {
+	my ($self, $args) = @_;
+	my $sql = 'SELECT * FROM jet.engine WHERE ' . join ',', map { "$_ = ?"} keys %$args;
+	my $engine = $self->single(sql => $sql, data => [ values %$args ]) || return;
+	$engine->{recipe} = $self->json->decode($engine->{recipe}) if $engine->{recipe};
+	return $engine;
+}
+
+=head3 insert_or_update_engine
+
+Insert or Update Jet engine
+
+=cut
+
+sub insert_or_update_engine {
+	my ($self, $where, $args) = @_;
+	my $engine = $self->find_engine($where);
+	return $engine ?
+		$self->update_engine($where, $args) :
+		$self->insert_engine({%$where, %$args});
+}
+
 =head2 Manipulating basetypes
 
 =head3 insert_basetype
@@ -171,7 +234,6 @@ sub update_basetype {
 		join(',', map { "$_ = ?"} keys(%$args)) .
 		' WHERE ' .
 		join(',', map { "$_ = ?"} keys(%$where));
-	$args->{recipe} = $self->json->encode($args->{recipe}) if $args->{recipe};
 	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
 }
 
