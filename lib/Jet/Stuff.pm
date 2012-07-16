@@ -3,12 +3,13 @@ package Jet::Stuff;
 use 5.010;
 use Moose;
 use MooseX::UndefTolerant;
+use JSON;
 use DBI;
 use DBIx::TransactionManager 1.06;
-use JSON;
 
 use Jet::Stuff::Loader;
 use Jet::Stuff::QueryBuilder;
+use Jet::Engine::Recipe
 
 with 'Jet::Role::Log';
 
@@ -185,7 +186,7 @@ sub find_engine {
 	my ($self, $args) = @_;
 	my $sql = 'SELECT * FROM jet.engine WHERE ' . join ',', map { "$_ = ?"} keys %$args;
 	my $engine = $self->single(sql => $sql, data => [ values %$args ]) || return;
-	$engine->{recipe} = $self->json->decode($engine->{recipe}) if $engine->{recipe};
+	$engine->{recipe} = Jet::Engine::Recipe->new(raw => $engine->{recipe});
 	return $engine;
 }
 
@@ -292,7 +293,10 @@ sub build_base_recipe {
 	};
 	my @binds = ($basetype->{id});
 	my $sth = $self->_execute($sql, \@binds);
-	return [ map {$_->{recipe}} @{ $sth->fetchall_arrayref({}) } ];
+	# Each engine gets its own name
+	my $recipe = Jet::Engine::Recipe->new;
+	$recipe->add_raw_engine($_->{name} => $_->{recipe}) for @{ $sth->fetchall_arrayref({}) };
+	return $recipe;
 }
 
 
