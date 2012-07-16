@@ -59,7 +59,7 @@ BEGIN {
 	my %connect_info;
 	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
 	$schema = Jet::Stuff->new(%connect_info);
-	$basetypes = $schema->get_basetypes_href;
+	$basetypes = $schema->get_expanded_basetypes;
 	$cache = CHI->new( %{ $config->jet->{cache} } );
 
 	# Roles

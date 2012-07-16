@@ -27,14 +27,14 @@ sub basetype_engine {
 					part => 'Stash',
 					static => {
 						stashname => 'basetypes',
-						method    => 'get_basetypes',
+						request_method    => 'get_basetypes',
 						order     => 'id',
 					},
 				},
 			],
 		},
 		{
-			name => 'List',
+			name => 'Create',
 			conditions => [
 				{
 					part => 'Compare',
@@ -45,7 +45,7 @@ sub basetype_engine {
 				{
 					part => 'Method',
 					static => {
-						method  => 'POST',
+						request_method  => 'POST',
 					},
 				},
 			],
@@ -113,7 +113,6 @@ sub basetype_engine {
 			],
 		},
 	];
-warn Dumper $data;
 #	say STDERR Dumper( JSON->new->encode($data));
 	update_engine('basetype', $data);
 }

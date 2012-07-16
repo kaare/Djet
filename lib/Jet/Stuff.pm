@@ -255,28 +255,63 @@ sub get_basetypes {
 	return $sth->fetchall_arrayref({});
 }
 
-=head3 get_basetypes_href
+=head3 get_expanded_basetypes
 
 Get all basetypes as hashref, id is key
 
+The basetypes are expanded with roles and recipes
+
 =cut
 
-sub get_basetypes_href {
+sub get_expanded_basetypes {
 	my ($self, $where, $opt) = @_;
 	my $basetypes = $self->get_basetypes($where, $opt);
 	return { map {
-		$_->{recipe} = $self->json->decode($_->{recipe}) if $_->{recipe};
-		$_->{role} = $self->_build_base_role($_);
+		$_->{recipe} = $self->build_base_recipe($_);
+		$_->{role} = $self->build_base_role($_);
 		{ $_->{id} => $_ };
 	} @$basetypes };
 }
 
-sub _build_base_role {
+=head3 build_base_recipe
+
+Build the recipe for this basetype
+
+=cut
+
+sub build_base_recipe {
+	my ($self, $basetype) = @_;
+	my $sql = qq{
+		SELECT *
+		FROM jet.engine
+		WHERE id IN (
+			SELECT unnest(engines)
+			FROM jet.basetype
+			WHERE id=?
+		);
+	};
+	my @binds = ($basetype->{id});
+	my $sth = $self->_execute($sql, \@binds);
+	return [ map {$_->{recipe}} @{ $sth->fetchall_arrayref({}) } ];
+}
+
+
+=head3 build_base_role
+
+Build the role for all nodes of this basetype
+
+=cut
+
+sub build_base_role {
 	my ($self, $basetype) = @_;
 	my $role = Moose::Meta::Role->create_anon_role;
 	my $colidx;
 	for my $column (@{ $basetype->{columns} }) {
-		$role->add_method( "get_$column", sub {my $self = shift;my $cols = $self->get_column('columns');return $cols->[$colidx++]} );
+		$role->add_method( "get_$column", sub {
+			my $self = shift;
+			my $cols = $self->get_column('columns');
+			return $cols->[$colidx++];
+		});
 	}
 	return $role;
 }
@@ -291,7 +326,6 @@ sub find_basetype {
 	my ($self, $args) = @_;
 	my $sql = 'SELECT * FROM jet.basetype WHERE ' . join ',', map { "$_ = ?"} keys %$args;
 	my $basetype = $self->single(sql => $sql, data => [ values %$args ]) || return;
-	$basetype->{recipe} = $self->json->decode($basetype->{recipe}) if $basetype->{recipe};
 	return $basetype;
 }
 
