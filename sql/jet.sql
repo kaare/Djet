@@ -40,6 +40,7 @@ CREATE TABLE basetype (
 	columns					text[],
 	searchable				text[],
 	engines					int[], -- REFERENCES engine
+	bindings				text,
 	created					timestamp default now(),
 	modified				timestamp
 );
