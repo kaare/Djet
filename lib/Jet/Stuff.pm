@@ -2,7 +2,6 @@ package Jet::Stuff;
 
 use 5.010;
 use Moose;
-use MooseX::UndefTolerant;
 use JSON;
 use DBI;
 use DBIx::TransactionManager 1.06;
@@ -49,7 +48,7 @@ For database connectivity
 
 has 'dbname' => (isa => 'Str', is => 'ro');
 has 'username' => (isa => 'Str', is => 'ro');
-has 'password' => (isa => 'Str', is => 'ro');
+has 'password' => (isa => 'Maybe[Str]', is => 'ro');
 has 'connect_options' => (isa => 'HashRef', is => 'ro');
 
 =head2 Helper attributes
