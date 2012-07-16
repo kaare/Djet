@@ -1,4 +1,4 @@
-package Jet::Engine::Condition::Method;
+package Jet::Engine::Condition::Request::Method;
 
 use 5.010;
 use Moose;

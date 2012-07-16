@@ -43,7 +43,7 @@ sub basetype_engine {
 					},
 				},
 				{
-					part => 'Method',
+					part => 'Request::Method',
 					static => {
 						request_method  => 'POST',
 					},
@@ -69,7 +69,7 @@ sub basetype_engine {
 					},
 				},
 				{
-					part => 'Method',
+					part => 'Request::Method',
 					static => {
 						method  => 'POST',
 					},
