@@ -40,7 +40,7 @@ has 'json' => (
 );
 has raw => (
 	is => 'ro',
-	isa => 'Str',
+	isa => 'Maybe[Str]',
 );
 has recipe => (
 	traits  => ['Array'],
@@ -79,6 +79,66 @@ sub add_raw_engine {
 	return unless $recipe;
 
 	$self->add_engine({$name => $self->json->decode($recipe)});
+}
+
+=head2 components
+
+Return all components from the recipe as a hashref
+
+=cut
+
+sub components {
+	my $self = shift;
+	my %components;
+	for my $engine ($self->all_engines) {
+		while ((my ($enginename, $components)) = each %$engine) {
+			for my $component (@$components) {
+			my $componentname = $component->{name};
+			$components{$enginename}{$componentname} = $component;
+			}
+		}
+	}
+	return \%components;
+}
+
+=head2 conditions
+
+Return all conditions from the recipe as a hashref
+
+=cut
+
+sub conditions {
+	my $self = shift;
+	my %conditions;
+	for my $engine ($self->all_engines) {
+		while ((my ($enginename, $components)) = each %$engine) {
+			for my $component (@$components) {
+			my $componentname = $component->{name};
+			$conditions{$enginename}{$componentname} = $component->{conditions};
+			}
+		}
+	}
+	return \%conditions;
+}
+
+=head2 parts
+
+Return all parts from the recipe as a hashref
+
+=cut
+
+sub parts {
+	my $self = shift;
+	my %parts;
+	for my $engine ($self->all_engines) {
+		while ((my ($enginename, $components)) = each %$engine) {
+			for my $component (@$components) {
+			my $componentname = $component->{name};
+			$parts{$enginename}{$componentname} = $component->{steps};
+			}
+		}
+	}
+	return \%parts;
 }
 
 __PACKAGE__->meta->make_immutable;

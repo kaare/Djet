@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+use JSON;
+
+use Data::Dumper;
+
+use Jet::Config;
+use Jet::Stuff;
+
+our $schema;
+
+sub update_basetype {
+	my ($basetype, $conditions, $parts) = @_;
+	$schema->insert_or_update_basetype({name => $basetype}, {conditions => $conditions, bindings => $parts});
+	say STDERR Dumper $conditions, $parts,  $schema->find_basetype({name => $basetype});
+}
+
+sub basetypes {
+	my $conditions = {
+		'basetype.List.Compare.one' => 'endpath',
+		'basetype.Retrieve.Compare.one' => 'endpath',
+	};
+	my $parts = {
+		'basetype.Retrieve.Stash.key' => 'id',
+		'basetype.Retrieve.Stash.name' => 'endpath',
+
+	};
+	update_basetype('basetype', $conditions, $parts);
+}
+
+sub do_it {
+	my $configbase = 'etc/';
+	my $config = Jet::Config->new(base => $configbase);
+	my @connect_info = @{ $config->jet->{connect_info} };
+	my %connect_info;
+	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
+	$schema = Jet::Stuff->new(%connect_info);
+	basetypes;
+}
+
+do_it;

@@ -8,7 +8,8 @@ use DBIx::TransactionManager 1.06;
 
 use Jet::Stuff::Loader;
 use Jet::Stuff::QueryBuilder;
-use Jet::Engine::Recipe
+use Jet::Engine::Basetype;
+use Jet::Engine::Recipe;
 
 with 'Jet::Role::Log';
 
@@ -213,6 +214,8 @@ Insert a Jet basetype
 
 sub insert_basetype {
 	my ($self, $data, $opt) = @_;
+	$data->{$_} = $self->json->encode($data->{$_}) for qw/conditions bindings/;
+	$data->{$_} = $self->json->encode($data->{$_}) for qw/conditions bindings/;
 	my ($sql, @binds) = $self->sql_builder->insert(
 		"jet.basetype",
 		$data,
@@ -234,7 +237,22 @@ sub update_basetype {
 		join(',', map { "$_ = ?"} keys(%$args)) .
 		' WHERE ' .
 		join(',', map { "$_ = ?"} keys(%$where));
+	$args->{$_} = $self->json->encode($args->{$_}) for qw/conditions bindings/;
 	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
+}
+
+=head3 insert_or_update_basetype
+
+Insert or Update Jet basetype
+
+=cut
+
+sub insert_or_update_basetype {
+	my ($self, $where, $args) = @_;
+	my $engine = $self->find_basetype($where);
+	return $engine ?
+		$self->update_basetype($where, $args) :
+		$self->insert_basetype({%$where, %$args});
 }
 
 =head3 get_basetypes
@@ -267,9 +285,11 @@ sub get_expanded_basetypes {
 	my ($self, $where, $opt) = @_;
 	my $basetypes = $self->get_basetypes($where, $opt);
 	return { map {
-		$_->{recipe} = $self->build_base_recipe($_);
-		$_->{role} = $self->build_base_role($_);
-		{ $_->{id} => $_ };
+			$_->{id} => Jet::Engine::Basetype->new(
+				basetype => $_,
+				recipe   => $self->build_base_recipe($_),
+				role     => $self->build_base_role($_),
+			)
 	} @$basetypes };
 }
 

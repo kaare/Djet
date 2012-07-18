@@ -40,6 +40,7 @@ CREATE TABLE basetype (
 	columns					text[],
 	searchable				text[],
 	engines					int[], -- REFERENCES engine
+	conditions				text,
 	bindings				text,
 	created					timestamp default now(),
 	modified				timestamp
@@ -48,6 +49,8 @@ CREATE TABLE basetype (
 COMMENT ON TABLE basetype IS 'Node Base Type';
 COMMENT ON COLUMN basetype.name IS 'Base Name';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
+COMMENT ON COLUMN basetype.conditions IS 'All conditions for the recipe of this basetype';
+COMMENT ON COLUMN basetype.bindings IS 'All parts for the recipe of this basetype';
 COMMENT ON COLUMN basetype.columns IS 'The column definition';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
