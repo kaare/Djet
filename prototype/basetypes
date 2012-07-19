@@ -20,15 +20,22 @@ sub update_basetype {
 
 sub basetypes {
 	my $conditions = {
-		'basetype.List.Compare.one' => 'endpath',
-		'basetype.Retrieve.Compare.one' => 'endpath',
+		'basetype_List_Jet::Engine::Condition::Compare' => {
+			one => 'endpath',
+			two => undef,
+		},
+		'basetype_Retrieve_Jet::Engine::Condition::Compare' => {
+			one => 'endpath',
+			two => undef,
+		},
 	};
 	my $parts = {
-		'basetype.Retrieve.Stash.key' => 'id',
-		'basetype.Retrieve.Stash.name' => 'endpath',
-
+		'basetype_Retrieve_Jet::Engine::Part::Stash' => {
+			key  => 'id',
+			name => 'endpath',
+		},
 	};
-	update_basetype('basetype', $conditions, $parts);
+	update_basetype('jet_basetype', $conditions, $parts);
 }
 
 sub do_it {

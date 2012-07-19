@@ -62,7 +62,7 @@ has endpath => (
 	is => 'ro',
 );
 has basetype => (
-	isa => 'HashRef',
+	isa => 'Jet::Engine::Basetype',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
@@ -71,7 +71,7 @@ has basetype => (
 	},
 );
 has path => (
-	isa => 'Str',
+	isa => 'Maybe[Str]',
 	is => 'ro',
 	lazy => 1,
 	default => sub {

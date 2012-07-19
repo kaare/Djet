@@ -28,6 +28,10 @@ For (de)serializing data
 
 The recipe in raw (serialized) form
 
+=head3 node_role
+
+The role for all nodes of this basetype
+
 =cut
 
 has 'json' => (
@@ -83,11 +87,32 @@ sub add_raw_engine {
 
 =head2 components
 
-Return all components from the recipe as a hashref
+Return all components from the recipe as a arrayref
 
 =cut
 
 sub components {
+	my $self = shift;
+	my @components;
+	for my $engine ($self->all_engines) {
+		while ((my ($enginename, $components)) = each %$engine) {
+			for my $component (@$components) {
+			my $componentname = $component->{name};
+			$component->{fullname} = join '_', $enginename, $componentname;
+			push @components, $component;
+			}
+		}
+	}
+	return \@components;
+}
+
+=head2 components_href
+
+Return all components from the recipe as a hashref
+
+=cut
+
+sub components_href {
 	my $self = shift;
 	my %components;
 	for my $engine ($self->all_engines) {

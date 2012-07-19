@@ -270,7 +270,11 @@ sub get_basetypes {
 		$opt
 	);
 	my $sth = $self->_execute($sql, \@binds);
-	return $sth->fetchall_arrayref({});
+	return [ map {
+		$_->{bindings} = $self->json->decode($_->{bindings}) if $_->{bindings};
+		$_->{conditions} = $self->json->decode($_->{conditions}) if $_->{conditions};
+		$_;
+	} @{ $sth->fetchall_arrayref({}) } ];
 }
 
 =head3 get_expanded_basetypes
@@ -288,7 +292,6 @@ sub get_expanded_basetypes {
 			$_->{id} => Jet::Engine::Basetype->new(
 				basetype => $_,
 				recipe   => $self->build_base_recipe($_),
-				role     => $self->build_base_role($_),
 			)
 	} @$basetypes };
 }
@@ -316,27 +319,6 @@ sub build_base_recipe {
 	my $recipe = Jet::Engine::Recipe->new;
 	$recipe->add_raw_engine($_->{name} => $_->{recipe}) for @{ $sth->fetchall_arrayref({}) };
 	return $recipe;
-}
-
-
-=head3 build_base_role
-
-Build the role for all nodes of this basetype
-
-=cut
-
-sub build_base_role {
-	my ($self, $basetype) = @_;
-	my $role = Moose::Meta::Role->create_anon_role;
-	my $colidx;
-	for my $column (@{ $basetype->{columns} }) {
-		$role->add_method( "get_$column", sub {
-			my $self = shift;
-			my $cols = $self->get_column('columns');
-			return $cols->[$colidx++];
-		});
-	}
-	return $role;
 }
 
 =head3 find_basetype

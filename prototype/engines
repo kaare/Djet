@@ -16,7 +16,7 @@ sub basetype_engine {
 			name => 'List',
 			conditions => [
 				{
-					part => 'Compare',
+					part => 'Jet::Engine::Condition::Compare',
 					static => {
 						two => undef,
 					},
@@ -24,7 +24,7 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Stash',
+					part => 'Jet::Engine::Part::Stash',
 					static => {
 						stashname => 'basetypes',
 						request_method    => 'get_basetypes',
@@ -37,21 +37,21 @@ sub basetype_engine {
 			name => 'Create',
 			conditions => [
 				{
-					part => 'Compare',
+					part => 'Jet::Engine::Condition::Compare',
 					static => {
 						two => undef,
 					},
 				},
 				{
-					part => 'Request::Method',
+					part => 'Jet::Engine::Condition::Request::Method',
 					static => {
-						request_method  => 'POST',
+						request_method  => ['POST'],
 					},
 				},
 			],
 			steps => [
 				{
-					part => 'Update',
+					part => 'Jet::Engine::Part::Update',
 					static => {
 						stashname => 'basetype',
 						method    => 'update_basetype',
@@ -63,28 +63,28 @@ sub basetype_engine {
 			name => 'Update',
 			conditions => [
 				{
-					part => 'Compare',
+					part => 'Jet::Engine::Condition::Compare',
 					static => {
 						two => /^\d+$/,
 					},
 				},
 				{
-					part => 'Request::Method',
+					part => 'Jet::Engine::Condition::Request::Method',
 					static => {
-						method  => 'POST',
+						method  => ['POST'],
 					},
 				},
 			],
 			steps => [
 				{
-					part => 'Update',
+					part => 'Jet::Engine::Part::Request::Update',
 					static => {
 						stashname => 'basetype',
 						method    => 'update_basetype',
 					},
 				},
 				{
-					part => 'Stash',
+					part => 'Jet::Engine::Part::Stash',
 					static => {
 						stashname => 'basetype',
 						method    => 'find_basetype',
@@ -96,7 +96,7 @@ sub basetype_engine {
 			name => 'Retrieve',
 			conditions => [
 				{
-					part => 'Compare',
+					part => 'Jet::Engine::Condition::Compare',
 					static => {
 						two => /^\d+$/,
 					},
@@ -104,7 +104,7 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Stash',
+					part => 'Jet::Engine::Part::Stash',
 					static => {
 						stashname => 'basetype',
 						method    => 'find_basetype',

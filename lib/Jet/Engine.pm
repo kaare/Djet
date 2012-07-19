@@ -3,7 +3,8 @@ package Jet::Engine;
 use 5.010;
 use Moose;
 
-with 'Jet::Role::Log';
+
+with qw/Jet::Role::Log MooseX::Traits/;
 
 =head1 NAME
 
@@ -56,11 +57,11 @@ foo => {
 
 =cut
 
-has 'params' => (
+has params => (
 	isa => 'HashRef',
 	is => 'ro',
 );
-has 'parameters' => (
+has parameters => (
 	isa => 'HashRef',
 	is => 'ro',
 	default => sub {
@@ -94,7 +95,7 @@ has basetypes => (
 	isa       => 'HashRef',
 	is        => 'ro',
 );
-has 'stash' => (
+has stash => (
 	isa => 'HashRef',
 	is => 'ro',
 );
@@ -102,13 +103,31 @@ has request => (
 	isa => 'Plack::Request',
 	is => 'ro',
 );
-has 'node' => (
+has node => (
 	isa => 'Jet::Node',
 	is => 'ro',
 );
 has response => (
 	isa => 'Jet::Response',
 	is => 'ro',
+);
+has run_components => (
+	traits  => ['Array'],
+	isa     => 'ArrayRef[Str]',
+	is => 'rw',
+	handles => {
+		all_components    => 'elements',
+		add_component     => 'push',
+		map_components    => 'map',
+		filter_components => 'grep',
+		find_component    => 'first',
+		get_component     => 'get',
+		join_components   => 'join',
+		count_components  => 'count',
+		has_components    => 'count',
+		has_no_components => 'is_empty',
+		sorted_components => 'sort',
+	},
 );
 
 sub _parse_params {

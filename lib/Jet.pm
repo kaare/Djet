@@ -100,7 +100,8 @@ sub run_psgi($) {
 		);
 	};
 	$stash->{node} = $node;
-	my $engine = Jet::Engine->new(
+	my $engine_role = $node->basetype->engine_role;
+	my $engine = Jet::Engine->with_traits($engine_role)->new(
 		config => $config,
 		schema => $schema,
 		cache  => $cache,
@@ -110,6 +111,7 @@ sub run_psgi($) {
 		stash  => $stash,
 		response => $response,
 	);
+	$engine->conditions;
 	$engine->init;
 	$engine->run;
 	$engine->render;
@@ -134,7 +136,7 @@ sub find_node_path($) {
 	);
 	my $nodedata = $schema->find_node({ node_path =>  $path });
 	if ($nodedata) {
-		my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
+		my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
 		return $baserole ?
 			Jet::Node->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
 			Jet::Node->new(%nodeparams, row => $nodedata);
@@ -146,7 +148,7 @@ sub find_node_path($) {
 	my $endpath = $2;
 	$nodedata = $schema->find_node({ node_path =>  $node_path });
 	if ($nodedata) {
-		my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
+		my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
 		# We'll save the endpath for later, where we'll see if there is something to do
 		return Jet::Node->with_traits($baserole)->new(
 			%nodeparams,
@@ -158,7 +160,7 @@ sub find_node_path($) {
 	# Find Not Found node
 	my $notfound_name = $config->{jet}{nodenames}{notfound};
 	$nodedata = $schema->find_node({ name =>  $notfound_name });
-	my $baserole = $basetypes->{$nodedata->{basetype_id}}->{role};
+	my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
 	return $baserole ?
 		Jet::Node->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
 		Jet::Node->new(%nodeparams, row => $nodedata);

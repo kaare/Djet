@@ -19,12 +19,22 @@ extends 'Jet::Engine::Condition';
 
 =head1 ATTRIBUTES
 
-=head2 stash
+=head2 engine
+
+The engine contains all the information needed,
+
+	cache
+	config
+	parameters
+	request
+	response
+	schema
+	stash
 
 =cut
 
-has 'stash' => (
-	isa => 'HashRef',
+has 'engine' => (
+#	isa => 'Jet::Engine',
 	is => 'ro',
 );
 

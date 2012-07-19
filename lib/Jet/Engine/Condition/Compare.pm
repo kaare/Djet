@@ -1,4 +1,4 @@
-package Jet::Engine::Condition::Request::Method;
+package Jet::Engine::Condition::Compare;
 
 use 5.010;
 use Moose;
@@ -9,23 +9,29 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Engine::Condition::Request::Method - Request Method Condition
+Jet::Engine::Condition::Compare - Compare Condition
 
 =head1 SYNOPSIS
 
-Return true if method condition is met
+Return true if compare condition is met
 
 =head1 ATTRIBUTES
 
-=head2 request_method
+=head2 one
 
-HTTP Method, Can be one or more of GET,POST,PUT,DELETE
+First argument
+
+=head2 two
+
+Second argument
 
 =cut
 
-has request_method => (
+has one => (
 	is => 'ro',
-	isa => 'ArrayRef'
+);
+has two => (
+	is => 'ro',
 );
 
 =head1 METHODS
@@ -36,8 +42,9 @@ has request_method => (
 
 sub condition {
 	my $self = shift;
-	my $method = $self->request_method;
-	return $self->engine->request->method =~ $method;
+	my $one = $self->one;
+	my $two = $self->two;
+	return $one =~ $two;
 }
 
 no Moose::Role;
