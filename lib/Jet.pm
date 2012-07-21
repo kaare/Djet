@@ -96,7 +96,6 @@ sub run_psgi($) {
 			schema => $schema,
 			basetypes => $basetypes,
 			row =>{},
-			endpath => '',
 		);
 	};
 	$stash->{basenode} = $basenode;
@@ -135,11 +134,17 @@ sub find_node_path($) {
 	my $nodedata = $schema->find_basenode($path);
 	if ($nodedata) {
 		my $basedata = shift @$nodedata;
+		# Find the path arguments
+		my $basepath = $basedata->{node_path};
+		$path =~ /$basepath(.*)/;
+		my @arguments = split '/', $1;
+		shift @arguments;
 		# Save the remaining nodes on the stash
 		$stash->{nodes}{$_->{id}} = $_ for @$nodedata;
+
 		my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
 		return $baserole ?
-			Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata) :
+			Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments) :
 			Jet::Basenode->new(%nodeparams, row => $basedata);
 	}
 

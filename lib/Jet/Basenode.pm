@@ -21,7 +21,7 @@ Jet::Basenode - The Base Jet Node
 
 The node data found for this node
 
-=head2 endpath
+=head2 arguments
 
 The path found after the node_path
 
