@@ -184,6 +184,27 @@ CREATE TABLE node_tree (
     UNIQUE (parent, child)
 );
 
+--
+-- Find a complete branch in the nodetree
+--
+
+CREATE OR REPLACE FUNCTION find_nodebranch(path text) RETURNS SETOF jet.data_node
+	LANGUAGE plpgsql
+	AS $$
+DECLARE
+	parts text[];
+	item text;
+	build_part text;
+	paths text[];
+BEGIN
+	parts := regexp_split_to_array(path, E'\/+');
+	FOREACH item IN ARRAY parts LOOP
+		paths := array_append(paths, array_to_string(ARRAY[paths[array_length(paths, 1)], item], '/'));
+	END LOOP;
+	RETURN QUERY SELECT * FROM jet.data_node WHERE node_path = ANY (paths) ORDER BY length(node_path) DESC;
+END;
+$$;
+
 -- --------------------------------------------------------------------
 -- INSERT:
 -- 1. Insert a matching row in node_tree where both parent and child

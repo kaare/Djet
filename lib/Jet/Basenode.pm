@@ -1,4 +1,4 @@
-package Jet::Node;
+package Jet::Basenode;
 
 use 5.010;
 use Moose;
@@ -7,7 +7,7 @@ with 'MooseX::Traits';
 
 =head1 NAME
 
-Jet::Node - Represents Jet Nodes
+Jet::Basenode - The Base Jet Node
 
 =head1 SYNOPSIS
 
@@ -28,10 +28,6 @@ The path found after the node_path
 =head2 basetype
 
 The node's basetype
-
-=head2 path
-
-The node's path
 
 =cut
 
@@ -57,8 +53,8 @@ has row => (
 		get_columns    => 'kv',
 	},
 );
-has endpath => (
-	isa => 'Str',
+has arguments => (
+	isa => 'ArrayRef[Str]',
 	is => 'ro',
 );
 has basetype => (
@@ -68,15 +64,6 @@ has basetype => (
 	default => sub {
 		my $self = shift;
 		return $self->basetypes->{$self->get_column('basetype_id')};
-	},
-);
-has path => (
-	isa => 'Maybe[Str]',
-	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		return $self->get_column('node_path');
 	},
 );
 
@@ -92,7 +79,7 @@ Build the Jet with roles
 	# # Logging
 	# with 'Jet::Role::Log';
 	# # Configuration
-	# my $config = Jet->config->options->{'Jet::Node'};
+	# my $config = Jet->config->options->{'Jet::Basenode'};
 	# return unless $config->{role};
 
 	# my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
@@ -235,7 +222,7 @@ Please report any bugs or feature requests to my email address listed above.
 
 =head1 COPYRIGHT & LICENSE 
 
-Copyright 2011 Kaare Rasmussen, all rights reserved.
+Copyright 2012 Kaare Rasmussen, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under the same terms as 
 Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 

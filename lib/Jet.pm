@@ -5,13 +5,13 @@ use Moose;
 use Try::Tiny;
 use CHI;
 
+use Jet::Basenode;
 use Jet::Config;
-use Jet::Stuff;
+use Jet::Engine;
+use Jet::Exception;
 use Jet::Request;
 use Jet::Response;
-use Jet::Node;
-use Jet::Exception;
-use Jet::Engine;
+use Jet::Stuff;
 
 =head1 NAME
 
@@ -85,29 +85,29 @@ sub run_psgi($) {
 		config => $config,
 		stash  => $stash,
 	);
-	my $node;
+	my $basenode;
 	try {
-		$node = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
+		$basenode = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
 	} catch {
 		my $e = shift;
 		$stash->{exception} = $e;
 		$response->template('generic/error' . $config->jet->{template_suffix});
-		$node = Jet::Node->new(
+		$basenode = Jet::Basenode->new(
 			schema => $schema,
 			basetypes => $basetypes,
 			row =>{},
 			endpath => '',
 		);
 	};
-	$stash->{node} = $node;
-	my $engine_role = $node->basetype->engine_role;
+	$stash->{basenode} = $basenode;
+	my $engine_role = $basenode->basetype->engine_role;
 	my $engine = Jet::Engine->with_traits($engine_role)->new(
 		config => $config,
 		schema => $schema,
 		cache  => $cache,
 		basetypes => $basetypes,
 		request => $request,
-		node   => $node,
+		basenode => $basenode,
 		stash  => $stash,
 		response => $response,
 	);
@@ -121,40 +121,26 @@ sub run_psgi($) {
 
 =head2 find_node_path
 
-Accepts an url and returns a Jet::Node if the url points to a valid path in the system.
-
-If not found, it goes one step up from find_node and tries to find something consistent with the path
+Accepts an url and returns a Jet::Basenode if the url points to a valid path in the system.
 
 =cut
 
 sub find_node_path($) {
-	my ($self, $path) = @_;
+	my ($self, $path, $stash) = @_;
 	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
 	my %nodeparams = (
 		schema => $schema,
 		basetypes => $basetypes,
 	);
-	my $nodedata = $schema->find_node({ node_path =>  $path });
+	my $nodedata = $schema->find_basenode($path);
 	if ($nodedata) {
-		my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
+		my $basedata = shift @$nodedata;
+		# Save the remaining nodes on the stash
+		$stash->{nodes}{$_->{id}} = $_ for @$nodedata;
+		my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
 		return $baserole ?
-			Jet::Node->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
-			Jet::Node->new(%nodeparams, row => $nodedata);
-	}
-
-	# Find node at one level up. See if there is a path expression on that node
-	$path =~ m|(.*)/(\w+)/?$|;
-	my $node_path = $1;
-	my $endpath = $2;
-	$nodedata = $schema->find_node({ node_path =>  $node_path });
-	if ($nodedata) {
-		my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
-		# We'll save the endpath for later, where we'll see if there is something to do
-		return Jet::Node->with_traits($baserole)->new(
-			%nodeparams,
-			row => $nodedata,
-			endpath => $endpath // '',
-		);
+			Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata) :
+			Jet::Basenode->new(%nodeparams, row => $basedata);
 	}
 
 	# Find Not Found node
@@ -162,8 +148,8 @@ sub find_node_path($) {
 	$nodedata = $schema->find_node({ name =>  $notfound_name });
 	my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
 	return $baserole ?
-		Jet::Node->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
-		Jet::Node->new(%nodeparams, row => $nodedata);
+		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
+		Jet::Basenode->new(%nodeparams, row => $nodedata);
 }
 
 __PACKAGE__->meta->make_immutable;

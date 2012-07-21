@@ -338,6 +338,26 @@ sub find_basetype {
 
 =head3 find_node
 
+Find the basenode
+
+The PostgreSQL function find_nodebranch returns a set of rows, starting from the
+basenode and with the root last.
+
+Thus, we're sure always to have to whole branch, and we can also find the
+arguments of the request
+
+=cut
+
+sub find_basenode {
+	my ($self, $path) = @_;
+	my $sql = 'SELECT * FROM jet.find_nodebranch(?)';
+	my @binds = ($path);
+	my $sth = $self->_execute($sql, \@binds);
+	return $sth->fetchall_arrayref({}),
+}
+
+=head3 find_node
+
 Find a node
 
 =cut
