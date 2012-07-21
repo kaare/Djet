@@ -21,6 +21,10 @@ Jet::Node - Represents Jet Nodes
 
 The node data found for this node
 
+=head2 endpath
+
+The path found after the node_path
+
 =head2 basetype
 
 The node's basetype
@@ -53,6 +57,10 @@ has row => (
 		get_columns    => 'kv',
 	},
 );
+has endpath => (
+	isa => 'Str',
+	is => 'ro',
+);
 has basetype => (
 	isa => 'Jet::Engine::Basetype',
 	is => 'ro',
@@ -62,8 +70,34 @@ has basetype => (
 		return $self->basetypes->{$self->get_column('basetype_id')};
 	},
 );
+has path => (
+	isa => 'Maybe[Str]',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return $self->get_column('node_path');
+	},
+);
 
 =head1 METHODS
+
+=head2 BEGIN
+
+Build the Jet with roles
+
+=cut
+
+# BEGIN {
+	# # Logging
+	# with 'Jet::Role::Log';
+	# # Configuration
+	# my $config = Jet->config->options->{'Jet::Node'};
+	# return unless $config->{role};
+
+	# my @roles = ref $config->{role} ? @{ $config->{role} }: ($config->{role});
+	# with ( map "Jet::Role::$_", @roles ) if @roles;
+# }
 
 =head2 add
 

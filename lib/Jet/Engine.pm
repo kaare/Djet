@@ -103,8 +103,8 @@ has request => (
 	isa => 'Plack::Request',
 	is => 'ro',
 );
-has node => (
-	isa => 'Jet::Node',
+has basenode => (
+	isa => 'Jet::Basenode',
 	is => 'ro',
 );
 has response => (
@@ -166,15 +166,12 @@ Does the actual data processing and rendering for this node
 
 sub run {
 	my ($self) = @_;
-	my $node = $self->node;
+	my $node = $self->basenode;
 	my $recipe = $node->basetype->{recipe};
-	# Check if the endpath was correct
-	Jet::Exception->throw(NotFound => { message => $self->request->uri->as_string })
-		if $node->endpath and !$recipe->{paths}{$node->endpath};
+	# Check if the path was correct
+	Jet::Exception->throw(NotFound => { message => $self->request->uri->as_string }) if 0; # Check for inValid template/argument combination
 
-	my $steps = $node->endpath ?
-		$recipe->{paths}{$node->endpath} :
-		$recipe->{steps};
+	my $steps = $recipe->{steps};
 	for my $step (@$steps) {
 		my $engine_name = "Jet::Engine::Part::$step->{part}";
 		print STDERR "\n$engine_name: ";
@@ -192,9 +189,7 @@ sub run {
 
 		print STDERR "executed ";
 	}
-	my $template_name = $node->endpath ?
-		$recipe->{html_templates}{$node->endpath} :
-		$recipe->{html_template};
+	my $template_name = $recipe->{html_template};
 	$template_name ||= $node->get_column('node_path');
 	$self->response->template($self->config->jet->{template_path} . $template_name . $self->config->jet->{template_suffix});
 	return;
