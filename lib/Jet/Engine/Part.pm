@@ -45,6 +45,11 @@ sub parameter_names {
 	return \@names;
 }
 
+
+sub init {}
+sub run {}
+sub render {}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

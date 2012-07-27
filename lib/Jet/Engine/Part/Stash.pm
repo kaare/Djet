@@ -3,7 +3,7 @@ package Jet::Engine::Part::Stash;
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine';
+extends 'Jet::Engine::Part';
 
 with 'Jet::Role::Log';
 

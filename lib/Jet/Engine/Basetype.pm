@@ -84,14 +84,29 @@ has engine_role => (
 						my $classname = $condition->{part};
 						eval "require $classname" or die $@;
 
-						my $fullname = join '_', $enginename, $componentname, $classname;
+						my $conditionname = $condition->{name} || $classname;
+						my $fullname = join '_', $enginename, $componentname, $conditionname;
 						my $baseconditions =  {
-							%{ $condition->{static} // {} },
+							%{ $condition->{default} // {} },
 							%{ $self->basetype->{conditions}{$fullname} // {} } } //
 						{};
 						$todo{$fullname} = {
 							class => $classname,
 							args => $baseconditions,
+						};
+					}
+					for my $step (@{ $component->{steps} }) {
+						my $classname = $step->{part};
+						eval "require $classname" or die $@;
+
+						my $fullname = join '_', $enginename, $componentname, $classname;
+						my $baseargs =  {
+							%{ $step->{default} // {} },
+							%{ $self->basetype->{steps}{$fullname} // {} } } //
+						{};
+						$todo{$fullname} = {
+							class => $classname,
+							args => $baseargs,
 						};
 					}
 				}
@@ -100,22 +115,74 @@ has engine_role => (
 		my @components = @{ $self->recipe->components };
 		$role->add_method( 'conditions', sub {
 			my $self = shift;
+			COMPONENT:
 			for my $component (@components) {
 				my $component_fullname = $component->{fullname};
 				for my $condition (@{ $component->{conditions} }) {
-					my $classname = $condition->{part};
-					my $fullname = join '_', $component_fullname, $classname;
+					my $conditionname = $condition->{name} || $condition->{part};
+					my $fullname = join '_', $component_fullname, $conditionname;
 					my $class = $todo{$fullname}{class};
-					my $args  = $todo{$fullname}{args};
+					my $args  = $self->handle_arguments($todo{$fullname}{args});
 					my $cond_obj = $class->new(engine => $self, %$args);
-					$self->add_component($fullname) if $cond_obj->condition;
+					next COMPONENT unless $cond_obj->condition;
 				}
+				$self->add_component($component);
 			}
 			return 1;
 		});
 		$role->add_method( 'parts', sub {
 			my $self = shift;
-			return 1;
+			my @steps;
+			for my $component ($self->all_components) {
+				my $component_fullname = $component->{fullname};
+				for my $step (@{ $component->{steps} }) {
+					my $classname = $step->{part};
+					my $fullname = join '_', $component_fullname, $classname;
+					my $class = $todo{$fullname}{class};
+					my $args  = $todo{$fullname}{args};
+					push @steps, $class->new(engine => $self, %$args);
+				}
+			}
+			warn 'processing ' . join ', ', map {ref $_} @steps;
+			warn 'init';
+			$_->init for @steps;
+			warn 'run';
+			$_->run for @steps;
+			warn 'render';
+			$_->render for @steps;
+		});
+
+		$role->add_method( 'handle_arguments', sub  {
+			my ($self, $parms) = @_;
+			my $stash = $self->stash;
+			my $parameters = $self->request->parameters;
+			my $args = $self->basenode->arguments;
+			while (my ($name, $parm) = each %$parms) {
+				if (ref $parm eq 'HASH') {
+					$parms->{$name} = $self->replace_argument($parm, $stash, $parameters, $args);
+				}
+			}
+			return $parms;
+		});
+		$role->add_method( 'replace_argument', sub  {
+			my ($self, $parms, $stash, $parameters, $args) = @_;
+			my $result;
+			while (my ($name, $parm) = each %$parms) {
+				$result->{$name} = $self->replace_argument($parm) if (ref $parm eq 'HASH');
+				given (lc $name) {
+					when ('stash') {
+						$result->{$name} = $stash->{$name};
+					}
+					when ('param') {
+						$result->{$name} = $parameters->{$name};
+					}
+					when ('arg') {
+						$result = $args->[$parm - 1];
+					}
+					default {$result = $parm}
+				}
+			}
+			return $result;
 		});
 		return $role;
 	},

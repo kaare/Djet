@@ -23,7 +23,7 @@ HTTP Method, Can be one or more of GET,POST,PUT,DELETE
 
 =cut
 
-has request_method => (
+has requestmethod => (
 	is => 'ro',
 	isa => 'ArrayRef'
 );
@@ -36,7 +36,7 @@ has request_method => (
 
 sub condition {
 	my $self = shift;
-	my $method = $self->request_method;
+	my $method = $self->requestmethod;
 	return $self->engine->request->method =~ $method;
 }
 
