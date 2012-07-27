@@ -136,10 +136,11 @@ has engine_role => (
 			for my $component ($self->all_components) {
 				my $component_fullname = $component->{fullname};
 				for my $step (@{ $component->{steps} }) {
-					my $classname = $step->{part};
-					my $fullname = join '_', $component_fullname, $classname;
+					my $partname = $step->{name} || $step->{part};
+					my $fullname = join '_', $component_fullname, $partname;
 					my $class = $todo{$fullname}{class};
 					my $args  = $todo{$fullname}{args};
+					warn "setting up $component_fullname as $class";
 					push @steps, $class->new(engine => $self, %$args);
 				}
 			}

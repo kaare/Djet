@@ -25,11 +25,11 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Stash',
+					part => 'Jet::Engine::Part::Stash::Stuff',
 					default => {
-						stashname     => 'basetypes',
-						requestmethod => 'get_basetypes',
-						order         => 'id',
+						stashname => 'basetypes',
+						method    => 'get_basetypes',
+						order     => 'id',
 					},
 				},
 			],
@@ -85,7 +85,7 @@ sub basetype_engine {
 					},
 				},
 				{
-					part => 'Jet::Engine::Part::Stash',
+					part => 'Jet::Engine::Part::Stash::Stuff',
 					default => {
 						stashname  => 'basetype',
 						methodname => 'find_basetype',
@@ -115,7 +115,7 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Stash',
+					part => 'Jet::Engine::Part::Stash::Stuff',
 					default => {
 						stashname  => 'basetype',
 						methodname => 'find_basetype',

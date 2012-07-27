@@ -19,6 +19,25 @@ extends 'Jet::Engine::Part';
 
 =head1 ATTRIBUTES
 
+=head2 engine
+
+The engine contains all the information needed,
+
+	cache
+	config
+	parameters
+	request
+	response
+	schema
+	stash
+
+=cut
+
+has 'engine' => (
+#	isa => 'Jet::Engine',
+	is => 'ro',
+);
+
 =head1 METHODS
 
 =head2 title

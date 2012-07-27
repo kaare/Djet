@@ -1,4 +1,4 @@
-package Jet::Engine::Part::Stash;
+package Jet::Engine::Part::Stash::Stuff;
 
 use 5.010;
 use Moose;
@@ -9,29 +9,50 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Part::Stash - Stash something
+Jet::Part::Stash - Stash some stuff
 
 =head1 SYNOPSIS
 
 Put something on the stash
 
-=head1 METHODS
-
-=head2 data
+=head1 ATTRIBUTES
 
 =cut
 
-sub data {
+has stashname => (
+	is => 'ro',
+	isa => 'Str',
+);
+has method => (
+	is => 'ro',
+	isa => 'Str',
+);
+has order => (
+	is => 'ro',
+	isa => 'Str',
+
+);
+has where => (
+	is => 'ro',
+	isa => 'Str',
+
+);
+
+=head1 METHODS
+
+=head2 run
+
+=cut
+
+sub run {
 	my $self = shift;
-	my $parms = $self->parameters;
-	my $node_name = $parms->{nodes} || 'node';
-	my $method = $parms->{method};
-	my $where = $parms->{where};
-	my $order = $parms->{order};
-	my $name = $parms->{stashname};
+	my $stashname = $self->stashname;
+	my $method = $self->method;
+	my $order = $self->order;
+	my $where = $self->where;
 	if ($method) {
-		my $data = $self->schema->$method($where, $order);
-		$self->stash->{$name} = $data;
+		my $data = $self->engine->schema->$method($where, $order);
+		$self->engine->stash->{$stashname} = $data;
 	}
 }
 

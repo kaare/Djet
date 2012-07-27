@@ -112,6 +112,7 @@ sub run_psgi($) {
 	);
 	$engine->conditions;
 	$engine->parts;
+	$response->render;
 	return [ $response->status, $response->headers, $response->output ];
 }
 

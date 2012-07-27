@@ -137,6 +137,8 @@ Renders the output as HTML
 sub render_html {
 	my $self = shift;
 	loc_lang($self->config->{jet}{language});
+	my $jet_config = $self->config->jet;
+	$self->template($jet_config->{template_path} . $self->stash->{basenode}->get_column('node_path') . $jet_config->{template_suffix}) unless $self->template;;
 	my $output = $self->tx->render($self->template, $self->stash);
 	$self->output([ $output ]);
 }
