@@ -124,6 +124,7 @@ has engine_role => (
 					my $class = $todo{$fullname}{class};
 					my $args  = $self->handle_arguments($todo{$fullname}{args});
 					my $cond_obj = $class->new(engine => $self, %$args);
+					warn "testing $component_fullname condition $class " . $cond_obj->condition;
 					next COMPONENT unless $cond_obj->condition;
 				}
 				$self->add_component($component);
