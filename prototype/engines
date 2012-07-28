@@ -66,7 +66,7 @@ sub basetype_engine {
 				{
 					part => 'Jet::Engine::Condition::Compare',
 					default => {
-						two => 1,#qr/^\d+$/,
+						two => qr/^\d+$/,
 					},
 				},
 				{
@@ -109,7 +109,7 @@ sub basetype_engine {
 					part => 'Jet::Engine::Condition::Compare',
 					default => {
 						one => {arg => 2},
-						two => 1,#qr/^\d+$/,
+						two => qr/^\d+$/,
 					},
 				},
 			],
