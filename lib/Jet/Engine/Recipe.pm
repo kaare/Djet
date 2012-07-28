@@ -2,7 +2,8 @@ package Jet::Engine::Recipe;
 
 use 5.010;
 use Moose;
-use JSON;
+
+use Jet::JSON;
 
 with 'Jet::Role::Log';
 
@@ -34,11 +35,11 @@ The role for all nodes of this basetype
 
 =cut
 
-has 'json' => (
-	isa => 'JSON',
+has json => (
+	isa => 'Jet::JSON',
 	is => 'ro',
 	default => sub {
-		JSON->new();
+		Jet::JSON->new();
 	},
 	lazy => 1,
 );
@@ -52,7 +53,7 @@ has recipe => (
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		$self->raw ? {self => $self->json->encode($self->raw)} : [];
+		$self->raw ? $self->json->decode($self->raw) : [];
 	},
 	lazy => 1,
 	handles => {

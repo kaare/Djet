@@ -2,10 +2,10 @@ package Jet::Stuff;
 
 use 5.010;
 use Moose;
-use JSON;
 use DBI;
 use DBIx::TransactionManager 1.06;
 
+use Jet::JSON;
 use Jet::Stuff::Loader;
 use Jet::Stuff::QueryBuilder;
 use Jet::Engine::Basetype;
@@ -115,10 +115,10 @@ has 'sql_builder' => (
 	lazy => 1,
 );
 has 'json' => (
-	isa => 'JSON',
+	isa => 'Jet::JSON',
 	is => 'ro',
 	default => sub {
-		JSON->new();
+		Jet::JSON->new;
 	},
 	lazy => 1,
 );

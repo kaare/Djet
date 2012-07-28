@@ -66,7 +66,7 @@ sub basetype_engine {
 				{
 					part => 'Jet::Engine::Condition::Compare',
 					default => {
-						two => /^\d+$/,
+						two => 1,#qr/^\d+$/,
 					},
 				},
 				{
@@ -109,7 +109,7 @@ sub basetype_engine {
 					part => 'Jet::Engine::Condition::Compare',
 					default => {
 						one => {arg => 2},
-						two => /^\d+$/,
+						two => 1,#qr/^\d+$/,
 					},
 				},
 			],
@@ -133,7 +133,8 @@ our $schema;
 sub update_engine {
 	my ($engine, $recipe) = @_;
 	$schema->insert_or_update_engine({name => $engine}, {recipe => $recipe});
-	say STDERR Dumper $recipe, $schema->find_engine({name => $engine});
+	my $found = $schema->find_engine({name => $engine});
+	say STDERR Dumper $found->{recipe}->recipe;
 }
 
 
