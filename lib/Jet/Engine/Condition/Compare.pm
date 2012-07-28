@@ -44,7 +44,7 @@ sub condition {
 	my $self = shift;
 	my $one = $self->one;
 	my $two = $self->two;
-	return $one =~ $two;
+	return $one ~~ $two;
 }
 
 no Moose::Role;
