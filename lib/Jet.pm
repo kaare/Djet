@@ -138,7 +138,7 @@ sub find_node_path($) {
 		my @arguments = split '/', $1;
 		shift @arguments;
 		# Save the remaining nodes on the stash
-		$stash->{nodes}{$_->{id}} = $_ for @$nodedata;
+		$stash->{nodes}{$_->{node_id}} = $_ for @$nodedata;
 
 		my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
 		return $baserole ?
