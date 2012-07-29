@@ -3,7 +3,7 @@ package Jet::Engine::Condition;
 use 5.010;
 use Moose;
 
-with 'Jet::Role::Log';
+with qw/Jet::Role::Log Jet::Role::Engine::Part/;
 
 =head1 NAME
 
@@ -17,42 +17,7 @@ In your condition you just write
 
 extends 'Jet::Engine::Condition';
 
-=head1 ATTRIBUTES
-
-=head2 engine
-
-The engine contains all the information needed,
-
-	cache
-	config
-	parameters
-	request
-	response
-	schema
-	stash
-
 =cut
-
-has 'engine' => (
-#	isa => 'Jet::Engine',
-	is => 'ro',
-);
-
-=head1 METHODS
-
-=head2 attribute_names
-
-Returns an arrayref with the names of the part's attributes
-
-=cut
-
-sub attribute_names {
-	my ($self) = @_;
-	my $meta = $self->meta;
-	my @names;
-	push @names, $_->name for $meta->get_all_attributes;
-	return \@names;
-}
 
 __PACKAGE__->meta->make_immutable;
 

@@ -3,7 +3,7 @@ package Jet::Engine::Part;
 use 5.010;
 use Moose;
 
-with 'Jet::Role::Log';
+with qw/Jet::Role::Log Jet::Role::Engine::Part/;
 
 =head1 NAME
 
@@ -17,27 +17,6 @@ In your engine you just write
 
 extends 'Jet::Engine::Part';
 
-=head1 ATTRIBUTES
-
-=head2 engine
-
-The engine contains all the information needed,
-
-	cache
-	config
-	parameters
-	request
-	response
-	schema
-	stash
-
-=cut
-
-has 'engine' => (
-#	isa => 'Jet::Engine',
-	is => 'ro',
-);
-
 =head1 METHODS
 
 =head2 title
@@ -49,21 +28,6 @@ Provides the human readable title
 sub title {
 	return 'Not Yet Implemented'; 
 }
-
-=head2 parameter_names
-
-Returns an arrayref with the names of the part's parameters
-
-=cut
-
-sub parameter_names {
-	my ($self) = @_;
-	my $meta = $self->meta;
-	my @names;
-	push @names, $_->name for $meta->get_all_attributes;
-	return \@names;
-}
-
 
 sub init {}
 sub run {}
