@@ -95,6 +95,7 @@ sub basetype_engine {
 		},
 		{
 			name => 'Retrieve',
+			template => 'basetype/jet/config/basetype/display.tx',
 			conditions => [
 				{
 					name => 'arg1',
@@ -115,10 +116,11 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Stash::Stuff',
+					part => 'Jet::Engine::Part::Stash::Basetype',
 					default => {
 						stashname  => 'basetype',
-						methodname => 'find_basetype',
+						key => 'id',
+						value => {arg => 2},
 					},
 				},
 			],
