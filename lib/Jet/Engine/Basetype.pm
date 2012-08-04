@@ -128,6 +128,7 @@ has engine_role => (
 					next COMPONENT unless $cond_obj->condition;
 				}
 				$self->add_component($component);
+				$self->response->template($component->{template}) if $component->{template};
 			}
 			return 1;
 		});
@@ -140,7 +141,7 @@ has engine_role => (
 					my $partname = $step->{name} || $step->{part};
 					my $fullname = join '_', $component_fullname, $partname;
 					my $class = $todo{$fullname}{class};
-					my $args  = $todo{$fullname}{args};
+					my $args  = $self->handle_arguments($todo{$fullname}{args});
 					warn "setting up $component_fullname as $class";
 					push @steps, $class->new(engine => $self, %$args);
 				}
