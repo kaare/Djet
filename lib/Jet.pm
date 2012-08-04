@@ -89,6 +89,9 @@ sub run_psgi($) {
 	my $basenode;
 	try {
 		$basenode = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
+		# Set a default html template if there are no arguments. We should probably look for response type to determine if it's a REST request first though
+		my $jet_config = $config->jet;
+		$response->template($jet_config->{template_path} . $basenode->get_column('node_path') . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
 	} catch {
 		my $e = shift;
 		Jet::Failure->new(

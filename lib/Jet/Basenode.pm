@@ -56,7 +56,6 @@ has row => (
 has arguments => (
 	isa => 'ArrayRef[Str]',
 	is => 'ro',
-	predicate => 'has_arguments',
 );
 has basetype => (
 	isa => 'Jet::Engine::Basetype',

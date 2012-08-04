@@ -99,7 +99,6 @@ has headers  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type
 has output   => (
 	isa => 'ArrayRef',
 	is => 'rw',
-	default => sub { [ 'Jet version 0.0000001' ]},
 	predicate => 'has_output',
 );
 has template => (isa => 'Str', is => 'rw' );
