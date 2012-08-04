@@ -88,7 +88,7 @@ sub run_psgi($) {
 	);
 	my $basenode;
 	try {
-		$basenode = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
+		$basenode = $self->find_node_path($request->path_info);
 		# Set a default html template if there are no arguments. We should probably look for response type to determine if it's a REST request first though
 		my $jet_config = $config->jet;
 		$response->template($jet_config->{template_path} . $basenode->get_column('node_path') . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
@@ -119,9 +119,24 @@ sub run_psgi($) {
 			stash  => $stash,
 			response => $response,
 		);
-		$engine->conditions;
-		$engine->parts;
-		$response->render;
+		try {
+			$engine->conditions;
+			$engine->parts;
+			$response->render;
+		} catch {
+			my $e = shift;
+			Jet::Failure->new(
+				exception => $e,
+				config => $config,
+				schema => $schema,
+				cache  => $cache,
+				basetypes => $basetypes,
+				request => $request,
+				basenode => $basenode,
+				stash  => $stash,
+				response => $response,
+			);
+		};
 	}
 	return [ $response->status, $response->headers, $response->output ];
 }
@@ -140,29 +155,21 @@ sub find_node_path($) {
 		basetypes => $basetypes,
 	);
 	my $nodedata = $schema->find_basenode($path);
-	if ($nodedata) {
-		my $basedata = shift @$nodedata;
-		# Find the path arguments
-		my $basepath = $basedata->{node_path};
-		$path =~ /$basepath(.*)/;
-		my @arguments = split '/', $1;
-		shift @arguments;
-		# Save the remaining nodes on the stash
-		$stash->{nodes}{$_->{node_id}} = $_ for @$nodedata;
+	Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
 
-		my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
-		return $baserole ?
-			Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments) :
-			Jet::Basenode->new(%nodeparams, row => $basedata);
-	}
+	my $basedata = shift @$nodedata;
+	# Find the path arguments
+	my $basepath = $basedata->{node_path};
+	$path =~ /$basepath(.*)/;
+	my @arguments = split '/', $1;
+	shift @arguments;
+	# Save the remaining nodes on the stash
+	$stash->{nodes}{$_->{node_id}} = $_ for @$nodedata;
 
-	# Find Not Found node
-	my $notfound_name = $config->{jet}{nodenames}{notfound};
-	$nodedata = $schema->find_node({ name =>  $notfound_name });
-	my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
+	my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
 	return $baserole ?
-		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
-		Jet::Basenode->new(%nodeparams, row => $nodedata);
+		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments) :
+		Jet::Basenode->new(%nodeparams, row => $basedata);
 }
 
 __PACKAGE__->meta->make_immutable;

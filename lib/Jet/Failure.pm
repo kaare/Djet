@@ -23,6 +23,13 @@ has exception => (
 		my ($self, $e) = @_;
 		my $stash = $self->stash;
 		if (ref $_) {
+	# Find Not Found node
+	# my $notfound_name = $config->{jet}{nodenames}{notfound};
+	# $nodedata = $schema->find_node({ name =>  $notfound_name });
+	# my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
+	# return $baserole ?
+		# Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
+		# Jet::Basenode->new(%nodeparams, row => $nodedata);
 			$stash->{exception} = $e
 		} else {
 			$stash->{error} = $e
