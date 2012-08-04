@@ -23,7 +23,7 @@ has stashname => (
 	is => 'ro',
 	isa => 'Str',
 );
-has method => (
+has methodname => (
 	is => 'ro',
 	isa => 'Str',
 );
@@ -47,11 +47,11 @@ has where => (
 sub run {
 	my $self = shift;
 	my $stashname = $self->stashname;
-	my $method = $self->method;
+	my $methodname = $self->methodname;
 	my $order = $self->order;
 	my $where = $self->where;
-	if ($method) {
-		my $data = $self->engine->schema->$method($where, $order);
+	if ($methodname) {
+		my $data = $self->engine->schema->$methodname($where, $order);
 		$self->engine->stash->{$stashname} = $data;
 	}
 }

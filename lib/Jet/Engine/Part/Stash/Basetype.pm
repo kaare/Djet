@@ -29,7 +29,7 @@ has key => (
 );
 has value => (
 	is => 'ro',
-	isa => 'Str|ArrayRef[Str]',
+	isa => 'Str',
 
 );
 
@@ -47,7 +47,6 @@ sub run {
 	my $args;
 	$args->{$key} = $value if $key;
 	my $data = $self->engine->schema->find_basetype($args);
-debug($data, $args);
 	$self->engine->stash->{$stashname} = $data;
 }
 
