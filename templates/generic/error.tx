@@ -1,5 +1,11 @@
-<h2>
-: $exception.reason
-</h2>
+: if ($exception) {
+<h2><: $exception.reason :></h2>
 
 : $exception.message
+: } else {
+<h2>Program Error</h2>
+The program terminated with this error:
+<div>
+: $error
+</div>
+: }

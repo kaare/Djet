@@ -96,7 +96,12 @@ has 'stash' => (
 
 has status   => (isa => 'Int', is => 'rw', default => 200);
 has headers  => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Content-Type' => 'text/html; charset="utf-8"' ] });
-has output   => (isa => 'ArrayRef', is => 'rw', default => sub { [ 'Jet version 0.0000001' ]} );
+has output   => (
+	isa => 'ArrayRef',
+	is => 'rw',
+	default => sub { [ 'Jet version 0.0000001' ]},
+	predicate => 'has_output',
+);
 has template => (isa => 'Str', is => 'rw' );
 has tx       => (isa => 'Text::Xslate', is => 'ro', lazy => 1, default => sub {
 	my $self = shift;
@@ -125,6 +130,7 @@ Chooses the output renderer based on the requested response types
 
 sub render {
 	my $self = shift;
+	warn 'Rendering ' . $self->template;
 	$self->render_html;# if $c->rest->type eq 'HTML'; # XXX We can only do html for now
 }
 
@@ -137,8 +143,6 @@ Renders the output as HTML
 sub render_html {
 	my $self = shift;
 	loc_lang($self->config->{jet}{language});
-	my $jet_config = $self->config->jet;
-	$self->template($jet_config->{template_path} . $self->stash->{basenode}->get_column('node_path') . $jet_config->{template_suffix}) unless $self->template;;
 	my $output = $self->tx->render($self->template, $self->stash);
 	$self->output([ $output ]);
 }

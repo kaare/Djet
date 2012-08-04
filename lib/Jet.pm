@@ -9,6 +9,7 @@ use Jet::Basenode;
 use Jet::Config;
 use Jet::Engine;
 use Jet::Exception;
+use Jet::Failure;
 use Jet::Request;
 use Jet::Response;
 use Jet::Stuff;
@@ -90,29 +91,35 @@ sub run_psgi($) {
 		$basenode = $self->find_node_path($request->path_info) || Jet::Exception->throw(NotFound => { message => $request->uri->as_string });
 	} catch {
 		my $e = shift;
-		$stash->{exception} = $e;
-		$response->template('generic/error' . $config->jet->{template_suffix});
-		$basenode = Jet::Basenode->new(
+		Jet::Failure->new(
+			exception => $e,
+			config => $config,
 			schema => $schema,
+			cache  => $cache,
 			basetypes => $basetypes,
-			row =>{},
+			request => $request,
+			basenode => $basenode,
+			stash  => $stash,
+			response => $response,
 		);
 	};
-	$stash->{basenode} = $basenode;
-	my $engine_role = $basenode->basetype->engine_role;
-	my $engine = Jet::Engine->with_traits($engine_role)->new(
-		config => $config,
-		schema => $schema,
-		cache  => $cache,
-		basetypes => $basetypes,
-		request => $request,
-		basenode => $basenode,
-		stash  => $stash,
-		response => $response,
-	);
-	$engine->conditions;
-	$engine->parts;
-	$response->render;
+	unless ($response->has_output) {
+		$stash->{basenode} = $basenode;
+		my $engine_role = $basenode->basetype->engine_role;
+		my $engine = Jet::Engine->with_traits($engine_role)->new(
+			config => $config,
+			schema => $schema,
+			cache  => $cache,
+			basetypes => $basetypes,
+			request => $request,
+			basenode => $basenode,
+			stash  => $stash,
+			response => $response,
+		);
+		$engine->conditions;
+		$engine->parts;
+		$response->render;
+	}
 	return [ $response->status, $response->headers, $response->output ];
 }
 
