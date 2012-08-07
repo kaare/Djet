@@ -9,6 +9,9 @@
 <h1><: $basenode.get_column('title') :></h1>
 <ul>
 	<li><a href="/jet/config/basetype/id/<: $basetype.id :>"><: $basetype.name :></a>
+: for $fields -> $item {
+	<li><a href="/jet/config/basetype/id/<: $basetype.id :>"><: $item :></a>
+: }
 </ul>
 </body>
 </html>

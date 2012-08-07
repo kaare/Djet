@@ -51,8 +51,8 @@ sub run {
 	my $order = $self->order;
 	my $where = $self->where;
 	if ($methodname) {
-		my $data = $self->engine->schema->$methodname($where, $order);
-		$self->engine->stash->{$stashname} = $data;
+		my $data = $self->schema->$methodname($where, $order);
+		$self->stash->{$stashname} = $data;
 	}
 }
 

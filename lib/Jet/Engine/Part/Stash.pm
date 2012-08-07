@@ -1,4 +1,4 @@
-package Jet::Engine::Part::Stash::Basetype;
+package Jet::Engine::Part::Stash;
 
 use 5.010;
 use Moose;
@@ -9,13 +9,15 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Engine::Part::Stash::Basetype - Stash basetypes
+Jet::Part::Stash - Stash something
 
 =head1 SYNOPSIS
 
-Put basetypes on the stash
+Stash some stuff
 
 =head1 ATTRIBUTES
+
+=head2 stashname
 
 =cut
 
@@ -23,14 +25,14 @@ has stashname => (
 	is => 'ro',
 	isa => 'Str',
 );
-has key => (
-	is => 'ro',
-	isa => 'Str',
-);
-has value => (
-	is => 'ro',
-	isa => 'Str',
 
+=head2 something
+
+=cut
+
+has something => (
+	is => 'ro',
+	isa => 'Str|ArrayRef|HashRef',
 );
 
 =head1 METHODS
@@ -41,13 +43,8 @@ has value => (
 
 sub run {
 	my $self = shift;
-	my $stashname = $self->stashname || 'basetype';
-	my $key = $self->key;
-	my $value = $self->value;
-	my $args;
-	$args->{$key} = $value if $key;
-	my $data = $self->engine->schema->find_basetype($args);
-	$self->stash->{$stashname} = $data;
+	my $stashname = $self->stashname;
+	$self->stash->{$stashname} = $self->something;
 }
 
 no Moose::Role;
