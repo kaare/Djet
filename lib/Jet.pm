@@ -108,8 +108,8 @@ sub run_psgi($) {
 	};
 	unless ($response->has_output) {
 		$stash->{basenode} = $basenode;
-		my $engine_role = $basenode->basetype->engine_role;
-		my $engine = Jet::Engine->with_traits($engine_role)->new(
+		my $engine = Jet::Engine->new(
+			arguments => $basenode->basetype->engine_arguments,
 			config => $config,
 			schema => $schema,
 			cache  => $cache,
