@@ -6,7 +6,6 @@ use DBI;
 use DBIx::TransactionManager 1.06;
 
 use Jet::JSON;
-use Jet::Stuff::Loader;
 use Jet::Stuff::QueryBuilder;
 use Jet::Engine::Basetype;
 use Jet::Engine::Recipe;
@@ -62,10 +61,6 @@ The actual database handle. You can provide one in the ->new call, or it will be
 
 The transaction manager
 
-=head3 schema
-
-The database schema
-
 =head3 sql_builder
 
 Helps you write sql
@@ -94,17 +89,6 @@ has 'txn_manager' => (
 		DBIx::TransactionManager->new($self->dbh);
 	},
 	lazy => 1,
-);
-has 'schema'       => (
-	isa => 'DBIx::Inspector::Driver::Pg',
-	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		my $dbh = $self->dbh;
-		my $loader = Jet::Stuff::Loader->new(dbh => $dbh);
-		return $loader->schema;
-	}
 );
 has 'sql_builder' => (
 	isa => 'Jet::Stuff::QueryBuilder',
@@ -214,8 +198,7 @@ Insert a Jet basetype
 
 sub insert_basetype {
 	my ($self, $data, $opt) = @_;
-	$data->{$_} = $self->json->encode($data->{$_}) for qw/conditions bindings/;
-	$data->{$_} = $self->json->encode($data->{$_}) for qw/conditions bindings/;
+	$data->{$_} = $self->json->encode($data->{$_}) for qw/columns conditions bindings/;
 	my ($sql, @binds) = $self->sql_builder->insert(
 		"jet.basetype",
 		$data,
@@ -237,7 +220,7 @@ sub update_basetype {
 		join(',', map { "$_ = ?"} keys(%$args)) .
 		' WHERE ' .
 		join(',', map { "$_ = ?"} keys(%$where));
-	$args->{$_} = $self->json->encode($args->{$_}) for qw/conditions bindings/;
+	do { $args->{$_} = $self->json->encode($args->{$_}) if $args->{$_}} for qw/columns conditions bindings/;
 	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
 }
 
@@ -271,9 +254,9 @@ sub get_basetypes {
 	);
 	my $sth = $self->_execute($sql, \@binds);
 	return [ map {
-		$_->{bindings} = $self->json->decode($_->{bindings}) if $_->{bindings};
-		$_->{conditions} = $self->json->decode($_->{conditions}) if $_->{conditions};
-		$_;
+		my $arg = $_;
+		do { $arg->{$_} = $self->json->decode($arg->{$_}) if $arg->{$_} } for qw/columns bindings conditions/;
+		$arg;
 	} @{ $sth->fetchall_arrayref({}) } ];
 }
 

@@ -37,7 +37,7 @@ CREATE TABLE basetype (
 	id						serial NOT NULL PRIMARY KEY,
 	name					text UNIQUE,
 	parent					int[],
-	columns					text[],
+	columns					text,
 	searchable				text[],
 	engines					int[], -- REFERENCES engine
 	conditions				text,

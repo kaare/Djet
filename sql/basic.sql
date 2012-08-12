@@ -17,7 +17,7 @@ INSERT INTO basetype (name) VALUES ('jet_config');
 INSERT INTO basetype (name, engines) VALUES ('jet_basetype','{2}');
 INSERT INTO basetype (name) VALUES ('not_found');
 INSERT INTO basetype (name) VALUES ('usergroup');
-INSERT INTO basetype (name,parent,searchable,columns) VALUES ('person','{2,3}','{"userlogin"}','{"userlogin","password"}');
+INSERT INTO basetype (name,parent,columns,searchable) VALUES ('person','{2,3}', '[{"name":"userlogin","type":"Str"},{"name":"password","type":"Password"}]', '{"userlogin"}');
 
 -- Data Nodes
 

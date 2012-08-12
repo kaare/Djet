@@ -59,8 +59,11 @@ has node_role => (
 		my $self= shift;
 		my $role = Moose::Meta::Role->create_anon_role;
 		my $colidx;
-		for my $column (@{ $self->basetype->{columns} }) {
-			$role->add_method( "get_$column", sub {
+		my $columns = $self->basetype->{columns};
+		for my $column (@{ $columns }) {
+			my $colname = $column->{name};
+			my $coltype = $column->{type};
+			$role->add_method( "get_$colname", sub {
 				my $self = shift;
 				my $cols = $self->get_column('columns');
 				return $cols->[$colidx++];
