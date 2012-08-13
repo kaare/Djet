@@ -118,18 +118,10 @@ sub basetype_engine {
 				{
 					part => 'Jet::Engine::Part::Stash::Basetype',
 					default => {
-						stashname  => 'basetype',
-						key => 'id',
+						stashname   => 'basetype',
+						stashfields => 'fields',
+						key   => 'id',
 						value => {arg => 2},
-					},
-				},
-				{
-					part => 'Jet::Engine::Part::Stash',
-					default => {
-						stashname  => 'fields',
-						something => [qw/
-							a b c
-						/],
 					},
 				},
 			],

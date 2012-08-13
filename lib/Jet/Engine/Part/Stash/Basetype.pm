@@ -23,6 +23,10 @@ has stashname => (
 	is => 'ro',
 	isa => 'Str',
 );
+has stashfields => (
+	is => 'ro',
+	isa => 'Str',
+);
 has key => (
 	is => 'ro',
 	isa => 'Str',
@@ -48,6 +52,35 @@ sub run {
 	$args->{$key} = $value if $key;
 	my $data = $self->engine->schema->find_basetype($args);
 	$self->stash->{$stashname} = $data;
+    if (my $stashfields = $self->stashfields) {
+        $self->stash->{$stashfields} = {
+            columns => {
+                name  => 'columns',
+                type  => 'json',
+                value => $data->{columns},
+            },
+            searchable => {
+                name  => 'searchable',
+                type  => 'list',
+                value => $data->{searchable},
+            },
+            engines => {
+                name  => 'engines',
+                type  => 'lookup',
+                value => $data->{engines},
+            },
+            conditions => {
+                name  => 'conditions',
+                type  => 'json',
+                value => $data->{conditions},
+            },
+            bindings => {
+                name  => 'bindings',
+                type  => 'json',
+                value => $data->{bindings},
+            },
+        };
+    }
 }
 
 no Moose::Role;
