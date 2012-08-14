@@ -63,10 +63,15 @@ has node_role => (
 		for my $column (@{ $columns }) {
 			my $colname = $column->{name};
 			my $coltype = $column->{type};
-			$role->add_method( "get_$colname", sub {
-				my $self = shift;
-				my $cols = $self->get_column('columns');
-				return $cols->[$colidx++];
+			$role->add_attribute("__$colname" => {
+				reader  => "get_$colname",
+				isa     => $coltype,
+				default => sub {
+					my $self = shift;
+					my $cols = $self->get_column('columns');
+					return $cols->[$colidx++];
+				},
+				lazy => 1,
 			});
 		}
 		return $role;
