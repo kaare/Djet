@@ -58,7 +58,7 @@ has arguments => (
 	is => 'ro',
 );
 has basetype => (
-	isa => 'Jet::Engine::Basetype',
+	isa => 'Jet::Basetype',
 	is => 'ro',
 	lazy => 1,
 	default => sub {

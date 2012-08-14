@@ -1,4 +1,4 @@
-package Jet::Engine::Basetype;
+package Jet::Basetype;
 
 use 5.010;
 use Moose;
@@ -10,7 +10,7 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Engine::Basetype - Jet Engine Basetype Base Class
+Jet::Basetype - Jet Basetype Base Class
 
 =head1 SYNOPSIS
 

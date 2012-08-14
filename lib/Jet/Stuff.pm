@@ -7,7 +7,7 @@ use DBIx::TransactionManager 1.06;
 
 use Jet::JSON;
 use Jet::Stuff::QueryBuilder;
-use Jet::Engine::Basetype;
+use Jet::Basetype;
 use Jet::Engine::Recipe;
 
 with 'Jet::Role::Log';
@@ -272,7 +272,7 @@ sub get_expanded_basetypes {
 	my ($self, $where, $opt) = @_;
 	my $basetypes = $self->get_basetypes($where, $opt);
 	return { map {
-			$_->{id} => Jet::Engine::Basetype->new(
+			$_->{id} => Jet::Basetype->new(
 				basetype => $_,
 				recipe   => $self->build_base_recipe($_),
 			)
