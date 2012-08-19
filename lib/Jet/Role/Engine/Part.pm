@@ -30,7 +30,7 @@ The engine contains all the information needed,
 has 'engine' => (
 	isa => 'Jet::Engine',
 	is => 'ro',
-	handles => [qw( cache config parameters request response schema stash )],
+	handles => [qw( basenode cache config parameters request response schema stash )],
 );
 
 =head1 METHODS
