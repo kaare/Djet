@@ -66,6 +66,7 @@ has run_components => (
 	traits  => ['Array'],
 	isa     => 'ArrayRef[HashRef]',
 	is => 'rw',
+	predicate => 'has_runcomponents',
 	handles => {
 		all_runcomponents    => 'elements',
 		add_runcomponent     => 'push',
@@ -75,7 +76,6 @@ has run_components => (
 		get_runcomponent     => 'get',
 		join_runcomponents   => 'join',
 		count_runcomponents  => 'count',
-		has_runcomponents    => 'count',
 		has_no_runcomponents => 'is_empty',
 		sorted_runcomponents => 'sort',
 	},
@@ -137,6 +137,8 @@ sub parts {
 	my @components = @{ $self->all_components };
 	my $arguments = $self->arguments;
 	my @steps;
+	return unless $self->has_runcomponents;
+
 	for my $component ($self->all_runcomponents) {
 		my $component_fullname = $component->{fullname};
 		for my $step (@{ $component->{steps} }) {
