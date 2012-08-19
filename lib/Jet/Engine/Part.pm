@@ -17,6 +17,16 @@ In your engine you just write
 
 extends 'Jet::Engine::Part';
 
+=head1 ATTRIBUTES
+
+=cut
+
+has template => (
+	isa => 'Str',
+	is => 'ro',
+	predicate => 'has_template',
+);
+
 =head1 METHODS
 
 =head2 title
@@ -31,7 +41,16 @@ sub title {
 
 sub init {}
 sub run {}
-sub render {}
+sub render {
+	my $self = shift;
+	return unless $self->has_template;
+
+use Data::Dumper;
+	my $output =
+Dumper $self->stashname, $self->stash->{$self->stashname};
+	$self->stash->{$self->stashname} = $output;
+
+}
 
 __PACKAGE__->meta->make_immutable;
 
