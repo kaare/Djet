@@ -131,6 +131,33 @@ sub basetype_engine {
 	update_engine('basetype', $data);
 }
 
+sub bc_engine {
+	my $data = [
+		{
+			name => 'List',
+			conditions => [
+				{
+					part => 'Jet::Engine::Condition::Response::Type',
+					default => {
+						response_type => [qr/html/i],
+					},
+				},
+			],
+			steps => [
+				{
+					part => 'Jet::Engine::Part::Node::BC',
+					default => {
+						stashname  => 'bc',
+						template   => 'basetype/bc'
+					},
+				},
+			],
+		},
+	];
+#	say STDERR Dumper( JSON->new->encode($data));
+	update_engine('breadcrumbs', $data);
+}
+
 our $schema;
 
 sub update_engine {
@@ -149,6 +176,7 @@ sub do_it {
 	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
 	$schema = Jet::Stuff->new(%connect_info);
 	basetype_engine;
+	bc_engine;
 }
 
 do_it;
