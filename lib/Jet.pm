@@ -88,7 +88,7 @@ sub run_psgi($) {
 	);
 	my $basenode;
 	try {
-		$basenode = $self->find_node_path($request->path_info);
+		$basenode = $self->find_node_path($request->path_info, $stash);
 		# Set a default html template if there are no arguments. We should probably look for response type to determine if it's a REST request first though
 		my $jet_config = $config->jet;
 		$response->template($jet_config->{template_path} . $basenode->get_column('node_path') . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
@@ -164,7 +164,7 @@ sub find_node_path($) {
 	my @arguments = split '/', $1;
 	shift @arguments;
 	# Save the remaining nodes on the stash
-	$stash->{nodes}{$_->{node_id}} = $_ for @$nodedata;
+	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_) for @$nodedata;
 
 	my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
 	return $baserole ?
