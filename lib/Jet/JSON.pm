@@ -16,7 +16,6 @@ Also serializes regexes
 
 =cut
 
-use Data::Dumper;
 sub new {
 	my $class = shift;
 	my $self = $class->SUPER::new(@_);
