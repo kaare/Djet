@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="/css/jet.css">
 </head>
 <body>
-<: $bc :>
+<: mark_raw($bc) :>
 <h1><: $basenode.get_column('title') :></h1>
 <ul>
 : for $basetypes -> $basetype {

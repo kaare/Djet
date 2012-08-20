@@ -148,7 +148,7 @@ sub bc_engine {
 					part => 'Jet::Engine::Part::Node::BC',
 					default => {
 						stashname  => 'bc',
-						template   => 'basetype/bc'
+						template   => 'basetype/bc.tx'
 					},
 				},
 			],

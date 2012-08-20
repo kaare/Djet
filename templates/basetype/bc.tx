@@ -1,0 +1,7 @@
+<ul>
+: for $bc -> $parent {
+	<li>
+		<a href="<: $parent.get_column('node_path') :>" ><: $parent.get_column('title') :></a>
+	</li>
+: }
+</ul>

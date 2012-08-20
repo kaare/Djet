@@ -24,7 +24,7 @@ Faster than an AWE2
 
 =head1 SYNOPSIS
 
-Experimental module
+Experimental CMS
 
 =head1 Class Attributes
 
@@ -38,6 +38,7 @@ our $config;
 our $schema;
 our $cache;
 our $basetypes;
+our $renderers;
 
 =head1 METHODS
 
@@ -62,6 +63,14 @@ BEGIN {
 	$schema = Jet::Stuff->new(%connect_info);
 	$basetypes = $schema->get_expanded_basetypes;
 	$cache = CHI->new( %{ $config->jet->{cache} } );
+	do {
+		my $classname = "Jet::Render::$_";
+		eval "require $classname" or die $@;
+		$renderers->{lc $_} = $classname->new(
+			jet_root => $jet_root,
+			config => $config,
+		);
+	} for qw/Html/;
 
 	# Roles
 	with 'Jet::Role::Log';
@@ -82,9 +91,8 @@ sub run_psgi($) {
 	my $request = Jet::Request->new($env);
 	my $stash  = {request => $request};
 	my $response = Jet::Response->new(
-		jet_root => $jet_root,
-		config => $config,
 		stash  => $stash,
+		renderers => $renderers,
 	);
 	my $basenode;
 	try {

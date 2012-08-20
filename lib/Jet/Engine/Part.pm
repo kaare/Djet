@@ -45,9 +45,11 @@ sub render {
 	my $self = shift;
 	return unless $self->has_template;
 
-use Data::Dumper;
-	my $output =
-Dumper $self->stashname, $self->stash->{$self->stashname};
+	my $response = $self->response;
+	$response->type =~/(html|json)/i;
+	my $type = $1;
+	my $renderer = $response->renderers->{$type};
+	my $output = $renderer->render($self->template, $self->stash);
 	$self->stash->{$self->stashname} = $output;
 
 }

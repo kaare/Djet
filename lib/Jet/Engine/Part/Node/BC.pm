@@ -55,7 +55,7 @@ sub parents {
 		push @parents, $parent;
 		$node = $parent;
 	}
-	return \@parents;
+	return [ reverse @parents ];
 }
 
 no Moose::Role;
