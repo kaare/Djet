@@ -172,12 +172,12 @@ sub find_node_path($) {
 	my @arguments = split '/', $1;
 	shift @arguments;
 	# Save the remaining nodes on the stash
-	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_) for @$nodedata;
+	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_, stash => $stash) for @$nodedata;
 
 	my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
 	return $baserole ?
-		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments) :
-		Jet::Basenode->new(%nodeparams, row => $basedata);
+		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments, stash => $stash) :
+		Jet::Basenode->new(%nodeparams, row => $basedata, stash => $stash);
 }
 
 __PACKAGE__->meta->make_immutable;

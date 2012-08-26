@@ -62,6 +62,10 @@ has basetype => (
 		return $self->basetypes->{$self->get_column('basetype_id')};
 	},
 );
+has stash => (
+	isa => 'HashRef',
+	is => 'ro',
+);
 
 =head1 METHODS
 
@@ -150,9 +154,38 @@ sub children {
 	return [ map {Jet::Node->new(row =>  $_)} @$result ];
 }
 
+=head2 parent
+
+Return the parent of the current node
+
+The parent, as found from the path
+
+If the parent is on the stash, this node will be returned. Otherwise it will be looked up
+in the database
+
+=cut
+
+sub parent {
+	my ($self) = @_;
+	my $stash = $self->stash;
+	my $parent_id = $self->row->{parent_id};
+	my $parent = $stash->{nodes}{$parent_id};
+	return $parent if $parent;
+
+	my $schema = $self->schema;
+	my $where = {
+		parent_id => $parent_id,
+	};
+	$parent = $schema->search($where);
+	return Jet::Node->new(row => $parent, stash => $stash);
+}
+
 =head2 parents
 
 Return the parents of the current node
+
+A node can have several parents, and we know only one from the path, so this method always requires
+a roundtrip to the database
 
 Required parameters:
 
