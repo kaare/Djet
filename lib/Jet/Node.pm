@@ -180,6 +180,27 @@ sub parent {
 	return Jet::Node->new(row => $parent, stash => $stash);
 }
 
+=head2 ancestors
+
+Return the ancestors of the current node
+
+Uses the parent method to utilize either the stash or the database
+
+=cut
+
+sub ancestors {
+	my ($self) = @_;
+	my $stash = $self->stash;
+
+	my $node = $self;
+	my @parents;
+	while ($node->row->{parent_id}) {
+		$node = $node->parent;
+		push @parents, $node;
+	}
+	return [ reverse @parents ];
+}
+
 =head2 parents
 
 Return the parents of the current node

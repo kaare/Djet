@@ -47,15 +47,7 @@ We know they're already on the stack
 
 sub parents {
 	my ($self, $basenode) = @_;
-	my $node = $basenode;
-	my $stash = $self->stash;
-	my @parents;
-	while (my $parent_id = $node->row->{parent_id}) {
-		my $parent = $stash->{nodes}{$parent_id};
-		push @parents, $parent;
-		$node = $parent;
-	}
-	return [ reverse @parents ];
+	return $basenode->ancestors;
 }
 
 no Moose::Role;
