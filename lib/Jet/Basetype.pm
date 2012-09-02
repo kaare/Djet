@@ -60,20 +60,33 @@ has node_role => (
 		my $role = Moose::Meta::Role->create_anon_role;
 		my $colidx;
 		my $columns = $self->basetype->{columns};
+		my @fieldcols;
 		for my $column (@{ $columns }) {
 			my $colname = $column->{name};
 			my $coltype = $column->{type};
-			$role->add_attribute("__$colname" => {
+			$role->add_attribute("__$colname" => (
 				reader  => "get_$colname",
-				isa     => $coltype,
+				isa     => "$coltype|Undef",
+				traits => [qw/Jet::Trait::Field/],
+				title => $colname,
 				default => sub {
 					my $self = shift;
 					my $cols = $self->get_column('columns');
 					return $cols->[$colidx++];
 				},
 				lazy => 1,
-			});
+			));
+			push @fieldcols, "get_$colname";
 		}
+		$role->add_attribute('field_values' => (
+			is => 'ro',
+			isa => 'ArrayRef',
+			default => sub {
+				my $self = shift;
+				return [ map {$self->$_} @fieldcols ];
+			},
+			lazy => 1,
+		));
 		return $role;
 	},
 	lazy => 1,
