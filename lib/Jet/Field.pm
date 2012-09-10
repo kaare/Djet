@@ -1,11 +1,11 @@
-package Jet::Trait::Field;
+package Jet::Field;
 
 use 5.010;
-use Moose::Role;
+use Moose;
 
 =head1 NAME
 
-Jet::Trait::Field - Attributes and feature for Jet Fields
+Jet::Field - Attributes and feature for Jet Fields
 
 =head1 ATTRIBUTES
 
@@ -18,6 +18,16 @@ The field's title
 has title => (
 	is => 'ro',
 	isa => 'Str',
+);
+
+=head2 value
+
+The field's value
+
+=cut
+
+has value => (
+	is => 'ro',
 );
 
 no Moose::Role;

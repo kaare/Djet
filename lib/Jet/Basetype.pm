@@ -5,6 +5,7 @@ use Moose;
 use JSON;
 
 use Jet::Engine::Recipe;
+use Jet::Field;
 
 with 'Jet::Role::Log';
 
@@ -66,19 +67,20 @@ has node_role => (
 			my $coltype = $column->{type};
 			$role->add_attribute("__$colname" => (
 				reader  => "get_$colname",
-				isa     => "$coltype|Undef",
-				traits => [qw/Jet::Trait::Field/],
-				title => $colname,
+				isa     => 'Jet::Field',
 				default => sub {
 					my $self = shift;
 					my $cols = $self->get_column('columns');
-					return $cols->[$colidx++];
+					return Jet::Field->new(
+						value => $cols->[$colidx++],
+						title => $colname,
+					);
 				},
 				lazy => 1,
 			));
 			push @fieldcols, "get_$colname";
 		}
-		$role->add_attribute('field_values' => (
+		$role->add_attribute('fields' => (
 			is => 'ro',
 			isa => 'ArrayRef',
 			default => sub {

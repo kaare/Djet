@@ -8,16 +8,10 @@
 <body>
 <h1><: $basenode.get_column('title') :></h1>
 basetype.name: <: $basetype.name :>
-<h2>Field Values</h2>
-<ul>
-: for $basenode.field_values -> $item {
-	<li><: $item :>
-: }
-</ul>
 <h2>Fields</h2>
 <ul>
 : for $basenode.fields -> $item {
-	<li><: ref($item) :></a>
+	<li><: $item.title :>: <: $item.value :>
 : }
 </ul>
 </body>
