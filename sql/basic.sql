@@ -14,7 +14,7 @@ INSERT INTO engine (name) VALUES ('basetype');
 
 INSERT INTO basetype (name) VALUES ('directory');
 INSERT INTO basetype (name) VALUES ('jet_config');
-INSERT INTO basetype (name, engines,columns) VALUES ('jet_basetype','{2}','[{"name":"name","type":"Str"},{"name":"parent","type":"Int"}]');
+INSERT INTO basetype (name, engines,columns) VALUES ('jet_basetype','{2}','[{"name":"name","type":"Str", "traits": ["Jet::Trait::Config::Basetype"]},{"name":"parent","type":"Int"}]');
 INSERT INTO basetype (name) VALUES ('not_found');
 INSERT INTO basetype (name) VALUES ('usergroup');
 INSERT INTO basetype (name,parent,columns,searchable) VALUES ('person','{2,3}', '[{"name":"userlogin","type":"Str"},{"name":"password","type":"Password"}]', '{"userlogin"}');

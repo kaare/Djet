@@ -65,16 +65,20 @@ has node_role => (
 		for my $column (@{ $columns }) {
 			my $colname = $column->{name};
 			my $coltype = $column->{type};
+			my $traits =  $column->{traits};
 			$role->add_attribute("__$colname" => (
 				reader  => "get_$colname",
 				isa     => 'Jet::Field',
 				default => sub {
 					my $self = shift;
 					my $cols = $self->get_column('columns');
-					return Jet::Field->new(
+					my %params = (
 						value => $cols->[$colidx++],
 						title => $colname,
 					);
+					return $traits ?
+						Jet::Field->with_traits(@$traits)->new(%params) :
+						Jet::Field->new(%params);
 				},
 				lazy => 1,
 			));

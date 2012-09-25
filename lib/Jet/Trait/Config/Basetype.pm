@@ -1,36 +1,36 @@
-package Jet::Field;
+package Jet::Trait::Config::Basetype;
 
 use 5.010;
-use Moose;
-
-with 'MooseX::Traits';
+use Moose::Role;
 
 =head1 NAME
 
-Jet::Field - Attributes and feature for Jet Fields
+Jet::Trait::Config::Basetype - Common functionality for parts and conditions
+
+=head1 SYNOPSIS
+
+with 'Jet::Trait::Config::Basetype';
 
 =head1 ATTRIBUTES
 
-=head2 title
-
-The field's title
-
 =cut
 
-has title => (
-	is => 'ro',
-	isa => 'Str',
-);
+=head1 METHODS
 
 =head2 value
 
-The field's value
-
 =cut
 
-has value => (
-	is => 'ro',
-);
+around value => sub {
+	my ($self) = @_;
+	return "xyzzy";
+};
+
+=head1 METHODS
+
+=head2 
+
+=cut
 
 no Moose::Role;
 
