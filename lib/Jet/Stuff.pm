@@ -141,7 +141,7 @@ sub insert_engine {
 		$data,
 		$opt
 	);
-	my $sth = $self->_execute($sql, \@binds);
+	return $self->_execute($sql, \@binds);
 }
 
 =head3 update_engine
@@ -151,25 +151,32 @@ Update Jet engine
 =cut
 
 sub update_engine {
-	my ($self, $where, $args) = @_;
-	my $sql = 'UPDATE jet.engine SET ' .
-		join(',', map { "$_ = ?"} keys(%$args)) .
-		' WHERE ' .
-		join(',', map { "$_ = ?"} keys(%$where));
-	$args->{recipe} = $self->json->encode($args->{recipe}) if $args->{recipe};
-	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
+	my ($self, $where, $data) = @_;
+	$data->{recipe} = $self->json->encode($data->{recipe}) if $data->{recipe};
+	my ($sql, @binds) = $self->sql_builder->update(
+		"jet.engine",
+		$data,
+		$where
+	);
+	my $sth = $self->_execute($sql, \@binds);
 }
 
 =head3 find_engine
 
-Find a engine
+Find an engine
 
 =cut
 
 sub find_engine {
-	my ($self, $args) = @_;
-	my $sql = 'SELECT * FROM jet.engine WHERE ' . join ',', map { "$_ = ?"} keys %$args;
-	my $engine = $self->single(sql => $sql, data => [ values %$args ]) || return;
+	my ($self, $data, $opt) = @_;
+	$data->{recipe} = $self->json->encode($data->{recipe}) if $data->{recipe};
+	my ($sql, @binds) = $self->sql_builder->select(
+		"jet.engine",
+		'*',
+		$data,
+		$opt
+	);
+	my $engine = $self->single(sql => $sql, data => \@binds) || return;
 	$engine->{recipe} = Jet::Engine::Recipe->new(raw => $engine->{recipe});
 	return $engine;
 }
