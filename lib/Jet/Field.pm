@@ -32,6 +32,17 @@ has value => (
 	is => 'ro',
 );
 
+=head2 node
+
+The node that contains this attribute
+
+=cut
+
+has node => (
+	is => 'ro',
+	isa => 'Jet::Node',
+);
+
 no Moose::Role;
 
 1;

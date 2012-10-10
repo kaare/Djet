@@ -56,6 +56,7 @@ has recipe => (
 has node_role => (
 	isa => 'Moose::Meta::Role',
 	is => 'ro',
+#	builder => '_build_field',
 	default => sub {
 		my $self= shift;
 		my $role = Moose::Meta::Role->create_anon_role;
@@ -75,6 +76,7 @@ has node_role => (
 					my %params = (
 						value => $cols->[$colidx++],
 						title => $colname,
+						node  => $self,
 					);
 					return $traits ?
 						Jet::Field->with_traits(@$traits)->new(%params) :

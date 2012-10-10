@@ -22,8 +22,10 @@ with 'Jet::Trait::Config::Basetype';
 =cut
 
 around value => sub {
-	my ($self) = @_;
-	return "xyzzy";
+	my ($orig, $self) = @_;
+	my $node = $self->node;
+	my $basetype_id = $node->arguments->[1];
+	return $node->basetypes->{$basetype_id}{basetype}{name};
 };
 
 =head1 METHODS
