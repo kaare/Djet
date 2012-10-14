@@ -37,7 +37,7 @@ has requestmethod => (
 sub condition {
 	my $self = shift;
 	my $method = $self->requestmethod;
-	return $self->request->method =~ $method;
+	return $self->request->request->method =~ $method;
 }
 
 no Moose::Role;

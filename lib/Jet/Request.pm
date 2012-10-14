@@ -2,11 +2,11 @@ package Jet::Request;
 
 use 5.010;
 use Moose;
-use MooseX::NonMoose;
+use MooseX::StrictConstructor;
 use namespace::autoclean;
-use HTTP::Headers::Util qw(split_header_words);
 
-extends 'Plack::Request';
+use HTTP::Headers::Util qw(split_header_words);
+use Plack::Request;
 
 with 'Jet::Role::Log';
 
@@ -18,21 +18,90 @@ Jet::Request - The Jet Request
 
 =head1 ATTRIBUTES
 
+=head2 env
+
+The web environment
+
+=cut
+
+has env => (
+	is => 'ro',
+	isa => 'HashRef',
+);
+
+=head2 request
+
+The plack request
+
+=cut
+
+has request => (
+	is => 'ro',
+	isa => 'Plack::Request',
+	default => sub {
+		my $self = shift;
+		return Plack::Request->new($self->env);
+	},
+	lazy => 1,
+);
+
+=head2 config
+
+The Jet configuration
+
+=cut
+
+has config => (
+	is => 'ro',
+	isa => 'Jet::Config',
+);
+
+=head2 schema
+
+The Jet schema
+
+=cut
+
+has schema => (
+	is => 'ro',
+	isa => 'Jet::Stuff',
+);
+
+=head2 cache
+
+The Jet cache
+
+=cut
+
+has cache => (
+	is => 'ro',
+);
+
+=head2 basetypes
+
+The Jet basetypes
+
+=cut
+
+has basetypes=> (
+	is => 'ro',
+	isa => 'HashRef',
+);
+
+=head2 renderers
+
+The Jet render engines
+
+=cut
+
+has renderers=> (
+	is => 'ro',
+	isa => 'HashRef',
+);
+
 =head2 accept_types
 
 Arrayref of types the client will accept.
-
-=head2 verb
-
-The verb, or method
-
-=head2 serializer
-
-The (de)serializer if the requestis a "REST" call
-
-=head2 rest_parameters
-
-If the request is a "REST" call, the parameters will be here
 
 =cut
 
@@ -42,14 +111,15 @@ has accept_types => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $headers = $self->headers;
+		my $request = $self->request;
+		my $headers = $request->headers;
 		my %types;
 
 		# We use the content type in the HTTP Request as a backup default.
-		$types{ $self->content_type } = .001 if $self->content_type;
+		$types{ $request->content_type } = .001 if $request->content_type;
 
-		if ($self->method eq "GET" && $self->param('content-type')) {
-			$types{ $self->param('content-type') } = .002;
+		if ($request->method eq "GET" && $request->param('content-type')) {
+			$types{ $request->param('content-type') } = .002;
 		}
 		if (my $accept_header = $headers->header('accept')) {
 	#        $self->accept_only(1) unless keys %types;
@@ -75,29 +145,51 @@ has accept_types => (
 		return [ sort { $types{$b} <=> $types{$a} } keys %types ];
 	},
 );
+
+=head2 verb
+
+The verb, or method
+
+=cut
+
 has verb => (
 	isa => 'Str',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
+		my $request = $self->request;
 		# Methods PUT, DELETE can be tunnelled through POST
 		# XXX For safer handling, add tests for POST method and PUT, DELETE value
-		return $self->param('_method') || $self->method || 'GET';
+		return $request->param('_method') || $request->method || 'GET';
 	},
 );
+
+=head2 serializer
+
+The (de)serializer if the requestis a "REST" call
+
+=cut
+
 has serializer => (
 	isa => 'Data::Serializer',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return unless $self->content_type;
+		return unless $self->request->content_type;
 
 		return Data::Serializer->new(
-			serializer => $self->content_type,
+			serializer => $self->request->content_type,
 		);
 	},
 );
+
+=head2 rest_parameters
+
+If the request is a "REST" call, the parameters will be here
+
+=cut
+
 has rest_parameters => (
 	isa => 'Hash::MultiValue',
 	is => 'ro',
@@ -106,8 +198,8 @@ has rest_parameters => (
 		my $self = shift;
 		my $result;
 		try {
-			$result = $self->type eq 'HTML' ?
-				$self->parameters :
+			$result = $self->request->type eq 'HTML' ?
+				$self->request->parameters :
 				Hash::MultiValue->new(%{ $self->serializer->raw_deserialize($self->content) });
 		} catch {
 			warn "Couldn't serialize data with " . $self->content_type;

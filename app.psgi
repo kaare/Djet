@@ -3,14 +3,35 @@ use strict;
 use warnings;
 
 use Plack::Builder;
+use CHI;
 
 use Jet;
+use Jet::Config;
+use Jet::Request;
+use Jet::Stuff;
+
+our $config;
+our $schema;
+our $cache;
+our $basetypes;
+our $renderers;
+our @roles;
 
 my $app = sub {
 	my $env = shift;
 	if ($env->{'psgix.session'}{user_id}) {
-		my $machine = Jet->new;
-		$machine->run_psgi($env, @_);
+		my $request = Jet::Request->new(
+			env => $env,
+			config => $config,
+			schema => $schema,
+			cache  => $cache,
+			basetypes => $basetypes,
+			renderers => $renderers,
+		);
+		my $machine = @roles ?
+			Jet->with_traits(@roles)->new(request => $request) :
+			Jet->new(request => $request);
+		$machine->run_psgi(@_);
 	} else {
 		return [ 302, { 'Location' => '/login', }, [ ] ];
 	}
@@ -18,11 +39,16 @@ my $app = sub {
 
 sub check_pass {
 	my( $username, $pass ) = @_;
-	my $machine = Jet->new;
-return 1;
-	my $person = $machine->login($username, $pass);
+	my $person = login($username, $pass);
 	return unless defined $person;
 	return {user_id => $username, redir_to => join '/', $person->{node_path}, ''};
+}
+
+sub login {
+	my ($login, $pwd) = @_;
+	my $person = $schema->search('person', { userlogin =>  $login, password => $pwd  });
+	return unless $person;
+	return $person->[0];
 }
 
 builder {
@@ -40,5 +66,41 @@ builder {
 		authenticator => \&check_pass;
 	enable 'Static',
 		path => qr{^/(images|js|css)/}, root => './public/';
+
+
+=head2 BEGIN
+
+Build the Jet with roles
+
+=cut
+
+	# Init "Class Attributes"
+	my $path = $INC{'Jet.pm'};
+	$path =~ s|lib/+Jet.pm||;
+	my $jet_root = $path;
+	my $configbase = 'etc/';
+	$config = Jet::Config->new(base => $configbase);
+	my @connect_info = @{ $config->jet->{connect_info} };
+	my %connect_info;
+	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
+	$schema = Jet::Stuff->new(%connect_info);
+	$basetypes = $schema->get_expanded_basetypes;
+	$cache = CHI->new( %{ $config->jet->{cache} } );
+	do {
+		my $classname = "Jet::Render::$_";
+		eval "require $classname" or die $@;
+		$renderers->{lc $_} = $classname->new(
+			jet_root => $jet_root,
+			config => $config,
+		);
+	} for qw/Html/;
+
+	# Roles
+	my $role_config = $config->options->{Jet}{role};
+
+	if ($role_config) {
+		@roles = ref $role_config ? @{ $role_config } : ($role_config);
+	}
+
 	$app;
 };

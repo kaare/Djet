@@ -21,29 +21,19 @@ extends 'Jet::Engine';
 
 =cut
 
-has config => (
-	isa => 'Jet::Config',
-	is => 'ro',
-);
-has schema => (
-	isa => 'Jet::Stuff',
-	is => 'rw',
-);
-has cache => (
-	isa => 'Object',
-	is => 'ro',
-);
-has basetypes => (
-	isa       => 'HashRef',
-	is        => 'ro',
-);
 has stash => (
 	isa => 'HashRef',
 	is => 'ro',
 );
 has request => (
-	isa => 'Plack::Request',
+	isa => 'Jet::Request',
 	is => 'ro',
+	handles => [qw/
+		basetypes
+		cache
+		config
+		schema
+	/],
 );
 has basenode => (
 	isa => 'Jet::Basenode',
@@ -162,7 +152,7 @@ sub parts {
 sub _handle_arguments {
 	my ($self, $parms) = @_;
 	my $stash = $self->stash;
-	my $parameters = $self->request->parameters;
+	my $parameters = $self->request->request->parameters;
 	my $args = $self->basenode->arguments;
 	while (my ($name, $parm) = each %$parms) {
 		if (ref $parm eq 'HASH') {

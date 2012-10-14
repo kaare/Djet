@@ -39,29 +39,19 @@ has exception => (
 		$response->render;
 	},
 );
-has config => (
-	isa => 'Jet::Config',
-	is => 'ro',
-);
-has schema => (
-	isa => 'Jet::Stuff',
-	is => 'rw',
-);
-has cache => (
-	isa => 'Object',
-	is => 'ro',
-);
-has basetypes => (
-	isa       => 'HashRef',
-	is        => 'ro',
-);
 has stash => (
 	isa => 'HashRef',
 	is => 'ro',
 );
 has request => (
-	isa => 'Plack::Request',
+	isa => 'Jet::Request',
 	is => 'ro',
+	handles => [qw/
+		basetypes
+		cache
+		config
+		schema
+	/],
 );
 has basenode => (
 	isa => 'Jet::Basenode',

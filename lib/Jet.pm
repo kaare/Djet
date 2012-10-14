@@ -3,16 +3,17 @@ package Jet;
 use 5.010;
 use Moose;
 use Try::Tiny;
-use CHI;
 
 use Jet::Basenode;
-use Jet::Config;
 use Jet::Engine;
 use Jet::Exception;
 use Jet::Failure;
-use Jet::Request;
 use Jet::Response;
-use Jet::Stuff;
+
+with 'MooseX::Traits';
+with 'Jet::Role::Log';
+
+# ABSTRACT: A Modern Content Management System
 
 =head1 NAME
 
@@ -26,59 +27,16 @@ Faster than an AWE2
 
 Experimental CMS
 
-=head1 Class Attributes
-
-configbase
+=head1 ATTRIBUTES
 
 =cut
 
-our $jet_root;
-our $configbase;
-our $config;
-our $schema;
-our $cache;
-our $basetypes;
-our $renderers;
+has request => (
+	is => 'ro',
+	isa => 'Jet::Request',
+);
 
 =head1 METHODS
-
-=head2 BEGIN
-
-Build the Jet with roles
-
-=cut
-
-# ABSTRACT: A Modern Content Management System
-
-BEGIN {
-	# Init "Class Attributes"
-	my $path = $INC{'Jet.pm'};
-	$path =~ s|lib/+Jet.pm||;
-	$jet_root = $path;
-	$configbase = 'etc/';
-	$config = Jet::Config->new(base => $configbase);
-	my @connect_info = @{ $config->jet->{connect_info} };
-	my %connect_info;
-	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-	$schema = Jet::Stuff->new(%connect_info);
-	$basetypes = $schema->get_expanded_basetypes;
-	$cache = CHI->new( %{ $config->jet->{cache} } );
-	do {
-		my $classname = "Jet::Render::$_";
-		eval "require $classname" or die $@;
-		$renderers->{lc $_} = $classname->new(
-			jet_root => $jet_root,
-			config => $config,
-		);
-	} for qw/Html/;
-
-	# Roles
-	with 'Jet::Role::Log';
-	my $role_config = $config->options->{Jet}{role};
-
-	my @roles = ref $role_config ? @{ $role_config }: ($role_config);
-	with ( map "Jet::Role::$_", @roles ) if @roles;
-}
 
 =head2 run_psgi
 
@@ -87,27 +45,23 @@ Entry point from psgi
 =cut
 
 sub run_psgi($) {
-	my ($self, $env) = @_;
-	my $request = Jet::Request->new($env);
+	my ($self) = @_;
+	my $request = $self->request;
 	my $stash  = {request => $request};
 	my $response = Jet::Response->new(
 		stash  => $stash,
-		renderers => $renderers,
+		renderers => $request->renderers,
 	);
 	my $basenode;
 	try {
-		$basenode = $self->find_node_path($request->path_info, $stash);
+		$basenode = $self->find_node_path($stash);
 		# Set a default html template if there are no arguments. We should probably look for response type to determine if it's a REST request first though
-		my $jet_config = $config->jet;
+		my $jet_config = $request->config->jet;
 		$response->template($jet_config->{template_path} . $basenode->get_column('node_path') . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
 	} catch {
 		my $e = shift;
 		Jet::Failure->new(
 			exception => $e,
-			config => $config,
-			schema => $schema,
-			cache  => $cache,
-			basetypes => $basetypes,
 			request => $request,
 			basenode => $basenode,
 			stash  => $stash,
@@ -118,10 +72,6 @@ sub run_psgi($) {
 		$stash->{basenode} = $basenode;
 		my $engine = Jet::Engine->new(
 			arguments => $basenode->basetype->engine_arguments,
-			config => $config,
-			schema => $schema,
-			cache  => $cache,
-			basetypes => $basetypes,
 			request => $request,
 			basenode => $basenode,
 			stash  => $stash,
@@ -135,10 +85,6 @@ sub run_psgi($) {
 			my $e = shift;
 			Jet::Failure->new(
 				exception => $e,
-				config => $config,
-				schema => $schema,
-				cache  => $cache,
-				basetypes => $basetypes,
 				request => $request,
 				basenode => $basenode,
 				stash  => $stash,
@@ -156,13 +102,15 @@ Accepts an url and returns a Jet::Basenode if the url points to a valid path in 
 =cut
 
 sub find_node_path($) {
-	my ($self, $path, $stash) = @_;
+	my ($self, $stash) = @_;
+	my $request = $self->request;
+	my $path = $request->request->path_info;
 	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
 	my %nodeparams = (
-		schema => $schema,
-		basetypes => $basetypes,
+		schema => $request->schema,
+		basetypes => $request->basetypes,
 	);
-	my $nodedata = $schema->find_basenode($path);
+	my $nodedata = $request->schema->find_basenode($path);
 	Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
 
 	my $basedata = shift @$nodedata;
@@ -174,7 +122,7 @@ sub find_node_path($) {
 	# Save the remaining nodes on the stash
 	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_, stash => $stash) for @$nodedata;
 
-	my $baserole = $basetypes->{$basedata->{basetype_id}}->node_role;
+	my $baserole = $request->basetypes->{$basedata->{basetype_id}}->node_role;
 	return $baserole ?
 		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments, stash => $stash) :
 		Jet::Basenode->new(%nodeparams, row => $basedata, stash => $stash);
