@@ -18,6 +18,7 @@ INSERT INTO basetype (name, engines,columns) VALUES ('jet_basetype','{2}','[{"na
 INSERT INTO basetype (name) VALUES ('not_found');
 INSERT INTO basetype (name) VALUES ('usergroup');
 INSERT INTO basetype (name,parent,columns,searchable) VALUES ('person','{2,3}', '[{"name":"userlogin","type":"Str"},{"name":"password","type":"Password"}]', '{"userlogin"}');
+INSERT INTO basetype (name,columns) VALUES ('acl', '[{"name":"acl","type":"Str"}]');
 
 -- Data Nodes
 

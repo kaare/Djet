@@ -37,7 +37,7 @@ CREATE TABLE basetype (
 	id						serial NOT NULL PRIMARY KEY,
 	name					text UNIQUE,
 	parent					int[],
-	columns					text,
+	columns					json,
 	searchable				text[],
 	engines					int[], -- REFERENCES engine
 	conditions				text,
@@ -363,5 +363,15 @@ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER bu_node_path_1 BEFORE UPDATE ON node
 FOR EACH ROW EXECUTE PROCEDURE bu_node_path_1();
+
+
+CREATE OR REPLACE FUNCTION connect_nodes(parent int, child int) RETURNS VOID
+	LANGUAGE plpgsql
+	AS $$
+BEGIN
+	INSERT INTO jet.node_tree (parent, child, depth) VALUES (parent,child,0);
+	RETURN ;
+END;
+$$;
 
 COMMIT;
