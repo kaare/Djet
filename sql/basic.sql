@@ -28,4 +28,7 @@ INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (2, 2,'conf
 INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (3, 3,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes');
 INSERT INTO data_node (basetype_id,part,name,title) VALUES (4,'not_found','not_found','Not Found');
 
+INSERT INTO data_node (basetype_id,part,name,columns) VALUES (6,'read','read','{read}');
+INSERT INTO data_node (basetype_id,part,name,columns) VALUES (6,'write','write','{write}');
+
 COMMIT;
