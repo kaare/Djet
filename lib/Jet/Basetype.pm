@@ -56,102 +56,105 @@ has recipe => (
 has node_role => (
 	isa => 'Moose::Meta::Role',
 	is => 'ro',
-#	builder => '_build_field',
-	default => sub {
-		my $self= shift;
-		my $role = Moose::Meta::Role->create_anon_role;
-		my $colidx;
-		my $columns = $self->basetype->{columns};
-		my @fieldcols;
-		for my $column (@{ $columns }) {
-			my $colname = $column->{name};
-			my $coltype = $column->{type};
-			my $traits =  $column->{traits};
-			$role->add_attribute("__$colname" => (
-				reader  => "get_$colname",
-				isa     => 'Jet::Field',
-				default => sub {
-					my $self = shift;
-					my $cols = $self->get_column('columns');
-					my %params = (
-						value => $cols->[$colidx++],
-						title => $colname,
-						node  => $self,
-					);
-					return $traits ?
-						Jet::Field->with_traits(@$traits)->new(%params) :
-						Jet::Field->new(%params);
-				},
-				lazy => 1,
-			));
-			push @fieldcols, "get_$colname";
-		}
-		$role->add_attribute('fields' => (
-			is => 'ro',
-			isa => 'ArrayRef',
-			default => sub {
-				my $self = shift;
-				return [ map {$self->$_} @fieldcols ];
-			},
-			lazy => 1,
-		));
-		return $role;
-	},
-	lazy => 1,
+	builder => '_build_field',
+	lazy_build => 1,
 );
 has engine_arguments => (
 	isa => 'HashRef',
 	is => 'ro',
-	default => sub {
-		my $self= shift;
-		my %todo;
-		for my $engine ($self->recipe->components_href) {
-			while (my ($enginename, $engineval) = each %$engine) {
-				while (my ($componentname, $component) = each %$engineval) {
-					for my $condition (@{ $component->{conditions} }) {
-						my $classname = $condition->{part};
-						eval "require $classname" or die $@;
-
-						my $conditionname = $condition->{name} || $classname;
-						my $fullname = join '_', $enginename, $componentname, $conditionname;
-						my $baseconditions =  {
-							%{ $condition->{default} // {} },
-							%{ $self->basetype->{conditions}{$fullname} // {} } } //
-						{};
-						$todo{$fullname} = {
-							class => $classname,
-							args => $baseconditions,
-						};
-					}
-					for my $step (@{ $component->{steps} }) {
-						my $classname = $step->{part};
-						eval "require $classname" or die $@;
-
-						my $fullname = join '_', $enginename, $componentname, $classname;
-						my $baseargs =  {
-							%{ $step->{default} // {} },
-							%{ $self->basetype->{steps}{$fullname} // {} } } //
-						{};
-						$todo{$fullname} = {
-							class => $classname,
-							args => $baseargs,
-						};
-					}
-				}
-			}
-		}
-		return \%todo;
-	},
-	lazy => 1,
+	lazy_build => 1,
 );
 
 =head1 METHODS
 
-=head2 bind
+=head2 _build_field
 
 =cut
 
-sub bind {
+sub _build_field {
+	my $self= shift;
+	my $role = Moose::Meta::Role->create_anon_role;
+	my $colidx;
+	my $columns = $self->basetype->{columns};
+	my @fieldcols;
+	for my $column (@{ $columns }) {
+		my $colname = $column->{name};
+		my $coltype = $column->{type};
+		my $traits =  $column->{traits};
+		$role->add_attribute("__$colname" => (
+			reader  => "get_$colname",
+			isa     => 'Jet::Field',
+			default => sub {
+				my $self = shift;
+				my $cols = $self->get_column('columns');
+				my %params = (
+					value => $cols->[$colidx++],
+					title => $colname,
+					node  => $self,
+				);
+				return $traits ?
+					Jet::Field->with_traits(@$traits)->new(%params) :
+					Jet::Field->new(%params);
+			},
+			lazy => 1,
+		));
+		push @fieldcols, "get_$colname";
+	}
+	$role->add_attribute('fields' => (
+		is => 'ro',
+		isa => 'ArrayRef',
+		default => sub {
+			my $self = shift;
+			return [ map {$self->$_} @fieldcols ];
+		},
+		lazy => 1,
+	));
+	return $role;
+}
+
+=head2 _build_engine_arguments
+
+=cut
+
+sub _build_engine_arguments {
+	my $self= shift;
+	my %todo;
+	for my $engine ($self->recipe->components_href) {
+		while (my ($enginename, $engineval) = each %$engine) {
+			while (my ($componentname, $component) = each %$engineval) {
+				for my $condition (@{ $component->{conditions} }) {
+					my $classname = $condition->{part};
+					eval "require $classname" or die $@;
+
+					my $conditionname = $condition->{name} || $classname;
+					my $fullname = join '_', $enginename, $componentname, $conditionname;
+					my $baseconditions =  {
+						%{ $condition->{default} // {} },
+						%{ $self->basetype->{conditions}{$fullname} // {} } } //
+					{};
+					$todo{$fullname} = {
+						class => $classname,
+						args => $baseconditions,
+					};
+				}
+				for my $step (@{ $component->{steps} }) {
+					my $classname = $step->{part};
+					eval "require $classname" or die $@;
+
+					my $fullname = join '_', $enginename, $componentname, $classname;
+					my $baseargs =  {
+						%{ $step->{default} // {} },
+						%{ $self->basetype->{steps}{$fullname} // {} } } //
+					{};
+					$todo{$fullname} = {
+						class => $classname,
+						args => $baseargs,
+					};
+				}
+			}
+		}
+	}
+	return \%todo;
 }
 
 __PACKAGE__->meta->make_immutable;
