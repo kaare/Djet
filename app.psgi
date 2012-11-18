@@ -46,7 +46,8 @@ sub check_pass {
 
 sub login {
 	my ($login, $pwd) = @_;
-	my $person = $schema->search('person', { userlogin =>  $login, password => $pwd  });
+	my $userbasetype = $schema->find_basetype({name => 'person'});
+	my $person = $schema->find_node({ basetype_id => $userbasetype->{id}, userlogin =>  $login, password => $pwd  });
 	return unless $person;
 	return $person->[0];
 }
