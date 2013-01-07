@@ -44,8 +44,9 @@ has tx => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
+		my $template_path = $self->config->jet->{template_path};
 		my $tx = Text::Xslate->new(
-			path => [ map {$_ . '/templates'} ('.', $self->jet_root) ],
+			path => [ map {$_ . '/' . $template_path} ('.', $self->jet_root) ],
 			function => {
 				l => sub {
 					return loc(@_);

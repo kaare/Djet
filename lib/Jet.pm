@@ -57,7 +57,8 @@ sub run_psgi($) {
 		$basenode = $self->find_node_path($stash);
 		# Set a default html template if there are no arguments. We should probably look for response type to determine if it's a REST request first though
 		my $jet_config = $request->config->jet;
-		$response->template($jet_config->{template_path} . $basenode->get_column('node_path') . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
+		my $basetype = $basenode->basetypes->{$basenode->get_column('basetype_id')}->basetype->{name};
+		$response->template($basetype . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
 	} catch {
 		my $e = shift;
 		Jet::Failure->new(
