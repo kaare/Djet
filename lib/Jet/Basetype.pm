@@ -4,7 +4,6 @@ use 5.010;
 use Moose;
 use JSON;
 
-use Jet::Engine::Recipe;
 use Jet::Field;
 
 with 'Jet::Role::Log';
@@ -19,53 +18,37 @@ Jet::Engine is the basic building block of all Jet Engine basetypes.
 
 =head1 ATTRIBUTES
 
-=head3 json
-
-For (de)serializing data
-
 =head3 basetype
 
 The basetype columns
 
-=head3 recipe
+=head3 class
 
-The basetype recipe object
-
-=head3 node_role
-
-The role for each node of this basetype
+The basetype handler class
 
 =cut
 
-has 'json' => (
-	isa => 'JSON',
-	is => 'ro',
-	default => sub {
-		JSON->new();
-	},
-	lazy => 1,
-);
 has basetype => (
 	isa => 'HashRef',
 	is => 'ro',
 );
-has recipe => (
-	isa => 'Jet::Engine::Recipe',
-	is => 'ro',
-);
-has node_role => (
+has class => (
 	isa => 'Moose::Meta::Role',
-	is => 'ro',
-	builder => '_build_field',
-	lazy_build => 1,
-);
-has engine_arguments => (
-	isa => 'HashRef',
 	is => 'ro',
 	lazy_build => 1,
 );
 
 =head1 METHODS
+
+=head2 _build_class
+
+Build the handler class for the basetype
+
+=cut
+
+sub _build_class {
+	my $self= shift;
+}
 
 =head2 _build_field
 
@@ -112,53 +95,9 @@ sub _build_field {
 	return $role;
 }
 
-=head2 _build_engine_arguments
-
-=cut
-
-sub _build_engine_arguments {
-	my $self= shift;
-	my %todo;
-	for my $engine ($self->recipe->components_href) {
-		while (my ($enginename, $engineval) = each %$engine) {
-			while (my ($componentname, $component) = each %$engineval) {
-				for my $condition (@{ $component->{conditions} }) {
-					my $classname = $condition->{part};
-					eval "require $classname" or die $@;
-
-					my $conditionname = $condition->{name} || $classname;
-					my $fullname = join '_', $enginename, $componentname, $conditionname;
-					my $baseconditions =  {
-						%{ $condition->{default} // {} },
-						%{ $self->basetype->{conditions}{$fullname} // {} } } //
-					{};
-					$todo{$fullname} = {
-						class => $classname,
-						args => $baseconditions,
-					};
-				}
-				for my $step (@{ $component->{steps} }) {
-					my $classname = $step->{part};
-					eval "require $classname" or die $@;
-
-					my $fullname = join '_', $enginename, $componentname, $classname;
-					my $baseargs =  {
-						%{ $step->{default} // {} },
-						%{ $self->basetype->{steps}{$fullname} // {} } } //
-					{};
-					$todo{$fullname} = {
-						class => $classname,
-						args => $baseargs,
-					};
-				}
-			}
-		}
-	}
-	return \%todo;
-}
-
 __PACKAGE__->meta->make_immutable;
 
 1;
+
 __END__
 

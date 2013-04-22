@@ -8,7 +8,6 @@ use DBIx::TransactionManager 1.06;
 use Jet::JSON;
 use Jet::Stuff::QueryBuilder;
 use Jet::Basetype;
-use Jet::Engine::Recipe;
 
 with 'Jet::Role::Log';
 
@@ -125,76 +124,6 @@ sub disconnect {
 	}
 }
 
-=head2 Manipulating engines
-
-=head3 insert_engine
-
-Insert a Jet engine
-
-=cut
-
-sub insert_engine {
-	my ($self, $data, $opt) = @_;
-	$data->{recipe} = $self->json->encode($data->{recipe}) if $data->{recipe};
-	my ($sql, @binds) = $self->sql_builder->insert(
-		"jet.engine",
-		$data,
-		$opt
-	);
-	return $self->_execute($sql, \@binds);
-}
-
-=head3 update_engine
-
-Update Jet engine
-
-=cut
-
-sub update_engine {
-	my ($self, $where, $data) = @_;
-	$data->{recipe} = $self->json->encode($data->{recipe}) if $data->{recipe};
-	my ($sql, @binds) = $self->sql_builder->update(
-		"jet.engine",
-		$data,
-		$where
-	);
-	my $sth = $self->_execute($sql, \@binds);
-}
-
-=head3 find_engine
-
-Find an engine
-
-=cut
-
-sub find_engine {
-	my ($self, $data, $opt) = @_;
-	$data->{recipe} = $self->json->encode($data->{recipe}) if $data->{recipe};
-	my ($sql, @binds) = $self->sql_builder->select(
-		"jet.engine",
-		'*',
-		$data,
-		$opt
-	);
-	my $engine = $self->single(sql => $sql, data => \@binds) || return;
-	$engine->{recipe} = Jet::Engine::Recipe->new(raw => $engine->{recipe});
-	return $engine;
-}
-
-=head3 insert_or_update_engine
-
-Insert or Update Jet engine
-
-=cut
-
-sub insert_or_update_engine {
-	my ($self, $where, $args) = @_;
-	my $engine = $self->find_engine($where);
-	return $engine ?
-		$self->update_engine($where, $args) :
-		$self->insert_engine({%$where, %$args});
-}
-
 =head2 Manipulating basetypes
 
 =head3 insert_basetype
@@ -205,7 +134,7 @@ Insert a Jet basetype
 
 sub insert_basetype {
 	my ($self, $data, $opt) = @_;
-	$data->{$_} = $self->json->encode($data->{$_}) for qw/columns conditions bindings/;
+	$data->{$_} = $self->json->encode($data->{$_}) for qw/columns/;
 	my ($sql, @binds) = $self->sql_builder->insert(
 		"jet.basetype",
 		$data,
@@ -227,7 +156,7 @@ sub update_basetype {
 		join(',', map { "$_ = ?"} keys(%$args)) .
 		' WHERE ' .
 		join(',', map { "$_ = ?"} keys(%$where));
-	do { $args->{$_} = $self->json->encode($args->{$_}) if $args->{$_}} for qw/columns conditions bindings/;
+	do { $args->{$_} = $self->json->encode($args->{$_}) if $args->{$_}} for qw/columns/;
 	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
 }
 
@@ -239,8 +168,8 @@ Insert or Update Jet basetype
 
 sub insert_or_update_basetype {
 	my ($self, $where, $args) = @_;
-	my $engine = $self->find_basetype($where);
-	return $engine ?
+	my $basetype = $self->find_basetype($where);
+	return $basetype ?
 		$self->update_basetype($where, $args) :
 		$self->insert_basetype({%$where, %$args});
 }
@@ -262,7 +191,7 @@ sub get_basetypes {
 	my $sth = $self->_execute($sql, \@binds);
 	return [ map {
 		my $arg = $_;
-		do { $arg->{$_} = $self->json->decode($arg->{$_}) if $arg->{$_} } for qw/columns bindings conditions/;
+		do { $arg->{$_} = $self->json->decode($arg->{$_}) if $arg->{$_} } for qw/columns/;
 		$arg;
 	} @{ $sth->fetchall_arrayref({}) } ];
 }
@@ -270,8 +199,6 @@ sub get_basetypes {
 =head3 get_expanded_basetypes
 
 Get all basetypes as hashref, id is key
-
-The basetypes are expanded with roles and recipes
 
 =cut
 
@@ -281,34 +208,8 @@ sub get_expanded_basetypes {
 	return { map {
 			$_->{id} => Jet::Basetype->new(
 				basetype => $_,
-				recipe   => $self->build_base_recipe($_),
 			)
 	} @$basetypes };
-}
-
-=head3 build_base_recipe
-
-Build the recipe for this basetype
-
-=cut
-
-sub build_base_recipe {
-	my ($self, $basetype) = @_;
-	my $sql = qq{
-		SELECT *
-		FROM jet.engine
-		WHERE id IN (
-			SELECT unnest(engines)
-			FROM jet.basetype
-			WHERE id=?
-		);
-	};
-	my @binds = ($basetype->{id});
-	my $sth = $self->_execute($sql, \@binds);
-	# Each engine gets its own name
-	my $recipe = Jet::Engine::Recipe->new;
-	$recipe->add_raw_engine($_->{name} => $_->{recipe}) for @{ $sth->fetchall_arrayref({}) };
-	return $recipe;
 }
 
 =head3 find_basetype

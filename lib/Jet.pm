@@ -5,7 +5,6 @@ use Moose;
 use Try::Tiny;
 
 use Jet::Basenode;
-use Jet::Engine;
 use Jet::Exception;
 use Jet::Failure;
 use Jet::Response;
@@ -71,16 +70,12 @@ sub run_psgi($) {
 	};
 	unless ($response->has_output) {
 		$stash->{basenode} = $basenode;
-		my $engine = Jet::Engine->new(
-			arguments => $basenode->basetype->engine_arguments,
-			request => $request,
-			basenode => $basenode,
-			stash  => $stash,
-			response => $response,
-		);
+debug($basenode);
+		my $engine = $basenode->basetype->class;
 		try {
+			$engine->init;
 			$engine->conditions;
-			$engine->parts;
+			$engine->data;
 			$response->render;
 		} catch {
 			my $e = shift;
@@ -122,11 +117,7 @@ sub find_node_path($) {
 	shift @arguments;
 	# Save the remaining nodes on the stash
 	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_, stash => $stash) for @$nodedata;
-
-	my $baserole = $request->basetypes->{$basedata->{basetype_id}}->node_role;
-	return $baserole ?
-		Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $basedata, arguments => \@arguments, stash => $stash) :
-		Jet::Basenode->new(%nodeparams, row => $basedata, stash => $stash);
+	return Jet::Basenode->new(%nodeparams, row => $basedata, stash => $stash);
 }
 
 __PACKAGE__->meta->make_immutable;
