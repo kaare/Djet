@@ -69,7 +69,6 @@ sub run_psgi($) {
 		);
 	};
 	unless ($response->has_output) {
-		$stash->{basenode} = $basenode;
 		my $engine = $basenode->basetype->class;
 		try {
 			$engine->init;

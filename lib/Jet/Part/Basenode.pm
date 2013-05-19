@@ -1,19 +1,32 @@
-package Jet::Part;
+package Jet::Part::Basenode;
 
 use 5.010;
 use Moose::Role;
 
+with 'Jet::Part';
+
+
+
 =head1 NAME
 
-Jet::Part - Base classe for Jet::Parts
+Jet::Part - Put the basenode on the stash
 
-=head1 SYNOPSIS
-
-with 'Jet::Part';
+=head1 ATTRIBUTES
 
 =cut
 
-requires qw/stash request basenode response/;
+=head1 METHODS
+
+=head2 data
+
+Puts the basenode on the stash (as $self->stash->{basenode};
+
+=cut
+
+sub data {
+	my $self = shift;
+	$self->stash->{basenode} = $self->basenode;
+}
 
 no Moose::Role;
 
