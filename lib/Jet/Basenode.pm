@@ -34,35 +34,26 @@ The node's basetype
 =cut
 
 has schema => (
-       isa => 'Jet::Stuff',
-       is => 'ro',
-);
-has basetypes => (
-       isa       => 'HashRef',
-       is        => 'ro',
+	   isa => 'Jet::Stuff',
+	   is => 'ro',
 );
 has row => (
-       traits    => ['Hash'],
-       is        => 'ro',
-       isa       => 'HashRef',
-       default   => sub { {} },
-       handles   => {
-               set_column     => 'set',
-               get_column     => 'get',
-               has_no_columns => 'is_empty',
-               num_columns    => 'count',
-               delete_column  => 'delete',
-               get_columns    => 'kv',
-       },
+	   traits	=> ['Hash'],
+	   is		=> 'ro',
+	   isa	   => 'HashRef',
+	   default   => sub { {} },
+	   handles   => {
+			   set_column	 => 'set',
+			   get_column	 => 'get',
+			   has_no_columns => 'is_empty',
+			   num_columns	=> 'count',
+			   delete_column  => 'delete',
+			   get_columns	=> 'kv',
+	   },
 );
 has basetype => (
-       isa => 'Jet::Basetype',
-       is => 'ro',
-       lazy => 1,
-       default => sub {
-               my $self = shift;
-               return $self->basetypes->{$self->get_column('basetype_id')};
-       },
+	   isa => 'Jet::Basetype',
+	   is => 'ro',
 );
 
 has arguments => (

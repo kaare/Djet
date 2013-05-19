@@ -5,8 +5,6 @@ use Moose::Role;
 
 with 'Jet::Part';
 
-
-
 =head1 NAME
 
 Jet::Part - Put the basenode on the stash

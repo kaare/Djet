@@ -54,10 +54,6 @@ sub run_psgi($) {
 	my $basenode;
 	try {
 		$basenode = $self->find_node_path($stash);
-		# Set a default html template if there are no arguments. We should probably look for response type to determine if it's a REST request first though
-		my $jet_config = $request->config->jet;
-		my $basetype = $basenode->basetypes->{$basenode->get_column('basetype_id')}->basetype->{name};
-		$response->template($basetype . $jet_config->{template_suffix}) unless @{ $basenode->arguments};
 	} catch {
 		my $e = shift;
 		Jet::Failure->new(
@@ -69,14 +65,21 @@ sub run_psgi($) {
 		);
 	};
 	unless ($response->has_output) {
-		my $engine = $basenode->basetype->class;
+		my $engine_class = $basenode->basetype->class;
+		my $engine = $engine_class->new(
+			stash => $stash,
+			request => $self->request,
+			basenode => $basenode,
+			response => $response,
+		);
 		try {
 			$engine->init;
-			$engine->conditions;
 			$engine->data;
+			$engine->render;
 			$response->render;
 		} catch {
 			my $e = shift;
+			debug($e);
 			Jet::Failure->new(
 				exception => $e,
 				request => $request,
@@ -100,21 +103,21 @@ sub find_node_path($) {
 	my $request = $self->request;
 	my $path = $request->request->path_info;
 	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
-	my %nodeparams = (
-		schema => $request->schema,
-		basetypes => $request->basetypes,
-	);
 	my $nodedata = $request->schema->find_basenode($path);
 	Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
 	my $basedata = shift @$nodedata;
-	# Find the path arguments
+	my %nodeparams = (
+		schema => $request->schema,
+		basetype => $request->basetypes->{$basedata->{basetype_id}},
+	);
+	# Find the path arguments, if any
 	my $basepath = $basedata->{node_path};
 	$path =~ /$basepath(.*)/;
 	my @arguments = split '/', $1;
 	shift @arguments;
 	# Save the remaining nodes on the stash
 	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_, stash => $stash) for @$nodedata;
-	return Jet::Basenode->new(%nodeparams, row => $basedata, stash => $stash);
+	return Jet::Basenode->new(%nodeparams, row => $basedata);
 }
 
 __PACKAGE__->meta->make_immutable;

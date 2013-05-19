@@ -33,7 +33,7 @@ has basetype => (
 	is => 'ro',
 );
 has class => (
-	isa => 'Moose::Meta::Role',
+	isa => 'Jet::Engine::Runtime',
 	is => 'ro',
 	lazy_build => 1,
 );
@@ -48,6 +48,9 @@ Build the handler class for the basetype
 
 sub _build_class {
 	my $self= shift;
+	my $handler = $self->basetype->{handler} || 'Jet::Engine::Default';
+	my $meta_class = Moose::Meta::Class->create('Jet::Engine::Runtime',superclasses => [$handler]);
+	return $meta_class->new_object;
 }
 
 =head2 _build_field

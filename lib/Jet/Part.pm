@@ -17,6 +17,10 @@ requires qw/stash request basenode response/;
 
 no Moose::Role;
 
+sub init {}
+sub data {}
+sub render {}
+
 1;
 
 __END__
