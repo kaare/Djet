@@ -70,7 +70,6 @@ sub run_psgi($) {
 	};
 	unless ($response->has_output) {
 		$stash->{basenode} = $basenode;
-debug($basenode);
 		my $engine = $basenode->basetype->class;
 		try {
 			$engine->init;
@@ -108,7 +107,6 @@ sub find_node_path($) {
 	);
 	my $nodedata = $request->schema->find_basenode($path);
 	Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
-
 	my $basedata = shift @$nodedata;
 	# Find the path arguments
 	my $basepath = $basedata->{node_path};

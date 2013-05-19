@@ -6,79 +6,81 @@ use warnings;
 use Test::More;
 use Test::MockModule;
 
-	my $mockrequest = Test::MockModule->new('Plack::Request');
-	$mockrequest->mock('param', sub {
-		return 'POST';#{ x => 1 };
-	});
-	use_ok('Plack::Request');
-	my $mockrest = Test::MockModule->new('Jet::Context::Rest');
-	$mockrest->mock('verb', sub {
-		return 'POST';
-	});
-	$mockrest->mock('parameters', sub {
-		return {
-			child_id => 2,
-			albumname => 'alabuma',
-		};
-	});
-	use_ok('Jet::Context::Rest');
-	my $mockcontext = Test::MockModule->new('Jet::Context');
-	$mockcontext->mock('rest', sub {
-		return Jet::Context::Rest->new;
-	});
-	$mockcontext->mock('stash', sub {
-		return {
-			one => 1,
-			two => 2,
-			nodes => 'parents',
-			no_nodes => 'children',
-		}
-	});
-	use_ok('Jet::Context');
-	my $c = Jet::Context->instance;
-	my $req = Plack::Request->new({});
-	$c->_request($req);
-	# Start testing
-	use_ok('Jet::Engine');
-	my $params = {
-		engine => 'Test::Engine',
-		content => {
-			child_id => 'photo_id',
-			names => {
-					albumname => 'albumname',
-					part => 'albumname',
-					title => 'albumname',
-				},
-		},
-		static => {
-			method => 'children',
-			params => {base_type => 'photoalbum'},
-			name => 'groupalbums',
-		},
-		stash => {
-			nodes => 'parents',
-			numbers => [qw/one two/],
-		},
+{ package Test::Part1;
+
+	use Moose::Role;
+	with 'Jet::Part';
+	no Moose::Role;
+
+	sub init {
+		warn "test init 1";
+	}
+
+	sub data {
+		warn "test data 1";
+	}
+
+}
+
+{ package Test::Part2;
+
+	use Moose::Role;
+	with 'Jet::Part';
+	no Moose::Role;
+	sub init {
+		warn "test init 2";
+	}
+
+	sub data {
+		warn "test data 2";
+	}
+
+}
+
+{ package Test::Engine;
+
+	use Moose;
+
+	extends 'Jet::Engine';
+
+	has parts => (
+		traits	=> [qw/Jet::Trait::Partname/],
+		is		=> 'ro',
+		isa	   => 'ArrayRef',
+		parts => [
+			{'Test::Part1' => 'jet_part_1'},
+			{'Test::Part2' => 'jet_part_2'},
+		],
+	);
+
+	before jet_part_1_init => sub {
+		my $self = shift;
+		$self->stash->{init} = 'No init';
 	};
-	ok(my $engine = Jet::Engine->new(params => $params), 'New engine');
-	isa_ok($engine, 'Jet::Engine', 'Correct class');
-	my $expected = {
-		params => {
-			base_type => 'photoalbum'
-		},
-		names => {
-			part => 'alabuma',
-			albumname => 'alabuma',
-			title => 'alabuma'
-		},
-		numbers => {
-			one => 1,
-			two => 2
-		},
-		name => 'groupalbums',
-		child_id => undef, #2,
-		method => 'children',
-		nodes => undef, #'parents'
+
+	after jet_part_2_data => sub {
+		my $self = shift;
+		$self->stash->{data} = 'No data';
 	};
-	is_deeply($engine->parameters, $expected, 'Engine parameters are correct');
+
+	# sub go {
+		# my $self = shift;
+		# my $stash = {};
+		# ok($self->engine->init, 'Init loop');
+		# use Data::Dumper;
+		# warn Dumper $self->engine->stash;
+		# ok($self->engine->data, 'Data loop');
+		# warn Dumper $self->engine->stash;
+	# }
+}
+
+ok(my $engine = Test::Engine->new, 'New engine');
+ok($engine->stash->{$_} = $_, "Put value on stash for $_") for qw/init data render/;
+is($engine->stash->{init}, 'init', 'Init stash OK');
+ok($engine->init, 'Init');
+is($engine->stash->{init}, 'No init', 'Init stash changed OK');
+ok($engine->data, 'Data');
+is($engine->stash->{data}, 'No data', 'Data stash changed OK');
+ok($engine->render, 'Render');
+
 done_testing;

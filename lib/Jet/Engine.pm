@@ -24,6 +24,8 @@ extends 'Jet::Engine';
 has stash => (
 	isa => 'HashRef',
 	is => 'ro',
+	lazy => 1,
+	default => sub { {} },
 );
 has request => (
 	isa => 'Jet::Request',
@@ -65,16 +67,10 @@ Engine initialization stuff
 
 sub init {
 	my $self = shift;
-}
-
-=head2 conditions
-
-The engine's conditions
-
-=cut
-
-sub conditions {
-	my $self = shift;
+	for my $method ($self->_init) {
+		$self->$method;
+	}
+	return 1;
 }
 
 =head2 data
@@ -85,6 +81,10 @@ Process data
 
 sub data {
 	my $self = shift;
+	for my $method ($self->_data) {
+		$self->$method;
+	}
+	return 1;
 }
 
 =head2 render
@@ -95,6 +95,10 @@ Render data
 
 sub render {
 	my $self = shift;
+	for my $method ($self->_data) {
+		$self->$method;
+	}
+	return 1;
 }
 
 __PACKAGE__->meta->make_immutable;
