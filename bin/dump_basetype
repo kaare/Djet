@@ -20,7 +20,6 @@ use warnings;
 use JSON;
 
 use Jet::Config;
-use Jet::Stuff;
 
 use FindBin qw($Bin);
 use lib "$Bin/../../lib/";
@@ -30,22 +29,19 @@ use Getopt::Long;
 
 my (%opts);
 my $ok = GetOptions(
-    \%opts,
-    'help',
+	\%opts,
+	'help',
 ) or exit 10;
 pod2usage(
-    -exitval => 20,
-    -verbose => 2,
+	-exitval => 20,
+	-verbose => 2,
 ) if $opts{help} or !$ok;
 
 sub do_it {
 	my $configbase = 'etc/';
 	my $config = Jet::Config->new(base => $configbase);
-	my @connect_info = @{ $config->jet->{connect_info} };
-	my %connect_info;
-	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-	my $schema = Jet::Stuff->new(%connect_info);
-    print JSON->new->pretty($schema->get_basetypes);
+	my $schema = $config->schema;
+	print JSON->new->pretty($schema->get_basetypes);
 }
 
 do_it;

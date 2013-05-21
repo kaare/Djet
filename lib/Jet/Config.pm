@@ -5,6 +5,8 @@ use Moose;
 
 use Config::Any;
 
+use Jet::Stuff;
+
 with 'Jet::Role::Log';
 
 =head1 NAME
@@ -15,17 +17,9 @@ Jet::Config - Jet Configuration
 
 =head1 ATTRIBUTES
 
-=head2 config
+=head2 base
 
-The configuration is loaded from etc by default
-
-=head2 jet
-
-The jet part of the config
-
-=head2 options
-
-The options part of the config
+The base directory (relative to the application's home dir) for the configuration file(s)
 
 =cut
 
@@ -34,6 +28,13 @@ has base => (
 	is  => 'ro',
 	default => 'etc/',
 );
+
+=head2 config
+
+The configuration is loaded from etc by default
+
+=cut
+
 has config => (
 	isa => 'HashRef',
 	is => 'ro',
@@ -51,6 +52,13 @@ has config => (
 		return $config_total;
 	},
 );
+
+=head2 jet
+
+The jet part of the config
+
+=cut
+
 has jet => (
 	isa => 'HashRef',
 	is => 'ro',
@@ -59,12 +67,37 @@ has jet => (
 		return $self->config->{'jet.conf'};
 	},
 );
+
+=head2 options
+
+The options part of the config
+
+=cut
+
 has options => (
 	isa => 'HashRef',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
 		return $self->config->{'options.conf'};
+	},
+);
+
+=head2 schema
+
+Defaults to the schema (Jet::Stuff) as found through the configuration
+
+=cut
+
+has schema => (
+	isa => 'Jet::Stuff',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		my @connect_info = @{ $self->jet->{connect_info} };
+		my %connect_info;
+		$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
+		my $schema = Jet::Stuff->new(%connect_info);
 	},
 );
 

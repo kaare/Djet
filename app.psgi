@@ -8,7 +8,6 @@ use CHI;
 use Jet;
 use Jet::Config;
 use Jet::Request;
-use Jet::Stuff;
 
 our $config;
 our $schema;
@@ -83,10 +82,7 @@ Build the Jet with roles
 	my $jet_root = $path;
 	my $configbase = 'etc/';
 	$config = Jet::Config->new(base => $configbase);
-	my @connect_info = @{ $config->jet->{connect_info} };
-	my %connect_info;
-	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-	$schema = Jet::Stuff->new(%connect_info);
+	$schema = $config->schema;
 	$basetypes = $schema->get_expanded_basetypes;
 	$cache = CHI->new( %{ $config->jet->{cache} } );
 	do {
