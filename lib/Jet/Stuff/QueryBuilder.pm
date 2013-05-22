@@ -2,6 +2,7 @@ package Jet::Stuff::QueryBuilder;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 extends 'SQL::Abstract';
 

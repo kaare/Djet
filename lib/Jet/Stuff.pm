@@ -2,6 +2,8 @@ package Jet::Stuff;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
+
 use DBI;
 use DBIx::TransactionManager 1.06;
 
@@ -558,6 +560,7 @@ sub txn_commit     { $_[0]->txn_manager->txn_commit     }
 sub txn_end        { $_[0]->txn_manager->txn_end        }
 
 __PACKAGE__->meta->make_immutable;
+
 __END__
 
 =head1 AUTHOR

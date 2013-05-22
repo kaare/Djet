@@ -2,6 +2,7 @@ package Jet::Response;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 with 'Jet::Role::Log';
 

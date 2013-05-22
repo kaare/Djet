@@ -2,6 +2,7 @@ package Jet::Exception;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 extends 'HTTP::Throwable::Factory';
 

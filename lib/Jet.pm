@@ -2,6 +2,8 @@ package Jet;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
+
 use Try::Tiny;
 
 use Jet::Basenode;

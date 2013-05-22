@@ -2,6 +2,8 @@ package Jet::Basetype;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
+
 use JSON;
 
 use Jet::Field;

@@ -2,6 +2,7 @@ package Jet::Failure;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 =head1 NAME
 

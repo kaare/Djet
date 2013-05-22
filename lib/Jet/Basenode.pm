@@ -4,6 +4,7 @@ use 5.010;
 use Moose;
 
 with 'MooseX::Traits';
+use namespace::autoclean;
 
 extends 'Jet::Node';
 

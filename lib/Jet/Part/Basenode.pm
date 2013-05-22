@@ -2,6 +2,7 @@ package Jet::Part::Basenode;
 
 use 5.010;
 use Moose::Role;
+use namespace::autoclean;
 
 with 'Jet::Part';
 

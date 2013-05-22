@@ -2,6 +2,7 @@ package Jet::Node;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 with 'MooseX::Traits';
 

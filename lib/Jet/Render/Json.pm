@@ -2,6 +2,7 @@ package Jet::Json;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 use Text::Xslate;
 use FindBin qw($Bin);

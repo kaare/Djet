@@ -2,6 +2,8 @@ package Jet::Role::Log;
 
 use 5.010;
 use Moose::Role;
+use namespace::autoclean;
+
 use JSON -convert_blessed_universally;
 
 =head1 NAME

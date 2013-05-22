@@ -2,6 +2,7 @@ package Jet::Config;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 use Config::Any;
 

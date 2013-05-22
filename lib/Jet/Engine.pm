@@ -2,6 +2,7 @@ package Jet::Engine;
 
 use 5.010;
 use Moose;
+use namespace::autoclean;
 
 with qw/Jet::Role::Log/;
 
