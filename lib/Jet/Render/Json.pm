@@ -1,10 +1,10 @@
-package Jet::Json;
+package Jet::Render::Json;
 
 use 5.010;
 use Moose;
 use namespace::autoclean;
 
-use Text::Xslate;
+use JSON;
 use FindBin qw($Bin);
 use Locale::Maketext::Simple (
 	Path		=> "$Bin/locale/",
@@ -16,7 +16,7 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Json - Json Class for Jet
+Jet::Render::Json - Render json for Jet
 
 =head1 DESCRIPTION
 
@@ -30,15 +30,13 @@ The response serializer.
 
 =cut
 
-has serializer => (
-	isa => 'Data::Serializer',
+has json => (
+	isa => 'JSON',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return Data::Serializer->new(
-			serializer => 'json',
-		);
+		return JSON->new->pretty;
 	},
 );
 
@@ -70,7 +68,7 @@ Please report any bugs or feature requests to my email address listed above.
 
 =head1 COPYRIGHT & LICENSE 
 
-Copyright 2012 Kaare Rasmussen, all rights reserved.
+Copyright 2013 Kaare Rasmussen, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under the same terms as 
 Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 

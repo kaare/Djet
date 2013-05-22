@@ -16,13 +16,12 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Render::Html - Render::Html Class for Jet
+Jet::Render::Html - Render html for Jet
 
 =head1 DESCRIPTION
 
 This is the Render::Html class for L<Jet>.
 
-=head1 ATTRIBUTES
 =head1 ATTRIBUTES
 
 =head2 tx
@@ -86,7 +85,7 @@ Please report any bugs or feature requests to my email address listed above.
 
 =head1 COPYRIGHT & LICENSE 
 
-Copyright 2012 Kaare Rasmussen, all rights reserved.
+Copyright 2013 Kaare Rasmussen, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under the same terms as 
 Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
