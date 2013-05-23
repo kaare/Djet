@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-dump_basetype - Dump one or more basetype(s)
+dump_datanode - Dump one or more datanode(s)
 
 =head1 USAGE
 
-./bin/dump_basetype
+./bin/dump_datanode
 
 =head1 COPYRIGHT
 
@@ -41,7 +41,7 @@ sub do_it {
 	my $configbase = 'etc/';
 	my $config = Jet::Config->new(base => $configbase);
 	my $schema = $config->schema;
-	print JSON->new->pretty->encode($schema->get_basetypes);
+	print JSON->new->pretty->encode($schema->search_node);
 }
 
 do_it;
