@@ -49,15 +49,28 @@ sub run_psgi($) {
 	my ($self) = @_;
 	my $request = $self->request;
 	my $stash  = {request => $request};
-	my $response = Jet::Response->new(
-		stash  => $stash,
-		renderers => $request->renderers,
-	);
-	my $basenode;
+	my ($basenode, $response);
 	try {
 		$basenode = $self->find_node_path($stash);
+		$response = Jet::Response->new(
+			stash  => $stash,
+			renderers => $request->renderers,
+			template => $basenode->basetype->template,
+		);
+		my $engine_class = $basenode->basetype->class;
+		my $engine = $engine_class->new(
+			stash => $stash,
+			request => $self->request,
+			basenode => $basenode,
+			response => $response,
+		);
+		$engine->init;
+		$engine->data;
+		$engine->render;
+		$response->render;
 	} catch {
 		my $e = shift;
+		debug($e);
 		Jet::Failure->new(
 			exception => $e,
 			request => $request,
@@ -66,31 +79,6 @@ sub run_psgi($) {
 			response => $response,
 		);
 	};
-	unless ($response->has_output) {
-		my $engine_class = $basenode->basetype->class;
-		my $engine = $engine_class->new(
-			stash => $stash,
-			request => $self->request,
-			basenode => $basenode,
-			response => $response,
-		);
-		try {
-			$engine->init;
-			$engine->data;
-			$engine->render;
-			$response->render;
-		} catch {
-			my $e = shift;
-			debug($e);
-			Jet::Failure->new(
-				exception => $e,
-				request => $request,
-				basenode => $basenode,
-				stash  => $stash,
-				response => $response,
-			);
-		};
-	}
 	return [ $response->status, $response->headers, $response->output ];
 }
 

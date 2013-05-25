@@ -97,7 +97,7 @@ The response template
 
 =cut
 
-has template => (isa => 'Str', is => 'rw' );
+has template => (isa => 'Maybe[Str]', is => 'rw' );
 
 =head1 METHODS
 

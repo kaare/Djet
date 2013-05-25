@@ -25,6 +25,7 @@ CREATE TABLE basetype (
 	columns					json,
 	searchable				text[],
 	handler					text,
+	template				text,
 	created					timestamp default now(),
 	modified				timestamp
 );
@@ -35,6 +36,7 @@ COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
 COMMENT ON COLUMN basetype.columns IS 'The column definitions';
 COMMENT ON COLUMN basetype.searchable IS 'The searchable columns';
 COMMENT ON COLUMN basetype.handler IS 'The handler module';
+COMMENT ON COLUMN basetype.template IS 'The template for this basetype';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 

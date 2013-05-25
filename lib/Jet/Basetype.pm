@@ -30,9 +30,20 @@ The basetype handler class
 
 =cut
 
+my @db_columns = qw/
+	columns
+	handler
+	searchable
+	template
+/;
+
 has basetype => (
 	isa => 'HashRef',
 	is => 'ro',
+	traits    => ['Hash'],
+	handles => {
+		map {$_ => [get => $_]} @db_columns,
+	},
 );
 has class => (
 	isa => 'Jet::Engine::Runtime',
@@ -50,7 +61,7 @@ Build the handler class for the basetype
 
 sub _build_class {
 	my $self= shift;
-	my $handler = $self->basetype->{handler} || 'Jet::Engine::Default';
+	my $handler = $self->handler || 'Jet::Engine::Default';
 	my $meta_class = Moose::Meta::Class->create('Jet::Engine::Runtime',superclasses => [$handler]);
 	return $meta_class->new_object;
 }
