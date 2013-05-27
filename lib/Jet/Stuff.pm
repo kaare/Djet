@@ -239,14 +239,17 @@ basenode and with the root last.
 Thus, we're sure always to have to whole branch, and we can also find the
 arguments of the request
 
+NB find_nodebranch is under repair atm, so this is a pass through to find_node.
+
 =cut
 
 sub find_basenode {
-	my ($self, $path) = @_;
-	my $sql = 'SELECT * FROM jet.find_nodebranch(?)';
-	my @binds = ($path);
-	my $sth = $self->_execute($sql, \@binds);
-	return $sth->fetchall_arrayref({}),
+	my ($self, $where, $opt) = @_;
+    return $self->find_node($where, $opt);
+#	my $sql = 'SELECT * FROM jet.find_nodebranch(?)';
+#	my @binds = ($path);
+#	my $sth = $self->_execute($sql, \@binds);
+#	return $sth->fetchall_arrayref({}),
 }
 
 =head3 find_node
