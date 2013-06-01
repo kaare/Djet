@@ -245,11 +245,7 @@ NB find_nodebranch is under repair atm, so this is a pass through to find_node.
 
 sub find_basenode {
 	my ($self, $where, $opt) = @_;
-    return $self->find_node($where, $opt);
-#	my $sql = 'SELECT * FROM jet.find_nodebranch(?)';
-#	my @binds = ($path);
-#	my $sth = $self->_execute($sql, \@binds);
-#	return $sth->fetchall_arrayref({}),
+	return $self->find_node($where, $opt);
 }
 
 =head3 find_node
@@ -295,9 +291,9 @@ Fulltext search in nodes
 =cut
 
 sub ft_search_node {
-    my ($self, $terms) = @_;
-    my $ftsquery = join ' | ', split /\s+/, $terms;
-    return $self->search_node(
+	my ($self, $terms) = @_;
+	my $ftsquery = join ' | ', split /\s+/, $terms;
+	return $self->search_node(
 		"fts @@ to_tsquery('english','$ftsquery')",
 	);
 }
@@ -520,7 +516,7 @@ sub in_transaction_check {
 
 	if ( my $info = $self->{txn_manager}->in_transaction ) {
 		my $caller = $info->{caller};
-		my $pid    = $info->{pid};
+		my $pid	= $info->{pid};
 		Carp::confess("Detected transaction during a connect operation (last known transaction at $caller->[1] line $caller->[2], pid $pid). Refusing to proceed at");
 	}
 }
@@ -557,10 +553,10 @@ Commit the transaction.
 =cut
 
 sub in_transaction { $_[0]->txn_manager->in_transaction }
-sub txn_begin      { $_[0]->txn_manager->txn_begin      }
-sub txn_rollback   { $_[0]->txn_manager->txn_rollback   }
-sub txn_commit     { $_[0]->txn_manager->txn_commit     }
-sub txn_end        { $_[0]->txn_manager->txn_end        }
+sub txn_begin { $_[0]->txn_manager->txn_begin }
+sub txn_rollback { $_[0]->txn_manager->txn_rollback }
+sub txn_commit { $_[0]->txn_manager->txn_commit	 }
+sub txn_end { $_[0]->txn_manager->txn_end }
 
 __PACKAGE__->meta->make_immutable;
 

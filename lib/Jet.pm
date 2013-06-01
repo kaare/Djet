@@ -93,7 +93,7 @@ sub find_node_path($) {
 	my $request = $self->request;
 	my $path = $request->request->path_info;
 	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
-	my $nodedata = $request->schema->find_basenode(node_path => $path);
+	my $nodedata = $request->schema->find_basenode({ node_path => $path });
 	Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
 # Replace the next line with the shift when find_basenode is updated (see below)
 	my $basedata = $nodedata;
