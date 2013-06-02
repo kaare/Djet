@@ -147,7 +147,7 @@ Return the children of the current node
 
 sub children {
 	my ($self, %opt) = @_;
-	my $parent_id = $self->get_column('id');
+	my $parent_id = $self->get_column('node_id');
 	$opt{parent_id} = $parent_id;
 	# Try to find basetype_id from basetype if that is defined
 	$opt{basetype_id} ||= $self->basetypes->{delete $opt{basetype}}{id} if $opt{basetype};
