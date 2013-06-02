@@ -18,26 +18,19 @@ Jet::Basenode - The Base Jet Node
 
 =head2 schema
 
-=head2 basetypes
-
-=head2 row
-
-The node data found for this node
-
-=head2 arguments
-
-The path found after the node_path
-
-=head2 basetype
-
-The node's basetype
-
 =cut
 
 has schema => (
 	   isa => 'Jet::Stuff',
 	   is => 'ro',
 );
+
+=head2 row
+
+The node data found for this node
+
+=cut
+
 has row => (
 	   traits	=> ['Hash'],
 	   is		=> 'ro',
@@ -52,16 +45,16 @@ has row => (
 			   get_columns	=> 'kv',
 	   },
 );
+
+=head2 basetype
+
+The node's basetype
+
+=cut
+
 has basetype => (
 	   isa => 'Jet::Basetype',
 	   is => 'ro',
-);
-
-has arguments => (
-	isa => 'ArrayRef[Str]',
-	is => 'ro',
-	default => sub { [] },
-	lazy => 1,
 );
 
 =head1 METHODS

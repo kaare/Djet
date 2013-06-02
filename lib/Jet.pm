@@ -93,8 +93,17 @@ sub find_node_path($) {
 	my $request = $self->request;
 	my $path = $request->request->path_info;
 	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
-	my $nodedata = $request->schema->find_basenode({ node_path => $path });
-	Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
+	my $nodedata;
+	$nodedata = $request->schema->find_basenode({ node_path => $path });
+
+	# Try again to see if the last part was a parameter
+	if (!$nodedata) {
+		my @segments = $request->request->uri->path_segments;
+		my $argument = pop @segments;
+		$nodedata = $request->schema->find_basenode({ node_path => join '/', @segments });
+		Jet::Exception->throw(NotFound => { message => $path }) unless $nodedata;
+		$request->set_arguments([$argument // '']);
+	}
 # Replace the next line with the shift when find_basenode is updated (see below)
 	my $basedata = $nodedata;
 	# my $basedata = shift @$nodedata;
@@ -102,11 +111,6 @@ sub find_node_path($) {
 		schema => $request->schema,
 		basetype => $request->basetypes->{$basedata->{basetype_id}},
 	);
-	# Find the path arguments, if any
-	my $basepath = $basedata->{node_path};
-	$path =~ /$basepath(.*)/;
-	my @arguments = split '/', $1;
-	shift @arguments;
 	# Save the remaining nodes on the stash
 # Reenable this when find_basenode returns an array w/ the basenode and all ancestors again
 #	$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_, stash => $stash) for @$nodedata;
