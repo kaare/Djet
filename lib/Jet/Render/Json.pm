@@ -49,9 +49,10 @@ Renders the output as JSON
 =cut
 
 sub render {
-	my ($self, $template) = @_;
+	my ($self, $template, $stash) = @_;
 	warn 'Rendering ' . $template;
-	return $self->json->encode($self->stash);
+my @dynadata = map {{title => $_->row->{part}}}  @{$stash->{basenode}->children };
+	return $self->json->encode(\@dynadata);
 }
 
 __PACKAGE__->meta->make_immutable;

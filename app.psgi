@@ -92,7 +92,7 @@ Build the Jet with roles
 			jet_root => $jet_root,
 			config => $config,
 		);
-	} for qw/Html/;
+	} for qw/Html Json/;
 
 	# Roles
 	my $role_config = $config->options->{Jet}{role};
