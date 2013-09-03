@@ -31,7 +31,7 @@ The basetype handler class
 =cut
 
 my @db_columns = qw/
-	columns
+	datacolumns
 	handler
 	searchable
 	template
@@ -74,7 +74,7 @@ sub _build_field {
 	my $self= shift;
 	my $role = Moose::Meta::Role->create_anon_role;
 	my $colidx;
-	my $columns = $self->basetype->{columns};
+	my $columns = $self->basetype->{datacolumns};
 	my @fieldcols;
 	for my $column (@{ $columns }) {
 		my $colname = $column->{name};
@@ -85,7 +85,7 @@ sub _build_field {
 			isa     => 'Jet::Field',
 			default => sub {
 				my $self = shift;
-				my $cols = $self->get_column('columns');
+				my $cols = $self->get_column('datacolumns');
 				my %params = (
 					value => $cols->[$colidx++],
 					title => $colname,

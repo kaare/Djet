@@ -3,7 +3,7 @@
 SELECT d.*, a.acl
 FROM jet.data_node d
 LEFT JOIN (
-	SELECT d.node_id, array_agg(array_to_string(p.columns, ',')) acl
+	SELECT d.node_id, array_agg(array_to_string(p.datacolumns, ',')) acl
 	FROM jet.data_node d
 	JOIN jet.data_node p ON n.parent=p.id
 	JOIN jet.basetype b ON p.basetype_id=b.id
@@ -22,7 +22,7 @@ WHERE node_path=''
 SELECT d.*, a.acl
 FROM datanode d
 LEFT JOIN (
-	SELECT d.node_id, array_agg(array_to_string(p.columns, ',')) acl
+	SELECT d.node_id, array_agg(array_to_string(p.datacolumns, ',')) acl
 	FROM datanode d
 	JOIN jet.data_node p ON n.parent=p.id
 	JOIN jet.basetype b ON p.basetype_id=b.id
@@ -38,7 +38,7 @@ CREATE OR REPLACE VIEW data_node_acl AS (
 	SELECT d.*, a.acl
 	FROM data_node d
 	LEFT JOIN (
-		SELECT d.node_id, array_agg(array_to_string(p.columns, ',')) acl
+		SELECT d.node_id, array_agg(array_to_string(p.datacolumns, ',')) acl
 		FROM data_node d
 		JOIN jet.node_tree n ON d.node_id=n.child
 		JOIN jet.data_node p ON n.parent=p.node_id

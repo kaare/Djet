@@ -8,11 +8,11 @@ SET search_path=jet;
 
 INSERT INTO basetype (name) VALUES ('directory');
 INSERT INTO basetype (name) VALUES ('jet_config');
-INSERT INTO basetype (name, handler,columns) VALUES ('jet_basetype','Jet::Engine::Basetype','[{"name":"name","type":"Str", "traits": ["Jet::Trait::Config::Basetype"]},{"name":"parent","type":"Int"}]');
+INSERT INTO basetype (name, handler,datacolumns) VALUES ('jet_basetype','Jet::Engine::Basetype','[{"name":"name","type":"Str", "traits": ["Jet::Trait::Config::Basetype"]},{"name":"parent","type":"Int"}]');
 INSERT INTO basetype (name) VALUES ('not_found');
 INSERT INTO basetype (name) VALUES ('usergroup');
-INSERT INTO basetype (name,parent,columns,searchable) VALUES ('person','{2,3}', '[{"name":"userlogin","type":"Str"},{"name":"password","type":"Password"}]', '{"userlogin"}');
-INSERT INTO basetype (name,columns) VALUES ('acl', '[{"name":"acl","type":"Str"}]');
+INSERT INTO basetype (name,parent,datacolumns,searchable) VALUES ('person','{2,3}', '[{"name":"userlogin","type":"Str"},{"name":"password","type":"Password"}]', '{"userlogin"}');
+INSERT INTO basetype (name,datacolumns) VALUES ('acl', '[{"name":"acl","type":"Str"}]');
 
 -- Data Nodes
 
@@ -22,7 +22,7 @@ INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (2, 2,'conf
 INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (3, 3,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes');
 INSERT INTO data_node (basetype_id,part,name,title) VALUES (4,'not_found','not_found','Not Found');
 
-INSERT INTO data_node (basetype_id,part,name,columns) VALUES (6,'read','read','{read}');
-INSERT INTO data_node (basetype_id,part,name,columns) VALUES (6,'write','write','{write}');
+INSERT INTO data_node (basetype_id,part,name,datacolumns) VALUES (6,'read','read','{read}');
+INSERT INTO data_node (basetype_id,part,name,datacolumns) VALUES (6,'write','write','{write}');
 
 COMMIT;

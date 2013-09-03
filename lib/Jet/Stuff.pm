@@ -136,7 +136,7 @@ Insert a Jet basetype
 
 sub insert_basetype {
 	my ($self, $data, $opt) = @_;
-	$data->{$_} = $self->json->encode($data->{$_}) for qw/columns/;
+	$data->{$_} = $self->json->encode($data->{$_}) for qw/datacolumns/;
 	my ($sql, @binds) = $self->sql_builder->insert(
 		"jet.basetype",
 		$data,
@@ -158,7 +158,7 @@ sub update_basetype {
 		join(',', map { "$_ = ?"} keys(%$args)) .
 		' WHERE ' .
 		join(',', map { "$_ = ?"} keys(%$where));
-	do { $args->{$_} = $self->json->encode($args->{$_}) if $args->{$_}} for qw/columns/;
+	do { $args->{$_} = $self->json->encode($args->{$_}) if $args->{$_}} for qw/datacolumns/;
 	my $sth = $self->_execute($sql, [ values %$args, values %$where ]) || return;
 }
 
@@ -193,7 +193,7 @@ sub get_basetypes {
 	my $sth = $self->_execute($sql, \@binds);
 	return [ map {
 		my $arg = $_;
-		do { $arg->{$_} = $self->json->decode($arg->{$_}) if $arg->{$_} } for qw/columns/;
+		do { $arg->{$_} = $self->json->decode($arg->{$_}) if $arg->{$_} } for qw/datacolumns/;
 		$arg;
 	} @{ $sth->fetchall_arrayref({}) } ];
 }
