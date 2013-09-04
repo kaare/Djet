@@ -12,6 +12,11 @@ has parts => (
 	isa	   => 'ArrayRef',
 	parts => [
 		{'Jet::Part::Basenode' => 'jet_basenode'},
+		{
+			module => 'Jet::Part::Children',
+			alias  => 'jet_children',
+			type => 'json',
+		},
 	],
 );
 
