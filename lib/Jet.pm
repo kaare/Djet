@@ -14,7 +14,7 @@ use Jet::Response;
 with 'MooseX::Traits';
 with 'Jet::Role::Log';
 
-# ABSTRACT: A Modern Content Management System
+# ABSTRACT: A Modern Node-based Content Management System
 
 =head1 NAME
 
@@ -45,7 +45,7 @@ Entry point from psgi
 
 =cut
 
-sub run_psgi($) {
+sub to_app($) {
 	my ($self) = @_;
 	my $request = $self->request;
 	my $stash  = {request => $request};
