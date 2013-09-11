@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SET search_path=jet;
+SET search_path=jet, public;
 
 -- Basetypes
 

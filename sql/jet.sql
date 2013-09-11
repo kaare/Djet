@@ -1,6 +1,7 @@
 -- Public functions
 
 CREATE LANGUAGE plperl;
+CREATE extension ltree;
 
 BEGIN;
 
@@ -16,10 +17,10 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE SCHEMA jet;
 
-SET search_path TO jet;
+SET search_path TO jet, public;
 
 CREATE TABLE basetype (
-	id						serial NOT NULL PRIMARY KEY,
+	id					serial NOT NULL PRIMARY KEY,
 	name					text UNIQUE,
 	parent					int[],
 	datacolumns				json,
@@ -41,14 +42,14 @@ COMMENT ON COLUMN basetype.template IS 'The template for this basetype';
 CREATE TRIGGER set_modified BEFORE UPDATE ON basetype FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE data (
-	id						serial NOT NULL PRIMARY KEY,
+	id					serial NOT NULL PRIMARY KEY,
 	basetype_id				int NOT NULL REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
 	name					text,
 	title					text,
 	datacolumns				text[],
-	fts						tsvector,
+	fts					tsvector,
 	created					timestamp default now(),
 	modified				timestamp
 );
@@ -63,7 +64,7 @@ COMMENT ON COLUMN data.fts IS 'Full Text Search column containing the content of
 CREATE TRIGGER set_modified BEFORE UPDATE ON data FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
 CREATE TABLE node (
-	id						serial NOT NULL PRIMARY KEY,
+	id					serial NOT NULL PRIMARY KEY,
 	data_id					int REFERENCES data(id)
 							ON DELETE cascade
 							ON UPDATE cascade,
@@ -71,7 +72,7 @@ CREATE TABLE node (
 							ON DELETE cascade
 							ON UPDATE cascade,
 	part					text,
-	node_path				text UNIQUE,
+	node_path				ltree,
 	created					timestamp default now(),
 	modified				timestamp
 );
@@ -83,6 +84,8 @@ COMMENT ON COLUMN node.part IS 'Path part';
 COMMENT ON COLUMN node.node_path IS 'Global Path parts';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
+
+CREATE INDEX node_path_gist_idx ON node USING GIST (node_path);
 
 --
 -- data_node view
@@ -121,5 +124,42 @@ END;
 $$ language plpgsql;
 
 CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_update();
+
+CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS ltree AS
+$$
+	SELECT CASE
+		WHEN s.parent_id IS NULL THEN text2ltree(s.part)
+		ELSE jet.get_calculated_node_path(s.parent_id) || s.part
+	END
+	FROM jet.node s
+	WHERE s.id = $1;
+$$
+LANGUAGE sql;
+
+--
+-- Update the node path recursively down the tree
+--
+
+CREATE OR REPLACE FUNCTION trig_update_node_path() RETURNS trigger AS
+$$
+BEGIN
+	IF TG_OP = 'UPDATE' THEN
+		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.data_id != OLD.data_id OR NEW.part != OLD.part) THEN
+			-- update all nodes that are children of this one including this one
+			UPDATE jet.node SET node_path = jet.get_calculated_node_path(id)
+				WHERE node_path @> node.node_path;
+		END IF;
+	ELSIF TG_OP = 'INSERT' THEN
+		UPDATE jet.node SET node_path = jet.get_calculated_node_path(NEW.id) WHERE node.id = NEW.id;
+	END IF;
+   RETURN NEW;
+END
+$$
+LANGUAGE 'plpgsql' VOLATILE;
+
+CREATE TRIGGER trig01_update_node_path
+	AFTER INSERT OR UPDATE OF data_id, parent_id, part
+	ON node
+	FOR EACH ROW EXECUTE PROCEDURE trig_update_node_path();
 
 COMMIT;
