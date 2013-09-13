@@ -4,7 +4,7 @@
 -- Full Text Search (fts)
 
 
-SET search_path TO jet;
+SET search_path TO jet, public;
 
 -- fts
 

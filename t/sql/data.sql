@@ -1,11 +1,11 @@
-SET search_path=jet;
+SET search_path=jet, public;
 
 INSERT INTO basetype (name) VALUES ('domain');
 INSERT INTO basetype (name) VALUES ('directory');
 INSERT INTO basetype (name) VALUES ('usergroup');
-INSERT INTO basetype (name,parent,searchable,datacolumns) VALUES ('person','{2,3}','{"userlogin"}','{"userlogin","password"}');
+INSERT INTO basetype (name,parent,searchable,datacolumns) VALUES ('person','{2,3}','{"userlogin"}','["userlogin","password"]');
 INSERT INTO basetype (name,parent) VALUES ('photoalbum','{3,4}'); -- Photoalbums belong to users, but can be assigned to groups
-INSERT INTO basetype (name,parent,datacolumns,searchable) VALUES ('photo','{5}','{"filename","metadata","contenttype"}','{"filename","metadata"}');
+INSERT INTO basetype (name,parent,datacolumns,searchable) VALUES ('photo','{5}','["filename","metadata","contenttype"]','{"filename","metadata"}');
 
 INSERT INTO data_node (basetype_id,part,name,title) VALUES (1,'','family_photo','Family Photo');
 INSERT INTO data_node (basetype_id,part,title,parent_id,name) VALUES (2,'groups','User Groups', 1, 'Groups');
