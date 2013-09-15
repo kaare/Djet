@@ -128,8 +128,8 @@ CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXEC
 CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS ltree AS
 $$
 	SELECT CASE
-		WHEN s.parent_id IS NULL THEN text2ltree(s.part)
-		ELSE jet.get_calculated_node_path(s.parent_id) || s.part
+		WHEN s.parent_id IS NULL THEN text2ltree(regexp_replace(s.part, '\W', '_', 'g'))
+		ELSE jet.get_calculated_node_path(s.parent_id) || regexp_replace(s.part, '\W', '_', 'g')
 	END
 	FROM jet.node s
 	WHERE s.id = $1;
