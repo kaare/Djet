@@ -19,7 +19,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->table("data_node");
+__PACKAGE__->table("jet.data_node");
 
 =head1 ACCESSORS
 
