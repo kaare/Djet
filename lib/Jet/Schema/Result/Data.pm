@@ -15,11 +15,11 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<data>
+=head1 TABLE: C<jet.data>
 
 =cut
 
-__PACKAGE__->table("data");
+__PACKAGE__->table("jet.data");
 
 =head1 ACCESSORS
 
@@ -154,8 +154,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 13:46:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1z7PY3EXtwAq3GaZr8L2NA
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:35:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x1xdloTl0MJL5FoQsToSqw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

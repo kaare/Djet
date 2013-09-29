@@ -15,11 +15,11 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<basetype>
+=head1 TABLE: C<jet.basetype>
 
 =cut
 
-__PACKAGE__->table("basetype");
+__PACKAGE__->table("jet.basetype");
 
 =head1 ACCESSORS
 
@@ -161,8 +161,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 13:46:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:o1yNxRaCsZkP1vmvgqwC2w
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:35:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OHW02/bWrThD8MHvcHJiXg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

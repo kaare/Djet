@@ -15,11 +15,11 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<node>
+=head1 TABLE: C<jet.node>
 
 =cut
 
-__PACKAGE__->table("node");
+__PACKAGE__->table("jet.node");
 
 =head1 ACCESSORS
 
@@ -53,7 +53,7 @@ Path part
 
 =head2 node_path
 
-  data_type: 'text'
+  data_type: 'prefix_range'
   is_nullable: 1
 
 Global Path parts
@@ -87,7 +87,7 @@ __PACKAGE__->add_columns(
   "part",
   { data_type => "text", is_nullable => 1 },
   "node_path",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "prefix_range", is_nullable => 1 },
   "created",
   {
     data_type     => "timestamp",
@@ -110,20 +110,6 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("id");
-
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<node_node_path_key>
-
-=over 4
-
-=item * L</node_path>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("node_node_path_key", ["node_path"]);
 
 =head1 RELATIONS
 
@@ -183,8 +169,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 13:46:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0PlpKcM2/ULq2f9dXtOAJQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:35:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PPBztygC/kRasr/iUfal9Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

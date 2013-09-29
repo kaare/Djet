@@ -15,7 +15,7 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<data_node>
+=head1 TABLE: C<jet.data_node>
 
 =cut
 
@@ -80,7 +80,7 @@ __PACKAGE__->table("jet.data_node");
 
 =head2 node_path
 
-  data_type: 'text'
+  data_type: 'prefix_range'
   is_nullable: 1
 
 =head2 node_created
@@ -119,7 +119,7 @@ __PACKAGE__->add_columns(
   "part",
   { data_type => "text", is_nullable => 1 },
   "node_path",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "prefix_range", is_nullable => 1 },
   "node_created",
   { data_type => "timestamp", is_nullable => 1 },
   "node_modified",
@@ -127,8 +127,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 13:46:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fJXHmM94a1ae7Wunkp2KhQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:37:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CwoPFUTwqNAtq5Vsv9RxUA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
