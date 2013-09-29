@@ -1,7 +1,7 @@
 -- Public functions
 
 CREATE LANGUAGE plperl;
-CREATE extension ltree;
+CREATE extension prefix;
 
 BEGIN;
 
@@ -72,7 +72,7 @@ CREATE TABLE node (
 							ON DELETE cascade
 							ON UPDATE cascade,
 	part					text,
-	node_path				ltree,
+	node_path				prefix_range,
 	created					timestamp default now(),
 	modified				timestamp
 );
@@ -125,11 +125,11 @@ $$ language plpgsql;
 
 CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_update();
 
-CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS ltree AS
+CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text AS
 $$
 	SELECT CASE
-		WHEN s.parent_id IS NULL THEN text2ltree(regexp_replace(s.part, '\W', '_', 'g'))
-		ELSE jet.get_calculated_node_path(s.parent_id) || regexp_replace(s.part, '\W', '_', 'g')
+		WHEN s.parent_id IS NULL THEN s.part
+		ELSE jet.get_calculated_node_path(s.parent_id) || s.part
 	END
 	FROM jet.node s
 	WHERE s.id = $1;
