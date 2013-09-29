@@ -164,6 +164,36 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:35:15
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OHW02/bWrThD8MHvcHJiXg
 
+use Moose;
+
+=head1 ATTRIBUTES
+
+=head2 class
+
+The Basetype class
+
+=cut
+
+has class => (
+	isa => 'Jet::Engine::Runtime',
+	is => 'ro',
+	lazy_build => 1,
+);
+
+=head1 METHODS
+
+=head2 _build_class
+
+Build the handler class for the basetype
+
+=cut
+
+sub _build_class {
+	my $self= shift;
+	my $handler = $self->handler || 'Jet::Engine::Default';
+	my $meta_class = Moose::Meta::Class->create('Jet::Engine::Runtime',superclasses => [$handler]);
+	return $meta_class->new_object;
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

@@ -5,12 +5,12 @@ use Moose;
 use namespace::autoclean;
 
 use JSON;
-use FindBin qw($Bin);
-use Locale::Maketext::Simple (
-	Path		=> "$Bin/locale/",
-	Decode      => 1,
-	Encoding    => 'locale',
-);
+#use FindBin qw($Bin);
+#use Locale::Maketext::Simple (
+#	Path		=> "$Bin/locale/",
+#	Decode      => 1,
+#	Encoding    => 'locale',
+#);
 
 with 'Jet::Role::Log';
 

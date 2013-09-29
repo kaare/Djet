@@ -78,7 +78,7 @@ The Jet schema
 
 has schema => (
 	is => 'ro',
-	isa => 'Jet::Stuff',
+	isa => 'Jet::Schema',
 );
 
 =head2 cache

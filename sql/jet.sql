@@ -129,7 +129,7 @@ CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS te
 $$
 	SELECT CASE
 		WHEN s.parent_id IS NULL THEN s.part
-		ELSE jet.get_calculated_node_path(s.parent_id) || s.part
+		ELSE jet.get_calculated_node_path(s.parent_id) || '/' || s.part
 	END
 	FROM jet.node s
 	WHERE s.id = $1;

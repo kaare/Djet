@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use Config::Any;
 
-use Jet::Stuff;
+use Jet::Schema;
 
 with 'Jet::Role::Log';
 
@@ -91,14 +91,12 @@ Defaults to the schema (Jet::Stuff) as found through the configuration
 =cut
 
 has schema => (
-	isa => 'Jet::Stuff',
+	isa => 'Jet::Schema',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
 		my @connect_info = @{ $self->jet->{connect_info} };
-		my %connect_info;
-		$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-		my $schema = Jet::Stuff->new(%connect_info);
+		my $schema = Jet::Schema->connect(@connect_info);
 	},
 );
 

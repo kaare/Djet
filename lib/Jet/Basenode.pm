@@ -27,7 +27,7 @@ has schema => (
 =cut
 
 has basetypes => (
-	isa => 'Jet::Config::Basetypes',
+	isa => 'HashRef',
 	is => 'ro',
 );
 
@@ -47,15 +47,15 @@ The node data found for this node
 =cut
 
 has rows => (
-	traits	=> ['Hash'],
 	is	=> 'ro',
-	isa	=> 'Jet::Schema',
+	isa	=> 'Jet::Schema::ResultSet::DataNode',
 	default	=> sub {
 		my $self = shift;
 		my $path = $self->path;
 		$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
-		return $self->schema->search(node_path => { '@>' => $path } }, {order_by => {-desc => 'nlevel(node_path)'} });
+		return $self->schema->resultset('DataNode')->search({node_path => { '@>' => $path } }, {order_by => {-desc => 'node_path'} });
 	},
+	lazy => 1,
 );
 
 =head2 basetype
@@ -65,21 +65,14 @@ The node's basetype
 =cut
 
 has basetype => (
-	isa => 'Jet::Basetype',
+	isa => 'Jet::Schema::Result::Basetype',
 	is => 'ro',
 	default	=> sub {
 		my $self = shift;
-		my $request = $self->request;
-		my $basedata = $self->rows->first;
-		my %nodeparams = (
-			schema => $request->schema,
-			basetype => $request->basetypes->{$basedata->{basetype_id}},
-		);
-		# Save the remaining nodes on the stash
-# Reenab	le this when find_basenode returns an array w/ the basenode and all ancestors again
-#		$stash->{nodes}{$_->{node_id}} = Jet::Node->new(row => $_, stash => $stash) for @$nodedata;
-		return Jet::Basenode->new(%nodeparams, row => $basedata);
-}
+		my $baserow = $self->rows->first;
+		return $self->basetypes->{$baserow->basetype_id};
+	},
+	lazy => 1,
 );
 
 __PACKAGE__->meta->make_immutable;

@@ -1,6 +1,8 @@
 package Jet;
 
 use 5.010;
+package Jet;
+
 use Moose;
 use namespace::autoclean;
 
@@ -41,19 +43,23 @@ has request => (
 
 =head1 METHODS
 
-=head2 run_psgi
+=head2 process
 
-Entry point from psgi
+Process the request.  Entry point from psgi
 
 =cut
 
-sub call {
+sub process {
 	my ($self) = @_;
 	my $request = $self->request;
+	my $path = $request->request->path_info;
 	my $stash  = {request => $request};
 	my ($basenode, $response);
 	try {
-		$basenode = $self->basenode->find_basenode(path => $path);
+		$basenode = Jet::Basenode->new(
+			schema => $request->schema,
+			basetypes => $request->basetypes,
+			path => $path);
 		$response = Jet::Response->new(
 			stash  => $stash,
 			renderers => $request->renderers,
@@ -98,7 +104,7 @@ Please report any bugs or feature requests to my email address listed above.
 
 =head1 COPYRIGHT & LICENSE 
 
-Copyright 2011 Kaare Rasmussen, all rights reserved.
+Copyright 2013 Kaare Rasmussen, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under the same terms as 
 Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 
