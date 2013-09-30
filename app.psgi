@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Plack::Builder;
-use CHI;
 
 use Jet::Starter;
 
