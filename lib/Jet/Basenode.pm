@@ -53,7 +53,7 @@ has rows => (
 		my $self = shift;
 		my $path = $self->path;
 		$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
-		return $self->schema->resultset('DataNode')->search({node_path => { '@>' => $path } }, {order_by => {-desc => 'node_path'} });
+		return $self->schema->resultset('DataNode')->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' });
 	},
 	lazy => 1,
 );
