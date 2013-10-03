@@ -8,14 +8,10 @@ use namespace::autoclean;
 
 use Try::Tiny;
 
-extends 'Plack::Component';
-
 use Jet::Basenode;
-use Jet::Exception;
 use Jet::Failure;
 use Jet::Response;
 
-with 'MooseX::Traits';
 with 'Jet::Role::Log';
 
 # ABSTRACT: A Modern Node-based Content Management System

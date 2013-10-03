@@ -4,14 +4,15 @@ use 5.010;
 use Moose;
 use namespace::autoclean;
 
+use Jet::Exception;
+
 =head1 NAME
 
 Jet::Failure - Something bad happened to our Jet
 
 =head1 SYNOPSIS
 
-Jet::Failure handles the case when the Jet won't fly
-
+Jet::Failure handles the case when the Jet crashes
 
 =head1 ATTRIBUTES
 

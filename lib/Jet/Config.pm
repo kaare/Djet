@@ -5,6 +5,7 @@ use Moose;
 use namespace::autoclean;
 
 use Config::Any;
+use FindBin qw/$Bin/;
 
 use Jet::Schema;
 
@@ -14,9 +15,43 @@ with 'Jet::Role::Log';
 
 Jet::Config - Jet Configuration
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+The Jet configuration is a collection of all the data that Jet and its application need
+to know about how to operate themselves.
 
 =head1 ATTRIBUTES
+
+=head2 jet_root
+
+Jet's root path. This is the path to where the Jet software is - NOT the application!
+
+=cut
+
+has jet_root => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $path = __FILE__;
+		$path =~ s|lib/+Jet/Config.pm||;
+		return $path;
+	},
+	lazy => 1,
+);
+
+=head2 app_root
+
+Jet's root path. This is the path to where the application software is
+
+=cut
+
+has app_root => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		return $Bin;
+	},
+);
 
 =head2 base
 

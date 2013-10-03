@@ -8,23 +8,6 @@ use Jet::Request;
 
 =head1 ATTRIBUTES
 
-=head2 jet_root
-
-Jet's root path
-
-=cut
-
-has jet_root => (
-	is => 'ro',
-	isa => 'Str',
-	default => sub {
-		my $path = __FILE__;
-		$path =~ s|lib/+Jet/Starter.pm||;
-		return $path;
-	},
-	lazy => 1,
-);
-
 =head2 config
 
 Jet configuration
@@ -71,7 +54,6 @@ has renderers => (
 			my $classname = "Jet::Render::$_";
 			eval "require $classname" or die $@;
 			$renderers{lc $_} = $classname->new(
-				jet_root => $self->jet_root,
 				config => $self->config,
 			);
 		} for qw/Html Json/;
