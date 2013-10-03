@@ -13,7 +13,10 @@ Jet::Schema::Result::Node - Node
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
 
 =head1 TABLE: C<jet.node>
 
@@ -169,9 +172,10 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:35:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PPBztygC/kRasr/iUfal9Q
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DrIASJM1AHye6F+ZzRge9Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;

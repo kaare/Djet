@@ -13,7 +13,10 @@ Jet::Schema::Result::Data - Data
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
 
 =head1 TABLE: C<jet.data>
 
@@ -154,9 +157,10 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-29 13:35:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x1xdloTl0MJL5FoQsToSqw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5nCNOktC43x/08FWvJ3D1A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;
