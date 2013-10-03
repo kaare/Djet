@@ -16,7 +16,7 @@ after 'attach_to_class' => sub {
 	foreach my $part (@parts) {
 		my ($module, $alias, $type);
 		if ((my @keys = keys %$part) == 1) {
-			$module = @keys[0];
+			$module = $keys[0];
 			$alias = $part->{$module};
 		} else {
 			$module = $part->{module};
