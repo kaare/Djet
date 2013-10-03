@@ -5,12 +5,7 @@ use Moose;
 use namespace::autoclean;
 
 use Text::Xslate;
-#use FindBin qw($Bin);
-#use Locale::Maketext::Simple (
-#	Path		=> "$Bin/locale/",
-#	Decode      => 1,
-#	Encoding    => 'locale',
-#);
+use Locale::Maketext::Simple;
 
 with 'Jet::Role::Log';
 
@@ -57,6 +52,22 @@ has tx => (
 );
 
 =head1 METHODS
+
+=head2 BUILD
+
+Locale::Maketext::Simple only works with class variables. So we call import on that module.
+
+=cut
+
+sub BUILD {
+	my $self = shift;
+	my $app_root = $self->config->app_root;
+	Locale::Maketext::Simple->import(
+		Path		=> "$app_root/locale/",
+		Decode		=> 1,
+		Encoding	=> 'locale',
+	)
+}
 
 =head2 render
 
