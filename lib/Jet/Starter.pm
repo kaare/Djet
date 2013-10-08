@@ -54,6 +54,7 @@ has renderers => (
 			my $classname = "Jet::Render::$_";
 			eval "require $classname" or die $@;
 			$renderers{lc $_} = $classname->new(
+                jet_root => $self->jet_root,
 				config => $self->config,
 			);
 		} for qw/Html Json/;

@@ -49,7 +49,7 @@ CREATE TABLE data (
 	name					text,
 	title					text,
 	datacolumns				text[],
-	fts					tsvector,
+	fts						tsvector,
 	created					timestamp default now(),
 	modified				timestamp
 );
