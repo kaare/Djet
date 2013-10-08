@@ -93,7 +93,7 @@ CREATE INDEX node_path_gist_idx ON node USING GIST (node_path);
 
 CREATE VIEW data_node AS
 SELECT d.id data_id, d.basetype_id, d.name, d.title, d.datacolumns, d.fts, d.created data_created, d.modified data_modified,
-	n.id node_id, n.parent_id, n.part, n.node_path, n.created node_created, n.modified	node_modified
+	n.id node_id, n.parent_id, n.part, n.node_path, n.created node_created, n.modified node_modified
 FROM jet.data d
 JOIN jet.node n ON d.id=n.data_id;
 

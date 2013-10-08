@@ -10,45 +10,7 @@ Jet::Role::DB::Result::Node
 
 =head1 DESCRIPTION
 
-Common features for nodes and datanodes.
-
-=cut
-
-has schema => (
-	isa => 'Jet::Stuff',
-	is => 'ro',
-);
-has basetypes => (
-	isa       => 'HashRef',
-	is        => 'ro',
-);
-has row => (
-	traits    => ['Hash'],
-	is        => 'ro',
-	isa       => 'HashRef',
-	default   => sub { {} },
-	handles   => {
-		set_column     => 'set',
-		get_column     => 'get',
-		has_no_columns => 'is_empty',
-		num_columns    => 'count',
-		delete_column  => 'delete',
-		get_columns    => 'kv',
-	},
-);
-has basetype => (
-	isa => 'Jet::Basetype',
-	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		return $self->basetypes->{$self->get_column('basetype_id')};
-	},
-);
-has stash => (
-	isa => 'HashRef',
-	is => 'ro',
-);
+Common methods for nodes and datanodes.
 
 =head1 METHODS
 
@@ -125,16 +87,13 @@ sub move_child {
 
 Return the children of the current node
 
+Extends the node method with a convenience search hashref
+
 =cut
 
 sub children {
 	my ($self, %opt) = @_;
-	my $parent_id = $self->get_column('node_id');
-	$opt{parent_id} = $parent_id;
-	# Try to find basetype_id from basetype if that is defined
-	$opt{basetype_id} ||= $self->basetypes->{delete $opt{basetype}}{id} if $opt{basetype};
-	my $result = $self->schema->search_node(\%opt);
-	return [ map {Jet::Node->new(row =>  $_)} @$result ];
+	return $self->nodes->search(\%opt);
 }
 
 =head2 parent

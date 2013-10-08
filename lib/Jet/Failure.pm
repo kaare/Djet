@@ -37,7 +37,7 @@ has exception => (
 			$stash->{error} = $e
 		}
 		my $response = $self->response;
-		$response->template('generic/error' . $self->config->jet->{template_suffix});
+		$response->template('generic/error' . $self->config->config->{template_suffix});
 		$response->render;
 	},
 );
@@ -56,7 +56,7 @@ has request => (
 	/],
 );
 has basenode => (
-	isa => 'Jet::Basenode',
+	isa => 'Jet::Schema::Result::DataNode',
 	is => 'ro',
 );
 has response => (

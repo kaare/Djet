@@ -39,7 +39,7 @@ has request => (
 	/],
 );
 has basenode => (
-	isa => 'Jet::Basenode',
+	isa => 'Jet::Schema::Result::DataNode',
 	is => 'ro',
 );
 has response => (

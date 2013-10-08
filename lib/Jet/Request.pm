@@ -45,17 +45,6 @@ has request => (
 	lazy => 1,
 );
 
-=head2 config
-
-The Jet configuration
-
-=cut
-
-has config => (
-	is => 'ro',
-	isa => 'Jet::Config',
-);
-
 =head2 schema
 
 The Jet schema
@@ -65,38 +54,10 @@ The Jet schema
 has schema => (
 	is => 'ro',
 	isa => 'Jet::Schema',
-);
-
-=head2 cache
-
-The Jet cache
-
-=cut
-
-has cache => (
-	is => 'ro',
-);
-
-=head2 basetypes
-
-The Jet basetypes
-
-=cut
-
-has basetypes=> (
-	is => 'ro',
-	isa => 'HashRef',
-);
-
-=head2 renderers
-
-The Jet render engines
-
-=cut
-
-has renderers=> (
-	is => 'ro',
-	isa => 'HashRef',
+	handles => [qw/
+		basetypes
+		config
+	/],
 );
 
 =head2 accept_types

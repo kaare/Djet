@@ -35,59 +35,21 @@ has config => (
 
 =head2 schema
 
-Jet Schema
+The schema is initialized with the connection info found in the config
 
 =cut
 
 has schema => (
-	is => 'ro',
-	isa => 'Jet::Schema',
-	default => sub {
-		my $self = shift;
-		my $config = $self->config;
-		return $config->schema;
-	},
-	lazy => 1,
-);
+       isa => 'Jet::Schema',
+       is => 'ro',
+       default => sub {
+               my $self = shift;
+               my $connect_info = $self->config->config->{connect_info};
+	       die 'No database connection information' unless $connect_info && @$connect_info;
 
-=head2 basetypes
-
-Jet Basetypes
-
-=cut
-
-has basetypes => (
-	is => 'ro',
-	isa => 'HashRef',
-	default => sub {
-		my $self = shift;
-		my $schema = $self->schema;
-		return { map { $_->id =>  $_} $schema->resultset('Basetype')->search };
-	},
-	lazy => 1,
-);
-
-=head2 renderers
-
-Jet Renderers
-
-=cut
-
-has renderers => (
-	is => 'ro',
-	isa => 'HashRef',
-	default => sub {
-		my $self = shift;
-		my %renderers;
-		do {
-			my $classname = "Jet::Render::$_";
-			eval "require $classname" or die $@;
-			$renderers{lc $_} = $classname->new(
-                jet_root => $self->jet_root,
-				config => $self->config,
-			);
-		} for qw/Html Json/;
-		return \%renderers;
+               my $schema = Jet::Schema->connect(@$connect_info);
+	       $schema->config($self->config);
+	       return $schema;
 	},
 	lazy => 1,
 );
@@ -107,13 +69,10 @@ has app => (
 			my $env = shift;
 			my $request = Jet::Request->new(
 				env => $env,
-				config => $self->config,
 				schema => $self->schema,
-				basetypes => $self->basetypes,
-				renderers => $self->renderers,
 			);
-			my $machine = Jet->new(request => $request);
-			$machine->process(@_);
+			my $flight = Jet->new(request => $request);
+			$flight->take_off(@_);
 		};
 	},
 	lazy => 1,

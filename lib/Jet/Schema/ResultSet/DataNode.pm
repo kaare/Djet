@@ -13,18 +13,9 @@ arguments of the request
 =cut
 
 sub find_basenode {
-	my ($self, %params) = @_;
-	my $schema = $self->result_source->schema;
-	my $nodedata;
-	$nodedata = $request->schema->find_basenode({ node_path => $path });
-
-	# Try again to see if the last part was a parameter
-	if (!$nodedata) {
-		my @segments = $request->request->uri->path_segments;
-		my $argument = pop @segments;
-		$nodedata = $request->schema->find_basenode({ node_path => join '/', @segments });
-		$request->set_arguments([$argument // '']);
-	}
+	my ($self, $path) = @_;
+	$path =~ s|^(.*?)/?$|$1|; # Remove last character if slash
+	return $self->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' });
 }
 
 1;

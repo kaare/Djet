@@ -37,26 +37,26 @@ has request => (
 
 =head1 METHODS
 
-=head2 process
+=head2 take_off
 
 Process the request.  Entry point from psgi
 
 =cut
 
-sub process {
+sub take_off {
 	my ($self) = @_;
 	my $request = $self->request;
+	my $schema = $request->schema;
+	my $config = $schema->config;
 	my $path = $request->request->path_info;
-	my $stash  = {request => $request};
+	my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
+	my $stash = {request => $request};
 	my ($basenode, $response);
 	try {
-		$basenode = Jet::Basenode->new(
-			schema => $request->schema,
-			basetypes => $request->basetypes,
-			path => $path);
+		$basenode = $data_nodes->first;
 		$response = Jet::Response->new(
 			stash  => $stash,
-			renderers => $request->renderers,
+			renderers => $config->renderers,
 			template => $basenode->basetype->template,
 		);
 		my $engine_class = $basenode->basetype->class;

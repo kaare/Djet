@@ -133,6 +133,78 @@ __PACKAGE__->add_columns(
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xyQ2gX88tpQ1PhS51Rc3wg
 
+with 'Jet::Role::DB::Result::Node';
+
+=head1 ATTRIBUTES
+
+=head2 basetype
+
+The node's basetype
+
+=cut
+
+has basetype => (
+	isa => 'Jet::Schema::Result::Basetype',
+	is => 'ro',
+	default	=> sub {
+		my $self = shift;
+		my $schema = $self->result_source->schema;
+
+		return $schema->basetypes->{$self->basetype_id};
+	},
+	lazy => 1,
+);
+
+#NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Node, as dbicdump didn't find them
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
+# __PACKAGE__->set_primary_key("node_id");
+
+=head1 RELATIONS
+
+=head2 nodes
+
+Type: has_many
+
+Related object: L<Jet::Schema::Result::Node>
+
+=cut
+
+__PACKAGE__->has_many(
+  "nodes",
+  "Jet::Schema::Result::DataNode",
+  { "foreign.parent_id" => "self.node_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 parent
+
+Type: belongs_to
+
+Related object: L<Jet::Schema::Result::Node>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "parent",
+  "Jet::Schema::Result::Node",
+  { node_id => "parent_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

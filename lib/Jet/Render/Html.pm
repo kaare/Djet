@@ -39,7 +39,8 @@ has tx => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $template_path = $self->config->jet->{template_path};
+		my $template_path = $self->config->config->{template_path};
+warn $template_path;
 		my $tx = Text::Xslate->new(
 			path => [ map {$_ . '/' . $template_path} ('.', $self->jet_root) ],
 			function => {
@@ -78,7 +79,7 @@ Renders the output as HTML
 sub render {
 	my ($self, $template, $stash) = @_;
 	warn 'Rendering ' . $template;
-	loc_lang($self->config->{jet}{language});
+	loc_lang($self->config->config->{language});
 	return $self->tx->render($template, $stash);
 }
 
