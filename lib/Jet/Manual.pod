@@ -28,6 +28,10 @@ Full-Text Search
 
 Arrays
 
+=item 3
+
+Extensible datatypes (like prefix, that is used for efficient basetype finding)
+
 =back
 
 =item *
