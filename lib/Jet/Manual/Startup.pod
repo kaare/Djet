@@ -1,0 +1,81 @@
+=head1 NAME
+
+Jet::Manual::Startup - Description of the startup "sequence"
+
+=head1 DESCRIPTION
+
+This document describes the way Jet performs a startup.
+
+=head1 Modules
+
+=head2 Jet::Starter
+
+Jet::Starter is instantiated in app.psgi, making it a singleton (at least within the
+address space of a single web server process).
+
+Has the following attributes
+
+=over 4
+
+=item config
+
+Jet::Starter initializes the configuration.
+
+=item schema
+
+The schema acts as a model containing all the relevant data for Jet, including the
+DBIC database schema, the configuration, and a hashref with the basetypes.
+
+=item app
+
+The sub that plack will call. Contains the schema, which holds the Jet view of the world,
+including the configuration.
+
+=back
+
+=head2 Jet::Config
+
+Contains the 'static' Jet data, including
+
+=over 4
+
+=item jet_root
+
+The path to Jet's home directory.
+
+=item app_root
+
+The path to the application's home directory
+
+=item config
+
+The configuration, fetched from the configuration file(s)a.
+
+=item renderers
+
+A hashref with the renderer objects (HTML, JSON)
+
+=item log (Yet to come)
+
+The logger
+
+=back
+
+=head2 Jet::Schema
+
+=over 4
+
+=item config
+
+Set from Jet::Starter, contains the entire configuration.
+
+=item basetypes
+
+A hashref containing the basetypes is kept around for performance reasons.
+
+=item ... the rest
+
+Jet::Schema is also an ordinary DBIC Schema class.
+
+=back
+
