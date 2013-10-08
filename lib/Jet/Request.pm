@@ -45,20 +45,6 @@ has request => (
 	lazy => 1,
 );
 
-=head2 arguments
-
-The path found after the node_path
-
-It is rw so find_basepath can set it when the basenode is found
-
-=cut
-
-has arguments => (
-       isa => 'ArrayRef[Str]',
-       is => 'rw',
-       writer => 'set_arguments',
-);
-
 =head2 config
 
 The Jet configuration

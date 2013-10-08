@@ -224,7 +224,9 @@ sub parents {
 	return [ map {Jet::Node->new(row => $_)} @result ];
 }
 
-__PACKAGE__->meta->make_immutable;
+no Moose::Role;
+
+1;
 
 __END__
 

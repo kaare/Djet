@@ -6,6 +6,14 @@ use Jet;
 use Jet::Config;
 use Jet::Request;
 
+=head1 NAME
+
+Jet::Starter
+
+=head1 DESCRIPTION
+
+What it takes to start a Jet
+
 =head1 ATTRIBUTES
 
 =head2 config
@@ -24,6 +32,13 @@ has config => (
 	},
 	lazy => 1,
 );
+
+=head2 schema
+
+Jet Schema
+
+=cut
+
 has schema => (
 	is => 'ro',
 	isa => 'Jet::Schema',
@@ -34,6 +49,13 @@ has schema => (
 	},
 	lazy => 1,
 );
+
+=head2 basetypes
+
+Jet Basetypes
+
+=cut
+
 has basetypes => (
 	is => 'ro',
 	isa => 'HashRef',
@@ -44,6 +66,13 @@ has basetypes => (
 	},
 	lazy => 1,
 );
+
+=head2 renderers
+
+Jet Renderers
+
+=cut
+
 has renderers => (
 	is => 'ro',
 	isa => 'HashRef',
@@ -62,6 +91,12 @@ has renderers => (
 	},
 	lazy => 1,
 );
+
+=head2 app
+
+The thing that starts it all
+
+=cut
 
 has app => (
 	is => 'ro',
@@ -84,7 +119,7 @@ has app => (
 	lazy => 1,
 );
 
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);
+__PACKAGE__->meta->make_immutable;
 
 __END__
 

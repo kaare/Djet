@@ -8,7 +8,7 @@ with 'Jet::Part';
 
 =head1 NAME
 
-Jet::Part - Put the children of a node(default basenode) on the stash
+Jet::Part::Children - Put the children of a node(default basenode) on the stash
 
 =head1 ATTRIBUTES
 

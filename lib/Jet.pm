@@ -24,8 +24,6 @@ Jet
 
 Faster than an AWE2
 
-=head1 SYNOPSIS
-
 Experimental CMS
 
 =head1 ATTRIBUTES

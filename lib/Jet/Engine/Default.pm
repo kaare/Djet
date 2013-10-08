@@ -6,6 +6,22 @@ use Moose;
 extends 'Jet::Engine';
 with qw/Jet::Role::Log/;
 
+=head1 NAME
+
+Jet::Engine - Default Jet Engine
+
+=head1 DESCRIPTION
+
+Jet::Engine::Default is the basic Jet Engine.
+
+=head1 ATTRIBUTES
+
+=head2 parts
+
+This is the engine parts
+
+=cut
+
 has parts => (
 	traits	=> [qw/Jet::Trait::Partname/],
 	is		=> 'ro',
@@ -21,25 +37,6 @@ has parts => (
 );
 
 no Moose;
-
-=head1 NAME
-
-Jet::Engine - Default Jet Engine
-
-=head1 SYNOPSIS
-
-Jet::Engine::Default is the basic Jet Engines.
-
-=head1 ATTRIBUTES
-
-=cut
-
-=head2 arguments
-
-This is the set of arguments for this engine
-
-=cut
-
 
 =head1 METHODS
 
