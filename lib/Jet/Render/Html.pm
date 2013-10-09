@@ -29,10 +29,6 @@ has config => (
 	isa => 'Jet::Config',
 	is => 'ro',
 );
-has 'jet_root' => (
-	isa => 'Str',
-	is => 'ro',
-);
 has tx => (
 	isa => 'Text::Xslate',
 	is => 'ro',
@@ -41,7 +37,7 @@ has tx => (
 		my $self = shift;
 		my $template_path = $self->config->config->{template_path};
 		my $tx = Text::Xslate->new(
-			path => [ map {$_ . '/' . $template_path} ('.', $self->jet_root) ],
+			path => [ map {$_ . '/' . $template_path} ('.', $self->config->jet_root) ],
 			function => {
 				l => sub {
 					return loc(@_);

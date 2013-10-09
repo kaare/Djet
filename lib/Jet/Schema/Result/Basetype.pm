@@ -198,9 +198,19 @@ sub _build_class {
 	return $meta_class->new_object;
 }
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
-1;
+=head2 render_template
 
+The template for use when rendering
+
+=cut
+
+sub render_template {
+	my $self= shift;
+	return $self->template if $self->template;
+
+	my $schema = $self->result_source->schema;
+	return 'basetype/' . $self->name . $schema->config->config->{template_suffix};
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
