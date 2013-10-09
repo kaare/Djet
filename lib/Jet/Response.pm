@@ -16,14 +16,36 @@ This is the Response class for L<Jet>.
 
 =head1 ATTRIBUTES
 
-=head2 renderers
+=head2 stash
 
-All the rendering engines
+The stash
 
 =cut
 
-has renderers  => (
+has 'stash' => (
 	isa => 'HashRef',
+	is => 'ro',
+);
+
+=head2 request
+
+The Jet::Request
+
+=cut
+
+has request  => (
+	isa => 'Jet::Request',
+	is => 'ro',
+);
+
+=head2 data_nodes
+
+The node "stack"
+
+=cut
+
+has data_nodes  => (
+	isa => 'Jet::Schema::ResultSet::DataNode',
 	is => 'ro',
 );
 
@@ -47,6 +69,7 @@ has headers  => (
 	default => sub {
 		[ 'Content-Type' => 'text/html; charset="utf-8"' ]
 	},
+	lazy => 1,
 );
 
 =head2 output
@@ -75,20 +98,9 @@ has type => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $request = $self->stash->{request};
+		my $request = $self->request;
 		return $request->accept_types->[0];
 	},
-);
-
-=head2 stash
-
-The stash
-
-=cut
-
-has 'stash' => (
-	isa => 'HashRef',
-	is => 'ro',
 );
 
 =head2 template
@@ -112,7 +124,7 @@ sub render {
 	warn join ' ', 'Rendering', $self->template, 'as', $self->type;
 	$self->type =~/(html|json)/i;
 	my $type = $1;
-	my $renderer = $self->renderers->{$type};
+	my $renderer = $self->request->renderers->{$type};
 	my $output = $renderer->render($self->template, $self->stash);
 	$self->output([ $output ]);
 }
@@ -131,7 +143,7 @@ Please report any bugs or feature requests to my email address listed above.
 
 =head1 COPYRIGHT & LICENSE 
 
-Copyright 2012 Kaare Rasmussen, all rights reserved.
+Copyright 2013 Kaare Rasmussen, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under the same terms as 
 Perl itself, either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may 

@@ -33,6 +33,9 @@ Jet configuration. Jet::Schema wants to know its surroundings upon start.
 has config => (
 	is => 'rw',
 	isa => 'Jet::Config',
+	handles => [qw/
+		renderers
+	/],
 );
 
 =head2 basetypes

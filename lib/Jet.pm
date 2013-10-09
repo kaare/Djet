@@ -51,14 +51,13 @@ sub take_off {
 	my $path = $request->request->path_info;
 	my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
 	my $stash = {request => $request};
-	my ($basenode, $response);
+	my $response = Jet::Response->new(
+		stash  => $stash,
+		request => $request,
+		data_nodes => $data_nodes,
+	);
 	try {
-		$basenode = $data_nodes->first;
-		$response = Jet::Response->new(
-			stash  => $stash,
-			renderers => $config->renderers,
-			template => $basenode->basetype->template,
-		);
+		my $basenode = $data_nodes->first;
 		my $engine_class = $basenode->basetype->class;
 		my $engine = $engine_class->new(
 			stash => $stash,
@@ -76,7 +75,7 @@ sub take_off {
 		Jet::Failure->new(
 			exception => $e,
 			request => $request,
-			basenode => $basenode,
+			data_nodes => $data_nodes,
 			stash  => $stash,
 			response => $response,
 		);

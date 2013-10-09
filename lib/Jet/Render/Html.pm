@@ -40,7 +40,6 @@ has tx => (
 	default => sub {
 		my $self = shift;
 		my $template_path = $self->config->config->{template_path};
-warn $template_path;
 		my $tx = Text::Xslate->new(
 			path => [ map {$_ . '/' . $template_path} ('.', $self->jet_root) ],
 			function => {

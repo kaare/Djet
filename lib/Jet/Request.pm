@@ -55,8 +55,9 @@ has schema => (
 	is => 'ro',
 	isa => 'Jet::Schema',
 	handles => [qw/
-		basetypes
 		config
+		basetypes
+		renderers
 	/],
 );
 
