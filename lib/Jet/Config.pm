@@ -6,6 +6,8 @@ use namespace::autoclean;
 
 use Config::JFDI;
 use FindBin qw/$Bin/;
+use Log::Any;
+use Log::Any::Adapter;
 
 use Jet::Schema;
 
@@ -104,6 +106,24 @@ has renderers => (
 			);
 		} for qw/Html Json/;
 		return \%renderers;
+	},
+	lazy => 1,
+);
+
+=head2 log
+
+Jet logger
+
+=cut
+
+has log => (
+	is => 'ro',
+	#isa => 'Log::Any::Adapter',
+	default => sub {
+		my $category = 'jet';
+		my $logger = Log::Any->get_logger(category => $category);
+		Log::Any::Adapter->set('Stdout');
+		return $logger;
 	},
 	lazy => 1,
 );

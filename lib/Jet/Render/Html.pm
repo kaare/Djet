@@ -73,7 +73,6 @@ Renders the output as HTML
 
 sub render {
 	my ($self, $template, $stash) = @_;
-	warn 'Rendering ' . $template;
 	loc_lang($self->config->config->{language});
 	return $self->tx->render($template, $stash);
 }

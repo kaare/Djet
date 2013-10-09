@@ -122,10 +122,11 @@ Chooses the output renderer based on the requested response types
 sub render {
 	my $self = shift;
 	$self->template($self->data_nodes->first->basetype->render_template) unless $self->template;
-	warn join ' ', 'Rendering', $self->template, 'as', $self->type;
+	my $request = $self->request;
+	$request->log->info(join ' ', 'Rendering', $self->template, 'as', $self->type);
 	$self->type =~/(html|json)/i;
 	my $type = $1;
-	my $renderer = $self->request->renderers->{$type};
+	my $renderer = $request->renderers->{$type};
 	my $output = $renderer->render($self->template, $self->stash);
 	$self->output([ $output ]);
 }

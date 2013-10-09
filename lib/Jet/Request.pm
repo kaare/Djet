@@ -58,6 +58,7 @@ has schema => (
 		config
 		basetypes
 		renderers
+		log
 	/],
 );
 

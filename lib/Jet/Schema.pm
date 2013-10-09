@@ -35,6 +35,7 @@ has config => (
 	isa => 'Jet::Config',
 	handles => [qw/
 		renderers
+		log
 	/],
 );
 
