@@ -120,9 +120,13 @@ has log => (
 	is => 'ro',
 	#isa => 'Log::Any::Adapter',
 	default => sub {
-		my $category = 'jet';
+        my $self = shift;
+        my $config = $self->config->{log} // {};
+		my $category = $config->{category} // 'jet';
 		my $logger = Log::Any->get_logger(category => $category);
-		Log::Any::Adapter->set('Stdout');
+        my $adapter = $config->{adapter} // 'Stdout';
+		Log::Any::Adapter->set($adapter);
+        $logger->info("Log adapter $adapter for $category started");
 		return $logger;
 	},
 	lazy => 1,
