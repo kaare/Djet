@@ -16,6 +16,28 @@ What it takes to start a Jet
 
 =head1 ATTRIBUTES
 
+=head2 params
+
+Jet parameters, from the environment
+
+
+=cut
+
+has params => (
+	is => 'ro',
+	isa => 'HashRef',
+	default => sub {
+		my %params = map {
+			m/^jet_(.*)/i;
+			my $key = lc $1;
+			$key => lc $ENV{$_}
+		} grep {/^jet_/i} keys %ENV;
+		$params{configbase} //= 'etc/';
+		return \%params;
+	},
+	lazy => 1,
+);
+
 =head2 config
 
 Jet configuration
@@ -27,8 +49,7 @@ has config => (
 	isa => 'Jet::Config',
 	default => sub {
 		my $self = shift;
-		my $configbase = 'etc/';
-		return Jet::Config->new(base => $configbase);
+		return Jet::Config->new(%{ $self->params} );
 	},
 	lazy => 1,
 );

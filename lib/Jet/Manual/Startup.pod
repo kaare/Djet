@@ -17,6 +17,11 @@ Has the following attributes
 
 =over 4
 
+=item params
+
+Searches the environment for parameters starting with JET_ (case insensitive) and hands them over to config.
+The JET_ prefix is removed, such that JET_APP_ROOT sets the config parameter app_root.
+
 =item config
 
 Jet::Starter initializes the configuration.
