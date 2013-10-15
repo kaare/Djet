@@ -36,6 +36,7 @@ has request => (
 		cache
 		config
 		schema
+		log
 	/],
 );
 has basenode => (
@@ -58,6 +59,16 @@ has 'arguments' => (
 	is => 'ro',
 );
 
+sub _run {
+	my ($self, $stage) = @_;
+	my $vstage = '_' . $stage;
+	for my $method ($self->$vstage) {
+		$self->log->debug("Executing method $method in stage $stage");
+		$self->$method;
+	}
+	return 1;
+}
+
 =head1 METHODS
 
 =head2 init
@@ -68,10 +79,7 @@ Engine initialization stuff
 
 sub init {
 	my $self = shift;
-	for my $method ($self->_init) {
-		$self->$method;
-	}
-	return 1;
+	$self->_run('init');
 }
 
 =head2 data
@@ -82,10 +90,7 @@ Process data
 
 sub data {
 	my $self = shift;
-	for my $method ($self->_data) {
-		$self->$method;
-	}
-	return 1;
+	$self->_run('data');
 }
 
 =head2 render
@@ -96,14 +101,12 @@ Render data
 
 sub render {
 	my $self = shift;
-	for my $method ($self->_data) {
-		$self->$method;
-	}
-	return 1;
+	$self->_run('render');
 }
 
 __PACKAGE__->meta->make_immutable;
 
 1;
+
 __END__
 
