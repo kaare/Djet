@@ -155,8 +155,10 @@ has log => (
 	#isa => 'Log::Any::Adapter',
 	default => sub {
 		my $self = shift;
-		my $logger = Log::Any->get_logger(category => $self->log_category);
-		Log::Any::Adapter->set($self->log_adapter);
+		my $category = $self->log_category;
+		my $logger = Log::Any->get_logger(category => $category);
+		my $adapter = $self->log_adapter;
+		Log::Any::Adapter->set($adapter);
 		$logger->info("Log adapter $adapter for $category started");
 		return $logger;
 	},
