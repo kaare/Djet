@@ -22,6 +22,20 @@ Has the following attributes
 Searches the environment for parameters starting with JET_ (case insensitive) and hands them over to config.
 The JET_ prefix is removed, such that JET_APP_ROOT sets the config parameter app_root.
 
+These parameters make sense to set as environment variables:
+
+=over 4
+
+=item * jet_root
+
+=item * app_root
+
+=item * log_category
+
+=item * log_adapter
+
+=back
+
 =item config
 
 Jet::Starter initializes the configuration.

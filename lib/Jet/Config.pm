@@ -110,6 +110,40 @@ has renderers => (
 	lazy => 1,
 );
 
+=head2 log_category
+
+Jet logger's category. Default 'jet'.
+
+=cut
+
+has log_category => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $self = shift;
+		my $config = $self->config->{log} // {};
+		return $config->{category} // 'jet';
+	},
+	lazy => 1,
+);
+
+=head2 log_adapter
+
+The name of Jet logger's adapter. Default 'Stdout'.
+
+=cut
+
+has log_adapter => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $self = shift;
+		my $config = $self->config->{log} // {};
+		return $config->{category} // 'Stdout';
+	},
+	lazy => 1,
+);
+
 =head2 log
 
 Jet logger
@@ -120,13 +154,10 @@ has log => (
 	is => 'ro',
 	#isa => 'Log::Any::Adapter',
 	default => sub {
-        my $self = shift;
-        my $config = $self->config->{log} // {};
-		my $category = $config->{category} // 'jet';
-		my $logger = Log::Any->get_logger(category => $category);
-        my $adapter = $config->{adapter} // 'Stdout';
-		Log::Any::Adapter->set($adapter);
-        $logger->info("Log adapter $adapter for $category started");
+		my $self = shift;
+		my $logger = Log::Any->get_logger(category => $self->log_category);
+		Log::Any::Adapter->set($self->log_adapter);
+		$logger->info("Log adapter $adapter for $category started");
 		return $logger;
 	},
 	lazy => 1,
