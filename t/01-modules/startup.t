@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use DBI;
 use Test::More;
 
 use_ok 'Jet::Starter';
