@@ -4,6 +4,8 @@ use 5.010;
 use Moose;
 use namespace::autoclean;
 
+use Jet::Engine::Control;
+
 with qw/Jet::Role::Log/;
 
 =head1 NAME
@@ -22,6 +24,12 @@ extends 'Jet::Engine';
 
 =cut
 
+has control => (
+	isa => 'Jet::Engine::Control',
+	is => 'ro',
+	lazy => 1,
+	default => sub { Jet::Engine::Control->new },
+);
 has stash => (
 	isa => 'HashRef',
 	is => 'ro',
@@ -63,6 +71,10 @@ sub _run {
 	my ($self, $stage) = @_;
 	my $vstage = '_' . $stage;
 	for my $method ($self->$vstage) {
+        my $omitmethod = "first$vstage";
+        last if $self->control->first_skip( sub { $stage } );
+        next if $self->control->omit->$omitmethod( sub { $method } );
+
 		$self->log->debug("Executing method $method in stage $stage");
 		$self->$method;
 	}
