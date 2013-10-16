@@ -124,6 +124,7 @@ sub render {
 	$self->template($self->data_nodes->first->basetype->render_template) unless $self->template;
 	my $request = $self->request;
 	$request->log->info(join ' ', 'Rendering', $self->template, 'as', $self->type);
+	$request->log->debug('Stashed items: ' . join ', ', keys %{ $self->stash });
 	$self->type =~/(html|json)/i;
 	my $type = $1;
 	my $renderer = $request->renderers->{$type};
