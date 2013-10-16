@@ -2,13 +2,10 @@
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title><: $node.row.get_column('title') :></title>
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="css/photomanager.css">
-
+	<title><: $basenode.title :></title>
 </head>
 <body>
 
-<h1>Directory</h1>
+<h1><: $basenode.title :></h1>
 </body>
 </html>

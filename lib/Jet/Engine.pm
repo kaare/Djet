@@ -10,7 +10,7 @@ with qw/Jet::Role::Log/;
 
 Jet::Engine - Jet Engine Base Class
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
 Jet::Engine is the basic building block of all Jet Engines.
 
