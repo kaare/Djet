@@ -8,7 +8,6 @@ use namespace::autoclean;
 
 use Try::Tiny;
 
-use Jet::Basenode;
 use Jet::Failure;
 use Jet::Response;
 
