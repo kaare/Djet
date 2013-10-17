@@ -14,6 +14,12 @@ Jet::JSON - (De)Serialize data
 
 Also serializes regexes
 
+=head1 METHODS
+
+=head2 new
+
+Hook regexp_load into json's filtering
+
 =cut
 
 sub new {
@@ -49,6 +55,14 @@ use constant _QR_TYPES => {
     msi => sub { qr{$_[0]}msi },
     msix => sub { qr{$_[0]}msix },
 };
+
+=head1 METHODS
+
+=head2 regexp_load
+
+Make the serialization of regexes possible
+
+=cut
  
 sub regexp_load {
     my $node = shift;
