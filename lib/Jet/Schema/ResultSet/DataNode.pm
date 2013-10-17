@@ -19,3 +19,7 @@ sub find_basenode {
 }
 
 1;
+
+# COPYRIGHT
+
+__END__

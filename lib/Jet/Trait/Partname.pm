@@ -89,3 +89,7 @@ after 'attach_to_class' => sub {
 no Moose::Role;
 
 1;
+
+# COPYRIGHT
+
+__END__

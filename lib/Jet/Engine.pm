@@ -120,5 +120,7 @@ __PACKAGE__->meta->make_immutable;
 
 1;
 
+# COPYRIGHT
+
 __END__
 

@@ -179,3 +179,7 @@ with 'Jet::Role::DB::Result::Node';
 
 __PACKAGE__->meta->make_immutable;
 1;
+
+# COPYRIGHT
+
+__END__

@@ -20,13 +20,13 @@ has _init => (
 	is	=> 'ro',
 	isa => 'ArrayRef',
 	traits => ['Array'],
-    default => sub { [] },
-    lazy => 1,
-    handles => {
-        init => 'push',
-        clear_init => 'clear',
-        first_init => 'first',
-    },
+	default => sub { [] },
+	lazy => 1,
+	handles => {
+		init => 'push',
+		clear_init => 'clear',
+		first_init => 'first',
+	},
 );
 
 =head2 _data
@@ -37,13 +37,13 @@ has _data => (
 	is	=> 'ro',
 	isa => 'ArrayRef',
 	traits => ['Array'],
-    default => sub { [] },
-    lazy => 1,
-    handles => {
-        data => 'push',
-        clear_data => 'clear',
-        first_data => 'first',
-    },
+	default => sub { [] },
+	lazy => 1,
+	handles => {
+		data => 'push',
+		clear_data => 'clear',
+		first_data => 'first',
+	},
 );
 
 =head2 _render
@@ -54,13 +54,13 @@ has _render => (
 	is	=> 'ro',
 	isa => 'ArrayRef',
 	traits => ['Array'],
-    default => sub { [] },
-    lazy => 1,
-    handles => {
-        render => 'push',
-        clear_render => 'clear',
-        first_render => 'first',
-    },
+	default => sub { [] },
+	lazy => 1,
+	handles => {
+		render => 'push',
+		clear_render => 'clear',
+		first_render => 'first',
+	},
 );
 
 no Moose;
@@ -72,6 +72,8 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+# COPYRIGHT
 
 __END__
 

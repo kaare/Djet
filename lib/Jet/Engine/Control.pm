@@ -37,8 +37,8 @@ $self->control->skip('render');
 has omit => (
 	is	=> 'ro',
 	isa => 'Jet::Engine::Control::Omit',
-    default => sub { Jet::Engine::Control::Omit->new },
-    lazy => 1,
+	default => sub { Jet::Engine::Control::Omit->new },
+	lazy => 1,
 );
 
 =head2 _skip
@@ -49,13 +49,13 @@ has _skip => (
 	is	=> 'ro',
 	isa => 'ArrayRef',
 	traits => ['Array'],
-    default => sub { [] },
-    lazy => 1,
-    handles => {
-        skip => 'push',
-        clear_skip => 'clear',
-        first_skip => 'first',
-    },
+	default => sub { [] },
+	lazy => 1,
+	handles => {
+		skip => 'push',
+		clear_skip => 'clear',
+		first_skip => 'first',
+	 },
 );
 
 no Moose;
@@ -67,6 +67,8 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+# COPYRIGHT
 
 __END__
 
