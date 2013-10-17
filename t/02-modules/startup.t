@@ -14,8 +14,6 @@ ok(my $startup = Jet::Starter->new, 'New Jet Starter');
 isa_ok($startup, 'Jet::Starter', 'ISA Jet Starter');
 ok(my $config = $startup->config, 'Init config');
 isa_ok($config, 'Jet::Config', 'ISA Jet Config');
-use Data::Dumper;
-warn Dumper $config;
 ok(my $schema = $startup->schema, 'Init Schema');
 isa_ok($schema, 'Jet::Schema', 'ISA Jet Schema');
 
