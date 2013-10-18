@@ -1,4 +1,4 @@
-package Jet::Trait::Partname;
+package Jet::Trait::Engine;
 
 use 5.010;
 use Moose::Role;
@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Trait::Partname - Trait for the engine parts
+Jet::Trait::Engine - Trait for the engine parts
 
 =head1 SYNOPSIS
 
@@ -17,8 +17,8 @@ extends 'Jet::Engine';
 
 ... and define the parts
 
-has parts => (
-	traits	=> [qw/Jet::Trait::Partname/],
+has _parts => (
+	traits	=> [qw/Jet::Trait::Engine/],
 	is		=> 'ro',
 	isa	   => 'ArrayRef',
 	parts => [

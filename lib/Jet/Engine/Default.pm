@@ -22,8 +22,8 @@ This is the engine parts
 
 =cut
 
-has parts => (
-	traits	=> [qw/Jet::Trait::Partname/],
+has _parts => (
+	traits	=> [qw/Jet::Trait::Engine/],
 	is		=> 'ro',
 	isa	   => 'ArrayRef',
 	parts => [

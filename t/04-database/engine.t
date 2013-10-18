@@ -48,7 +48,7 @@ use Jet::Response;
 	extends 'Jet::Engine';
 
 	has parts => (
-		traits	=> [qw/Jet::Trait::Partname/],
+		traits	=> [qw/Jet::Trait::Engine/],
 		is		=> 'ro',
 		isa	   => 'ArrayRef',
 		parts => [
