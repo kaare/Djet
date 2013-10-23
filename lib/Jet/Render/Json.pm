@@ -44,11 +44,7 @@ Renders the output as JSON
 
 sub render {
 	my ($self, $template, $stash) = @_;
-	warn 'Rendering ' . $template;
-my @dynadata = map {{title => $_->row->{part}, isFolder => 1}}  @{$stash->{basenode}->children };
-use Data::Dumper;
-warn Dumper \@dynadata;
-	return $self->json->encode(\@dynadata);
+	return $self->json->encode($stash);
 }
 
 __PACKAGE__->meta->make_immutable;

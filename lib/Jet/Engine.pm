@@ -32,9 +32,14 @@ has control => (
 );
 has stash => (
 	isa => 'HashRef',
+	traits => ['Hash'],
 	is => 'ro',
 	lazy => 1,
 	default => sub { {} },
+	handles => {
+		set_stash => 'set',
+		clear_stash => 'clear',
+	},
 );
 has request => (
 	isa => 'Jet::Request',

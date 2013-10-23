@@ -40,11 +40,23 @@ no Moose;
 
 =head1 METHODS
 
+=head2 render
+
+Control what to send when it's JSON
+
 =cut
 
-__PACKAGE__->meta->make_immutable;
+sub render {
+	my $self = shift;
+	if ($self->response->type =~ /json/i) {
+		$self->clear_stash;
+		my $basenode = $self->basenode;
+		my @dynadata = map {{title => $_->part, isfolder => 1}}  $basenode->nodes;
+		$self->set_stash('dynadata', \@dynadata);
+	}
+}
 
-1;
+__PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
 
