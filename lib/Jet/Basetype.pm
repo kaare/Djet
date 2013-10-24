@@ -89,7 +89,6 @@ sub _build_field {
 				my %params = (
 					value => $cols->[$colidx++],
 					title => $colname,
-					node  => $self,
 				);
 				return $traits ?
 					Jet::Field->with_traits(@$traits)->new(%params) :
