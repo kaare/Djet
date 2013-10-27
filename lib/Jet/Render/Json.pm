@@ -18,9 +18,9 @@ This is the Json class for L<Jet>.
 
 =head1 ATTRIBUTES
 
-=head2 serializer
+=head2 json
 
-The response serializer.
+The response serializer. Probably no need to set it; defaults to JSON->new->pretty.
 
 =cut
 
@@ -34,6 +34,18 @@ has json => (
 	},
 );
 
+=head2 expose_stash
+
+
+=cut
+
+has expose_stash => (
+	isa => 'ArrayRef|RegexpRef',
+	is => 'ro',
+	predicate => '_has_expose_stash',
+	writer => 'set_expose_stash',
+);
+
 =head1 METHODS
 
 =head2 render
@@ -44,7 +56,30 @@ Renders the output as JSON
 
 sub render {
 	my ($self, $template, $stash) = @_;
-	return $self->json->encode($stash);
+	my $cond = sub { 1 };
+	my $single_key;
+	if ($self->_has_expose_stash) {
+		my $expose = $self->expose_stash;
+		if (ref($expose) eq 'Regexp') {
+			$cond = sub { $_[0] =~ $expose };
+		} elsif (ref($expose) eq 'ARRAY') {
+			my %match = map { $_ => 1 } @$expose;
+			$cond = sub { $match{$_[0]} };
+		} elsif (!ref($expose)) {
+			$single_key = $expose;
+		} else {
+# FIXME			$c->log->warn("expose_stash should be an array referernce or Regexp object.");
+		}
+	}
+
+	my $data;
+	if ($single_key) {
+		$data = $stash->{$single_key};
+	} else {
+		$data = { map { $cond->($_) ? ($_ => $stash->{$_}) : () } keys %{$stash} };
+	}
+
+	return $self->json->encode($data);
 }
 
 __PACKAGE__->meta->make_immutable;

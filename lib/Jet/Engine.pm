@@ -76,9 +76,9 @@ sub _run {
 	my ($self, $stage) = @_;
 	my $vstage = '_' . $stage;
 	for my $method ($self->$vstage) {
-        my $omitmethod = "first$vstage";
-        last if $self->control->first_skip( sub { $stage } );
-        next if $self->control->omit->$omitmethod( sub { $method } );
+		my $omitmethod = "first$vstage";
+		last if $self->control->first_skip( sub { $stage } );
+		next if $self->control->omit->$omitmethod( sub { $method } );
 
 		$self->log->debug("Executing method $method in stage $stage");
 		$self->$method;
@@ -110,6 +110,20 @@ sub data {
 	$self->_run('data');
 }
 
+=head2 set_renderer
+
+Choose the renderer
+
+=cut
+
+sub set_renderer {
+	my $self = shift;
+	my $response = $self->response;
+	$response->type =~/(html|json)/i;
+	my $type = $1;
+	$response->set_renderer($self->request->renderers->{$type});
+}
+
 =head2 render
 
 Render data
@@ -118,7 +132,11 @@ Render data
 
 sub render {
 	my $self = shift;
+	my $response = $self->response;
+	my $basetype = $response->data_nodes->first->basetype;
+	$response->template($basetype->render_template) unless $response->_has_template;
 	$self->_run('render');
+	$response->render;
 }
 
 __PACKAGE__->meta->make_immutable;

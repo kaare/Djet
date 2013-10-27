@@ -66,8 +66,8 @@ sub take_off {
 		);
 		$engine->init;
 		$engine->data;
+		$engine->set_renderer;
 		$engine->render;
-		$response->render;
 	} catch {
 		my $e = shift;
 		debug($e);

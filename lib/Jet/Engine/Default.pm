@@ -36,25 +36,24 @@ has _parts => (
 	],
 );
 
-no Moose;
-
 =head1 METHODS
 
-=head2 render
+=head2 set_renderer
 
 Control what to send when it's JSON
 
 =cut
 
-sub render {
+after set_renderer => sub {
 	my $self = shift;
-	if ($self->response->type =~ /json/i) {
-		$self->clear_stash;
+	my $response = $self->response;
+	if ($response->type =~ /json/i and $self->request->request->parameters->{template} eq 'treeview') {
 		my $basenode = $self->basenode;
 		my @dynadata = map {{title => $_->part, isfolder => 1}}  $basenode->nodes;
 		$self->set_stash('dynadata', \@dynadata);
+		$response->renderer->set_expose_stash(['dynadata']);
 	}
-}
+};
 
 __PACKAGE__->meta->make_immutable;
 

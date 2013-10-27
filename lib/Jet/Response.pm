@@ -55,7 +55,7 @@ The response status. Default 200
 
 =cut
 
-has status   => (isa => 'Int', is => 'rw', default => 200);
+has status => (isa => 'Int', is => 'rw', default => 200);
 
 =head2 headers
 
@@ -78,7 +78,7 @@ The output content.
 
 =cut
 
-has output   => (
+has output	=> (
 	isa => 'ArrayRef',
 	is => 'rw',
 	predicate => 'has_output',
@@ -103,13 +103,30 @@ has type => (
 	},
 );
 
+=head2 renderer
+
+The class that does the actual rendering
+
+=cut
+
+has renderer => (
+	isa => 'Object',
+	is => 'ro',
+	writer => 'set_renderer',
+	predicate => '_has_renderer',
+);
+
 =head2 template
 
 The response template
 
 =cut
 
-has template => (isa => 'Maybe[Str]', is => 'rw' );
+has template => (
+	isa => 'Maybe[Str]',
+	is => 'rw',
+	predicate => '_has_template',
+);
 
 =head1 METHODS
 
@@ -121,14 +138,10 @@ Chooses the output renderer based on the requested response types
 
 sub render {
 	my $self = shift;
-	$self->template($self->data_nodes->first->basetype->render_template) unless $self->template;
 	my $request = $self->request;
 	$request->log->info(join ' ', 'Rendering', $self->template, 'as', $self->type);
 	$request->log->debug('Stashed items: ' . join ', ', keys %{ $self->stash });
-	$self->type =~/(html|json)/i;
-	my $type = $1;
-	my $renderer = $request->renderers->{$type};
-	my $output = $renderer->render($self->template, $self->stash);
+	my $output = $self->renderer->render($self->template, $self->stash);
 	$self->output([ $output ]);
 }
 

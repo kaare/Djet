@@ -34,7 +34,7 @@
 			initAjax: {
 				url: "/",
 				data: {
-					template: "dynatree",
+					template: "treeview",
 				}
 			},
 		});
