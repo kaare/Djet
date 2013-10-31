@@ -40,7 +40,7 @@ has json => (
 =cut
 
 has expose_stash => (
-	isa => 'ArrayRef|RegexpRef',
+	isa => 'Str|ArrayRef|RegexpRef',
 	is => 'ro',
 	predicate => '_has_expose_stash',
 	writer => 'set_expose_stash',

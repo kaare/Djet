@@ -13,9 +13,9 @@ The remaining part after the basenode has been found.
 =cut
 
 has rest_path => (
-    is => 'ro',
-    isa => 'Str',
-    writer => 'set_rest_path',
+	 is => 'ro',
+	 isa => 'Str',
+	 writer => 'set_rest_path',
 );
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
@@ -38,12 +38,12 @@ As a side effect this method sets rest_path.
 sub find_basenode {
 	my ($self, $path) = @_;
 	my $datanodes = $self->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' });
-    my $basenode = $datanodes->first or return;
+	my $basenode = $datanodes->first or return;
 
-    my $base_path = $basenode->node_path;
-    my $rest = $path;
-    $rest =~ s|^$base_path/*||;
-    $self->set_rest_path($rest);
+	my $base_path = $basenode->node_path;
+	my $rest = $path;
+	$rest =~ s|^$base_path/*||;
+	$datanodes->set_rest_path($rest);
 	return $datanodes;
 }
 

@@ -25,7 +25,7 @@ This is the engine parts
 has _parts => (
 	traits	=> [qw/Jet::Trait::Engine/],
 	is		=> 'ro',
-	isa	   => 'ArrayRef',
+	isa		=> 'ArrayRef',
 	parts => [
 		{'Jet::Part::Basenode' => 'jet_basenode'},
 		{
@@ -49,9 +49,13 @@ after set_renderer => sub {
 	my $response = $self->response;
 	if ($response->type =~ /json/i and $self->request->request->parameters->{template} eq 'treeview') {
 		my $basenode = $self->basenode;
-		my @dynadata = map {{title => $_->part, isfolder => 1}}  $basenode->nodes;
-		$self->set_stash('dynadata', \@dynadata);
-		$response->renderer->set_expose_stash(['dynadata']);
+		my %dynadata = (
+			title => $basenode->title,
+			isfolder => 1,
+			children => [ map {{title => $_->part, path => $_->path, isfolder => 1}} $basenode->nodes ],
+		);
+		$self->set_stash('dynadata', \%dynadata);
+		$response->renderer->set_expose_stash('dynadata');
 	}
 };
 
