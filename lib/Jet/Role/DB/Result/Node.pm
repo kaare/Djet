@@ -183,6 +183,17 @@ sub parents {
 	return [ map {Jet::Node->new(row => $_)} @result ];
 }
 
+=head2 has_children
+
+A convenience method; returns true if the current node has children.
+
+=cut
+
+sub has_children {
+	my $self = shift;
+	return $self->nodes->count;
+}
+
 no Moose::Role;
 
 1;
