@@ -51,10 +51,18 @@ after set_renderer => sub {
 		my $basenode = $self->basenode;
 		my %dynadata = (
 			title => $basenode->title,
-			isfolder => 1,
-			children => [ map {{title => $_->part, path => $_->path, isfolder => 1}} $basenode->nodes ],
+			folder => 1,
+			children => [ map {
+				my $folder = $_->has_children ? 1 : undef;
+				{
+					title => $_->part,
+					path => $_->node_path,
+					folder => $folder,
+					lazy => $folder,
+				}
+			} $basenode->nodes ],
 		);
-		$self->set_stash('dynadata', \%dynadata);
+		$self->set_stash('dynadata', [\%dynadata]);
 		$response->renderer->set_expose_stash('dynadata');
 	}
 };
