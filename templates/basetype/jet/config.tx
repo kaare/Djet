@@ -32,13 +32,13 @@
 			source: {
 				url: "/",
 				data: {
-					template: "treeview",
+					template: "treetop",
 				}
 			},
 			lazyload: function(event, data) {
 				var node = data.node;
 				data.result = {
-					url: node.data.path,
+					url: node.data.path + '/',
 					data: {
 						template: "treeview",
 					}

@@ -47,12 +47,19 @@ Control what to send when it's JSON
 after set_renderer => sub {
 	my $self = shift;
 	my $response = $self->response;
-	if ($response->type =~ /json/i and $self->request->request->parameters->{template} eq 'treeview') {
+	if ($response->type =~ /json/i and my ($template) = $self->request->request->parameters->{template} =~ /^tree(top|view)$/) {
 		my $basenode = $self->basenode;
-		my %dynadata = (
-			title => $basenode->title,
-			folder => 1,
-			children => [ map {
+		my $dynadata;
+		if ($template eq 'top') {
+			my $folder = $basenode->has_children ? 1 : undef;
+			$dynadata = {
+				title => $basenode->title,
+				folder => $folder,
+				lazy => $folder,
+				path => $basenode->node_path,
+			};
+		} else { # treeview
+			$dynadata = {children => [ map {
 				my $folder = $_->has_children ? 1 : undef;
 				{
 					title => $_->part,
@@ -60,9 +67,9 @@ after set_renderer => sub {
 					folder => $folder,
 					lazy => $folder,
 				}
-			} $basenode->nodes ],
-		);
-		$self->set_stash('dynadata', [\%dynadata]);
+			} $basenode->nodes ] },
+		}
+		$self->set_stash('dynadata', [$dynadata]);
 		$response->renderer->set_expose_stash('dynadata');
 	}
 };
