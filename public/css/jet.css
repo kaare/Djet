@@ -1,5 +1,5 @@
 body {
-	font-size: 62.5%;
+	font-size: 78.5%;
 }
 
 table {
@@ -12,6 +12,19 @@ table {
 body {
 	font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
 }
+
+#tree {
+	width: 14%;
+    float: left;
+}
+
+#bread {
+    width: 84%;
+	background: #f3f3f3;
+    float: right;
+}
+
+/* Clutter below -------------------------------- */
 
 /* Layout
    -------------------------------- */
