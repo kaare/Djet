@@ -52,14 +52,14 @@ after set_renderer => sub {
 		my $dynadata;
 		if ($template eq 'top') {
 			my $folder = $basenode->has_children ? 1 : undef;
-			$dynadata = {
+			$dynadata = [ {
 				title => $basenode->title,
 				folder => $folder,
 				lazy => $folder,
 				path => $basenode->node_path,
-			};
+			} ];
 		} else { # treeview
-			$dynadata = {children => [ map {
+			$dynadata = [ map {
 				my $folder = $_->has_children ? 1 : undef;
 				{
 					title => $_->part,
@@ -67,9 +67,9 @@ after set_renderer => sub {
 					folder => $folder,
 					lazy => $folder,
 				}
-			} $basenode->nodes ] },
+			} $basenode->nodes ],
 		}
-		$self->set_stash('dynadata', [$dynadata]);
+		$self->set_stash('dynadata', $dynadata);
 		$response->renderer->set_expose_stash('dynadata');
 	}
 };
