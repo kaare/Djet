@@ -45,8 +45,15 @@
 				}
 			},
 			activate: function(event, data) {
+				// start "working" flag. e.g. cursor change
 				var node = data.node;
-                $("#bread").html(node.data.path);
+				$.ajax({
+					url: node.data.path,
+					cache: false
+				}).done(function( html ) {
+					$("#bread").html(html);
+				});
+				// remove working flag
 			}
 		});
 	});
