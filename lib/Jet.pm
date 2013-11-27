@@ -57,6 +57,7 @@ sub take_off {
 	);
 	try {
 		my $basenode = $data_nodes->first;
+		$basenode->basetype_id($config->{config}{jet_config}{basetype_id}) if $data_nodes->rest_path eq '_jet_config';
 		my $engine_class = $basenode->basetype->class;
 		my $engine = $engine_class->new(
 			stash => $stash,

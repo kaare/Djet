@@ -48,7 +48,7 @@
 				// start "working" flag. e.g. cursor change
 				var node = data.node;
 				$.ajax({
-					url: node.data.path,
+					url: node.data.path + '/_jet_config',
 					cache: false
 				}).done(function( html ) {
 					$("#bread").html(html);
