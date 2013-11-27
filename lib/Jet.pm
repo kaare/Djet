@@ -49,15 +49,17 @@ sub take_off {
 	my $config = $schema->config;
 	my $path = $request->request->path_info;
 	my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
+	my $basenode = $data_nodes->first;
+	$basenode->basetype_id($config->{config}{jet_config}{basetype_id}) if $data_nodes->rest_path eq '_jet_config';
+
 	my $stash = {request => $request};
 	my $response = Jet::Response->new(
 		stash  => $stash,
 		request => $request,
 		data_nodes => $data_nodes,
+        basenode => $basenode,
 	);
 	try {
-		my $basenode = $data_nodes->first;
-		$basenode->basetype_id($config->{config}{jet_config}{basetype_id}) if $data_nodes->rest_path eq '_jet_config';
 		my $engine_class = $basenode->basetype->class;
 		my $engine = $engine_class->new(
 			stash => $stash,

@@ -49,6 +49,17 @@ has data_nodes  => (
 	is => 'ro',
 );
 
+=head2 basenode
+
+The node we're looking at
+
+=cut
+
+has basenode => (
+	isa => 'Jet::Schema::Result::DataNode',
+	is => 'ro',
+);
+
 =head2 status
 
 The response status. Default 200

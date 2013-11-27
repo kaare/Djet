@@ -132,8 +132,8 @@ Render data
 sub render {
 	my $self = shift;
 	my $response = $self->response;
-	my $basetype = $response->data_nodes->first->basetype;
-	$response->template($basetype->render_template) unless $response->_has_template;
+	my $basenode = $response->basenode;
+	$response->template($basenode->render_template) unless $response->_has_template;
 	$self->_run('render');
 	$response->render;
 }
