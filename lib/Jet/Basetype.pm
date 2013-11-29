@@ -16,7 +16,6 @@ Jet::Basetype - Jet Basetype Base Class
 
 =head1 SYNOPSIS
 
-Jet::Engine is the basic building block of all Jet Engine basetypes.
 
 =head1 ATTRIBUTES
 
