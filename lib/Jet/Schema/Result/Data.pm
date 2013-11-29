@@ -161,7 +161,13 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5nCNOktC43x/08FWvJ3D1A
 
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->inflate_column('datacolumns'=>{
+    inflate=>sub {
+        my ($datacol, $self) = @_;
+        return $self->basetype->fields->new(datacolumns => $datacol);
+    },
+});
+
 __PACKAGE__->meta->make_immutable;
 1;
 

@@ -47,7 +47,7 @@ Control what to send when it's JSON
 before data => sub {
 	my $self = shift;
 use Data::Dumper;
-    warn Dumper $self->basenode->fields;
+warn Dumper $self->basenode->datacolumns;
 };
 
 __PACKAGE__->meta->make_immutable;

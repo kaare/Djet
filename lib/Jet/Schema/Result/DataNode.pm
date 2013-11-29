@@ -133,7 +133,16 @@ __PACKAGE__->add_columns(
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xyQ2gX88tpQ1PhS51Rc3wg
 
-with 'Jet::Role::DB::Result::Node';
+__PACKAGE__->inflate_column('datacolumns'=>{
+    inflate=>sub {
+        my ($datacol, $self) = @_;
+        return $self->basetype->fields->new(datacolumns => $datacol);
+    },
+});
+
+with qw/
+    Jet::Role::DB::Result::Node
+/;
 
 =head1 ATTRIBUTES
 

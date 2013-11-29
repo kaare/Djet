@@ -183,6 +183,18 @@ has class => (
 	lazy_build => 1,
 );
 
+=head2 fields
+
+The Basetype fields
+
+=cut
+
+has fields => (
+	isa => 'Jet::Fields',
+	is => 'ro',
+	lazy_build => 1,
+);
+
 =head1 METHODS
 
 =head2 _build_class
@@ -195,6 +207,42 @@ sub _build_class {
 	my $self= shift;
 	my $handler = $self->handler || 'Jet::Engine::Default';
 	my $meta_class = Moose::Meta::Class->create('Jet::Engine::Runtime',superclasses => [$handler]);
+	return $meta_class->new_object;
+}
+
+=head2 _build_fields
+
+Build the fields for the basetype
+
+=cut
+
+sub _build_fields {
+	my $self= shift;
+	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Jet::Fields']);
+	my $colidx;
+	my $columns = $self->datacolumns;
+	my @fieldcols;
+	for my $column (@{ $columns }) {
+		my $colname = $column->{name};
+		my $coltype = $column->{type};
+		my $traits =  $column->{traits};
+		$meta_class->add_attribute("__$colname" => (
+			reader  => "get_$colname",
+			isa     => 'Jet::Field',
+			default => sub {
+				my $self = shift;
+				my $cols = $self->get_column('datacolumns');
+				my %params = (
+					value => $cols->[$colidx++],
+					title => $colname,
+				);
+				return $traits ?
+					Jet::Field->with_traits(@$traits)->new(%params) :
+					Jet::Field->new(%params);
+			},
+			lazy => 1,
+		));
+	}
 	return $meta_class->new_object;
 }
 
