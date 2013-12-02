@@ -176,7 +176,8 @@ sub render_template {
 	return $template if $template;
 
 	my $schema = $self->result_source->schema;
-	return 'basetype/' . $self->node_path . $schema->config->config->{template_suffix};
+	my $node_path = $self->node_path || 'index';
+	return 'basetype/' . $node_path . $schema->config->config->{template_suffix};
 }
 
 #NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Node, as dbicdump didn't find them
