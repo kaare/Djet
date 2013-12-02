@@ -116,7 +116,6 @@ sub env {
 $ENV{JET_APP_ROOT} = './t';
 my $starter = Jet::Starter->new;
 my $schema = $starter->schema;
-my $env = shift;
 my $request = Jet::Request->new(
 	env => env(),
 	schema => $schema,
@@ -124,14 +123,14 @@ my $request = Jet::Request->new(
 my $config = $schema->config;
 my $path = $request->request->path_info;
 my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
+my $basenode = $data_nodes->first;
 my $stash = {request => $request};
 my $response = Jet::Response->new(
 	stash  => $stash,
 	request => $request,
 	data_nodes => $data_nodes,
+	basenode => $basenode,
 );
-my $basenode = $data_nodes->first;
-
 
 ok(my $engine = Test::Engine->new(
 	stash => $stash,
@@ -145,6 +144,7 @@ ok($engine->init, 'Init');
 is($engine->stash->{init}, 'No init', 'Init stash changed OK');
 ok($engine->data, 'Data');
 is($engine->stash->{data}, 'No data', 'Data stash changed OK');
+$engine->set_renderer;
 ok($engine->render, 'Render');
 
 done_testing;
