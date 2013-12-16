@@ -167,7 +167,13 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PFlTCwB6RSlL1XdEDQpxwQ
 
+use JSON;
 use Moose;
+
+__PACKAGE__->inflate_column('datacolumns'=>{
+    inflate=>sub { JSON->new->allow_nonref->decode(shift); },
+    deflate=>sub { JSON->new->allow_nonref->encode(shift); },
+});
 
 =head1 ATTRIBUTES
 
@@ -227,11 +233,11 @@ sub _build_fields {
 		my $coltype = $column->{type};
 		my $traits =  $column->{traits};
 		$meta_class->add_attribute("__$colname" => (
-			reader  => "get_$colname",
+			reader  => $colname,
 			isa     => 'Jet::Field',
 			default => sub {
 				my $self = shift;
-				my $cols = $self->get_column('datacolumns');
+				my $cols = $self->datacolumns;
 				my %params = (
 					value => $cols->[$colidx++],
 					title => $colname,

@@ -48,6 +48,7 @@ before data => sub {
 	my $self = shift;
 use Data::Dumper;
 warn Dumper $self->basenode->datacolumns;
+warn Dumper $self->basenode->datacolumns->description;
 };
 
 __PACKAGE__->meta->make_immutable;
