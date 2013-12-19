@@ -78,7 +78,10 @@ has headers  => (
 	isa => 'ArrayRef',
 	is => 'rw',
 	default => sub {
-		[ 'Content-Type' => 'text/html; charset="utf-8"' ]
+		my $self = shift;
+		return $self->type =~ /json/i ?
+			[ 'Content-Type' => 'application/json' ] :
+			[ 'Content-Type' => 'text/html; charset="utf-8"' ];
 	},
 	lazy => 1,
 );
@@ -106,6 +109,7 @@ Changable, but should be only one of the accepted types
 has type => (
 	isa => 'Str',
 	is => 'ro',
+	writer => 'set_type',
 	lazy => 1,
 	default => sub {
 		my $self = shift;

@@ -46,9 +46,12 @@ Control what to send when it's JSON
 
 before data => sub {
 	my $self = shift;
-	my $response = $self->response;
-	$response->set_renderer($self->request->renderers->{'json'});
 	$self->stash->{fields} = $self->basenode->datacolumns->fields_as_json;
+
+	# Return json
+	my $response = $self->response;
+	$response->set_type('json');
+	$self->set_renderer;
 	$response->renderer->set_expose_stash('fields');
 };
 
