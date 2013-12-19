@@ -134,14 +134,14 @@ __PACKAGE__->add_columns(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xyQ2gX88tpQ1PhS51Rc3wg
 
 __PACKAGE__->inflate_column('datacolumns'=>{
-    inflate=>sub {
-        my ($datacol, $self) = @_;
-        return $self->basetype->fields->new(datacolumns => $datacol);
-    },
+	inflate=>sub {
+		my ($datacol, $self) = @_;
+		return $self->basetype->fields->new(datacolumns => $datacol);
+	},
 });
 
 with qw/
-    Jet::Role::DB::Result::Node
+	Jet::Role::DB::Result::Node
 /;
 
 =head1 ATTRIBUTES
@@ -180,7 +180,7 @@ sub render_template {
 	return 'basetype/' . $node_path . $schema->config->config->{template_suffix};
 }
 
-#NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Node, as dbicdump didn't find them
+# NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Node, as dbicdump didn't find them
 
 =head1 PRIMARY KEY
 
@@ -224,10 +224,10 @@ __PACKAGE__->belongs_to(
   "Jet::Schema::Result::Node",
   { node_id => "parent_id" },
   {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+	is_deferrable => 0,
+	join_type	 => "LEFT",
+	on_delete	 => "CASCADE",
+	on_update	 => "CASCADE",
   },
 );
 

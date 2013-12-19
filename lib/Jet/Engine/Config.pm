@@ -46,9 +46,10 @@ Control what to send when it's JSON
 
 before data => sub {
 	my $self = shift;
-use Data::Dumper;
-warn Dumper $self->basenode->datacolumns;
-warn Dumper $self->basenode->datacolumns->description;
+	my $response = $self->response;
+	$response->set_renderer($self->request->renderers->{'json'});
+	$self->stash->{fields} = $self->basenode->datacolumns->fields_as_json;
+	$response->renderer->set_expose_stash('fields');
 };
 
 __PACKAGE__->meta->make_immutable;

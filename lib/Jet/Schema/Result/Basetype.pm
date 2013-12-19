@@ -171,8 +171,8 @@ use JSON;
 use Moose;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
-    inflate=>sub { JSON->new->allow_nonref->decode(shift); },
-    deflate=>sub { JSON->new->allow_nonref->encode(shift); },
+	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
+	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
 });
 
 =head1 ATTRIBUTES
@@ -227,14 +227,15 @@ sub _build_fields {
 	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Jet::Fields']);
 	my $colidx;
 	my $columns = $self->datacolumns;
-	my @fieldcols;
+	my @fieldnames;
 	for my $column (@{ $columns }) {
 		my $colname = $column->{name};
 		my $coltype = $column->{type};
 		my $traits =  $column->{traits};
+		push @fieldnames, $colname;
 		$meta_class->add_attribute("__$colname" => (
 			reader  => $colname,
-			isa     => 'Jet::Field',
+			isa => 'Jet::Field',
 			default => sub {
 				my $self = shift;
 				my $cols = $self->datacolumns;
@@ -242,6 +243,7 @@ sub _build_fields {
 					value => $cols->[$colidx++],
 					title => $colname,
 				);
+				$params{type} = $coltype if $coltype;
 				return $traits ?
 					Jet::Field->with_traits(@$traits)->new(%params) :
 					Jet::Field->new(%params);
@@ -249,10 +251,14 @@ sub _build_fields {
 			lazy => 1,
 		));
 	}
+	$meta_class->add_attribute(fieldnames => (
+		is => 'ro',
+		isa	 => 'ArrayRef[Str]',
+		default => sub { \@fieldnames },
+	));
 	return $meta_class->new_object;
 }
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
 

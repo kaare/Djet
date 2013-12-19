@@ -119,6 +119,8 @@ Choose the renderer
 sub set_renderer {
 	my $self = shift;
 	my $response = $self->response;
+	return if $response->_has_renderer;
+
 	my $type = $response->type =~/(html|json)/i ? $1 : 'html';
 	$response->set_renderer($self->request->renderers->{$type})
 }
