@@ -7,7 +7,6 @@
 	<link rel='stylesheet' type='text/css' href='/css/jet.css'>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 	<link rel='stylesheet' type='text/css' href='/js/fancytree/skin-win8/ui.fancytree.css'>
-	<link rel='stylesheet' type='text/css' href='/css/bootstrap.css'>
 
 </head>
 <body>
@@ -17,14 +16,13 @@
 </ul>
 <div id="body">
 	<div id="tree"></div>
-	<div id="bread" ng-app></div>
+	<div id="bread"></div>
 </div>
 
 <script src='http://code.jquery.com/jquery-1.10.0.min.js' type="text/javascript"></script>
 <script src='http://code.jquery.com/ui/1.10.3/jquery-ui.min.js' type="text/javascript"></script>
 <script src='/js/jquery.cookie.js' type="text/javascript"></script>
 <script src="/js/fancytree/jquery.fancytree-all.js"></script>
-<script src="/js/angular.js"></script>
 
 <script type="text/javascript">
 	$(function(){
