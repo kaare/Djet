@@ -47,6 +47,18 @@ has value => (
 	is => 'ro',
 );
 
+=head2 updatable
+
+Switch to tell if the field is updatable
+
+=cut
+
+has updatable => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 1,
+);
+
 =head1 METHODS
 
 =head2 as_json

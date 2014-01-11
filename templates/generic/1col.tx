@@ -1,0 +1,18 @@
+<table>
+: for $groups -> $group {
+:   if $group.header {
+  <tr>
+    <td colspan="2"><: $group.header :></td>
+  </tr>
+:   }
+:   for $group.columns -> $field {
+  <tr>
+:     my $elm = 'generic/field/' ~ ($field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
+    <td><: $field.title :></td>
+    <td>
+: include $elm {field => $field};
+    </td>
+</tr>
+:   }
+: }
+</table>

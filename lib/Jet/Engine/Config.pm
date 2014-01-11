@@ -40,19 +40,17 @@ has _parts => (
 
 =head2 data
 
-Control what to send when it's JSON
+Control what to send when it's Jet config
 
 =cut
 
 before data => sub {
 	my $self = shift;
-	$self->stash->{fields} = $self->basenode->datacolumns->fields_as_json;
+	$self->stash->{node} = $self->basenode;
 
-	# Return json
+	# Return
 	my $response = $self->response;
-	$response->set_type('json');
-	$self->set_renderer;
-	$response->renderer->set_expose_stash('fields');
+	$response->template('config/basenode.tx');
 };
 
 __PACKAGE__->meta->make_immutable;

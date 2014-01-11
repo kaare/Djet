@@ -1,0 +1,2 @@
+<h2><: $node.get_column('title') :></h2>
+: include 'generic/1col.tx' {update => 0, groups => [ { columns => [ {type => 'Str', title => 'Basetype', value => $node.basetype.name } ] }, {header => 'Fields', columns => $node.datacolumns.fields} ] };
