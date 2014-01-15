@@ -47,6 +47,7 @@ Control what to send when it's Jet config
 before data => sub {
 	my $self = shift;
 	$self->stash->{node} = $self->basenode;
+	$self->stash->{request} = $self->request;
 
 	# Return
 	my $response = $self->response;
