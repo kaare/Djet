@@ -17,6 +17,7 @@ use Moose;
 use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+__PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 
 =head1 TABLE: C<jet.data_node>
 
@@ -48,7 +49,7 @@ __PACKAGE__->table("jet.data_node");
 
 =head2 datacolumns
 
-  data_type: 'text[]'
+  data_type: 'json'
   is_nullable: 1
 
 =head2 fts
@@ -108,7 +109,7 @@ __PACKAGE__->add_columns(
   "title",
   { data_type => "text", is_nullable => 1 },
   "datacolumns",
-  { data_type => "text[]", is_nullable => 1 },
+  { data_type => "json", is_nullable => 1 },
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
   "data_created",
@@ -130,13 +131,15 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xyQ2gX88tpQ1PhS51Rc3wg
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-16 05:14:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IXxV3+JuBV0kpeMJdXiKzw
+
+use JSON;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
 		my ($datacol, $self) = @_;
-		return $self->basetype->fields->new(datacolumns => $datacol);
+		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
 	},
 });
 

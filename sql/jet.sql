@@ -48,7 +48,7 @@ CREATE TABLE data (
 							ON UPDATE restrict,
 	name					text,
 	title					text,
-	datacolumns				text[],
+	datacolumns				json,
 	fts						tsvector,
 	created					timestamp default now(),
 	modified				timestamp

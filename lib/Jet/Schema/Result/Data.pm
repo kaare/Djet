@@ -57,7 +57,7 @@ The Title
 
 =head2 datacolumns
 
-  data_type: 'text[]'
+  data_type: 'json'
   is_nullable: 1
 
 The actual column data
@@ -98,7 +98,7 @@ __PACKAGE__->add_columns(
   "title",
   { data_type => "text", is_nullable => 1 },
   "datacolumns",
-  { data_type => "text[]", is_nullable => 1 },
+  { data_type => "json", is_nullable => 1 },
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
   "created",
@@ -157,14 +157,15 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5nCNOktC43x/08FWvJ3D1A
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-16 05:14:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:332/8j1Y7bucqhWxMOompg
 
+use JSON;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
     inflate=>sub {
         my ($datacol, $self) = @_;
-        return $self->basetype->fields->new(datacolumns => $datacol);
+		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
     },
 });
 

@@ -25,7 +25,7 @@ The raw data columns
 =cut
 
 has datacolumns => (
-	isa => 'ArrayRef',
+	isa => 'HashRef',
 	is => 'ro',
 );
 

@@ -225,7 +225,6 @@ Build the fields for the basetype
 sub _build_fields {
 	my $self= shift;
 	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Jet::Fields']);
-	my $colidx;
 	my $columns = $self->datacolumns;
 	my @fieldnames;
 	for my $column (@{ $columns }) {
@@ -240,7 +239,7 @@ sub _build_fields {
 				my $self = shift;
 				my $cols = $self->datacolumns;
 				my %params = (
-					value => $cols->[$colidx++],
+					value => $cols->{$colname},
 					title => $colname,
 				);
 				$params{type} = $coltype if $coltype;
