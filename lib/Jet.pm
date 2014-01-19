@@ -76,6 +76,8 @@ sub take_off {
 		$engine->render;
 	} catch {
 		my $e = shift;
+		die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack
+
 		debug($e);
 		Jet::Failure->new(
 			exception => $e,

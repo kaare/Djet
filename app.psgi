@@ -16,12 +16,13 @@ builder {
 #	enable 'Debug::DBIProfile',
 #		profile => 2;
 #	enable 'InteractiveDebugger';
+#	enable 'Auth::Form',
+#		authenticator => \&check_pass;
+	enable 'HTTPExceptions', rethrow => 1;
 	enable 'Plack::Middleware::AccessLog::Timed',
 		format => '%v %h %l %u %t \"%r\" %>s %b %D';
 	enable 'Session',
 		store => 'File';
-#	enable 'Auth::Form',
-#		authenticator => \&check_pass;
 	enable 'Static',
 		path => qr{^/(images|js|css)/}, root => './public/';
 

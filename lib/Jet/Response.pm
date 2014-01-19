@@ -4,6 +4,8 @@ use 5.010;
 use Moose;
 use namespace::autoclean;
 
+use HTTP::Throwable::Factory qw/http_throw/;
+
 with 'Jet::Role::Log';
 
 =head1 NAME
@@ -158,6 +160,17 @@ sub render {
 	$request->log->debug('Stashed items: ' . join ', ', keys %{ $self->stash });
 	my $output = $self->renderer->render($self->template, $self->stash);
 	$self->output([ $output ]);
+}
+
+=head2 redirect
+
+Throw a 302 HTTP::Exception
+
+=cut
+
+sub redirect {
+	my ($self, $url) = @_;
+	http_throw(Found => { location => $url });
 }
 
 __PACKAGE__->meta->make_immutable;
