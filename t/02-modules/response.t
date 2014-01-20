@@ -70,4 +70,6 @@ is($exception->status_code, 302, '302 status code');
 is($exception->location, 'somewhere', 'Redirect location');
 is($exception->reason, 'Found', 'Redirect reason');
 
+is($response->uri_for('somehow'), 'http://localhost:5000/somehow', 'uri_for');
+
 done_testing;

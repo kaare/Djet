@@ -173,6 +173,19 @@ sub redirect {
 	http_throw(Found => { location => $url });
 }
 
+=head2 uri_for
+
+Takes a path and returns the full URI path to the resource.
+
+=cut
+
+sub uri_for {
+	my ($self, $path) = @_;
+	my $uri = $self->request->request->base;
+	$uri->path($path);
+	return $uri->as_string;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
