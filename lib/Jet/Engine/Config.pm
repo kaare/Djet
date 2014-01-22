@@ -4,7 +4,7 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine';
-with qw/Jet::Role::Log/;
+with qw/Jet::Role::Update Jet::Role::Log/;
 
 =head1 NAME
 
@@ -46,6 +46,7 @@ Control what to send when it's Jet config
 
 before data => sub {
 	my $self = shift;
+	$self->edit;
 	$self->stash->{node} = $self->basenode;
 	$self->stash->{request} = $self->request;
 

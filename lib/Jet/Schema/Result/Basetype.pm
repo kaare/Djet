@@ -92,10 +92,10 @@ The template for this basetype
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "jet.basetype_id_seq",
+	data_type			=> "integer",
+	is_auto_increment => 1,
+	is_nullable		=> 0,
+	sequence			=> "jet.basetype_id_seq",
   },
   "name",
   { data_type => "text", is_nullable => 1 },
@@ -111,10 +111,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "created",
   {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 1,
-    original      => { default_value => \"now()" },
+	data_type	=> "timestamp",
+	default_value => \"current_timestamp",
+	is_nullable	=> 1,
+	original		=> { default_value => \"now()" },
   },
   "modified",
   { data_type => "timestamp", is_nullable => 1 },
@@ -170,6 +170,8 @@ __PACKAGE__->has_many(
 use JSON;
 use Moose;
 
+use Jet::Data::Validator;
+
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
 	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
@@ -201,6 +203,18 @@ has fields => (
 	lazy_build => 1,
 );
 
+=head2 validator
+
+The Basetype validator
+
+=cut
+
+has validator => (
+	isa => 'Jet::Data::Validator',
+	is => 'ro',
+	lazy_build => 1,
+);
+
 =head1 METHODS
 
 =head2 _build_class
@@ -218,7 +232,14 @@ sub _build_class {
 
 =head2 _build_fields
 
-Build the fields for the basetype
+Build the fields for the basetype.
+
+The fields are build from a superclass Jet::Fields and each field has an
+attribute called __<field> and a reader called <field>.
+
+An arrayref attribute containing fieldnames is also build.
+
+This class is instantiated for each data or datanode requesting datacolumns from data.
 
 =cut
 
@@ -252,14 +273,34 @@ sub _build_fields {
 	}
 	$meta_class->add_attribute(fieldnames => (
 		is => 'ro',
-		isa	 => 'ArrayRef[Str]',
+		isa	=> 'ArrayRef[Str]',
 		default => sub { \@fieldnames },
 	));
 	return $meta_class->new_object;
 }
 
+=head2 _build_validator
+
+Build the validator for the basetype.
+
+The validator is a  Jet::Data::Validator and is used by (data)nodes to validate input
+
+=cut
+
+sub _build_validator {
+	my $self= shift;
+	my $dfv= {
+		optional => $self->fields->fieldnames,
+		filters  => 'trim',
+		field_filters => { },
+		constraint_methods => { },
+	};
+
+	my $validator = Jet::Data::Validator->new(dfv => $dfv);
+	return $validator;
+}
+
 __PACKAGE__->meta->make_immutable;
-1;
 
 # COPYRIGHT
 

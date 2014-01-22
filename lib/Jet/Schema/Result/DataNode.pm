@@ -141,6 +141,9 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 		my ($datacol, $self) = @_;
 		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
 	},
+	deflate=>sub {
+		return JSON->new->allow_nonref->encode(shift);
+	},
 });
 
 with qw/
@@ -195,7 +198,7 @@ sub render_template {
 
 =cut
 
-# __PACKAGE__->set_primary_key("node_id");
+__PACKAGE__->set_primary_key("node_id");
 
 =head1 RELATIONS
 

@@ -1,2 +1,2 @@
-<input type="submit" value="OK" />
-<input type="submit" value="Cancel" />
+<input type="submit" name="save" value="OK" />
+<input type="submit" name="cancel" value="Cancel" />
