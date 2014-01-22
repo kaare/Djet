@@ -55,6 +55,14 @@ before data => sub {
 	$response->template('config/basenode.tx');
 };
 
+=head2 edit_updated
+
+Override the role method to do nothing
+
+=cut
+
+sub edit_updated {}
+
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT

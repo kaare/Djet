@@ -192,7 +192,7 @@ sub render_template {
 
 =over 4
 
-=item * L</id>
+=item * L</node_id>
 
 =back
 
