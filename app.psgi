@@ -24,7 +24,7 @@ builder {
 	enable 'Session',
 		store => 'File';
 	enable 'Static',
-		path => qr{^/(images|js|css)/}, root => './public/';
+		path => qr{^/(fonts|images|js|css)/}, root => './public/';
 
 	$jet->app;
 };
