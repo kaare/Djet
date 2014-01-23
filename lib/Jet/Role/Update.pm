@@ -234,7 +234,7 @@ sub edit_create {
 		my $value = $validation->valid->{$fieldname};
 		$datacolumns->{$fieldname} = $value
 	}
-	my $new = $schema->resultset('DataNode')->create({
+	my $new = $self->schema->resultset('DataNode')->create({
 		# XXX Dummy values v
 		basetype_id => 1,
 		parent_id => 1,
