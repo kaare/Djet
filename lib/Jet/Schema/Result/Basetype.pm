@@ -92,10 +92,10 @@ The template for this basetype
 __PACKAGE__->add_columns(
   "id",
   {
-	data_type			=> "integer",
-	is_auto_increment => 1,
-	is_nullable		=> 0,
-	sequence			=> "jet.basetype_id_seq",
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "jet.basetype_id_seq",
   },
   "name",
   { data_type => "text", is_nullable => 1 },
@@ -111,10 +111,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "created",
   {
-	data_type	=> "timestamp",
-	default_value => \"current_timestamp",
-	is_nullable	=> 1,
-	original		=> { default_value => \"now()" },
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 1,
+    original      => { default_value => \"now()" },
   },
   "modified",
   { data_type => "timestamp", is_nullable => 1 },
@@ -164,8 +164,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PFlTCwB6RSlL1XdEDQpxwQ
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-23 08:04:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:l/5QjccPmtB6E6R+c2m2Ww
 
 use JSON;
 use Moose;

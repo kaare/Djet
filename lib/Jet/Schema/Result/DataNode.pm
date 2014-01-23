@@ -70,7 +70,7 @@ __PACKAGE__->table("jet.data_node");
 =head2 node_id
 
   data_type: 'integer'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 parent_id
 
@@ -117,7 +117,7 @@ __PACKAGE__->add_columns(
   "data_modified",
   { data_type => "timestamp", is_nullable => 1 },
   "node_id",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_nullable => 0 },
   "parent_id",
   { data_type => "integer", is_nullable => 1 },
   "part",
@@ -131,8 +131,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-16 05:14:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IXxV3+JuBV0kpeMJdXiKzw
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-23 08:05:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zoEKa1vr93S4wonQksgx0g
 
 use JSON;
 
