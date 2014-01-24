@@ -9,5 +9,6 @@ function editHtml(elm) {
       document.execCommand($(elm).data('role'), false, null);
       break;
     }
+  $(elm).closest('.editHtml').next('.htmlEditor').focus();
 }
 $('.editHtml a').click(function(e) { editHtml(this) } )
