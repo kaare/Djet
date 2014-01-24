@@ -207,6 +207,7 @@ sub edit_update {
 	}
 
 	$node->update({datacolumns => $datacolumns});
+	$node->discard_changes; # Necessary to keep db and dbic in sync
 }
 
 =head2 edit_create
