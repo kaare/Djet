@@ -14,7 +14,7 @@
 <body>
 <h1>Jet Configuration</h1>
 <ul>
-	<li><a href="config/basetypes">Basetypes</a>
+	<li><a href="config/basetype">Basetypes</a>
 </ul>
 <div id="body">
 	<div id="tree"></div>
