@@ -41,9 +41,9 @@ sub find_basenode {
 	my $basenode = $datanodes->first or return;
 
 	my $base_path = $basenode->node_path;
-	my $rest = $path;
-	$rest =~ s|^$base_path/*||;
-	$datanodes->set_rest_path($rest);
+	if ( $path =~ m|^$base_path/(.*)|) {
+		$datanodes->set_rest_path($1);
+	}
 	return $datanodes;
 }
 
