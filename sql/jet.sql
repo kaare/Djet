@@ -22,6 +22,7 @@ SET search_path TO jet, public;
 CREATE TABLE basetype (
 	id					serial NOT NULL PRIMARY KEY,
 	name					text UNIQUE,
+	title					text,
 	parent					int[],
 	datacolumns				json,
 	searchable				text[],
@@ -32,7 +33,8 @@ CREATE TABLE basetype (
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
-COMMENT ON COLUMN basetype.name IS 'Base Name';
+COMMENT ON COLUMN basetype.name IS 'Base Name - reference this in the app';
+COMMENT ON COLUMN basetype.title IS 'Human readable title';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
 COMMENT ON COLUMN basetype.datacolumns IS 'The column definitions';
 COMMENT ON COLUMN basetype.searchable IS 'The searchable columns';

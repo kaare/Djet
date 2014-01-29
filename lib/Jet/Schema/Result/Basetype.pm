@@ -38,7 +38,14 @@ __PACKAGE__->table("jet.basetype");
   data_type: 'text'
   is_nullable: 1
 
-Base Name
+Base Name - reference this in the app
+
+=head2 title
+
+  data_type: 'text'
+  is_nullable: 1
+
+Human readable title
 
 =head2 parent
 
@@ -98,6 +105,8 @@ __PACKAGE__->add_columns(
     sequence          => "jet.basetype_id_seq",
   },
   "name",
+  { data_type => "text", is_nullable => 1 },
+  "title",
   { data_type => "text", is_nullable => 1 },
   "parent",
   { data_type => "integer[]", is_nullable => 1 },
@@ -164,8 +173,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-23 08:04:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:l/5QjccPmtB6E6R+c2m2Ww
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-28 09:33:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9FWUCVL2HAtjzeGV2pPTXA
 
 use JSON;
 use Moose;
