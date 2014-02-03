@@ -1,0 +1,1 @@
+<div id="<: $name || $field.name :>"<: if $field.class { ' class="$class"' } :>><: if $field.value {'&#10003;'} :></div>
