@@ -13,6 +13,19 @@ Handles edit functionality for Jet Engines
 
 =head1 ATTRIBUTES
 
+=head2 object
+
+The object (node or basetype) to be updated or created
+
+=cut
+
+has object => (
+	is => 'ro',
+	isa => 'Object',
+	writer => 'set_object',
+	predicate => 'has_object',
+);
+
 =head2 is_new
 
 True if the node to be updated is new. False if not
@@ -50,6 +63,7 @@ Display object edit page.
 sub edit {
 	my ($self) = @_;
 
+	$self->set_base_object;
 	my $request = $self->request->request;
 	if ($request->parameters->{delete}) {
 		$self->delete_submit;
@@ -58,7 +72,7 @@ sub edit {
 
 	if ($request->method eq 'POST') {
 		if ($request->body_parameters->{save}) {
-				$self->edit_submit;
+			$self->edit_submit;
 		} else {
 			my $response = $self->response;
 			$response->redirect($response->uri_for($self->basenode->node_path));
@@ -77,8 +91,9 @@ Delete the object in question.
 sub delete_submit {
 	my ($self) = @_;
 
-	my $transaction=sub {
-		$self->delete_node($self->basenode);
+	my $object = $self->object;
+	my $transaction = sub {
+		$self->delete_object($self->basenode);
 	};
 	eval { $self->schema->txn_do($transaction) };
 	my $error=$@;
@@ -87,20 +102,20 @@ sub delete_submit {
 		$self->config->log->debug($error);
 		$self->stash->{message} = $error;
 	} else {
-		# XXX $self->flash->{notice}=$c->linkify("$display_name deleted.");
+		# XXX $self->flash->{notice} = $object->name . ' deleted.';
 		$self->response->redirect($self->response->uri_for("/")); # XXX Where to redirect to? Might be parent ??
 	}
 }
 
-=head2 delete_node
+=head2 delete_object
 
-Delete the node inside a transaction
+Delete the object inside a transaction
 
 =cut
 
-sub delete_node {
-	my ($self, $node) = @_;
-	$node->delete;
+sub delete_object {
+	my ($self, $object) = @_;
+	$object->delete;
 }
 
 =head2 edit_submit
@@ -116,8 +131,8 @@ sub edit_submit {
 	if ($validation->success) {
 		my $transaction = sub {
 			if ($self->is_new) {
-				my $node = $self->edit_create($validation);
-				return unless ref $node; # local edit_create may choose not to create a new node
+				my $object = $self->edit_create($validation);
+				return unless ref $object; # local edit_create may choose not to create a new object
 
 			} else {
 				$self->edit_update($validation);
@@ -160,9 +175,8 @@ project and user components save the parameter in _text
 =cut
 
 sub edit_validation {
-	my ($self) = @_;
-	my $basetype = $self->basenode->basetype;
-	my $validator = $basetype->validator;
+	my $self = shift;
+	my $validator = $self->get_validator;
 	my $params = $self->request->request->body_parameters;
 	return $validator->validate($params);
 }
@@ -181,7 +195,7 @@ sub edit_failed_validation {
 	@{ $self->stash->{msgs} }{ keys %msgs } = values %msgs;
 
 	$self->logger->debug("Failed validation:\n\t" . join ("\n\t" , map {$_ . ' => ' . $msgs{$_}} keys %msgs)) if %msgs;
-	my $node_type = $self->basenode->basetype->name;
+	my $node_type = $self->get_base_name;
 	my $error = "Could not save $node_type information - see detailed information by positioning your mouse over the fields marked with orange background (same as this box) in the table below:";
 	$self->logger->error($error);
 	$self->stash->{message} ||= $error;
@@ -189,16 +203,15 @@ sub edit_failed_validation {
 
 =head2 edit_update
 
-Update the node. Called from within the transaction
+Update the object. Called from within the transaction
 
 =cut
 
 sub edit_update {
 	my ($self, $validation)=@_;
 
-	my $node = $self->basenode;
-	my $fields = $node->basetype->fields; 
-	my @fieldnames = @{$fields->fieldnames};
+	my $object = $self->object;
+	my @fieldnames = @{$self->get_fieldnames};
 
 	my $datacolumns;
 	foreach my $fieldname (sort @fieldnames) {
@@ -206,8 +219,8 @@ sub edit_update {
 		$datacolumns->{$fieldname} = $value
 	}
 
-	$node->update({datacolumns => $datacolumns});
-	$node->discard_changes; # Necessary to keep db and dbic in sync
+	$object->update({datacolumns => $datacolumns});
+	$object->discard_changes; # Necessary to keep db and dbic in sync
 }
 
 =head2 edit_create
@@ -226,8 +239,8 @@ necessary for methods that need a row to work on (e.g. in order to create relate
 sub edit_create {
 	my ($self, $validation)=@_;
 
-	my $node = $self->basenode;
-	my $fields = $node->basetype->fields; 
+	my $object = $self->object;
+	my $fields = $object->basetype->fields;
 	my @fieldnames = @{$fields->fieldnames};
 
 	my $datacolumns;
@@ -235,7 +248,7 @@ sub edit_create {
 		my $value = $validation->valid->{$fieldname};
 		$datacolumns->{$fieldname} = $value
 	}
-	my $new = $self->schema->resultset('DataNode')->create({
+	my $new = $self->get_resultset->create({
 		# XXX Dummy values v
 		basetype_id => 1,
 		parent_id => 1,
@@ -258,7 +271,8 @@ The validation object is passed here in case any method modifier wants to use it
 
 sub edit_updated {
 	my ($self, $validation)=@_;
-	$self->response->redirect($self->response->uri_for($self->basenode->node_path));
+warn 'test';
+	$self->response->redirect($self->response->uri_for($self->redirect_to));
 }
 
 =head2 edit_failed_update
@@ -273,7 +287,7 @@ sub edit_failed_update {
 
 	$self->stash->{message} = $error;
 	$self->log->debug($error);
-	$self->stash->{title}='Could not update ' . $self->basenode->title;
+	$self->stash->{title}='Could not update ' . $self->object->title;
 }
 
 =head2 edit_view
@@ -284,7 +298,7 @@ Show the edit page
 
 sub edit_view {
 	my ($self) = @_;
-	$self->stash->{title} ||= $self->basenode->title;
+	$self->stash->{title} ||= $self->object->title;
 }
 
 sub _stash_defaults {
@@ -294,6 +308,28 @@ sub _stash_defaults {
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
 		$self->stash->{defaults}{$fieldname} = $upload->filename;
 	}
+}
+
+=head2 find_rows_from_params
+
+Works together with the across template to allow a row editing functionality.
+
+Group the parameter values into rows and return as a list
+
+=cut
+
+sub find_rows_from_params {
+	my ($self, $prefix) = @_;
+	my @list;
+	my $params = $self->request->request->body_parameters;
+	for my $key (keys %{ $params }) {
+		if ($key =~ /$prefix\_(\d+)_(.+)/) {
+			my $rowno = $1;
+			my $name = $2;
+			$list[$rowno]{$name} = $params->{$key};
+		}
+	}
+	return \@list;
 }
 
 1;
