@@ -17,17 +17,16 @@
 </ul>
 <h2>Basetypes</h2>
 <div id="body">
-	<div id="typelist">
+	<div id="typelist" class="left">
 		<ul>
 : for $basetypes -> $basetype {
           <li><a href="/jet/config/basetype/<: $basetype.name :>"><: $basetype.title :></a></li>
 : }
 		</ul>
 	</div>
-	<div id="bread">
+	<div id="bread" class="main">
 : if ($current_basetype) {
 :	include 'basetype/jet/config/basetype_edit.tx' {basetype => $current_basetype}
-fest
 : }
 	</div>
 </div>

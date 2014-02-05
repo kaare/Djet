@@ -271,7 +271,6 @@ The validation object is passed here in case any method modifier wants to use it
 
 sub edit_updated {
 	my ($self, $validation)=@_;
-warn 'test';
 	$self->response->redirect($self->response->uri_for($self->redirect_to));
 }
 

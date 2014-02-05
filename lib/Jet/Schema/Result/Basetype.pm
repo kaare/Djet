@@ -299,7 +299,7 @@ The validator is a  Jet::Data::Validator and is used by (data)nodes to validate 
 sub _build_validator {
 	my $self= shift;
 	my $dfv= {
-		optional => $self->fields->fieldnames,
+		optional => [], # $self->fields->fieldnames,
 		filters  => 'trim',
 		field_filters => { },
 		constraint_methods => { },

@@ -4,7 +4,7 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine';
-with qw/Jet::Role::Update Jet::Role::Log/;
+with qw/Jet::Role::Update::Node Jet::Role::Log/;
 
 =head1 NAME
 

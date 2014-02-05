@@ -1,0 +1,19 @@
+<table>
+  <tr>
+: for $fields.header -> $header {
+    <th><: $header :></th>
+: }
+  </tr>
+: for $fields.rows -> $row {
+: my $prefix = $fields.prefix ~ '_' ~ $~row.index ~ '_';
+  <tr>
+:   for $row -> $field {
+: my $field_name = $prefix ~ $field.name;
+:     my $elm = 'generic/field/' ~ ($field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
+    <td>
+: include $elm {field => $field, name => $field_name};
+    </td>
+:   }
+</tr>
+: }
+</table>

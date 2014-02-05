@@ -1,7 +1,8 @@
 <div id="basetype">
   <h2><: $basetype.title :></h2>
   <form method="post" id="edit-basetype" action="<: $request.request.path_info :>">
-: include 'generic/1col.tx' {update => 0, groups => [ {header => 'Fields', columns => $basetype.datacolumns} ] };
+: include 'generic/1col.tx' {update => 0, groups => [ {header => 'Fields', columns => $fields} ] };
+: include 'generic/across.tx' {update => 0, fields => $datacolumns };
 : include 'generic/okcancel.tx'
   </form>
 </div>
