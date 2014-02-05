@@ -11,27 +11,40 @@
 
 </head>
 <body>
-<h1>Jet Configuration</h1>
-<ul>
-	<li><a href="/jet/config">Nodes</a>
-</ul>
-<h2>Basetypes</h2>
-<div id="body">
-	<div id="typelist" class="left">
-		<ul>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+		  <a class="brand" href="#">Jet Configuration</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/jet/config">Nodes</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+<div id="body" class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+		    <ul class='nav navlist'>
+			  <li class="nav-header">Basetypes</li>
 : for $basetypes -> $basetype {
-          <li><a href="/jet/config/basetype/<: $basetype.name :>"><: $basetype.title :></a></li>
+              <li><a href="/jet/config/basetype/<: $basetype.name :>"><: $basetype.title :></a></li>
 : }
-		</ul>
-	</div>
-	<div id="bread" class="main">
+		    </ul>
+	      </div>
+	    </div><!-- span3-->
+	    <div id="bread" class='main span9'>
 : if ($current_basetype) {
 :	include 'basetype/jet/config/basetype_edit.tx' {basetype => $current_basetype}
 : }
-	</div>
+	    </div><!-- span9-->
+	  </div>
 </div>
 
 <script src='http://code.jquery.com/jquery-1.10.0.min.js' type="text/javascript"></script>
+<script src='/js/bootstrap.js' type="text/javascript"></script>
 <script src='http://code.jquery.com/ui/1.10.3/jquery-ui.min.js' type="text/javascript"></script>
 <script src='/js/jquery.cookie.js' type="text/javascript"></script>
 
