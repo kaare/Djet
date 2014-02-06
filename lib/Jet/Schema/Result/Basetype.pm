@@ -213,6 +213,28 @@ has fields => (
 	lazy_build => 1,
 );
 
+=head2 dfv
+
+The Data::Form::Validator init hash
+
+=cut
+
+has dfv => (
+	isa => 'HashRef',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return {
+			optional => $self->fields->fieldnames,
+			filters  => 'trim',
+			field_filters => { },
+			constraint_methods => { },
+		};
+	},
+	writer => 'set_dfv',
+);
+
 =head2 validator
 
 The Basetype validator
@@ -299,15 +321,7 @@ The validator is a  Jet::Data::Validator and is used by (data)nodes to validate 
 
 sub _build_validator {
 	my $self= shift;
-	my $dfv= {
-		optional => [], # $self->fields->fieldnames,
-		filters  => 'trim',
-		field_filters => { },
-		constraint_methods => { },
-	};
-
-	my $validator = Jet::Data::Validator->new(dfv => $dfv);
-	return $validator;
+	return Jet::Data::Validator->new(dfv => $self->dfv);
 }
 
 __PACKAGE__->meta->make_immutable;

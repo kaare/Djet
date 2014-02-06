@@ -1,6 +1,7 @@
 package Jet::Role::Update::Basetype;
 
 use MooseX::MethodAttributes::Role;
+use List::MoreUtils qw{ any };
 
 =head1 NAME
 
@@ -15,6 +16,23 @@ Handles create and edit functionality of basetypes for Jet Engines
 with 'Jet::Role::Update';
 
 requires qw/edit edit_validation edit_update edit_create/;
+
+=head1 ATTRIBUTES
+
+=head2 edit_cols
+
+Names of columns that will be edited in the engine itself
+
+=cut
+
+has edit_cols => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	lazy => 1,
+	default => sub { [qw/datacolumns searchable/] },
+);
+
+=head1 METHODS
 
 =head2 set_base_object
 
@@ -36,18 +54,44 @@ Get the validator for the object
 sub get_validator {
 	my $self = shift;
 	my $basetype = $self->object;
+	my $colnames = $self->get_colnames;
+	my $required = [ qw/name title/ ];
+	my $optional = [ grep {my $colname = $_;!any{ $colname eq $_ } @$required } @$colnames ];
+	my $dfv = {
+		required => $required,
+		optional => [],
+		filters  => 'trim',
+		field_filters => { },
+		constraint_methods => { },
+	};
+	$basetype->set_dfv($dfv);
 	return $basetype->validator;
 }
 
-=head2 get_fieldnames
+=head2 datacolumns
 
-Get the fieldnames of the object
+Get the datacolumns from input data
 
 =cut
 
-sub get_fieldnames {
-	my $self = shift;
-	return [ $self->object->result_source->columns ];
+sub datacolumns {
+	my ($self, $input_data) = @_;
+	my $prefix = 'datacolumn'; # XXX
+	my $params = $self->request->request->body_parameters;
+	my $rows = $self->find_rows_from_params($prefix, $params);
+	return [ grep {$_->{name}} @$rows ];
+}
+
+=head2 searchable
+
+Get the searchable from input data
+
+=cut
+
+sub searchable {
+	my ($self, $input_data, $data) = @_;
+	my $datacolumns = $data->{datacolumns};
+	return [ map {$_->{name}} grep {$_->{searchable}} @$datacolumns ];
 }
 
 =head2 get_resultset
@@ -80,9 +124,6 @@ Return the path to be redirected to after a successful update.
 
 sub redirect_to {
 	my $self = shift;
-warn 1;
-warn $self->object->name;
-warn 2;
 	return '/jet/config/basetype/' . $self->object->name;
 }
 

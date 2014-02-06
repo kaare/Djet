@@ -64,7 +64,7 @@ has profile => (
 		my $self = shift;
 		my $dfv = $self->dfv;
 		$dfv->{msgs} = sub {
-			Data::FormValidator::ErrMsgs::Combine->error_msgs(@_, {
+			$self->error_msgs(@_, {
 				$self->msgs,
 			});
 		};
@@ -89,6 +89,34 @@ sub validate {
 	delete $params->{save};
 	my $results = Data::FormValidator->check($params, $self->profile);
 	return $results;
+}
+
+=head1 METHODS
+
+=head2 error_msgs
+
+=cut
+
+sub error_msgs {
+	my ($self, $results, $defaults) = @_;
+	$defaults ||= {};
+	$results->{msgs} ||= {};
+
+	if ($results->has_invalid) {
+		my $invalids=$results->invalid;
+		foreach my $field (keys %$invalids) {
+			$results->{msgs}->{$field}=join ' ', grep { defined } @{$results->{msgs}->{$field} || []}, map { $defaults->{$_} || undef } @{$invalids->{$field}};
+		}
+	}
+
+	if ($results->has_missing) {
+		my $missings=$results->missing;
+		foreach my $field (@$missings) {
+			$results->{msgs}->{$field}= $defaults->{$field};
+		}
+	}
+
+	return $results->{msgs};
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -16,6 +16,23 @@ with 'Jet::Role::Update';
 
 requires qw/edit edit_validation edit_update edit_create/;
 
+=head1 ATTRIBUTES
+
+=head2 edit_cols
+
+Names of columns that will be edited in the engine itself
+
+=cut
+
+has edit_cols => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	lazy => 1,
+	default => sub { [qw/datacolumns/] },
+);
+
+=head1 METHODS
+
 =head2 set_base_object
 
 Set the object to the basenode
@@ -49,6 +66,18 @@ sub get_fieldnames {
 	my $self = shift;
 	my $fields = $self->object->fields;
 	return $fields->fieldnames;
+}
+
+=head2 datacolumns
+
+Get the datacolumns from input data
+
+=cut
+
+sub datacolumns {
+	my ($self, $input_data) = @_;
+	my $fieldnames = $self->get_fieldnames;
+	return { map { $_ => $input_data->{$_} } @$fieldnames };
 }
 
 =head2 get_resultset

@@ -1,7 +1,7 @@
 package Jet::Role::Update;
 
 use MooseX::MethodAttributes::Role;
-use List::MoreUtils qw{ uniq };
+use List::MoreUtils qw{ any uniq };
 
 =head1 NAME
 
@@ -194,10 +194,10 @@ sub edit_failed_validation {
 	$self->stash->{msgs} //= {};
 	@{ $self->stash->{msgs} }{ keys %msgs } = values %msgs;
 
-	$self->logger->debug("Failed validation:\n\t" . join ("\n\t" , map {$_ . ' => ' . $msgs{$_}} keys %msgs)) if %msgs;
+	$self->log->debug("Failed validation:\n\t" . join ("\n\t" , map {$_ . ' => ' . $msgs{$_}} keys %msgs)) if %msgs;
 	my $node_type = $self->get_base_name;
 	my $error = "Could not save $node_type information - see detailed information by positioning your mouse over the fields marked with orange background (same as this box) in the table below:";
-	$self->logger->error($error);
+	$self->log->error($error);
 	$self->stash->{message} ||= $error;
 }
 
@@ -211,15 +211,12 @@ sub edit_update {
 	my ($self, $validation)=@_;
 
 	my $object = $self->object;
-	my @fieldnames = @{$self->get_fieldnames};
-
-	my $datacolumns;
-	foreach my $fieldname (sort @fieldnames) {
-		my $value = $validation->valid->{$fieldname};
-		$datacolumns->{$fieldname} = $value
-	}
-
-	$object->update({datacolumns => $datacolumns});
+	my $colnames = $self->get_colnames;
+	my $input_data = $validation->valid;
+	my $data = { map { $_ => delete $input_data->{$_} } @$colnames };
+	my $edit_cols = $self->edit_cols;
+	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
+	$object->update($data);
 	$object->discard_changes; # Necessary to keep db and dbic in sync
 }
 
@@ -318,9 +315,8 @@ Group the parameter values into rows and return as a list
 =cut
 
 sub find_rows_from_params {
-	my ($self, $prefix) = @_;
+	my ($self, $prefix, $params) = @_;
 	my @list;
-	my $params = $self->request->request->body_parameters;
 	for my $key (keys %{ $params }) {
 		if ($key =~ /$prefix\_(\d+)_(.+)/) {
 			my $rowno = $1;
@@ -329,6 +325,18 @@ sub find_rows_from_params {
 		}
 	}
 	return \@list;
+}
+
+=head2 get_colnames
+
+Get the colnames of the object
+
+=cut
+
+sub get_colnames {
+	my $self = shift;
+	my $edit_cols = $self->edit_cols;
+	return [ grep {my $colname = $_;!any {$colname eq $_} @$edit_cols, qw/id created modified/} $self->object->result_source->columns ];
 }
 
 1;

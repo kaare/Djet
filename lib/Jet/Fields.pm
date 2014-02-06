@@ -8,8 +8,6 @@ use JSON;
 
 use Jet::Field;
 
-with 'Jet::Role::Log';
-
 =head1 NAME
 
 Jet::Fields - Jet Fields Base Class

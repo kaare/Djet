@@ -87,7 +87,7 @@ sub _build_basetype_fields {
 			updatable => 1,
 		},
 		{
-			title => 'title',
+			name => 'title',
 			title => 'Title',
 			type => 'Str',
 			value => $current_basetype->title,
@@ -108,9 +108,6 @@ sub _build_basetype_fields {
 			updatable => 1,
 		},
 	];
-use Data::Dumper;
-warn Dumper $current_basetype->searchable;
-warn ref $current_basetype->datacolumns;
 	my $datacolumns = {
 		prefix => 'datacolumn',
 		header => [qw/Name Title Type Searchable Required/],
