@@ -18,12 +18,6 @@ body {
     float: left;
 }
 
-#bread {
-    width: 84%;
-	background: #f3f3f3;
-    float: right;
-}
-
 /* Html Editor */
 
 .editHtml {
