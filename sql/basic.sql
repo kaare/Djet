@@ -16,11 +16,11 @@ INSERT INTO basetype (name,title) VALUES ('not_found', 'Not Found');
 
 -- Data Nodes
 
-INSERT INTO data_node (basetype_id,part,name,title) VALUES (1,'','Root','Root Directory');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (1,1,'jet','Jet Base Directory','Jet Base Directory');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (2, 1,'config','Jet Configuration', 'Jet Configuration');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (3, 3,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes');
-INSERT INTO data_node (basetype_id,part,name,title) VALUES (4,'not_found','not_found','Not Found');
+INSERT INTO data_node (basetype_id,part,name,title,datacolumns) VALUES (1,'','Root','Root Directory','[]');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (1,1,'jet','Jet Base Directory','Jet Base Directory','[]');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (2, 1,'config','Jet Configuration', 'Jet Configuration','[]');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (3, 3,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes','[]');
+INSERT INTO data_node (basetype_id,part,name,title,datacolumns) VALUES (4,'not_found','not_found','Not Found','[]');
 
 -- INSERT INTO data_node (basetype_id,part,name,datacolumns) VALUES (6,'read','read','{read}');
 -- INSERT INTO data_node (basetype_id,part,name,datacolumns) VALUES (6,'write','write','{write}');

@@ -21,10 +21,10 @@ SET search_path TO jet, public;
 
 CREATE TABLE basetype (
 	id					serial NOT NULL PRIMARY KEY,
-	name					text UNIQUE,
-	title					text,
+	name					text NOT NULL UNIQUE,
+	title					text NOT NULL,
 	parent					int[],
-	datacolumns				json,
+	datacolumns				json NOT NULL default '[]',
 	searchable				text[],
 	handler					text,
 	template				text,
@@ -48,9 +48,9 @@ CREATE TABLE data (
 	basetype_id				int NOT NULL REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
-	name					text,
-	title					text,
-	datacolumns				json,
+	name					text NOT NULL,
+	title					text NOT NULL,
+	datacolumns				json NOT NULL default '[]',
 	fts						tsvector,
 	created					timestamp default now(),
 	modified				timestamp

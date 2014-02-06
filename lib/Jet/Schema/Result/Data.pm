@@ -44,21 +44,22 @@ The Basetype of the Data
 =head2 name
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 The name
 
 =head2 title
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 The Title
 
 =head2 datacolumns
 
   data_type: 'json'
-  is_nullable: 1
+  default_value: '[]'
+  is_nullable: 0
 
 The actual column data
 
@@ -94,11 +95,11 @@ __PACKAGE__->add_columns(
   "basetype_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "title",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "datacolumns",
-  { data_type => "json", is_nullable => 1 },
+  { data_type => "json", default_value => "[]", is_nullable => 0 },
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
   "created",
@@ -157,8 +158,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-16 05:14:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:332/8j1Y7bucqhWxMOompg
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-06 03:14:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2HNtVq6cjlF+PpF+2Xy3WQ
 
 use JSON;
 

@@ -36,14 +36,14 @@ __PACKAGE__->table("jet.basetype");
 =head2 name
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 Base Name - reference this in the app
 
 =head2 title
 
   data_type: 'text'
-  is_nullable: 1
+  is_nullable: 0
 
 Human readable title
 
@@ -57,7 +57,8 @@ Array of allowed parent basetypes
 =head2 datacolumns
 
   data_type: 'json'
-  is_nullable: 1
+  default_value: '[]'
+  is_nullable: 0
 
 The column definitions
 
@@ -105,13 +106,13 @@ __PACKAGE__->add_columns(
     sequence          => "jet.basetype_id_seq",
   },
   "name",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "title",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "parent",
   { data_type => "integer[]", is_nullable => 1 },
   "datacolumns",
-  { data_type => "json", is_nullable => 1 },
+  { data_type => "json", default_value => "[]", is_nullable => 0 },
   "searchable",
   { data_type => "text[]", is_nullable => 1 },
   "handler",
@@ -173,8 +174,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-28 09:33:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9FWUCVL2HAtjzeGV2pPTXA
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-06 03:14:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HwMYkIP76Z5GBklGw9SWzA
 
 use JSON;
 use Moose;
