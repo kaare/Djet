@@ -14,7 +14,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-		  <a class="brand" href="#">Jet Configuration</a>
+		  <a class="brand" href="/">Jet</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li><a href="/jet/config">Nodes</a></li>
