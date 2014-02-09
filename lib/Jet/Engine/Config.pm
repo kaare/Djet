@@ -4,7 +4,7 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine';
-with qw/Jet::Role::Update::Node Jet::Role::Log/;
+with qw/Jet::Role::Update::Node Jet::Role::Treeview Jet::Role::Log/;
 
 =head1 NAME
 
@@ -27,12 +27,6 @@ has _parts => (
 	is		=> 'ro',
 	isa		=> 'ArrayRef',
 	parts => [
-#		{'Jet::Part::Basenode' => 'jet_basenode'},
-#		{
-#			module => 'Jet::Part::Children',
-#			alias  => 'jet_children',
-#			type => 'json',
-#		},
 	],
 );
 
@@ -46,13 +40,18 @@ Control what to send when it's Jet config
 
 before data => sub {
 	my $self = shift;
-	$self->edit;
-	$self->stash->{node} = $self->basenode;
-	$self->stash->{request} = $self->request;
-
-	# Return
 	my $response = $self->response;
-	$response->template('basetype/jet/config/basenode_edit.tx');
+	my $stash = $self->stash;
+	if ($self->response->data_nodes->rest_path eq '_jet_config') {
+		$self->edit;
+		$stash->{node} = $self->basenode;
+		$stash->{request} = $self->request;
+
+		# Return
+		$response->template('basetype/jet/config/basenode_edit.tx');
+	} else {
+		$response->template('basetype/jet/config.tx');
+	}
 };
 
 =head2 edit_updated
