@@ -50,6 +50,8 @@ sub take_off {
 	my $path = $request->request->path_info;
 	my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
 	my $basenode = $data_nodes->first;
+	my $rest_path = $data_nodes->rest_path;
+	$schema->log->debug('Found node ' . $basenode->name . ' and rest path' . $rest_path);
 	my $stash = {request => $request};
 	my $response = Jet::Response->new(
 		stash  => $stash,
@@ -59,10 +61,11 @@ sub take_off {
 	);
 	try {
 		# See if we want to use the config basetype
-		my $engine_basetype = $data_nodes->rest_path eq '_jet_config' ?
+		my $engine_basetype = $rest_path eq '_jet_config' ?
 			$schema->basetypes->{$config->{config}{jet_config}{basetype_id}} :
 			$basenode->basetype;
 		my $engine_class = $engine_basetype->class;
+		$schema->log->debug('Class: ' . $engine_basetype->name . ' found');
 
 		my $engine = $engine_class->new(
 			stash => $stash,
