@@ -1,0 +1,7 @@
+<div id="basenode">
+  <h2><: $node.get_column('title') :></h2>
+  <form method="post" id="edit-basenode" action="<: $request.request.path_info :>">
+: include 'generic/1col.tx' {update => 0, groups => [ { columns => [ {type => 'Str', title => 'Basetype', value => $node.basetype.name } ] }, {header => 'Fields', columns => $node.datacolumns.fields} ] };
+: include 'generic/okcancel.tx'
+  </form>
+</div>

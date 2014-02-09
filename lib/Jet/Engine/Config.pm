@@ -52,7 +52,7 @@ before data => sub {
 
 	# Return
 	my $response = $self->response;
-	$response->template('config/basenode.tx');
+	$response->template('basetype/jet/config/basenode_edit.tx');
 };
 
 =head2 edit_updated
