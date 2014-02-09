@@ -4,7 +4,7 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine';
-with qw/Jet::Role::Update::Node Jet::Role::Treeview Jet::Role::Log/;
+with qw/Jet::Role::Update::Node Jet::Role::Treeview Jet::Role::Config::Topmenu Jet::Role::Log/;
 
 =head1 NAME
 
@@ -50,7 +50,8 @@ before data => sub {
 		# Return
 		$response->template('basetype/jet/config/basenode_edit.tx');
 	} else {
-		$response->template('basetype/jet/config.tx');
+		$stash->{topmenu} = $self->topmenu;
+		$response->template('/config/basenode.tx');
 	}
 };
 

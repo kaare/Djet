@@ -24,9 +24,10 @@
           <a class="navbar-brand" href="/">Jet</a>
         </div>
         <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="/jet/config">Nodes</a></li>
-            <li class="active"><a href="/jet/config/basetype">Basetypes</a></li>
+			<ul class="nav navbar-nav">
+: for $topmenu -> $menuitem {
+			<li <: if $menuitem.active { ' class="active"' | raw } :>><a href="<: $menuitem.link :>"><: $menuitem.title :></a></li>
+: }
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -48,9 +49,6 @@
 : } # leftside
 	    <div class='main col-sm-9'>
 : block content -> {
-: if ($current_basetype) {
-:   include 'basetype/jet/config/basetype_edit.tx' {basetype => $current_basetype}
-: }
 : } # content
 	    </div><!-- span9-->
 	  </div>

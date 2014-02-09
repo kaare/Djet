@@ -4,7 +4,7 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine';
-with qw/Jet::Role::Update::Basetype Jet::Role::Log/;
+with qw/Jet::Role::Update::Basetype Jet::Role::Config::Topmenu Jet::Role::Log/;
 
 =head1 DESCRIPTION
 
@@ -61,13 +61,15 @@ Find the data to put on stash
 
 sub edit_view {
 	my $self = shift;
-	$self->stash->{request} = $self->request;
+	my $stash = $self->stash;
+	$stash->{topmenu} = $self->topmenu(1);
+	$stash->{request} = $self->request;
 	my $nodes = $self->response->data_nodes;
 	my @basetypes = $self->schema->resultset('Basetype')->search(undef, {order_by => 'id'});
-	$self->stash->{basetypes} = [ @basetypes ];
+	$stash->{basetypes} = [ @basetypes ];
 	if ($self->has_object) {
-		$self->stash->{title} ||= $self->object->title;
-		$self->stash->{current_basetype} = $self->object;
+		$stash->{title} ||= $self->object->title;
+		$stash->{current_basetype} = $self->object;
 		$self->_build_basetype_fields($self->object);
 	}
 
