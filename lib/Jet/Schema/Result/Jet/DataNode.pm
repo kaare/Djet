@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::DataNode;
+package Jet::Schema::Result::Jet::DataNode;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::DataNode
+Jet::Schema::Result::Jet::DataNode
 
 =cut
 
@@ -131,8 +131,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-01-23 08:05:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zoEKa1vr93S4wonQksgx0g
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-10 09:48:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R+3RIOuGRJtem0Mo1ZVKDQ
 
 use JSON;
 
@@ -159,7 +159,7 @@ The node's basetype
 =cut
 
 has basetype => (
-	isa => 'Jet::Schema::Result::Basetype',
+	isa => 'Jet::Schema::Result::Jet::Basetype',
 	is => 'ro',
 	default	=> sub {
 		my $self = shift;
@@ -186,7 +186,7 @@ sub render_template {
 	return 'basetype/' . $node_path . $schema->config->config->{template_suffix};
 }
 
-# NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Node, as dbicdump didn't find them
+# NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Node, as dbicdump didn't find them
 
 =head1 PRIMARY KEY
 
@@ -206,13 +206,13 @@ __PACKAGE__->set_primary_key("node_id");
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Node>
+Related object: L<Jet::Schema::Result::Jet::Node>
 
 =cut
 
 __PACKAGE__->has_many(
   "nodes",
-  "Jet::Schema::Result::DataNode",
+  "Jet::Schema::Result::Jet::DataNode",
   { "foreign.parent_id" => "self.node_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -221,13 +221,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Node>
+Related object: L<Jet::Schema::Result::Jet::Node>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "parent",
-  "Jet::Schema::Result::Node",
+  "Jet::Schema::Result::Jet::Node",
   { node_id => "parent_id" },
   {
 	is_deferrable => 0,
@@ -238,7 +238,6 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->meta->make_immutable;
-1;
 
 # COPYRIGHT
 

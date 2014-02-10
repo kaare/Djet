@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Data;
+package Jet::Schema::Result::Jet::Data;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Data - Data
+Jet::Schema::Result::Jet::Data - Data
 
 =cut
 
@@ -131,13 +131,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Basetype>
+Related object: L<Jet::Schema::Result::Jet::Basetype>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "basetype",
-  "Jet::Schema::Result::Basetype",
+  "Jet::Schema::Result::Jet::Basetype",
   { id => "basetype_id" },
   { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
@@ -146,20 +146,20 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Node>
+Related object: L<Jet::Schema::Result::Jet::Node>
 
 =cut
 
 __PACKAGE__->has_many(
   "nodes",
-  "Jet::Schema::Result::Node",
+  "Jet::Schema::Result::Jet::Node",
   { "foreign.data_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-06 03:14:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2HNtVq6cjlF+PpF+2Xy3WQ
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-10 09:48:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ugp5KfRymZj/VhCZllv3cA
 
 use JSON;
 
@@ -171,8 +171,7 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 });
 
 __PACKAGE__->meta->make_immutable;
+
 1;
 
 # COPYRIGHT
-
-__END__

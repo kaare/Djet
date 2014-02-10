@@ -54,7 +54,7 @@ my $request = Jet::Request->new(
 );
 my $config = $schema->config;
 my $path = $request->request->path_info;
-my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
+my $data_nodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
 my $basenode = $data_nodes->first;
 my $stash = {request => $request};
 ok(my $response = Jet::Response->new(

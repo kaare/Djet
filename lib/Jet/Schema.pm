@@ -50,7 +50,7 @@ has basetypes => (
 	isa => 'HashRef',
 	default => sub {
 		my $self = shift;
-		return { map { $_->id =>  $_} $self->resultset('Basetype')->search };
+		return { map { $_->id =>  $_} $self->resultset('Jet::Basetype')->search };
 	},
 	lazy => 1,
 );

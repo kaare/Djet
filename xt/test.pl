@@ -43,12 +43,12 @@ sub wanted {
 	$ldir =~ s/^\///;
 	$ldir =~ s/\//./g;
 	$ldir =~ s/[-@]/_/g;
-	my $parent = $schema->resultset('DataNode')->find({node_path => $ldir, basetype_id => 2});
-	my $node = $schema->resultset('DataNode')->create({
+	my $parent = $schema->resultset('Jet::DataNode')->find({node_path => $ldir, basetype_id => 2});
+	my $node = $schema->resultset('Jet::DataNode')->create({
 		basetype_id => 3,
 		parent_id => $parent ? $parent->node_id : undef,
 		part => $lname,
-	}) unless $schema->resultset('DataNode')->find({node_path => $lname, basetype_id => 3});
+	}) unless $schema->resultset('Jet::DataNode')->find({node_path => $lname, basetype_id => 3});
 
 }
 
@@ -63,8 +63,8 @@ warn $lname;
 	$ldir =~ s/^\///;
 	$ldir =~ s/\//./g;
 	$ldir =~ s/[-@]/_/g;
-	my $parent = $schema->resultset('DataNode')->find({node_path => $ldir, basetype_id => 2});
-	my $node = $schema->resultset('DataNode')->create({
+	my $parent = $schema->resultset('Jet::DataNode')->find({node_path => $ldir, basetype_id => 2});
+	my $node = $schema->resultset('Jet::DataNode')->create({
 		basetype_id => 2,
 		parent_id => $parent ? $parent->node_id : undef,
 		part => $lname,

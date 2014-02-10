@@ -88,7 +88,7 @@ Get the resultset to be used for creating objects
 
 sub get_resultset {
 	my $self = shift;
-	return $self->schema->resultset('DataNode');
+	return $self->schema->resultset('Jet::DataNode');
 }
 
 =head2 get_base_name

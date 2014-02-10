@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Basetype;
+package Jet::Schema::Result::Jet::Basetype;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Basetype - Node Base Type
+Jet::Schema::Result::Jet::Basetype - Node Base Type
 
 =cut
 
@@ -162,20 +162,20 @@ __PACKAGE__->add_unique_constraint("basetype_name_key", ["name"]);
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Data>
+Related object: L<Jet::Schema::Result::Jet::Data>
 
 =cut
 
 __PACKAGE__->has_many(
   "datas",
-  "Jet::Schema::Result::Data",
+  "Jet::Schema::Result::Jet::Data",
   { "foreign.basetype_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-06 03:14:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HwMYkIP76Z5GBklGw9SWzA
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-10 09:48:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eLj3pDCr/JQdxXDmo+hmsg
 
 use JSON;
 use Moose;
@@ -327,5 +327,3 @@ sub _build_validator {
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
-
-__END__

@@ -1,4 +1,4 @@
-package Jet::Schema::ResultSet::DataNode;
+package Jet::Schema::ResultSet::Jet::DataNode;
 use base 'DBIx::Class::ResultSet';
 
 use Moose;

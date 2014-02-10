@@ -65,7 +65,7 @@ sub edit_view {
 	$stash->{topmenu} = $self->topmenu(1);
 	$stash->{request} = $self->request;
 	my $nodes = $self->response->data_nodes;
-	my @basetypes = $self->schema->resultset('Basetype')->search(undef, {order_by => 'id'});
+	my @basetypes = $self->schema->resultset('Jet::Basetype')->search(undef, {order_by => 'id'});
 	$stash->{basetypes} = [ @basetypes ];
 	if ($self->has_object) {
 		$stash->{title} ||= $self->object->title;

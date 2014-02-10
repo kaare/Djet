@@ -56,7 +56,7 @@ has request => (
 	/],
 );
 has basenode => (
-	isa => 'Jet::Schema::Result::DataNode',
+	isa => 'Jet::Schema::Result::Jet::DataNode',
 	is => 'ro',
 );
 has response => (

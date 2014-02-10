@@ -47,7 +47,7 @@ The node "stack"
 =cut
 
 has data_nodes  => (
-	isa => 'Jet::Schema::ResultSet::DataNode',
+	isa => 'Jet::Schema::ResultSet::Jet::DataNode',
 	is => 'ro',
 );
 
@@ -58,7 +58,7 @@ The node we're looking at
 =cut
 
 has basenode => (
-	isa => 'Jet::Schema::Result::DataNode',
+	isa => 'Jet::Schema::Result::Jet::DataNode',
 	is => 'ro',
 );
 

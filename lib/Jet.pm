@@ -48,7 +48,7 @@ sub take_off {
 	my $schema = $request->schema;
 	my $config = $schema->config;
 	my $path = $request->request->path_info;
-	my $data_nodes = $schema->resultset('DataNode')->find_basenode($path);
+	my $data_nodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
 	my $basenode = $data_nodes->first;
 	my $rest_path = $data_nodes->rest_path;
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path' . $rest_path);
