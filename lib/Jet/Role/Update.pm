@@ -213,7 +213,7 @@ sub edit_update {
 	my $object = $self->object;
 	my $colnames = $self->get_colnames;
 	my $input_data = $validation->valid;
-	my $data = { map { $_ => delete $input_data->{$_} } @$colnames };
+	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
 	$object->update($data);
