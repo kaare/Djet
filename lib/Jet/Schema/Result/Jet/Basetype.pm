@@ -282,6 +282,7 @@ sub _build_fields {
 	my @fieldnames;
 	for my $column (@{ $columns }) {
 		my $colname = $column->{name};
+		my $coltitle = $column->{title};
 		my $coltype = $column->{type};
 		my $traits =  $column->{traits};
 		push @fieldnames, $colname;
@@ -293,7 +294,8 @@ sub _build_fields {
 				my $cols = $self->datacolumns;
 				my %params = (
 					value => $cols->{$colname},
-					title => $colname,
+					name => $colname,
+					title => $coltitle,
 				);
 				$params{type} = $coltype if $coltype;
 				return $traits ?

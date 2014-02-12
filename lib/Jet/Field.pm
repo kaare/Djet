@@ -26,6 +26,17 @@ has type => (
 	default => 'Text',
 );
 
+=head2 name
+
+The field's name
+
+=cut
+
+has name => (
+	is => 'ro',
+	isa => 'Str',
+);
+
 =head2 title
 
 The field's title
