@@ -3,8 +3,8 @@ package Jet::Engine::Config;
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine';
-with qw/Jet::Role::Update::Node Jet::Role::Treeview Jet::Role::Config::Topmenu Jet::Role::Log/;
+extends 'Jet::Engine::Default';
+with qw/Jet::Role::Update::Node Jet::Role::Config::Topmenu/;
 
 =head1 NAME
 
@@ -14,21 +14,9 @@ Jet::Engine - Configure Jet
 
 Jet::Engine::Config configures Jet data and nodes.
 
+It includes the roles L<Jet::Role::Update::Node> and L<Jet::Role::Config::Topmenu>.
+
 =head1 ATTRIBUTES
-
-=head2 parts
-
-This is the engine parts
-
-=cut
-
-has _parts => (
-	traits	=> [qw/Jet::Trait::Engine/],
-	is		=> 'ro',
-	isa		=> 'ArrayRef',
-	parts => [
-	],
-);
 
 =head1 METHODS
 
@@ -38,7 +26,7 @@ Control what to send when it's Jet config
 
 =cut
 
-before data => sub {
+after data => sub {
 	my $self = shift;
 	my $response = $self->response;
 	my $stash = $self->stash;

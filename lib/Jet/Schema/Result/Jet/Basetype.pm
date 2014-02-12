@@ -189,14 +189,15 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 
 =head1 ATTRIBUTES
 
-=head2 class
+=head2 engine
 
-The Basetype class
+The Basetype class. It might take a while to build an engine, so it's cached here.
+
+The engine meta, that is.
 
 =cut
 
-has class => (
-	isa => 'Jet::Engine::Runtime',
+has engine => (
 	is => 'ro',
 	lazy_build => 1,
 );
@@ -249,17 +250,18 @@ has validator => (
 
 =head1 METHODS
 
-=head2 _build_class
+=head2 _build_engine
 
 Build the handler class for the basetype
 
 =cut
 
-sub _build_class {
+sub _build_engine {
 	my $self= shift;
 	my $handler = $self->handler || 'Jet::Engine::Default';
-	my $meta_class = Moose::Meta::Class->create('Jet::Engine::Runtime',superclasses => [$handler]);
-	return $meta_class->new_object;
+	eval "require $handler" or die $@;
+
+	return $handler->meta->new_object;
 }
 
 =head2 _build_fields
