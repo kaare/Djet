@@ -1,7 +1,7 @@
 -- Public functions
 
-CREATE LANGUAGE plperl;
-CREATE extension prefix;
+CREATE OR REPLACE LANGUAGE plperl;
+CREATE extension IF NOT EXISTS prefix;
 
 BEGIN;
 
