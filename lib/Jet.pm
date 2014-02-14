@@ -51,7 +51,7 @@ sub take_off {
 	my $data_nodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
 	my $basenode = $data_nodes->first;
 	my $rest_path = $data_nodes->rest_path;
-	$schema->log->debug('Found node ' . $basenode->name . ' and rest path' . $rest_path);
+	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
 	my $stash = {request => $request};
 	my $response = Jet::Response->new(
 		stash  => $stash,

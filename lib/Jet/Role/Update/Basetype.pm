@@ -56,10 +56,10 @@ sub get_validator {
 	my $basetype = $self->object;
 	my $colnames = $self->get_colnames;
 	my $required = [ qw/name title/ ];
-	my $optional = [ grep {my $colname = $_;!any{ $colname eq $_ } @$required } @$colnames ];
+	my $optional = [ grep {my $colname = $_;!any{ $colname eq $_ } @$required, 'parent' } @$colnames ];
 	my $dfv = {
 		required => $required,
-		optional => [],
+		optional => $optional,
 		filters  => 'trim',
 		field_filters => { },
 		constraint_methods => { },
