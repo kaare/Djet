@@ -3,28 +3,14 @@ package Jet::Engine::Basetype;
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine';
-with qw/Jet::Role::Update::Basetype Jet::Role::Config::Topmenu Jet::Role::Log/;
+extends 'Jet::Engine::Default';
+with qw/Jet::Role::Update::Basetype Jet::Role::Config::Topmenu/;
 
 =head1 DESCRIPTION
 
 Jet::Engine::Basetype configures Jet basetypes.
 
 =head1 ATTRIBUTES
-
-=head2 parts
-
-This is the engine parts
-
-=cut
-
-has _parts => (
-	traits	=> [qw/Jet::Trait::Engine/],
-	is		=> 'ro',
-	isa		=> 'ArrayRef',
-	parts => [
-	],
-);
 
 =head1 METHODS
 

@@ -14,27 +14,9 @@ Jet::Engine - Default Jet Engine
 
 Jet::Engine::Default is the basic Jet Engine.
 
-=head1 ATTRIBUTES
-
-=head2 parts
-
-This is the engine parts
+It includes the roles L<Jet::Role::Treeview> and L<Jet::Role::Log>.
 
 =cut
-
-has _parts => (
-	traits	=> [qw/Jet::Trait::Engine/],
-	is		=> 'ro',
-	isa		=> 'ArrayRef',
-	parts => [
-		{'Jet::Part::Basenode' => 'jet_basenode'},
-		{
-			module => 'Jet::Part::Children',
-			alias  => 'jet_children',
-			type => 'json',
-		},
-	],
-);
 
 __PACKAGE__->meta->make_immutable;
 

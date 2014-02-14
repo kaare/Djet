@@ -4,8 +4,6 @@ use 5.010;
 use Moose;
 use namespace::autoclean;
 
-use Jet::Engine::Control;
-
 with qw/Jet::Role::Log/;
 
 =head1 NAME
@@ -22,14 +20,10 @@ extends 'Jet::Engine';
 
 =head1 ATTRIBUTES
 
+=head2 stash
+
 =cut
 
-has control => (
-	isa => 'Jet::Engine::Control',
-	is => 'ro',
-	lazy => 1,
-	default => sub { Jet::Engine::Control->new },
-);
 has stash => (
 	isa => 'HashRef',
 	traits => ['Hash'],
@@ -41,6 +35,11 @@ has stash => (
 		clear_stash => 'clear',
 	},
 );
+
+=head2 request
+
+=cut
+
 has request => (
 	isa => 'Jet::Request',
 	is => 'ro',
@@ -52,39 +51,24 @@ has request => (
 		log
 	/],
 );
+
+=head2 basenode
+
+=cut
+
 has basenode => (
 	isa => 'Jet::Schema::Result::Jet::DataNode',
 	is => 'ro',
 );
+
+=head2 response
+
+=cut
+
 has response => (
 	isa => 'Jet::Response',
 	is => 'ro',
 );
-
-=head2 arguments
-
-This is the set of arguments for this engine
-
-=cut
-
-has 'arguments' => (
-	isa => 'HashRef',
-	is => 'ro',
-);
-
-sub _run {
-	my ($self, $stage) = @_;
-	my $vstage = '_' . $stage;
-	for my $method ($self->$vstage) {
-		my $omitmethod = "first$vstage";
-		last if $self->control->first_skip( sub { $stage } );
-		next if $self->control->omit->$omitmethod( sub { $method } );
-
-		$self->log->debug("Executing method $method in stage $stage");
-		$self->$method;
-	}
-	return 1;
-}
 
 =head1 METHODS
 
@@ -94,10 +78,7 @@ Engine initialization stuff
 
 =cut
 
-sub init {
-	my $self = shift;
-	$self->_run('init');
-}
+sub init { }
 
 =head2 data
 
@@ -105,10 +86,7 @@ Process data
 
 =cut
 
-sub data {
-	my $self = shift;
-	$self->_run('data');
-}
+sub data { }
 
 =head2 set_renderer
 
@@ -136,7 +114,6 @@ sub render {
 	my $response = $self->response;
 	my $basenode = $response->basenode;
 	$response->template($basenode->render_template) unless $response->_has_template;
-	$self->_run('render');
 	$response->render;
 }
 
