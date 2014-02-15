@@ -47,6 +47,27 @@ sub find_basenode {
 	return $datanodes;
 }
 
+=head2 ft_search
+
+Do a full-text search on current resultset.
+
+params is either an arrayref or a text with search items
+
+=cut
+
+sub ft_search {
+	my ( $self, $params ) = @_;
+	my @words = ref $params eq 'ARRAY' ? @$params :
+		!ref $params ? split /\s+/, $params :
+		return $self; # We can't handle this
+
+	my $q = $self->schema->storage->sbh->quote( join '|',  @words );
+	return $self->search( {
+			fts => \"@@ to_tsquery( $q )",
+		}
+	);
+}
+
 1;
 
 # COPYRIGHT

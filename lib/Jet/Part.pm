@@ -18,26 +18,6 @@ requires qw/stash request basenode response/;
 
 no Moose::Role;
 
-=head1 METHODS
-
-=head2 init
-
-Template for the real parts
-
-=head2 data
-
-Template for the real parts
-
-=head2 render
-
-Template for the real parts
-
-=cut
-
-sub init {}
-sub data {}
-sub render {}
-
 1;
 
 # COPYRIGHT
