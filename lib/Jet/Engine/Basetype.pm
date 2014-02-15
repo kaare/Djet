@@ -129,7 +129,7 @@ sub _build_basetype_fields {
 				title => 'Searchable',
 				type => 'Boolean',
 				updatable => 1,
-				value => grep {$col->{name} eq $_} @{ $current_basetype->searchable },
+				value => grep {$col->{name} eq $_} @{ $current_basetype->searchable || [] },
 			},
 			{
 				name => 'required',

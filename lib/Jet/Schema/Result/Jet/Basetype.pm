@@ -227,6 +227,7 @@ has dfv => (
 	default => sub {
 		my $self = shift;
 		return {
+			required => [qw/title/],
 			optional => $self->fields->fieldnames,
 			filters  => 'trim',
 			field_filters => { },
