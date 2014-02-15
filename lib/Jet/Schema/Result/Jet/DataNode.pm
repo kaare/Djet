@@ -135,6 +135,7 @@ __PACKAGE__->add_columns(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R+3RIOuGRJtem0Mo1ZVKDQ
 
 use JSON;
+use Encode;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
@@ -142,7 +143,7 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
 	},
 	deflate=>sub {
-		return JSON->new->allow_nonref->encode(shift);
+		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
 });
 
