@@ -42,10 +42,33 @@ has tx => (
 				l => sub {
 					return loc(@_);
 				},
+				scale_image => sub {
+					return scale_image(@_)
+				},
 			},
 		);
 	},
 );
+
+=head2 scale_image
+
+Xslate function to scale image. Requires L<Plack::Middleware::Image::Scale>.
+
+Write something like
+
+  <: scale_image($product_image, '720x540') :>
+
+in the template.
+
+=cut
+
+sub scale_image {
+	my ($filename, $scale) = @_;
+	return '' unless $filename;
+
+	my ($name, $ext) = split /\./, $filename;
+	return $name . '_' . $scale . '.' . $ext;
+}
 
 =head1 METHODS
 
