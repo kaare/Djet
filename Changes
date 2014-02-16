@@ -2,6 +2,28 @@ Revision history for Jet
 
 {{$NEXT}}
 
+0.01 2014-2-16
+ - Removed most of the old stuff
+ - use PostgreSQL extension 'prefix'
+ - Use DBIC
+   and dbicdump, with a config file
+ - Jet::Engines and Jet::Parts
+ - Config (Config::JFDI) and Startup in an organized way
+ - Implement and abandon different ideas, including a "workflow" system and
+   different acl systems.
+   Also tried Bread::Board. Well, maybe some day...
+ - New logger (Log::Any)
+ - Add startup parameters to Jet. Environment parameters prefixed with JET_
+   will be passed to Jet::Config
+ - Config user interface for basetypes and nodes
+   Use jQuery fancytree
+ - Use bootstrap everywhere
+ - Use Text::Xslate
+   Components for editing, incl. a html5 editor
+ - Add HTTP::Throwable
+
+
+
 0.002 2011-11-19
   - Documentation
     Initial POD
