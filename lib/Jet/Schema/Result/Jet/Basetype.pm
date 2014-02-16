@@ -287,7 +287,7 @@ sub _build_fields {
 		my $colname = $column->{name};
 		my $coltitle = $column->{title};
 		my $coltype = $column->{type};
-		my $traits =  $column->{traits};
+		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
 		push @fieldnames, $colname;
 		$meta_class->add_attribute("__$colname" => (
 			reader  => $colname,
