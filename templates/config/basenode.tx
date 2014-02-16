@@ -23,9 +23,11 @@ function save_basenode(form) {
 		var thisname = $(this).attr('name');
 		var thishtml = $(this).html();
 		formdata = formdata + '&' + thisname + '=' + thishtml;
-		var d;
 	});
-	$.post( form.action, formdata, function( data ) {$('#basenode' ).html( data ); });
+	$.post( form.action, formdata, function( data ) {
+		$('#basenode' ).html( data );
+		$('#edit-basenode').submit(function() { save_basenode(this); return false } );
+	});
 }
 $(function(){
 	// Attach the dynatree widget to an existing <div id="tree"> element
