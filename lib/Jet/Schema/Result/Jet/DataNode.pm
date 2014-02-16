@@ -187,6 +187,23 @@ sub render_template {
 	return 'basetype/' . $node_path . $schema->config->config->{template_suffix};
 }
 
+# NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Data, as dbicdump didn't find them
+
+=head2 basetype
+
+Type: belongs_to
+
+Related object: L<Jet::Schema::Result::Jet::Basetype>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "basetype",
+  "Jet::Schema::Result::Jet::Basetype",
+  { id => "basetype_id" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
+);
+
 # NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Node, as dbicdump didn't find them
 
 =head1 PRIMARY KEY
