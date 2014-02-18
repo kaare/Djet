@@ -61,16 +61,16 @@ The schema is initialized with the connection info found in the config
 =cut
 
 has schema => (
-       isa => 'Jet::Schema',
-       is => 'ro',
-       default => sub {
-               my $self = shift;
-               my $connect_info = $self->config->config->{connect_info};
-	       die 'No database connection information' unless $connect_info && @$connect_info;
+   isa => 'Jet::Schema',
+   is => 'ro',
+   default => sub {
+	   my $self = shift;
+	   my $connect_info = $self->config->config->{connect_info};
+	   die 'No database connection information' unless $connect_info && @$connect_info;
 
-               my $schema = Jet::Schema->connect(@$connect_info);
-	       $schema->config($self->config);
-	       return $schema;
+	   my $schema = Jet::Schema->connect(@$connect_info);
+	   $schema->config($self->config);
+	   return $schema;
 	},
 	lazy => 1,
 );
