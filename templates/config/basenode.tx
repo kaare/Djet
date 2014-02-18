@@ -17,6 +17,24 @@
 <script src="/js/component/html.js"></script>
 
 <script type="text/javascript">
+function initLoadedForm() {
+	$('#edit-basenode').submit(function() { save_basenode(this); return false } );
+	$('.jet_file_chooser').fileTree({ script: '/public/images' }, function(file) {
+		var fa = file.split(/[/.]/);
+		var fa_length = fa.length;
+		var ext = fa[fa_length - 1];
+		if (typeof(ext) != 'undefined' && ext.match(/jpg|png/)) {
+			var imagename = '';
+			for (var i=2;i<fa_length - 1;i++) {
+				imagename = imagename + '/' + fa[i];
+			}
+			var thumbname = imagename + '_150x100.' + ext;
+			var imagename = imagename + '.' + ext;
+			$('.jet_file_image').attr('src', thumbname);
+			$('.jet_file_name').html(imagename);
+		}
+	});
+}
 function save_basenode(form) {
 	var formdata = $(form).serialize() + '&save=ok';
 	$('.htmlEditor').each(function() {
@@ -57,7 +75,7 @@ $(function(){
 			}).done(function( html ) {
 				$("#bread").html(html);
 				$('.editHtml a').click(function(e) { editHtml(this) } );
-				$('#edit-basenode').submit(function() { save_basenode(this); return false } );
+				initLoadedForm();
 			});
 			// remove working flag
 		}

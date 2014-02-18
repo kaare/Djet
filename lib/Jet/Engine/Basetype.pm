@@ -120,7 +120,7 @@ sub _build_basetype_fields {
 				name => 'type',
 				title => 'Type',
 				type => 'Enum',
-				enum => [qw/Boolean Enum Html Int Price Str/],
+				enum => [qw/Boolean Enum File Html Int Price Str/],
 				value => $col->{type},
 				updatable => 1,
 			},
@@ -156,7 +156,7 @@ sub _build_basetype_fields {
 			name => 'type',
 			title => 'Type',
 			type => 'Enum',
-			enum => [qw/Boolean Enum Html Int Price Str/],
+			enum => [qw/Boolean Enum File Html Int Price Str/],
 			updatable => 1,
 		},
 		{
