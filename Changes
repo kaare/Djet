@@ -1,6 +1,8 @@
 Revision history for Jet
 
 {{$NEXT}}
+ - Node import framework w/csv connector. To be used by applications.
+   Planned connectors: xls, ods
 
 0.01 2014-2-16
  - Removed most of the old stuff
