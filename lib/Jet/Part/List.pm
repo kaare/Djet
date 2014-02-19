@@ -70,7 +70,7 @@ after init => sub {
 sub _find_list {
 	my $self = shift;
 	my $options = {};
-	$options->{limit} = $self->limit if $self->has_limit;
+	$options->{rows} = $self->limit if $self->has_limit;
 	my $search = $self->schema->resultset('Jet::DataNode')->search($self->search, $options);
 	return $self->has_fts ? $search->ft_search($self->fts) : $search;
 }
