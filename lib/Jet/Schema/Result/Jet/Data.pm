@@ -18,6 +18,18 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=back
+
+=cut
+
+__PACKAGE__->load_components("InflateColumn::DateTime");
+
 =head1 TABLE: C<jet.data>
 
 =cut
@@ -158,8 +170,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-10 09:48:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ugp5KfRymZj/VhCZllv3cA
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-21 09:04:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jEEnGxnl7pYq07zdesl4lg
 
 use JSON;
 
