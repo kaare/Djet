@@ -61,7 +61,7 @@ sub ft_search {
 		!ref $params ? split /\s+/, $params :
 		return $self; # We can't handle this
 
-	my $q = $self->schema->storage->sbh->quote( join '|',  @words );
+	my $q = $self->result_source->schema->storage->dbh->quote( join '|',  @words );
 	return $self->search( {
 			fts => \"@@ to_tsquery( $q )",
 		}
