@@ -36,11 +36,12 @@ function initLoadedForm() {
 	});
 }
 function save_basenode(form) {
-	var formdata = $(form).serialize() + '&save=ok';
+	var formdata = $(form).find(':input').get();
 	$('.htmlEditor').each(function() {
 		var thisname = $(this).attr('name');
 		var thishtml = $(this).html();
-		formdata = formdata + '&' + thisname + '=' + thishtml;
+		var thiselm = $('<input>').attr({type: 'hidden', name: thisname}).val(thishtml);
+		formdata.push(thiselm[0]);
 	});
 	$.post( form.action, formdata, function( data ) {
 		$('#basenode' ).html( data );
