@@ -79,7 +79,15 @@ sub datacolumns {
 	my $prefix = 'datacolumn'; # XXX
 	my $params = $self->request->request->body_parameters;
 	my $rows = $self->find_rows_from_params($prefix, $params);
-	return [ grep {$_->{name}} @$rows ];
+
+	# Merge any existing values that are NOT in the web form
+	my $object = $self->object;
+	my $existing_datacolumns = $self->has_object ? { map {$_->{name} => $_}  @{ $object->datacolumns } } : {};
+	return [ map {
+		my $new_datacolumn = $_;
+		my $existing_datacolumn = $existing_datacolumns->{$new_datacolumn->{name}} // {};
+		+{ %$existing_datacolumn, %$new_datacolumn }
+	} grep {$_->{name}} @$rows ];
 }
 
 =head2 searchable
@@ -126,5 +134,19 @@ sub redirect_to {
 	my $self = shift;
 	return '/jet/config/basetype/' . $self->object->name;
 }
+
+=head2 edit_updated
+
+Use the new basetype upon successful update
+
+=cut
+
+before 'edit_updated' => sub {
+	my ($self, $validation)=@_;
+	my $basetypes = $self->schema->basetypes;
+	my $basetype_id = $self->object->id;
+	$basetypes->{$basetype_id} = $self->object;
+};
+
 
 1;
