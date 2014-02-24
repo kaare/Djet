@@ -11,12 +11,16 @@ Jet::Role::Breadcrumbs - put breadcrumbs on the stash
 
 =head2 data
 
+Places the data nodes in reverse order on the stash with key breadcrumbs.
+
+If the node's datatype has a breadcrumbs attribute, it will be omitted.
+
 =cut
 
 before data => sub {
 	my $self = shift;
 	my $stash = $self->stash;
-	$stash->{breadcrumbs} = [ reverse $self->response->data_nodes->all ];
+	$stash->{breadcrumbs} = [ reverse grep {!$_->basetype->attributes->{breadcrumbs}} $self->response->data_nodes->all ];
 };
 
 1;
