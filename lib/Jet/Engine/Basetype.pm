@@ -101,8 +101,7 @@ sub _build_basetype_fields {
 		header => [qw/Name Title Type Searchable Required/],
 		rows => [map {
 			my $col = $_;
-			[
-			{
+			[{
 				name => 'name',
 				title => 'Name',
 				type => 'Str',
@@ -139,8 +138,31 @@ sub _build_basetype_fields {
 			},
 		]} @{ $current_basetype->datacolumns }, {} ],
 	};
+	my $attributes = {
+		prefix => 'attribute',
+		header => [qw/Name Value/],
+		rows => [map {
+			my $key = $_;
+			my $val = $current_basetype->attributes->{$key};
+			[{
+				name => 'name',
+				title => 'Name',
+				type => 'Str',
+				value => $key,
+				updatable => 1,
+			},
+			{
+				name => 'value',
+				title => 'Value',
+				type => 'Str',
+				value => $val,
+				updatable => 1,
+			},
+		]} sort keys %{ $current_basetype->attributes }, ''],
+	};
 	$self->stash->{fields} = $fields;
 	$self->stash->{datacolumns} = $datacolumns;
+	$self->stash->{attributes} = $attributes;
 }
 
 __PACKAGE__->meta->make_immutable;

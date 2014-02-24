@@ -1,4 +1,7 @@
 <table>
+  <th>
+    <td><: $header :></td>
+  </th>
   <tr>
 : for $fields.header -> $header {
     <th><: $header :></th>

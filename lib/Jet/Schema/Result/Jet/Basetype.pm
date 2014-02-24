@@ -74,6 +74,14 @@ Array of allowed parent basetypes
 
 The column definitions
 
+=head2 attributes
+
+  data_type: 'json'
+  default_value: '{}'
+  is_nullable: 0
+
+Basetype specific information
+
 =head2 searchable
 
   data_type: 'text[]'
@@ -125,6 +133,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer[]", is_nullable => 1 },
   "datacolumns",
   { data_type => "json", default_value => "[]", is_nullable => 0 },
+  "attributes",
+  { data_type => "json", default_value => "{}", is_nullable => 0 },
   "searchable",
   { data_type => "text[]", is_nullable => 1 },
   "handler",
@@ -170,7 +180,7 @@ __PACKAGE__->add_unique_constraint("basetype_name_key", ["name"]);
 
 =head1 RELATIONS
 
-=head2 datas
+=head2 data
 
 Type: has_many
 
@@ -186,8 +196,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-21 09:04:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YpAfSaEQQITbLyfacrndmA
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 07:23:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SDaS2vWiSI4OkGVMkaxa+g
 
 use JSON;
 use Moose;
@@ -195,6 +205,11 @@ use Moose;
 use Jet::Data::Validator;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
+	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
+	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
+});
+
+__PACKAGE__->inflate_column('attributes'=>{
 	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
 	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
 });

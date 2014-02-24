@@ -29,7 +29,7 @@ has edit_cols => (
 	is => 'ro',
 	isa => 'ArrayRef',
 	lazy => 1,
-	default => sub { [qw/datacolumns searchable/] },
+	default => sub { [qw/attributes datacolumns searchable/] },
 );
 
 =head1 METHODS
@@ -66,6 +66,21 @@ sub get_validator {
 	};
 	$basetype->set_dfv($dfv);
 	return $basetype->validator;
+}
+
+=head2 attributes
+
+Get the attributes from input data
+
+=cut
+
+sub attributes {
+	my ($self, $input_data) = @_;
+	my $prefix = 'attribute';
+	my $params = $self->request->request->body_parameters;
+	my $rows = $self->find_rows_from_params($prefix, $params);
+	my %attributes = map {$_->{name} => $_->{value}} grep {$_->{name}} @$rows;
+	return \%attributes;
 }
 
 =head2 datacolumns

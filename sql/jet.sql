@@ -25,6 +25,7 @@ CREATE TABLE basetype (
 	title					text NOT NULL,
 	parent					int[],
 	datacolumns				json NOT NULL default '[]',
+	attributes 				json NOT NULL default '{}',
 	searchable				text[],
 	handler					text,
 	template				text,
@@ -37,6 +38,7 @@ COMMENT ON COLUMN basetype.name IS 'Base Name - reference this in the app';
 COMMENT ON COLUMN basetype.title IS 'Human readable title';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
 COMMENT ON COLUMN basetype.datacolumns IS 'The column definitions';
+COMMENT ON COLUMN basetype.attributes IS 'Basetype specific information';
 COMMENT ON COLUMN basetype.searchable IS 'The searchable columns';
 COMMENT ON COLUMN basetype.handler IS 'The handler module';
 COMMENT ON COLUMN basetype.template IS 'The template for this basetype';
