@@ -129,7 +129,7 @@ sub _build_basetype_fields {
 				title => 'Searchable',
 				type => 'Boolean',
 				updatable => 1,
-				value => grep {$col->{name} eq $_} @{ $current_basetype->searchable || [] },
+				value => (grep {$col->{name} && $col->{name} eq $_} @{ $current_basetype->searchable || [] }) ? 1 : 0,
 			},
 			{
 				name => 'required',
@@ -137,42 +137,8 @@ sub _build_basetype_fields {
 				type => 'Boolean',
 				updatable => 1,
 			},
-		]} @{ $current_basetype->datacolumns }],
+		]} @{ $current_basetype->datacolumns }, {} ],
 	};
-	push @{ $datacolumns->{rows} }, [
-		{
-			name => 'name',
-			title => 'Name',
-			type => 'Str',
-			updatable => 1,
-		},
-		{
-			name => 'title',
-			title => 'Title',
-			type => 'Str',
-			updatable => 1,
-		},
-		{
-			name => 'type',
-			title => 'Type',
-			type => 'Enum',
-			enum => [qw/Boolean Enum File Html Int Price Str/],
-			updatable => 1,
-		},
-		{
-			name => 'searchable',
-			title => 'Searchable',
-			type => 'Boolean',
-			value => 1,
-			updatable => 1,
-		},
-		{
-			name => 'required',
-			title => 'Required',
-			type => 'Boolean',
-			updatable => 1,
-		},
-	];
 	$self->stash->{fields} = $fields;
 	$self->stash->{datacolumns} = $datacolumns;
 }
