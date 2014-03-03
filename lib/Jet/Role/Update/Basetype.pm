@@ -45,13 +45,13 @@ sub set_base_object {
 	$self->set_object($self->basenode->basetype);
 }
 
-=head2 get_validator
+=head2 _build_dfv
 
-Get the validator for the object
+Build the validator init hashref for the object
 
 =cut
 
-sub get_validator {
+sub _build_dfv {
 	my $self = shift;
 	my $basetype = $self->object;
 	my $colnames = $self->get_colnames;
@@ -64,8 +64,7 @@ sub get_validator {
 		field_filters => { },
 		constraint_methods => { },
 	};
-	$basetype->set_dfv($dfv);
-	return $basetype->validator;
+	return $dfv;
 }
 
 =head2 attributes

@@ -3,6 +3,8 @@ package Jet::Role::Update;
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any uniq };
 
+use Jet::Data::Validator;
+
 =head1 NAME
 
 Jet::Role::Update - generic methods for edit / create actions
@@ -52,7 +54,62 @@ has dont_render_edit => (
 	isa => 'Bool',
 );
 
+=head2 dfv
+
+The Data::Form::Validator init hash.
+
+This is lazy_build in Jet::Role::Update::Node and Jet::Role::Update::Basetype
+to reflect their respective requirements.
+
+_build_dfv is also an obviuos place for method modifiers that will alter the
+behaviour of the validator.
+
+=cut
+
+has dfv => (
+	isa => 'HashRef',
+	is => 'ro',
+	lazy_build => 1,
+	writer => 'set_dfv',
+);
+
+=head2 validator
+
+The Basetype validator
+
+=cut
+
+has validator => (
+	isa => 'Jet::Data::Validator',
+	is => 'ro',
+	lazy_build => 1,
+	reader => 'get_validator',
+	writer => 'set_validator',
+);
+
 =head1 METHODS
+
+=head2 _build_dfv
+
+The Data::Form::Validator init hashref for the basetype is
+overriden in Jet::Role::Update::Node and Jet::Role::Update::Basetype
+
+=cut
+
+sub _build_dfv { }
+
+=head2 _build_validator
+
+Build the validator for the node or basetype.
+
+The validator is a  Jet::Data::Validator and is used by (data)nodes to validate input
+
+=cut
+
+sub _build_validator {
+	my $self= shift;
+	return Jet::Data::Validator->new(dfv => $self->dfv);
+}
 
 =head2 edit
 
@@ -71,12 +128,11 @@ sub edit {
 	}
 
 	if ($request->method eq 'POST') {
-
 		if ($request->body_parameters->{save}) {
 			$self->edit_submit;
 		} else {
 			my $response = $self->response;
-			$response->redirect($response->uri_for($self->basenode->node_path));
+			$response->redirect($response->uri_for($self->object->node_path));
 		}
 	}
 	$self->_stash_defaults;
@@ -94,7 +150,7 @@ sub delete_submit {
 
 	my $object = $self->object;
 	my $transaction = sub {
-		$self->delete_object($self->basenode);
+		$self->delete_object($self->object);
 	};
 	eval { $self->schema->txn_do($transaction) };
 	my $error=$@;
@@ -225,38 +281,21 @@ sub edit_update {
 
 Create the node from validation results. Called from within the transaction
 
-Handling of not null constraints:
-- Fields are updated before inserting the row in the DB
-- edit_<field> methods are called before insertion the row if they appear in the edit_before_fields stash entry
-
-Otherwise edit_<field> methods are called after inserting the row to make certain that the row exists. This is
-necessary for methods that need a row to work on (e.g. in order to create related rows).
-
 =cut
 
 sub edit_create {
 	my ($self, $validation)=@_;
 
-	my $object = $self->object;
-	my $fields = $object->basetype->fields;
-	my @fieldnames = @{$fields->fieldnames};
+	my $colnames = $self->get_colnames;
+	my $input_data = $validation->valid;
+	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
+	$data->{name} = $data->{title};
+	my $edit_cols = $self->edit_cols;
+	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
+	my $object = $self->schema->resultset('Jet::DataNode')->new($data);
+	$object->insert;
 
-	my $datacolumns;
-	foreach my $fieldname (sort @fieldnames) {
-		my $value = $validation->valid->{$fieldname};
-		$datacolumns->{$fieldname} = $value
-	}
-	my $new = $self->get_resultset->create({
-		# XXX Dummy values v
-		basetype_id => 1,
-		parent_id => 1,
-		name => 'unnamed',
-		title => 'no title',
-		part => 'x',
-		# XXX Dummy values ^
-		datacolumns => $datacolumns
-	});
-	return $new;
+	return $object;
 }
 
 =head2 edit_updated

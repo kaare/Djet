@@ -41,19 +41,19 @@ Set the object to the basenode
 
 sub set_base_object {
 	my $self = shift;
-	$self->set_object($self->basenode);
+	$self->set_object($self->basenode) unless $self->has_object;
 }
 
-=head2 get_validator
+=head2 _build_dfv
 
-Get the validator for the object
+Build the dfv for a node
 
 =cut
 
-sub get_validator {
+sub _build_dfv {
 	my $self = shift;
-	my $basetype = $self->basenode->basetype;
-	return $basetype->validator;
+	my $basetype = $self->object->basetype;
+	return $basetype->dfv;
 }
 
 =head2 get_fieldnames

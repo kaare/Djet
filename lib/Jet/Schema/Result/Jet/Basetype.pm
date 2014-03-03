@@ -202,8 +202,6 @@ __PACKAGE__->has_many(
 use JSON;
 use Moose;
 
-use Jet::Data::Validator;
-
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
 	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
@@ -243,7 +241,7 @@ has fields => (
 
 =head2 dfv
 
-The Data::Form::Validator init hash
+The Data::Form::Validator init hashref for the basetype
 
 =cut
 
@@ -262,18 +260,6 @@ has dfv => (
 		};
 	},
 	writer => 'set_dfv',
-);
-
-=head2 validator
-
-The Basetype validator
-
-=cut
-
-has validator => (
-	isa => 'Jet::Data::Validator',
-	is => 'ro',
-	lazy_build => 1,
 );
 
 =head1 METHODS
@@ -341,19 +327,6 @@ sub _build_fields {
 		default => sub { \@fieldnames },
 	));
 	return $meta_class->new_object;
-}
-
-=head2 _build_validator
-
-Build the validator for the basetype.
-
-The validator is a  Jet::Data::Validator and is used by (data)nodes to validate input
-
-=cut
-
-sub _build_validator {
-	my $self= shift;
-	return Jet::Data::Validator->new(dfv => $self->dfv);
 }
 
 __PACKAGE__->meta->make_immutable;

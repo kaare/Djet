@@ -1,5 +1,5 @@
 <select id="<: $name || $field_name :>" name="<: $name || $field_name :>" class="edit<: if $field.class { " $field.class" } :>">
 : for $field.enum -> $field_enum {
-  <option value="<: $field_enum :>" <: if $field_enum == $field.value { 'selected="selected"' } :>><: $field_enum :></option>
+  <option value="<: $field_enum.id // $field_enum :>" <: if ($field_enum.id // $field_enum) == $field.value { 'selected="selected"' } :>><: $field_enum.title // $field_enum :></option>
 : }
 </select>

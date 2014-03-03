@@ -1,7 +1,11 @@
 <div id="basenode">
   <h2><: $node.get_column('title') :></h2>
   <form method="post" id="edit-basenode" action="<: $request.request.path_info :>">
-: include 'generic/1col.tx' {update => 0, groups => [ { columns => [ {type => 'Str', title => 'Basetype', value => $node.basetype.name }, {type => 'Str', name => 'title', title => 'Title', value => $node.title, updatable => 1 }, ] }, {header => 'Fields', columns => $node.datacolumns.fields} ] };
-: include 'generic/okcancel.tx'
+: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.datacolumns.fields} ] };
+: include 'generic/okcancel.tx';
+: if $basetype_id || $parent_id {
+    <input type="hidden" name="basetype_id" value="<: $basetype_id :>">
+    <input type="hidden" name="parent_id" value="<: $parent_id :>">
+: }
   </form>
 </div>
