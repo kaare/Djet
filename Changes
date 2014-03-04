@@ -3,7 +3,15 @@ Revision history for Jet
 {{$NEXT}}
  - Node import framework w/csv connector. To be used by applications.
    Planned connectors: xls, ods
- - New 'file' type
+ - New 'file' type with file browser
+ - Search functionality
+ - Basetypes:
+   'Add' functionality
+   When a basetype is updated, update the basetype cache
+   Attributes
+ - Datanodes:
+   'Add' functionality
+   Retain all datacolumns info, even if it's not displayed in the update page
 
 0.01 2014-2-16
  - Removed most of the old stuff
