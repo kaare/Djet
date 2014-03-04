@@ -39,14 +39,6 @@
     <div id="body" class="container-fluid">
       <div class="row">
 : block leftside -> {
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-			<li class="dropdown-header">Basetypes</li>
-: for $basetypes -> $basetype {
-            <li><a href="/jet/config/basetype/<: $basetype.name :>"><: $basetype.title :></a></li>
-: }
-          </ul>
-        </div>
 : } # leftside
 	    <div class='main col-sm-9'>
 : block content -> {
