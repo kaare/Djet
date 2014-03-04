@@ -191,6 +191,7 @@ sub edit_submit {
 				my $object = $self->edit_create($validation);
 				return unless ref $object; # local edit_create may choose not to create a new object
 
+				$self->set_object($object);
 			} else {
 				$self->edit_update($validation);
 			}
@@ -292,7 +293,7 @@ sub edit_create {
 	$data->{name} = $data->{title};
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
-	my $object = $self->schema->resultset('Jet::DataNode')->new($data);
+	my $object = $self->get_resultset->new($data);
 	$object->insert;
 
 	return $object;
