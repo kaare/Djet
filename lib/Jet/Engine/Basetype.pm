@@ -22,7 +22,16 @@ Override the default basetype setter. Find the basetype being edited right now
 
 sub set_base_object {
 	my $self = shift;
-	return unless my $rest_path = $self->response->data_nodes->rest_path;
+	my $rest_path = $self->response->data_nodes->rest_path;
+	if (!$rest_path) {
+		$self->set_object($self->schema->resultset('Jet::Basetype')->new({
+			datacolumns => '[]',
+			attributes => '{}',
+		}));
+		$self->stash->{title} = 'New basetype';
+		$self->is_new(1);
+		return;
+	}
 
 	if (my ($current_basetype) = grep {$rest_path eq $_->name} values %{ $self->schema->basetypes }) {
 		$self->set_object($current_basetype);
