@@ -22,7 +22,8 @@ Override the default basetype setter. Find the basetype being edited right now
 
 sub set_base_object {
 	my $self = shift;
-	my $rest_path = $self->response->data_nodes->rest_path;
+	return unless my $rest_path = $self->response->data_nodes->rest_path;
+
 	if (my ($current_basetype) = grep {$rest_path eq $_->name} values %{ $self->schema->basetypes }) {
 		$self->set_object($current_basetype);
 	}
