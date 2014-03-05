@@ -108,6 +108,12 @@ after data => sub {
 	}
 };
 
+=head2 choose_basetype
+
+Put parameters on the stash for the choose_basetype template
+
+=cut
+
 sub choose_basetype {
 	my ($self, $parent_path) = @_;
 	my @basetypes = $self->schema->resultset('Jet::Basetype')->search(undef, {order_by => 'id'});
