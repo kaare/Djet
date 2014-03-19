@@ -1,6 +1,6 @@
 -- Public functions
 
-CREATE OR REPLACE LANGUAGE plperl;
+CREATE OR REPLACE LANGUAGE plperlu;
 CREATE extension IF NOT EXISTS prefix;
 
 BEGIN;
@@ -132,15 +132,15 @@ CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXEC
 CREATE OR REPLACE FUNCTION data_node_delete() RETURNS trigger AS $$
 DECLARE
 BEGIN
-	DELETE jet.data
+	DELETE FROM jet.data
 		WHERE id=OLD.data_id;
-	DELETE jet.node
+	DELETE FROM jet.node
 		WHERE id=OLD.node_id;
 	RETURN NEW;
 END;
 $$ language plpgsql;
 
-CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_update();
+CREATE TRIGGER data_node_delete INSTEAD OF DELETE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_delete();
 
 CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text AS
 $$
