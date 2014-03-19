@@ -129,6 +129,19 @@ $$ language plpgsql;
 
 CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_update();
 
+CREATE OR REPLACE FUNCTION data_node_delete() RETURNS trigger AS $$
+DECLARE
+BEGIN
+	DELETE jet.data
+		WHERE id=OLD.data_id;
+	DELETE jet.node
+		WHERE id=OLD.node_id;
+	RETURN NEW;
+END;
+$$ language plpgsql;
+
+CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE jet.data_node_update();
+
 CREATE OR REPLACE FUNCTION get_calculated_node_path(param_id integer) RETURNS text AS
 $$
 	SELECT CASE
