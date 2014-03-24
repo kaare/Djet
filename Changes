@@ -1,6 +1,9 @@
 Revision history for Jet
 
 {{$NEXT}}
+
+0.02 2014-3-24
+ - Tests work again
  - Node import framework w/csv connector. To be used by applications.
    Planned connectors: xls, ods
  - New 'file' type with file browser
