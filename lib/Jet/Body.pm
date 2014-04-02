@@ -1,4 +1,4 @@
-package Jet::Request;
+package Jet::Body;
 
 use 5.010;
 use Moose;
@@ -12,9 +12,13 @@ with 'Jet::Role::Log';
 
 =head1 NAME
 
-Jet::Request - The Jet Request
+Jet::Body - The Jet Body
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+Jet::Body is instantiated by Jet::Starter at the beginning of a request cycle.
+It holds all the volatile information, as opposed to Jet::Config.
+
 
 =head1 ATTRIBUTES
 
@@ -45,130 +49,46 @@ has request => (
 	lazy => 1,
 );
 
-=head2 schema
+=head2 stash
 
-The Jet schema
-
-=cut
-
-has schema => (
-	is => 'ro',
-	isa => 'Jet::Schema',
-	handles => [qw/
-		config
-		basetypes
-		renderers
-		log
-	/],
-);
-
-=head2 accept_types
-
-Arrayref of types the client will accept.
+The stash keeps data throughout a request cycle
 
 =cut
 
-has accept_types => (
-	isa => 'ArrayRef',
+has stash => (
+	isa => 'HashRef',
+	traits => ['Hash'],
 	is => 'ro',
 	lazy => 1,
-	default => sub {
-		my $self = shift;
-		my $request = $self->request;
-		my $headers = $request->headers;
-		my %types;
-
-		# We use the content type in the HTTP Request as a backup default.
-		$types{ $request->content_type } = .001 if $request->content_type;
-
-		if ($request->method eq "GET" && $request->param('content-type')) {
-			$types{ $request->param('content-type') } = .002;
-		}
-		if (my $accept_header = $headers->header('accept')) {
-	#        $self->accept_only(1) unless keys %types;
-			my $counter       = 0;
-
-			foreach my $pair ( split_header_words($accept_header) ) {
-				my ( $type, $qvalue ) = @{$pair}[ 0, 3 ];
-				next if $types{$type};
-
-				# cope with invalid (missing required q parameter) header like:
-				# application/json; charset="utf-8"
-				# http://tools.ietf.org/html/rfc2616#section-14.1
-				unless ( defined $pair->[2] && lc $pair->[2] eq 'q' ) {
-					$qvalue = undef;
-				}
-
-				unless ( defined $qvalue ) {
-					$qvalue = 1 - ( ++$counter / 1000 );
-				}
-				$types{$type} = sprintf( '%.3f', $qvalue );
-			}
-		}
-		return [ sort { $types{$b} <=> $types{$a} } keys %types ];
+	default => sub { {} },
+	handles => {
+		set_stash => 'set',
+		clear_stash => 'clear',
 	},
 );
 
-=head2 verb
+=head2 datanodes
 
-The verb, or method
+The node stack found
 
 =cut
 
-has verb => (
-	isa => 'Str',
+has datanodes => (
+	isa => 'Jet::Schema::ResultSet::Jet::DataNode',
 	is => 'ro',
-	default => sub {
-		my $self = shift;
-		my $request = $self->request;
-		# Methods PUT, DELETE can be tunnelled through POST
-		# XXX For safer handling, add tests for POST method and PUT, DELETE value
-		return $request->param('_method') || $request->method || 'GET';
-	},
+	writer => '_set_datanodes',
 );
 
-=head2 serializer
+=head2 basenode
 
-The (de)serializer if the requestis a "REST" call
-
-=cut
-
-has serializer => (
-	isa => 'Data::Serializer',
-	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		return unless $self->request->content_type;
-
-		return Data::Serializer->new(
-			serializer => $self->request->content_type,
-		);
-	},
-);
-
-=head2 rest_parameters
-
-If the request is a "REST" call, the parameters will be here
+The node we're working on
 
 =cut
 
-has rest_parameters => (
-	isa => 'Hash::MultiValue',
+has basenode => (
+	isa => 'Jet::Schema::Result::Jet::DataNode',
 	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		my $result;
-		try {
-			$result = $self->request->type eq 'HTML' ?
-				$self->request->parameters :
-				Hash::MultiValue->new(%{ $self->serializer->raw_deserialize($self->content) });
-		} catch {
-			warn "Couldn't serialize data with " . $self->content_type;
-		};
-		return $result;
-	},
+	writer => '_set_basenode',
 );
 
 =head1 METHODS

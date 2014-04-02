@@ -45,8 +45,8 @@ has stash => (
 	isa => 'HashRef',
 	is => 'ro',
 );
-has request => (
-	isa => 'Jet::Request',
+has body => (
+	isa => 'Jet::Body',
 	is => 'ro',
 	handles => [qw/
 		basetypes

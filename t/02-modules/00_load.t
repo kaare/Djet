@@ -10,7 +10,7 @@ find(\&wanted, @dirs);
 
 for my $module (@modules) {
 	use_ok($module);
-	next if $module =~ /Role/ || $module =~ /^Jet::[Part|Schema|Request|Trait::Field::Price]/;
+	next if $module =~ /Role/ || $module =~ /^Jet::[Part|Schema|Body|Trait::Field::Price]/;
 
 	ok(my $new = $module->new, "New $module object");
 }

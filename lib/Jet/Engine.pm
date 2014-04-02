@@ -2,9 +2,10 @@ package Jet::Engine;
 
 use 5.010;
 use Moose;
+use MooseX::NonMoose;
 use namespace::autoclean;
 
-with qw/Jet::Role::Log/;
+extends 'Web::Machine::Resource';
 
 =head1 NAME
 
@@ -18,108 +19,135 @@ In your engine you just write
 
 extends 'Jet::Engine';
 
-=head1 ATTRIBUTES
+=head1 ACCESSORS
 
-=head2 stash
-
-=cut
-
-has stash => (
-	isa => 'HashRef',
-	traits => ['Hash'],
-	is => 'ro',
-	lazy => 1,
-	default => sub { {} },
-	handles => {
-		set_stash => 'set',
-		clear_stash => 'clear',
-	},
-);
+Accessors inherited from Web::Machine
 
 =head2 request
 
+The plack request
+
+=head2 response
+
+Web::Machine's response accessor
+
+=head1 ATTRIBUTES
+
+=head2 schema
+
+The Jet schema. For easy access, it also contains the config, basetypes, renderers and log
+
 =cut
 
-has request => (
-	isa => 'Jet::Request',
+has schema => (
 	is => 'ro',
+	isa => 'Jet::Schema',
 	handles => [qw/
-		basetypes
-		cache
 		config
-		schema
+		basetypes
+		renderers
 		log
 	/],
 );
 
-=head2 basenode
+=head2 body
+
+The Jet body. Contains the stash and basenode
 
 =cut
 
-has basenode => (
-	isa => 'Jet::Schema::Result::Jet::DataNode',
+has body => (
 	is => 'ro',
+	isa => 'Jet::Body',
+	handles => [qw/
+		stash
+		basenode
+		datanodes
+	/],
 );
 
-=head2 response
+has content_types_provided => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	traits => [qw/Array/],
+	handles => {
+		add_content_type => 'push',
+	},
+);
+
+=head2 template
+
+The template to be used for rendering
 
 =cut
 
-has response => (
-	isa => 'Jet::Response',
-	is => 'ro',
+has 'template' => (
+	is => 'rw',
+	isa => 'Str',
+	predicate => '_has_template',
 );
+
+=head2 content_type
+
+The chosen content_type.
+
+Currently it's either html or json.
+
+=cut
+
+has content_type => (
+	isa => 'Str',
+	is => 'rw',
+	predicate => '_has_content_type',
+);
+
+=head2 renderer
+
+The thing that will render the output
+
+=cut
+
+has renderer => (
+	isa => 'Object',
+	is => 'ro',
+	lazy_build => 1,
+);
+
+sub _build_renderer {
+	my $self = shift;
+	return unless $self->_has_content_type;
+
+	my $type = $self->content_type =~/(html|json)/i ? $1 : 'html';
+	return $self->schema->renderers->{$type};
+}
 
 =head1 METHODS
 
-=head2 init
+=head2 BUILD
 
-Engine initialization stuff
+Necessary for the roles
 
 =cut
 
-sub init { }
+sub BUILD {}
+
+=head2 init
+
+Init is called just before the original method is called. Add anything that belongs to all media types.
+
+=cut
+
+sub init_data {}
 
 =head2 data
 
-Process data
+Data is called just after the original method is called. Add anything that belongs to all media types.
 
 =cut
 
-sub data { }
-
-=head2 set_renderer
-
-Choose the renderer
-
-=cut
-
-sub set_renderer {
-	my $self = shift;
-	my $response = $self->response;
-	return if $response->_has_renderer;
-
-	my $type = $response->type =~/(html|json)/i ? $1 : 'html';
-	$response->set_renderer($self->request->renderers->{$type})
-}
-
-=head2 render
-
-Render data
-
-=cut
-
-sub render {
-	my $self = shift;
-	my $response = $self->response;
-	my $basenode = $response->basenode;
-	$response->template($basenode->render_template) unless $response->_has_template;
-	$response->render;
-}
+sub data {}
 
 __PACKAGE__->meta->make_immutable;
-
-1;
 
 # COPYRIGHT
 

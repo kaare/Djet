@@ -43,10 +43,9 @@ Control what to send when it's Jet config
 
 after data => sub {
 	my $self = shift;
-	my $response = $self->response;
 	my $stash = $self->stash;
-	if ($self->response->data_nodes->rest_path eq '_jet_config') {
-		my $request = $self->request->request;
+	if ($self->datanodes->rest_path eq '_jet_config') {
+		my $request = $self->body->request;
 		my $parent_path = $request->parameters->{parent_path};
 		return $self->choose_basetype($parent_path) if defined $parent_path;
 
@@ -101,10 +100,10 @@ after data => sub {
 			]
 		};
 		$stash->{basecols} = $basecols;
-		$response->template('basetype/jet/config/basenode_edit.tx');
+		$self->template('basetype/jet/config/basenode_edit.tx');
 	} else {
 		$stash->{topmenu} = $self->topmenu;
-		$response->template('/config/basenode.tx');
+		$self->template('/config/basenode.tx');
 	}
 };
 

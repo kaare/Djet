@@ -1,5 +1,5 @@
 <div id="basetype">
-  <form method="post" id="edit-basetype" action="<: $request.request.path_info :>">
+  <form method="post" id="edit-basetype" action="<: $request.path_info :>">
 : include 'generic/1col.tx' {update => 0, groups => [ {header => 'Fields', columns => $fields} ] };
 : include 'generic/across.tx' {update => 0, header => 'Data Columns', fields => $datacolumns };
 : include 'generic/across.tx' {update => 0, header => 'Attributes', fields => $attributes };

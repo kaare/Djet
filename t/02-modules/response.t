@@ -6,7 +6,7 @@ use Test::More;
 use Test::Exception;
 
 use Jet::Starter;
-use Jet::Request;
+use Jet::Body;
 use Jet::Response;
 
 sub env {
@@ -48,18 +48,18 @@ sub env {
 $ENV{JET_APP_ROOT} = './t';
 my $starter = Jet::Starter->new;
 my $schema = $starter->schema;
-my $request = Jet::Request->new(
+my $body = Jet::Body->new(
 	env => env(),
 	schema => $schema,
 );
 my $config = $schema->config;
-my $path = $request->request->path_info;
+my $path = $body->request->path_info;
 my $data_nodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
 my $basenode = $data_nodes->first;
-my $stash = {request => $request};
+my $stash = {body => $body};
 ok(my $response = Jet::Response->new(
 	stash  => $stash,
-	request => $request,
+	body => $body,
 	data_nodes => $data_nodes,
 	basenode => $basenode,
 ), 'New response object');

@@ -4,7 +4,12 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine';
-with qw/Jet::Role::Treeview Jet::Role::Breadcrumbs Jet::Role::Log/;
+
+with qw/
+	Jet::Role::Engine::Html
+	Jet::Role::Engine::Json
+	Jet::Role::Treeview
+/;
 
 =head1 NAME
 
@@ -18,17 +23,15 @@ It includes the roles L<Jet::Role::Treeview> and L<Jet::Role::Log>.
 
 =head1 METHODS
 
-=head2 data
-
 =cut
 
-before data => sub {
+sub to_html {
 	my $self = shift;
 	my $stash = $self->stash;
 	$stash->{node} = $self->basenode;
-	$stash->{nodes} = $self->response->data_nodes;
+	$stash->{nodes} = $self->datanodes;
 	$stash->{request} = $self->request;
-};
+}
 
 __PACKAGE__->meta->make_immutable;
 

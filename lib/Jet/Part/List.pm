@@ -23,6 +23,7 @@ has limit => (
 	isa => 'Int',
 	predicate => 'has_limit',
 	writer => 'set_limit',
+	default => 10,
 );
 
 =head2 fts
@@ -62,7 +63,7 @@ Find the nodes with the parameters given
 
 =cut
 
-after init => sub {
+before 'data' => sub {
 	my $self = shift;
 	$self->stash->{children} = $self->_find_list;
 };

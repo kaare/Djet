@@ -14,16 +14,15 @@ Jet::Role::Treeview - handle treeview
 
 =head1 METHODS
 
-=head2 set_renderer
+=head2 to_json
 
 Control what to send when it's JSON
 
 =cut
 
-after set_renderer => sub {
+before to_json => sub {
 	my $self = shift;
-	my $response = $self->response;
-	if ($response->type =~ /json/i and my ($template) = $self->request->request->parameters->{template} =~ /^tree(top|view)$/) {
+	if (my ($template) = $self->request->parameters->{template} =~ /^tree(top|view)$/) {
 		my $basenode = $self->basenode;
 		my $dynadata;
 		if ($template eq 'top') {
@@ -45,8 +44,9 @@ after set_renderer => sub {
 				}
 			} $basenode->nodes ],
 		}
-		$self->set_stash('dynadata', $dynadata);
-		$response->renderer->set_expose_stash('dynadata');
+		$self->stash->{dynadata} = $dynadata;
+		$self->content_type('json');
+		$self->renderer->set_expose_stash('dynadata');
 	}
 };
 

@@ -121,7 +121,7 @@ sub edit {
 	my ($self) = @_;
 
 	$self->set_base_object;
-	my $request = $self->request->request;
+	my $request = $self->body->request;
 	if ($request->parameters->{delete}) {
 		$self->delete_submit;
 		return;
@@ -235,7 +235,7 @@ project and user components save the parameter in _text
 sub edit_validation {
 	my $self = shift;
 	my $validator = $self->get_validator;
-	my $params = $self->request->request->body_parameters;
+	my $params = $self->body->request->body_parameters;
 	return $validator->validate($params);
 }
 
@@ -340,7 +340,7 @@ sub edit_view {
 
 sub _stash_defaults {
 	my ($self) = @_;
-	my $request = $self->request->request;
+	my $request = $self->body->request;
 	$self->stash->{defaults} = $request->parameters;
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
 		$self->stash->{defaults}{$fieldname} = $upload->filename;

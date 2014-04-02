@@ -18,9 +18,9 @@ Find the nodes based on the search string
 
 =cut
 
-sub init {
+after 'init_data' => sub  {
 	my $self = shift;
-	my $search_phrase = encode('utf-8', $self->request->request->parameters->{search_phrase});
+	my $search_phrase = encode('utf-8', $self->body->request->parameters->{search_phrase});
 	return unless $search_phrase;
 
 	$self->stash->{search_nodes} = $self->schema->resultset('Jet::DataNode')->search(undef, {rows => 10})->ft_search($search_phrase);

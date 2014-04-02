@@ -27,11 +27,26 @@ Experimental CMS
 
 =head1 ATTRIBUTES
 
+=head2 body
+
+The body of the jet
+
 =cut
 
-has request => (
+has body => (
 	is => 'ro',
-	isa => 'Jet::Request',
+	isa => 'Jet::Body',
+);
+
+=head2 schema
+
+The schema
+
+=cut
+
+has schema => (
+	is => 'ro',
+	isa => 'Jet::Schema',
 );
 
 =head1 METHODS
@@ -44,39 +59,22 @@ Process the request.  Entry point from psgi
 
 sub take_off {
 	my ($self) = @_;
-	my $request = $self->request;
-	my $schema = $request->schema;
+	my $body = $self->body;
+	my $schema = $self->schema;
 	my $config = $schema->config;
-	my $path = $request->request->path_info;
-	my $data_nodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
-	my $basenode = $data_nodes->first;
-	my $rest_path = $data_nodes->rest_path;
+	my $path = $body->request->path_info;
+	my $datanodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
+	my $basenode = $datanodes->first;
+	my $rest_path = $datanodes->rest_path;
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
-	my $stash = {request => $request};
-	my $response = Jet::Response->new(
-		stash  => $stash,
-		request => $request,
-		data_nodes => $data_nodes,
-		basenode => $basenode,
-	);
+	my $engine_class;
 	try {
 		# See if we want to use the config basetype
 		my $engine_basetype = $rest_path eq '_jet_config' ?
 			$schema->basetypes->{$config->{config}{jet_config}{basetype_id}} :
 			$basenode->basetype;
-		my $engine_class = $engine_basetype->engine;
+		$engine_class = $engine_basetype->handler || 'Jet::Engine::Default';
 		$schema->log->debug('Class: ' . $engine_basetype->name . ' found');
-
-		my $engine = $engine_class->new(
-			stash => $stash,
-			request => $self->request,
-			basenode => $basenode,
-			response => $response,
-		);
-		$engine->init;
-		$engine->data;
-		$engine->set_renderer;
-		$engine->render;
 	} catch {
 		my $e = shift;
 		die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack
@@ -84,13 +82,13 @@ sub take_off {
 		debug($e);
 		Jet::Failure->new(
 			exception => $e,
-			request => $request,
-			data_nodes => $data_nodes,
-			stash  => $stash,
-			response => $response,
+			body => $body,
+			datanodes => $datanodes,
 		);
 	};
-	return [ $response->status, $response->headers, $response->output ];
+	$body->_set_basenode($basenode);
+	$body->_set_datanodes($datanodes);
+	return $engine_class;
 }
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);

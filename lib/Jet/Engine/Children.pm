@@ -24,7 +24,7 @@ Init the list part
 
 =cut
 
-sub init {
+after 'init_data' => sub {
 	my $self = shift;
 	$self->add_search(parent_id => $self->basenode->node_id);
 };

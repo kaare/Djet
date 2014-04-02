@@ -4,7 +4,8 @@ use Moose;
 
 use Jet;
 use Jet::Config;
-use Jet::Request;
+use Jet::Body;
+use Jet::Machine;
 
 =head1 NAME
 
@@ -88,12 +89,22 @@ has app => (
 		my $self = shift;
 		return sub {
 			my $env = shift;
-			my $request = Jet::Request->new(
+			my $body = Jet::Body->new(
 				env => $env,
-				schema => $self->schema,
+				stash => {},
 			);
-			my $flight = Jet->new(request => $request);
-			$flight->take_off(@_);
+			my $flight = Jet->new(body => $body, schema => $self->schema);
+			my $engine = $flight->take_off(@_);
+			my $resource_args = [
+				body => $body,
+				schema => $self->schema,
+			];
+			my $app = Jet::Machine->new(
+				resource => $engine,
+				resource_args => $resource_args,
+				tracing => 1,
+			);
+			return $app->call($env);
 		};
 	},
 	lazy => 1,

@@ -55,7 +55,7 @@ Renders the output as JSON
 =cut
 
 sub render {
-	my ($self, $template, $stash) = @_;
+	my ($self, $stash) = @_;
 	my $cond = sub { 1 };
 	my $single_key;
 	if ($self->_has_expose_stash) {

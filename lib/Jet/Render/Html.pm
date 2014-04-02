@@ -19,9 +19,9 @@ This is the Render::Html class for L<Jet>.
 
 =head1 ATTRIBUTES
 
-=head2 tx
+=head2 config
 
-The template engine
+The Jet configuration.
 
 =cut
 
@@ -29,6 +29,13 @@ has config => (
 	isa => 'Jet::Config',
 	is => 'ro',
 );
+
+=head2 tx
+
+The template engine
+
+=cut
+
 has tx => (
 	isa => 'Text::Xslate',
 	is => 'ro',
