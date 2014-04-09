@@ -302,8 +302,7 @@ sub _build_fields {
 		my $coltype = $column->{type};
 		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
 		push @fieldnames, $colname;
-		$meta_class->add_attribute("__$colname" => (
-			reader  => $colname,
+		$meta_class->add_attribute($colname => (
 			isa => 'Jet::Field',
 			default => sub {
 				my $self = shift;
