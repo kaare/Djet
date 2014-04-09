@@ -2,11 +2,14 @@ package Jet::Field;
 
 use 5.010;
 use Moose;
-use namespace::autoclean;
+use namespace::sweep;
 
 use JSON;
 
 with 'MooseX::Traits';
+
+use overload
+	'""' => sub { return $_[0]->value };
 
 =head1 NAME
 
