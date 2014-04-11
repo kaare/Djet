@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+DBNAME=$1
+createdb $DBNAME
+psql $DBNAME -f sql/jet.sql
+psql $DBNAME -f sql/functionality.sql
+psql $DBNAME -f sql/basic.sql
