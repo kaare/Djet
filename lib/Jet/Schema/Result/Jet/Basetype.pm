@@ -200,7 +200,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SDaS2vWiSI4OkGVMkaxa+g
 
 use JSON;
-use Moose;
+use Jet::Fields::Factory;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
@@ -293,41 +293,8 @@ This class is instantiated for each data or datanode requesting datacolumns from
 
 sub _build_fields {
 	my $self= shift;
-	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Jet::Fields']);
-	my $columns = $self->datacolumns;
-	my @fieldnames;
-	for my $column (@{ $columns }) {
-		my $colname = $column->{name};
-		my $coltitle = $column->{title};
-		my $coltype = $column->{type};
-		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
-		push @fieldnames, $colname;
-		$meta_class->add_attribute($colname => (
-			is => 'ro',
-			isa => 'Jet::Field',
-			writer => "set_$colname",
-			default => sub {
-				my $self = shift;
-				my $cols = $self->datacolumns;
-				my %params = (
-					value => $cols->{$colname},
-					name => $colname,
-					title => $coltitle,
-				);
-				$params{type} = $coltype if $coltype;
-				return $traits ?
-					Jet::Field->with_traits(@$traits)->new(%params) :
-					Jet::Field->new(%params);
-			},
-			lazy => 1,
-		));
-	}
-	$meta_class->add_attribute(fieldnames => (
-		is => 'ro',
-		isa	=> 'ArrayRef[Str]',
-		default => sub { \@fieldnames },
-	));
-	return $meta_class->new_object;
+	my $factory = Jet::Fields::Factory->new(datacolumns => $self->datacolumns);
+	return $factory->fields_class;
 }
 
 __PACKAGE__->meta->make_immutable;
