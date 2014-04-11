@@ -1,6 +1,5 @@
 -- Public functions
 
-CREATE OR REPLACE LANGUAGE plperlu;
 CREATE extension IF NOT EXISTS prefix;
 
 BEGIN;

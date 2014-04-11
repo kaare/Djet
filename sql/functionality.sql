@@ -3,6 +3,7 @@
 --
 -- Full Text Search (fts)
 
+CREATE OR REPLACE LANGUAGE plperlu;
 
 SET search_path TO jet, public;
 
@@ -51,5 +52,5 @@ use subs qw/ERROR NOTICE/;
 $$
 LANGUAGE 'plperlu' VOLATILE;
 
-DROP trigger update_fts ON jet.data;
+DROP trigger IF EXISTS update_fts ON jet.data;
 CREATE TRIGGER update_fts BEFORE INSERT OR UPDATE ON data FOR EACH ROW EXECUTE PROCEDURE jet.update_fts();
