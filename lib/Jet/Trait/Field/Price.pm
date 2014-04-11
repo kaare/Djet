@@ -31,4 +31,15 @@ sub formatted_value {
 	return $value;
 }
 
+=head2 for_search
+
+Return a nicely formatted value for fts
+
+=cut
+
+sub formatted_value {
+	my $self = shift;
+	return $self->formatted_value;
+}
+
 1;

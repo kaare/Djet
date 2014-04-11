@@ -87,6 +87,17 @@ sub as_json {
 	return JSON->new->encode($hash);
 }
 
+=head2 for_search
+
+Return the field value for fts
+
+=cut
+
+sub for_search {
+	my $self = shift;
+	return $self->value;
+}
+
 no Moose::Role;
 
 1;
