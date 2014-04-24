@@ -152,14 +152,7 @@ use Encode;
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
 		my ($datacol, $self) = @_;
-		my $fields = $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
-		my $meta = $self->meta;
-		$meta->make_mutable;
-		for my $fieldname (@{$fields->fieldnames}) {
-			$meta->add_method($fieldname => sub {return $fields->$fieldname});
-		}
-		$meta->make_immutable(inline_constructor => 0);
-		return $fields;
+		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
 	},
 	deflate=>sub {
 		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
