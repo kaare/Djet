@@ -148,6 +148,15 @@ __PACKAGE__->add_columns(
 
 use JSON;
 use Encode;
+use vars qw($AUTOLOAD);
+
+=head1 JSON column handling
+
+=head2 inflate datacolumns
+
+The JSON columns are stored in the datacolumns database column and is autoinflated upon request.
+
+=cut
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
@@ -158,6 +167,22 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
 });
+
+=head2 autoload
+
+Method calls are checked to see if they match a JSON column. If so, they're handled as ordinary accessors
+
+=cut
+
+sub AUTOLOAD {
+	my $self = shift;
+	$AUTOLOAD =~ /::(\w+)$/;
+	my $method = $1;
+	my $fields = $self->datacolumns;
+	die "No field $method for datanode " . $self->id unless my $field = $fields->can($method);
+
+	return $fields->$field(@_);
+}
 
 with qw/
 	Jet::Role::DB::Result::Node
