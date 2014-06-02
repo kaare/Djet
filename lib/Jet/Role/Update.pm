@@ -45,7 +45,7 @@ has is_new => (
 
 =head2 dont_render_edit
 
-Set to true if the page isn't to be rendered
+Set to true if the page isn't to be rendered after the edit action
 
 =cut
 
@@ -113,7 +113,7 @@ sub _build_dfv { }
 
 Build the validator for the node or basetype.
 
-The validator is a  Jet::Data::Validator and is used by (data)nodes to validate input
+The validator is a Jet::Data::Validator and is used by (data)nodes to validate input
 
 =cut
 
@@ -203,7 +203,6 @@ Delete the object in question.
 
 sub delete_submit {
 	my ($self) = @_;
-
 	my $object = $self->object;
 	my $transaction = sub {
 		$self->delete_object($self->object);
@@ -273,7 +272,6 @@ The actual transaction.
 
 sub edit_submit_handle_transaction {
 	my ($self, $transaction) = @_;
-
 	my $rs;
 	eval {
 		$rs = $self->schema->txn_do($transaction);
@@ -305,7 +303,6 @@ Is called if the validation failed
 sub edit_failed_validation {
 	my ($self, $validation)=@_;
 	my %msgs = %{ $validation->msgs };
-
 	$self->stash->{msgs} //= {};
 	@{ $self->stash->{msgs} }{ keys %msgs } = values %msgs;
 
@@ -324,7 +321,6 @@ Update the object. Called from within the transaction
 
 sub edit_update {
 	my ($self, $validation)=@_;
-
 	my $object = $self->object;
 	my $colnames = $self->get_colnames;
 	my $input_data = $validation->valid;
@@ -343,7 +339,6 @@ Create the node from validation results. Called from within the transaction
 
 sub edit_create {
 	my ($self, $validation)=@_;
-
 	my $colnames = $self->get_colnames;
 	my $input_data = $validation->valid;
 	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
