@@ -74,7 +74,7 @@ sub take_off {
 			$schema->basetypes->{$config->{config}{jet_config}{basetype_id}} :
 			$basenode->basetype;
 		$engine_class = $engine_basetype->handler || 'Jet::Engine::Default';
-		$schema->log->debug('Class: ' . $engine_basetype->name . ' found');
+		$schema->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
 	} catch {
 		my $e = shift;
 		die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack

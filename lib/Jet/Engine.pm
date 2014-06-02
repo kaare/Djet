@@ -66,12 +66,33 @@ has body => (
 	/],
 );
 
+=head2 content_types_provided
+
+The provided content types
+
+=cut
+
 has content_types_provided => (
 	is => 'ro',
 	isa => 'ArrayRef',
 	traits => [qw/Array/],
 	handles => {
-		add_content_type => 'push',
+		add_provided_content_type => 'push',
+	},
+);
+
+=head2 content_types_accepted
+
+The accepted content types
+
+=cut
+
+has content_types_accepted => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	traits => [qw/Array/],
+	handles => {
+		add_accepted_content_type => 'push',
 	},
 );
 

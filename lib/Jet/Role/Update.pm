@@ -79,7 +79,7 @@ The Basetype validator
 
 =cut
 
-has validator => (
+has 'validator' => (
 	isa => 'Jet::Data::Validator',
 	is => 'ro',
 	lazy_build => 1,
@@ -88,6 +88,17 @@ has validator => (
 );
 
 =head1 METHODS
+
+=head2 BUILD
+
+Tell the machine that we can handle html
+
+=cut
+
+after BUILD => sub {
+	my $self = shift;
+	$self->add_accepted_content_type( { 'application/x-www-form-urlencoded' => 'create_by_post' });
+};
 
 =head2 _build_dfv
 
@@ -111,32 +122,77 @@ sub _build_validator {
 	return Jet::Data::Validator->new(dfv => $self->dfv);
 }
 
-=head2 edit
+=head2 allowed_methods
 
-Display object edit page.
+Allow POST for updating (Web::Machine)
 
 =cut
 
-sub edit {
-	my ($self) = @_;
+sub allowed_methods {
+	return [qw/GET HEAD POST/];
+}
 
-	$self->set_base_object;
+=head2 before to_html
+
+Check if it's a delete request (GET w/ a 'delete' parameter)
+
+=cut
+
+before 'to_html' => sub {
+	my ($self) = @_;
 	my $request = $self->body->request;
+	$self->set_base_object;
 	if ($request->parameters->{delete}) {
 		$self->delete_submit;
 		return;
 	}
+};
 
-	if ($request->method eq 'POST') {
-		if ($request->body_parameters->{save}) {
-			$self->edit_submit;
-		} else {
-			my $response = $self->response;
-			$response->redirect($response->uri_for($self->object->node_path));
-		}
+=head2 process_post
+
+Process the edit POST
+
+=cut
+
+sub process_post {
+	my ($self) = @_;
+	my $request = $self->body->request;
+	if ($request->body_parameters->{save}) {
+		$self->set_base_object;
+		$self->edit_submit;
+	} else {
+		my $response = $self->response;
+		$response->redirect($response->uri_for($self->object->node_path));
 	}
 	$self->_stash_defaults;
 	$self->edit_view unless $self->dont_render_edit;
+}
+
+=head2 create_by_post
+
+We go here if a x-www-form-urlencoded post wants to create a new node
+
+=cut
+
+sub create_by_post {
+	my ($self) = @_;
+	my $request = $self->body->request;
+	$self->set_base_object;
+return \301;
+	$self->edit_submit;
+	return \301;
+
+}
+
+=head2 delete_resource
+
+Handle a DELETE request
+
+=cut
+
+sub delete_resource {
+	my ($self) = @_;
+	$self->delete_submit;
 }
 
 =head2 delete_submit
@@ -189,6 +245,7 @@ sub edit_submit {
 		my $transaction = sub {
 			if ($self->is_new) {
 				my $object = $self->edit_create($validation);
+die;
 				return unless ref $object; # local edit_create may choose not to create a new object
 
 				$self->set_object($object);

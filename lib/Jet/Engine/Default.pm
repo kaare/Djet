@@ -21,17 +21,25 @@ Jet::Engine::Default is the basic Jet Engine.
 
 It includes the roles L<Jet::Role::Treeview> and L<Jet::Role::Log>.
 
-=head1 METHODS
+=head1 ACCESSORS
+
+=head2 omit_run
+
+Set one of the following entries to true in this hashref:
+
+	init_data
+	to_html
+	data
+
+To stop Jet from processing that method.
 
 =cut
 
-sub to_html {
-	my $self = shift;
-	my $stash = $self->stash;
-	$stash->{node} = $self->basenode;
-	$stash->{nodes} = $self->datanodes;
-	$stash->{request} = $self->request;
-}
+has 'omit_run' => (
+	is => 'ro',
+	isa => 'HashRef',
+	default => sub { {} },
+);
 
 __PACKAGE__->meta->make_immutable;
 

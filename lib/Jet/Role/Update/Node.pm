@@ -14,7 +14,7 @@ Handles create and edit functionality of datanodes for Jet Engines
 
 with 'Jet::Role::Update';
 
-requires qw/edit edit_validation edit_update edit_create/;
+requires qw/edit_validation edit_update edit_create/;
 
 =head1 ATTRIBUTES
 

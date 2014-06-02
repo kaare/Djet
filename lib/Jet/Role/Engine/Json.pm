@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 Jet::Role::Engine::Json - Add functionality to json engines
 
-requires qw/init data/;
+requires qw/init data omit_run/;
 
 =head1 METHODS
 
@@ -19,7 +19,7 @@ Tell the machine that we want json
 
 after BUILD => sub {
 	my $self = shift;
-	$self->add_content_type( { 'application/json' => 'to_json' });
+	$self->add_provided_content_type( { 'application/json' => 'to_json' });
 };
 
 =head2 to_json
@@ -35,8 +35,7 @@ around to_json => sub {
 
 	$self->init;
 	$self->$orig(@_);
-	$self->data;
-
+	$self->data unless $self->omit_run->{all};
 	return $self->renderer->render($self->stash);
 };
 
