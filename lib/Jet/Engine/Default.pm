@@ -19,7 +19,7 @@ Jet::Engine - Default Jet Engine
 
 Jet::Engine::Default is the basic Jet Engine.
 
-It includes the roles L<Jet::Role::Treeview> and L<Jet::Role::Log>.
+It includes the roles L<Jet::Role::Engine::Html>, L<Jet::Role::Engine::Json>, L<Jet::Role::Treeview>.
 
 =head1 ACCESSORS
 
