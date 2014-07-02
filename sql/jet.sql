@@ -28,8 +28,8 @@ CREATE TABLE basetype (
 	searchable				text[],
 	handler					text,
 	template				text,
-	created					timestamp default now(),
-	modified				timestamp
+	created					timestamptz default now(),
+	modified				timestamptz
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
@@ -53,8 +53,8 @@ CREATE TABLE data (
 	title					text NOT NULL,
 	datacolumns				json NOT NULL default '[]',
 	fts						tsvector,
-	created					timestamp default now(),
-	modified				timestamp
+	created					timestamptz default now(),
+	modified				timestamptz
 );
 
 COMMENT ON TABLE data IS 'Data';
@@ -76,8 +76,8 @@ CREATE TABLE node (
 							ON UPDATE cascade,
 	part					text,
 	node_path				prefix_range,
-	created					timestamp default now(),
-	modified				timestamp
+	created					timestamptz default now(),
+	modified				timestamptz
 );
 
 COMMENT ON TABLE node IS 'Node';
