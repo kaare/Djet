@@ -5,11 +5,11 @@ use namespace::autoclean;
 use Moose;
 use Text::CSV;
 
-# extends 'Jet::Import::Iterator';
+extends 'Jet::Import::Iterator';
 
 =head1 Description
 
-Role for handling the import of a csv file
+Subclass for handling the import of a csv file
 
 =head1 ATTRIBUTES
 
@@ -24,63 +24,9 @@ has 'csv' => (
 	lazy_build => 1,
 );
 
-=head2 lineno
-
-The line counter
-
-=cut
-
-has 'lineno' => (
-	is => 'ro',
-	isa => 'Num',
-	traits => ['Counter'],
-	default => 0,
-	handles => {
-		inc_lineno => 'inc',
-		reset_lineno => 'reset',
-	},
-);
-
 =head1 "PRIVATE" ATTRIBUTES
 
-=head2 file
-
-The csv file
-
-=cut
-
-has 'file' => (
-	is => 'ro',
-	writer => '_set_file',
-	lazy_build => 1,
-);
-
-=head2 file_name
-
-The name of the spreadsheet
-
-=cut
-
-has file_name => (
-	is => 'ro',
-	isa => 'Str',
-);
-
 =head1 METHODS
-
-=head2 _build_file
-
-The lazy builder for the file
-
-=cut
-
-sub _build_file {
-	my $self = shift;
-	my $filename = $self->file_name;
-	open(my $file, "<:encoding(UTF-8)", $filename) or die "$filename: $!";
-
-	return $file;
-}
 
 =head2 _build_csv
 

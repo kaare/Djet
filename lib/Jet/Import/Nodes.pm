@@ -3,8 +3,9 @@ package Jet::Import::Nodes;
 use 5.010;
 use namespace::autoclean;
 use Moose;
-#use DateTime;
-#use DateTime::Format::Pg;
+use Moose::Util::TypeConstraints;
+use DateTime;
+use DateTime::Format::Pg;
 
 with 'MooseX::Traits';
 
@@ -19,7 +20,7 @@ Base class for handling the import of the spreadsheet file
 =cut
 
 has 'schema' => (
-	isa => 'Jet::Schema',
+	isa => 'DBIx::Class',
 	is => 'ro'
 );
 
@@ -44,6 +45,20 @@ The name of the spreadsheet
 has file_name => (
 	is => 'ro',
 	isa => 'Str',
+);
+
+=head2 import_type
+
+Three formats are supported, csv, xls, ods
+
+=cut
+
+enum 'import_types', [qw(csv ods xls)];
+
+has 'import_type' => (
+	is => 'ro',
+	isa => 'import_types',
+	lazy_build => 1,
 );
 
 =head1 "PRIVATE" ATTRIBUTES
@@ -120,17 +135,45 @@ has 'timestamp' => (
 
 =head1 METHODS
 
+=head2 _build_import_type
+
+Build the import type. It can be either csv, xls or ods.
+
+=cut
+
+sub _build_import_type {
+	my $self = shift;
+	my $file_name = $self->file_name;
+	$file_name =~ /\.(\w+)$/ || return;
+
+	return lc $1;
+}
+
 =head2 _build_import_iterator
 
-Build the import iterator. It can be either csv, xls or ods.
+Build the import iterator..
 
 =cut
 
 sub _build_import_iterator {
 	my $self = shift;
-	my $classname = 'Jet::Import::Iterator::Csv';
+	my $import_type = ucfirst $self->import_type;
+	my $classname = "Jet::Import::Iterator::$import_type";
 	eval "require $classname" or die $@;
 	return $classname->new(file_name => $self->file_name);
+}
+
+=head2 do_work
+
+Import a file
+
+=cut
+
+sub do_work {
+	my $self = shift;
+	$self->validate;
+	$self->import_run unless $self->dry_run or $self->has_errors;
+	$self->report
 }
 
 =head2 validate
