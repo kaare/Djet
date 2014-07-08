@@ -4,7 +4,7 @@ CREATE extension IF NOT EXISTS prefix;
 
 BEGIN;
 
-CREATE FUNCTION set_modified () RETURNS "trigger" AS $$
+CREATE OR REPLACE FUNCTION set_modified () RETURNS "trigger" AS $$
 BEGIN
 	NEW.created = OLD.created;
 	NEW.modified = now();
