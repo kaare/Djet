@@ -18,8 +18,25 @@ CREATE SCHEMA jet;
 
 SET search_path TO jet, public;
 
+CREATE TABLE feature (
+	id						serial NOT NULL PRIMARY KEY,
+	name					text NOT NULL UNIQUE,
+	version					decimal,
+	description				text,
+	created					timestamp default now(),
+	modified				timestamp
+);
+
+COMMENT ON TABLE feature IS 'A feature is a collection of basetypes that forms or supports a set of functions or methods';
+COMMENT ON COLUMN feature.name IS 'Feature Name';
+COMMENT ON COLUMN feature.version IS 'Feature Version';
+COMMENT ON COLUMN feature.description IS 'Feature Description';
+
+CREATE TRIGGER set_modified BEFORE UPDATE ON feature FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
+
 CREATE TABLE basetype (
 	id					serial NOT NULL PRIMARY KEY,
+	feature_id				int NOT NULL REFERENCES feature(id),
 	name					text NOT NULL UNIQUE,
 	title					text NOT NULL,
 	parent					int[],
@@ -33,6 +50,7 @@ CREATE TABLE basetype (
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
+COMMENT ON COLUMN basetype.feature_id IS 'References the feature table';
 COMMENT ON COLUMN basetype.name IS 'Base Name - reference this in the app';
 COMMENT ON COLUMN basetype.title IS 'Human readable title';
 COMMENT ON COLUMN basetype.parent IS 'Array of allowed parent basetypes';
