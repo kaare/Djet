@@ -120,12 +120,15 @@ JOIN jet.node n ON d.id=n.data_id;
 
 CREATE OR REPLACE FUNCTION data_node_insert() RETURNS trigger AS $$
 DECLARE
+	n_id INT;
+	n RECORD;
 BEGIN
 	WITH new_data AS (
 		INSERT INTO jet.data (basetype_id, name, title, datacolumns, fts) VALUES (NEW.basetype_id, NEW.name, NEW.title, NEW.datacolumns, NEW.fts) RETURNING id
 	)
-	INSERT INTO jet.node (data_id, parent_id, part, node_path) SELECT id, NEW.parent_id, NEW.part, NEW.node_path FROM new_data;
-	RETURN NEW;
+	INSERT INTO jet.node (data_id, parent_id, part, node_path) SELECT id, NEW.parent_id, NEW.part, NEW.node_path FROM new_data RETURNING id INTO n_id;
+	SELECT * INTO n FROM jet.data_node WHERE node_id = n_id;
+	RETURN n;
 END;
 $$ language plpgsql;
 
