@@ -21,7 +21,6 @@ What it takes to start a Jet
 
 Jet parameters, from the environment
 
-
 =cut
 
 has params => (

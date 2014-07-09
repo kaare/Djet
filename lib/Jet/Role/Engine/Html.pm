@@ -44,6 +44,9 @@ sub to_html {
 	$self->data unless $self->omit_run->{data};
 
 	$self->template($self->basenode->render_template) unless $self->_has_template;
+
+	my $schema = $self->schema;
+	$schema->log->debug('Template ' . $self->template);
 	return $self->renderer->render($self->template, $self->stash);
 };
 
