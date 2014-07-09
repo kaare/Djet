@@ -5,6 +5,7 @@ use Moose;
 use JSON;
 use File::Copy;
 use File::Path;
+use Job::Machine::Client;
 
 extends 'Jet::Engine::Default';
 
@@ -15,6 +16,10 @@ Jet::Engine::Import
 =head1 DESCRIPTION
 
 Jet::Engine::Import controls import of files to the system.
+
+It displays a form with one or more upload files and accepts a POST request with that form.
+
+The files are stored in a private path, a node is created for each, and an import job is created, using Job::Machine.
 
 =head1 ATTRIBUTES
 
@@ -92,6 +97,11 @@ sub create_path {
 sub create_nodes {
 	my $self = shift;
 	my $schema = $self->schema;
+	my $dbh = $schema->storage->dbh;
+	my $client = Job::Machine::Client->new(
+		dbh => $dbh,
+		queue => 'jet.import',
+	);
 
 	my $parent_id = $self->basenode->id;
 	my ($uploadtype) = grep {$_->name eq 'Upload'} values %{ $schema->basetypes };
@@ -106,11 +116,15 @@ sub create_nodes {
 			title => $upload->filename,
 			datacolumns => $self->json->encode({ mime_type => $upload->content_type}),
 		};
-		my $file_node = $self->schema->resultset('Jet::DataNode')->create($data);
+		my $file_node = $schema->resultset('Jet::DataNode')->create($data);
 		$file_node->discard_changes;
 		my $node_id = $file_node->node_id;
-		$self->file_placement($upload->path, $self->basenode->path, $node_id);
+		my $file_path = $self->file_placement($upload->path, $self->basenode->path, $node_id);
 		$file_node->update({part => $node_id});
+		my $job = {
+			file_path => $file_path,
+		};
+		$client->send($job);
 	}
 }
 
@@ -121,7 +135,9 @@ sub file_placement {
 	my $targetdir = substr($td,-2).'/'.substr($td,-4,2);
 	my $targetpath = join '/', $basedir, $targetdir, $target_id;
 	mkpath($targetpath);
-  	move $source_path, join '/', $targetpath, $target_id;
+	my $file_path = join '/', $targetpath, $target_id;
+	move $source_path, $file_path;
+	return $file_path;
 }
 
 __PACKAGE__->meta->make_immutable;
