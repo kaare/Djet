@@ -1,0 +1,131 @@
+package Jet::Engine::Import;
+
+use 5.010;
+use Moose;
+use JSON;
+use File::Copy;
+use File::Path;
+
+extends 'Jet::Engine::Default';
+
+=head1 NAME
+
+Jet::Engine::Import
+
+=head1 DESCRIPTION
+
+Jet::Engine::Import controls import of files to the system.
+
+=head1 ATTRIBUTES
+
+=head2 json
+
+JSON Accessor 
+
+=cut
+
+has 'json' => (
+	is => 'ro',
+	isa => 'JSON',
+	default => sub { JSON->new },
+);
+
+=head1 METHODS
+
+=head2 BUILD
+
+Tell the machine that we can handle html
+
+=cut
+
+after BUILD => sub {
+	my $self = shift;
+	$self->add_accepted_content_type( { 'multipart/form-data' => 'upload_file' });
+};
+
+=head2 allowed_methods
+
+Allow POST for updating (Web::Machine)
+
+=cut
+
+sub allowed_methods {
+	return [qw/GET POST/];
+}
+
+=head2 upload_file
+
+=cut
+
+sub upload_file { }
+
+=head2 post_is_create
+
+We will create a new import file node
+
+=cut
+
+sub post_is_create { 1 }
+
+=head2 create_path
+
+Process the POST request for creating a node
+
+=cut
+
+sub create_path {
+	my $self = shift;
+	my $transaction = sub {
+		$self->create_nodes;
+	};
+	eval { $self->schema->txn_do($transaction) };
+	my $error=$@;
+
+	if ($error) {
+		$self->config->log->debug($error);
+		$self->stash->{message} = $error;
+	} else {
+		return $self->basenode->node_path;
+	}
+}
+
+sub create_nodes {
+	my $self = shift;
+	my $schema = $self->schema;
+
+	my $parent_id = $self->basenode->id;
+	my ($uploadtype) = grep {$_->name eq 'Upload'} values %{ $schema->basetypes };
+	my $basetype_id = $uploadtype->id;
+	my $request = $self->body->request;
+	for my $upload ($request->uploads->get_all('uploadedfile')) {
+		my $uploadfile = $upload->path;
+		my $data = {
+			parent_id => $parent_id,
+			basetype_id => $basetype_id,
+			name => $upload->filename,
+			title => $upload->filename,
+			datacolumns => $self->json->encode({ mime_type => $upload->content_type}),
+		};
+		my $file_node = $self->schema->resultset('Jet::DataNode')->create($data);
+		$file_node->discard_changes;
+		my $node_id = $file_node->node_id;
+		$self->file_placement($upload->path, $self->basenode->path, $node_id);
+		$file_node->update({part => $node_id});
+	}
+}
+
+sub file_placement {
+	my ($self, $source_path, $basedir, $target_id) = @_;
+	my $td = substr($target_id,-4);
+	$td .= '_' x ( 4 - length( $td ) );
+	my $targetdir = substr($td,-2).'/'.substr($td,-4,2);
+	my $targetpath = join '/', $basedir, $targetdir, $target_id;
+	mkpath($targetpath);
+  	move $source_path, join '/', $targetpath, $target_id;
+}
+
+__PACKAGE__->meta->make_immutable;
+
+# COPYRIGHT
+
+__END__
