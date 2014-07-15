@@ -221,6 +221,7 @@ sub render_template {
 
 	my $schema = $self->result_source->schema;
 	my $node_path = $self->node_path || 'index';
+	$node_path =~ s/\.html$//;
 	return 'node/' . $node_path . $schema->config->config->{template_suffix};
 }
 
