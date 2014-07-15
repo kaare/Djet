@@ -1,0 +1,31 @@
+: cascade 'base.tx';
+: override content -> {
+        <div class="row">
+		  <div class="box">
+            <div class="col-md-2">
+                <p class="lead">Søg</p>
+	<form method="get" name="top_search" action="/search/" onSubmit="return (document.top_search.search_phrase.value != top_search_str);">
+		<input type="hidden" name="exclude" value="">
+		<input type="text" class="text" name="search_phrase" size="20" onFocus="if (this.value == top_search_str) this.value=''" value="Skriv søgeord"><input type="submit" class="submit" name="submit" value="Søg">
+	</form>
+
+	<script type="text/javascript">
+		var top_search_str = document.top_search.search_phrase.value;
+	</script>
+
+            </div>
+
+            <div class="col-md-10">
+: if $search_phrase {
+				<hgroup class="mb20">
+					<h1>Søgeresultater</h1>
+					<h2 class="lead"><strong class="text-danger"><: $search_nodes.count :></strong> resultat<: if $search_nodes.count > 1 { 'er' } :> blev fundet for <strong class="text-danger"><: $search_phrase :></strong></h2>
+				</hgroup>
+: }
+: while $search_nodes.next -> $item {
+: include 'element/search_item.tx' {item => $item, item_image => $item.image};
+: }
+            </div>
+          </div>
+        </div>
+: } # content
