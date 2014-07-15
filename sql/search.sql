@@ -10,10 +10,10 @@ INSERT INTO feature (name,version, description) VALUES ('search', 0.01, 'Search 
 
 -- Basetypes
 
-INSERT INTO basetype (feature_id,name,title,handler) VALUES (currval('feature_id_seq'), 'Search','Search Page','Jet::Engine::Search');
+INSERT INTO basetype (feature_id,name,title,handler) VALUES (currval('feature_id_seq'), 'search','Search Page','Jet::Engine::Search');
 
 -- Data Nodes
 
-INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (currval('basetype_id_seq'),1,'search','Search','Search Data');
+-- INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (currval('basetype_id_seq'),1,'search','Search','Search Data');
 
 COMMIT;
