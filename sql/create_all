@@ -1,0 +1,14 @@
+#!/bin/sh
+# Create all types, functions, tables and views in the correct order.
+
+# Usage:
+#   sql/create_all | psql <database>
+
+FILES="\
+ sql/jet.sql\
+ sql/functionality.sql\
+ sql/basic.sql\
+ sql/search.sql\
+ sql/import.sql\
+"
+cat $FILES

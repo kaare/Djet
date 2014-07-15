@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
+MY_PATH="`dirname \"$0\"`"
+cd "$MY_PATH/.."
+
 DBNAME=$1
 createdb $DBNAME
-psql $DBNAME -f sql/jet.sql
-psql $DBNAME -f sql/functionality.sql
-psql $DBNAME -f sql/basic.sql
+sql/create_all | psql $DBNAME
