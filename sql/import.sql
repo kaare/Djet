@@ -10,7 +10,7 @@ INSERT INTO feature (name,version, description) VALUES ('import', 0.01, 'Import 
 
 -- Basetypes
 
-INSERT INTO basetype (feature_id, name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'Import','Import Page','[{"name":"path","title":"Path","type":"Str"}]','Jet::Engine::Import');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'Import','Import Page','[{"name":"path","title":"Path","type":"Str"}]','Jet::Engine::Import');
 CREATE TEMP TABLE temp_currval AS SELECT currval('basetype_id_seq');
 INSERT INTO basetype (feature_id, name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'Upload', 'Uploaded File','[{"name":"mime_type","title":"Mime Type","type":"Str"}]','Jet::Engine::Import::File');
 
