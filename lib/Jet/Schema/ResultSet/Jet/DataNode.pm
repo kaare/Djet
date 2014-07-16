@@ -30,15 +30,12 @@ Returns a set of rows as an arrayref, starting from the basenode and with the ro
 
 Thus, we're sure always to have to whole branch, and we can also find the arguments of the request
 
-If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it.
-
 As a side effect this method sets rest_path.
 
 =cut
 
 sub find_basenode {
 	my ($self, $path) = @_;
-	my $node_path = $path =~ /\/$/ ? "$path/index.html" : $path;
 	my $datanodes = $self->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' });
 	my $basenode = $datanodes->first or return;
 

@@ -63,7 +63,9 @@ sub take_off {
 	my $schema = $self->schema;
 	my $config = $schema->config;
 	my $path = $body->request->path_info;
-	my $datanodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
+	# If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it.
+	my $node_path = $path =~ /\/$/ ? $path . "index.html" : $path;
+	my $datanodes = $schema->resultset('Jet::DataNode')->find_basenode($node_path);
 	my $basenode = $datanodes->first;
 	my $rest_path = $datanodes->rest_path;
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);

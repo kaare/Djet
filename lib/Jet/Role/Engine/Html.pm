@@ -2,6 +2,7 @@ package Jet::Role::Engine::Html;
 
 use Moose::Role;
 use namespace::autoclean;
+use Try::Tiny;
 
 =head1 NAME
 
@@ -43,12 +44,67 @@ sub to_html {
 	$self->init_data unless $self->omit_run->{init_data};
 	$self->data unless $self->omit_run->{data};
 
-	$self->template($self->basenode->render_template) unless $self->_has_template;
+	$self->template($self->render_template) unless $self->_has_template;
 
 	my $schema = $self->schema;
 	$schema->log->debug('Template ' . $self->template);
-	return $self->renderer->render($self->template, $self->stash);
+	my $result;
+	try {
+		$result = $self->renderer->render($self->template, $self->stash);
+	} catch {
+		my $e = shift;
+		$schema->log->error($e);
+	};
+	return $result;
 };
+
+=head2 render_template
+
+Set the template for use when rendering
+
+Use the basetype template name, and if it's not there, find it with $self->template_name
+
+=cut
+
+sub render_template {
+	my $self= shift;
+	my $basenode = $self->basenode;
+	my $template = $basenode->basetype->template;
+	return $template if $template;
+
+	return $self->template_name($basenode);
+}
+
+=head2 template_name
+
+Find the template name.
+
+If there is a domain node in the path somewhere, we expect the templates to be placed below
+a domain path, so instead of
+
+templates/node/<domain>/index.tx
+
+it is
+
+templates/<domain>/node/index.tx
+
+=cut
+
+sub template_name {
+	my ($self, $basenode) = @_;
+	my $schema = $self->schema;
+	my ($domain_basetype) = grep {$_->name eq 'domain'} values %{ $schema->basetypes };
+	my ($domain_node) = grep {$_->basetype_id == $domain_basetype->id} $self->datanodes->all;
+	my $node_path = $basenode->node_path || 'index';
+	my $prefix;
+	if ($domain_node) {
+		$prefix = $domain_node->node_path;
+		$node_path =~ s/^$prefix//;
+	}
+	$prefix .= '/node';
+	$node_path =~ s/\.html$//;
+	return $prefix . $node_path . $schema->config->config->{template_suffix};
+}
 
 no Moose::Role;
 

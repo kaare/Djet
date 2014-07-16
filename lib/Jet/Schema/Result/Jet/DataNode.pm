@@ -208,23 +208,6 @@ has basetype => (
 	lazy => 1,
 );
 
-=head2 render_template
-
-The template for use when rendering
-
-=cut
-
-sub render_template {
-	my $self= shift;
-	my $template = $self->basetype->template;
-	return $template if $template;
-
-	my $schema = $self->result_source->schema;
-	my $node_path = $self->node_path || 'index';
-	$node_path =~ s/\.html$//;
-	return 'node/' . $node_path . $schema->config->config->{template_suffix};
-}
-
 # NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Data, as dbicdump didn't find them
 
 =head2 basetype
