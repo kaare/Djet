@@ -11,6 +11,7 @@ INSERT INTO feature (name,version, description) VALUES ('basic', 0.01, 'Basic fe
 -- Basetypes
 
 INSERT INTO basetype (feature_id, name,title) VALUES (1, 'domain','Domain');
+INSERT INTO basetype (feature_id, name,title) VALUES (1, 'directory','Directory');
 INSERT INTO basetype (feature_id, name,title,handler) VALUES (1, 'jet_config', 'Jet Configuration','Jet::Engine::Config');
 -- INSERT INTO basetype (name,title,handler,datacolumns) VALUES ('jet_basetype','Jet Basetype','Jet::Engine::Basetype','[{"name":"text","type":"Str", "traits": ["Jet::Trait::Config::Basetype"]},{"name":"parent","type":"Int"}]');
 INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_basetype','Jet Basetype','Jet::Engine::Basetype','[{"name":"text","type":"Str"},{"name":"parent","type":"Int"}]');
