@@ -4,9 +4,9 @@
 # Usage:
 #   sql/create_all | psql <database>
 
+# sql/functionality.sql\
 FILES="\
  sql/jet.sql\
- sql/functionality.sql\
  sql/basic.sql\
  sql/search.sql\
  sql/import.sql\

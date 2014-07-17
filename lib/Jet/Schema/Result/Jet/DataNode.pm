@@ -147,6 +147,7 @@ __PACKAGE__->add_columns(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RlQmiuz5mxXkmDoaH5QVMg
 
 use JSON;
+use HTML::FormatText;
 use Encode;
 use vars qw($AUTOLOAD);
 
@@ -156,7 +157,23 @@ use vars qw($AUTOLOAD);
 
 The JSON columns are stored in the datacolumns database column and is autoinflated upon request.
 
+As a side-effect it updates the fts column with the relevant data from datacolumns
+
 =cut
+
+has 'json' => (
+	is => 'ro',
+	isa => 'JSON',
+	default => sub { JSON->new },
+	lazy => 1,
+);
+
+has 'html_formatter' => (
+	is => 'ro',
+	isa => 'HTML::FormatText',
+	default => sub { HTML::FormatText->new },
+	lazy => 1,
+);
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
@@ -164,9 +181,40 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
 	},
 	deflate=>sub {
+		my ($datacol, $self) = @_;
+		$self->update_fts($datacol);
 		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
 });
+
+=head2 update_fts
+
+Update the fts columns with the relevant data from datacolumns
+
+=cut
+
+sub update_fts {
+	my ($self, $datacol) = @_;
+	# jet.basetype
+	my $basetype = $self->basetype;
+
+	my $base_columns = $self->json->decode($basetype->get_column('datacolumns'));
+	# base_columns is the array version. basecols is the hash
+	my %basecols = map { (delete $_->{name} => $_) } @$base_columns;
+
+	# Find searchable columns with content and format according to style
+	my $fts = lc join ' ', $self->title,
+		map {
+			my $fieldname = $_;
+			my $value = $datacol->{$fieldname};
+			if ($basecols{$fieldname}{type} eq 'Html') {
+				$value = $self->html_formatter->format_from_string($value)
+			}
+			$value;
+		} grep {$basecols{$_}{searchable}} keys %$datacol;
+	$fts =~ s/[,-\/:)(]/ /g;
+	return $fts;
+}
 
 =head2 autoload
 
@@ -187,26 +235,6 @@ sub AUTOLOAD {
 with qw/
 	Jet::Role::DB::Result::Node
 /;
-
-=head1 ATTRIBUTES
-
-=head2 basetype
-
-The node's basetype
-
-=cut
-
-has basetype => (
-	isa => 'Jet::Schema::Result::Jet::Basetype',
-	is => 'ro',
-	default	=> sub {
-		my $self = shift;
-		my $schema = $self->result_source->schema;
-
-		return $schema->basetypes->{$self->basetype_id};
-	},
-	lazy => 1,
-);
 
 # NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Data, as dbicdump didn't find them
 
