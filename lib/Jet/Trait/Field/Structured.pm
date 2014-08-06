@@ -7,6 +7,10 @@ use YAML::Tiny;
 
 Jet::Trait::Field::Structured
 
+=head1 DESCRIPTION
+
+Structured data. Input format is expected as pseudo yaml (yaml w/o the initial ---).
+
 =cut
 
 requires qw/value/;
@@ -21,9 +25,9 @@ Pack a structured field
 
 sub pack {
 	my ($self, $value) = @_;
-use Data::Dumper 'Dumper';
-warn Dumper [ YAML::Tiny::Load($value)];
-	return $value;
+	my $new;
+	eval {$new = YAML::Tiny::Load("---\n" . $value) };
+	return $@ ? $value : $new;
 }
 
 1;
