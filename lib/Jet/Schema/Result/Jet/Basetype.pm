@@ -199,6 +199,20 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 07:23:31
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SDaS2vWiSI4OkGVMkaxa+g
 
+=head2 datanodes
+
+Type: has_many
+
+Related object: L<Jet::Schema::Result::Jet::DataNode>
+
+=cut
+
+__PACKAGE__->has_many(
+  "datanodes",
+  "Jet::Schema::Result::Jet::DataNode",
+  { "foreign.basetype_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 use JSON;
 use Jet::Fields::Factory;
 
