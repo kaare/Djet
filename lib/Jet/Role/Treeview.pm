@@ -34,6 +34,13 @@ before to_json => sub {
 				path => $basenode->node_path,
 			} ];
 		} else { # treeview
+			my $node;
+			if ($basenode->node_path =~ /index.html$/) {
+				my @nodes = $self->datanodes->all;
+				$node = $nodes[-2];
+			} else {
+				$node = $basenode;
+			}
 			$dynadata = [ map {
 				my $folder = $_->has_children ? 1 : undef;
 				{
@@ -42,7 +49,7 @@ before to_json => sub {
 					folder => $folder,
 					lazy => $folder,
 				}
-			} $basenode->nodes ],
+			} $node->nodes ],
 		}
 		$self->stash->{dynadata} = $dynadata;
 		$self->content_type('json');
