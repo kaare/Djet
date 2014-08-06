@@ -178,14 +178,49 @@ has 'html_formatter' => (
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
 		my ($datacol, $self) = @_;
-		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
+		my $data = $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
+		$self->field_inflate($data);
+		return $data;
 	},
 	deflate=>sub {
 		my ($datacol, $self) = @_;
+		$self->field_deflate($datacol);
 		$self->update_fts($datacol);
 		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
 });
+
+=head2 field_inflate
+
+Specific inflating for each field
+
+=cut
+
+sub field_inflate {
+	my ($self, $data) = @_;
+	my $fields = $self->datacolumns;
+	while (my ($name, $value) = each %$data) {
+		die "No field $name for datanode " . $self->id unless my $field = $fields->can($name);
+
+		$data->{$name} = $fields->$field->unpack($value);
+	}
+}
+
+=head2 field_deflate
+
+Specific deflating for each field
+
+=cut
+
+sub field_deflate {
+	my ($self, $datacol) = @_;
+	my $fields = $self->datacolumns;
+	while (my ($name, $value) = each %$datacol) {
+		die "No field $name for datanode " . $self->id unless my $field = $fields->can($name);
+
+		$datacol->{$name} = $fields->$field->pack($value);
+	}
+}
 
 =head2 update_fts
 

@@ -75,6 +75,28 @@ has updatable => (
 
 =head1 METHODS
 
+=head2 pack
+
+Pack the data for storage
+
+=cut
+
+sub pack {
+	my ($self, $value) = @_;
+	return $value;
+}
+
+=head2 unpack
+
+Unpack the data from storage
+
+=cut
+
+sub unpack {
+	my ($self, $value) = @_;
+	return $value;
+}
+
 =head2 as_json
 
 Return the field (type, title, value) as JSON
