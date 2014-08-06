@@ -179,7 +179,7 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
 		my ($datacol, $self) = @_;
 		my $data = $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
-		$self->field_inflate($data);
+#		$self->field_inflate($data);
 		return $data;
 	},
 	deflate=>sub {
