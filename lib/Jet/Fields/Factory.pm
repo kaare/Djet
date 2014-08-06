@@ -54,7 +54,12 @@ sub fields_class {
 		my $colname = $column->{name};
 		my $coltitle = $column->{title};
 		my $coltype = $column->{type};
+
 		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
+		my $fieldtraitname = "Jet::Trait::Field::$column->{type}";
+		eval "require $fieldtraitname";
+		push @$traits, $fieldtraitname unless $@;
+
 		push @fieldnames, $colname;
 		$meta_class->add_attribute($colname => (
 			is => 'ro',
