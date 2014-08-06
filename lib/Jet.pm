@@ -65,6 +65,7 @@ sub take_off {
 	my $path = $body->request->path_info;
 	# If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it.
 	my $node_path = $path =~ /\/$/ ? $path . "index.html" : $path;
+	$schema->log->debug("Node path: $node_path");
 	my $datanodes = $schema->resultset('Jet::DataNode')->find_basenode($node_path);
 	my $basenode = $datanodes->first;
 	my $rest_path = $datanodes->rest_path;
