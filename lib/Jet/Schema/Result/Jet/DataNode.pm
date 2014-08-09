@@ -184,7 +184,7 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 	},
 	deflate=>sub {
 		my ($datacol, $self) = @_;
-		$self->field_deflate($datacol);
+		#	$self->field_deflate($datacol);
 		$self->update_fts($datacol);
 		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
@@ -242,7 +242,7 @@ sub update_fts {
 		map {
 			my $fieldname = $_;
 			my $value = $datacol->{$fieldname};
-			if ($basecols{$fieldname}{type} eq 'Html') {
+			if ($basecols{$fieldname}{type} eq 'Html' && defined $value) {
 				$value = $self->html_formatter->format_from_string($value)
 			}
 			$value;
@@ -261,6 +261,8 @@ sub AUTOLOAD {
 	my $self = shift;
 	$AUTOLOAD =~ /::(\w+)$/;
 	my $method = $1;
+	return if $method eq 'fields';
+
 	my $fields = $self->datacolumns;
 	die "No field $method for datanode " . $self->id unless my $field = $fields->can($method);
 
