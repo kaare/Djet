@@ -70,9 +70,34 @@ sub render_template {
 	my $self= shift;
 	my $basenode = $self->basenode;
 	my $template = $basenode->basetype->template;
+	$template = $self->template_substitute($template) if $template =~ /<.+>/;
 	return $template if $template;
 
 	return $self->template_name($basenode);
+}
+
+=head2 template_substitute
+
+Substitute <basetype_name> with the basetype's node_path for the first found node with that basetype - in upwards direction.
+
+If there is a node hanging under some nodes and a domain node with the node_path 'top_level' at the top, 
+
+<domain>/basetype/node.tx would be top_level/basetype/node.tx
+
+=cut
+
+sub template_substitute {
+	my ($self, $template) = @_;
+	$template =~ /<(.+)>/ or return;
+
+	my $schema = $self->schema;
+	my $basetext = $1;
+	my ($basetype) = grep {$_->name eq $basetext} values %{ $schema->basetypes };
+	my ($node) = grep {$_->basetype_id == $basetype->id} $self->datanodes->all;
+	my $node_path = $node->node_path;
+	$template =~ s/(.*)<.+>(.*)/$1$node_path$2/ or return;
+
+	return $template;
 }
 
 =head2 template_name
