@@ -147,7 +147,6 @@ __PACKAGE__->add_columns(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RlQmiuz5mxXkmDoaH5QVMg
 
 use JSON;
-use HTML::FormatText;
 use Encode;
 use vars qw($AUTOLOAD);
 
@@ -165,13 +164,6 @@ has 'json' => (
 	is => 'ro',
 	isa => 'JSON',
 	default => sub { JSON->new },
-	lazy => 1,
-);
-
-has 'html_formatter' => (
-	is => 'ro',
-	isa => 'HTML::FormatText',
-	default => sub { HTML::FormatText->new },
 	lazy => 1,
 );
 
@@ -233,22 +225,15 @@ sub update_fts {
 	# jet.basetype
 	my $basetype = $self->basetype;
 
-	my $base_columns = $self->json->decode($basetype->get_column('datacolumns'));
-	# base_columns is the array version. basecols is the hash
-	my %basecols = map { (delete $_->{name} => $_) } @$base_columns;
+	my $fts;
+	for my $field (@{ $self->datacolumns->fields }) {
+		next unless $field->searchable;
 
-	# Find searchable columns with content and format according to style
-	my $fts = lc join ' ', $self->title,
-		map {
-			my $fieldname = $_;
-			my $value = $datacol->{$fieldname};
-			if ($basecols{$fieldname}{type} eq 'Html' && defined $value) {
-				$value = $self->html_formatter->format_from_string($value)
-			}
-			$value;
-		} grep {$basecols{$_}{searchable}} keys %$datacol;
+		$fts .= ' ' . $field->for_search;
+	}
+
 	$fts =~ s/[,-\/:)(]/ /g;
-	return $fts;
+	$self->fts($fts);
 }
 
 =head2 autoload

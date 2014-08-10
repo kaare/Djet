@@ -34,7 +34,7 @@ Return a value for fts
 
 sub for_search {
 	my $self = shift;
-	return $self->formatter->format_from_string($self->value)
+	return $self->value ? $self->formatter->format_from_string($self->value) : $self->value;
 }
 
 1;

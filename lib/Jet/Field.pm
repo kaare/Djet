@@ -61,6 +61,18 @@ has value => (
 	is => 'ro',
 );
 
+=head2 searchable
+
+Switch to tell if the field is searchable
+
+=cut
+
+has searchable => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 1,
+);
+
 =head2 updatable
 
 Switch to tell if the field is updatable
