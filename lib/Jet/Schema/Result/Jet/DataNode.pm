@@ -225,7 +225,7 @@ sub update_fts {
 	# jet.basetype
 	my $basetype = $self->basetype;
 
-	my $fts;
+	my $fts = $self->title;
 	for my $field (@{ $self->datacolumns->fields }) {
 		next unless $field->searchable;
 
@@ -233,7 +233,7 @@ sub update_fts {
 	}
 
 	$fts =~ s/[,-\/:)(]/ /g;
-	$self->fts($fts);
+	$self->fts(lc $fts);
 }
 
 =head2 autoload
