@@ -55,6 +55,27 @@ has basetypes => (
 	lazy => 1,
 );
 
+=head2 default_class
+
+The default class to do something for every node, before and after other handling
+
+=cut
+
+has default_class => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $self = shift;
+		my $default_class = $self->config->{config}{jet_config}{default_class} || 'Jet::Correct';
+		$self->log->debug("Default Class: $default_class");
+		eval "require $default_class";
+		warn $@ if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up
+
+		return $default_class;
+	},
+	lazy => 1,
+);
+
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 # COPYRIGHT

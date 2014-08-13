@@ -7,6 +7,8 @@ use namespace::autoclean;
 
 extends 'Web::Machine::Resource';
 
+with 'Jet::Role::Basic';
+
 =head1 NAME
 
 Jet::Engine - Jet Engine Base Class
@@ -32,39 +34,6 @@ The plack request
 Web::Machine's response accessor
 
 =head1 ATTRIBUTES
-
-=head2 schema
-
-The Jet schema. For easy access, it also contains the config, basetypes, renderers and log
-
-=cut
-
-has schema => (
-	is => 'ro',
-	isa => 'Jet::Schema',
-	handles => [qw/
-		config
-		basetypes
-		renderers
-		log
-	/],
-);
-
-=head2 body
-
-The Jet body. Contains the stash and basenode
-
-=cut
-
-has body => (
-	is => 'ro',
-	isa => 'Jet::Body',
-	handles => [qw/
-		stash
-		basenode
-		datanodes
-	/],
-);
 
 =head2 content_types_provided
 

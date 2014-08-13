@@ -41,12 +41,20 @@ sub to_html {
 	$stash->{nodes} = $self->datanodes;
 	$stash->{request} = $self->request;
 
+	my $schema = $self->schema;
+	my $default_class = $schema->default_class->new(
+		body => $self->body,
+		schema => $self->schema,
+		content_type => $self->content_type,
+	);
+
+	$default_class->before;
 	$self->init_data unless $self->omit_run->{init_data};
 	$self->data unless $self->omit_run->{data};
+	$default_class->after;
 
 	$self->template($self->render_template) unless $self->_has_template;
 
-	my $schema = $self->schema;
 	$schema->log->debug('Template ' . $self->template);
 	my $result;
 	try {
