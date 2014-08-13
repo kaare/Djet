@@ -1,6 +1,7 @@
 package Jet::Engine;
 
 use 5.010;
+use List::Util qw/first/;
 use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
@@ -136,6 +137,29 @@ Data is called just after the original method is called. Add anything that belon
 =cut
 
 sub data {}
+
+=head2 basetype_by_name
+
+Returns a basetype from the cache, given a name
+
+=cut
+
+sub basetype_by_name {
+	my ($self, $basename) = @_;
+	return first {$_->name eq $basename} values %{ $self->schema->basetypes };
+}
+
+=head2 datanode_by_basetype
+
+Returns the first node from the datanodes, given a basetype or a basetype id
+
+=cut
+
+sub datanode_by_basetype {
+	my ($self, $basetype) = @_;
+	my $basetype_id = ref $basetype ? $basetype->id : $basetype;
+	return first {$_->basetype_id == $basetype_id} @ { $self->datanodes };
+}
 
 __PACKAGE__->meta->make_immutable;
 

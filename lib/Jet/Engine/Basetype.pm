@@ -22,7 +22,7 @@ Override the default basetype setter. Find the basetype being edited right now
 
 sub set_base_object {
 	my $self = shift;
-	my $rest_path = $self->datanodes->rest_path;
+	my $rest_path = $self->rest_path;
 	if (!$rest_path) {
 		$self->set_object($self->schema->resultset('Jet::Basetype')->new({
 			datacolumns => '[]',

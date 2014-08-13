@@ -36,8 +36,7 @@ before to_json => sub {
 		} else { # treeview
 			my $node;
 			if ($basenode->node_path =~ /index.html$/) {
-				my @nodes = $self->datanodes->all;
-				$node = $nodes[-2];
+				$node = $self->datanodes->[-2];
 			} else {
 				$node = $basenode;
 			}
