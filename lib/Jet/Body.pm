@@ -74,7 +74,7 @@ The node stack found
 =cut
 
 has datanodes => (
-	isa => 'Jet::Schema::ResultSet::Jet::DataNode',
+	isa => 'ArrayRef[Jet::Schema::Result::Jet::DataNode]',
 	is => 'ro',
 	writer => '_set_datanodes',
 );
