@@ -20,7 +20,7 @@ If the node's datatype has a breadcrumbs attribute, it will be omitted.
 before to_html => sub {
 	my $self = shift;
 	my $stash = $self->stash;
-	$stash->{breadcrumbs} = [ reverse grep {!$_->basetype->attributes->{breadcrumbs}} $self->datanodes->all ];
+	$stash->{breadcrumbs} = [ reverse grep {!$_->basetype->attributes->{breadcrumbs}} @{ $self->datanodes } ];
 };
 
 1;

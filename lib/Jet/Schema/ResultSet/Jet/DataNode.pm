@@ -36,14 +36,14 @@ As a side effect this method sets rest_path.
 
 sub find_basenode {
 	my ($self, $path) = @_;
-	my $datanodes = $self->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' });
-	my $basenode = $datanodes->first or return;
+	my @datanodes = $self->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' })->all;
+	my $basenode = $datanodes[0] or return;
 
 	my $base_path = $basenode->node_path;
 	if ( $path =~ m|^$base_path/(.*)|) {
-		$datanodes->set_rest_path($1);
+		$self->set_rest_path($1);
 	}
-	return $datanodes;
+	return \@datanodes;
 }
 
 =head2 ft_search

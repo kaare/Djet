@@ -74,9 +74,21 @@ The node stack found
 =cut
 
 has datanodes => (
-	isa => 'Jet::Schema::ResultSet::Jet::DataNode',
+	isa => 'ArrayRef[Jet::Schema::Result::Jet::DataNode]',
 	is => 'ro',
 	writer => '_set_datanodes',
+);
+
+=head2 rest_path
+
+The rest_path is the part that wasn't found by a node
+
+=cut
+
+has rest_path => (
+	isa => 'Str',
+	is => 'ro',
+	writer => '_set_rest_path',
 );
 
 =head2 basenode

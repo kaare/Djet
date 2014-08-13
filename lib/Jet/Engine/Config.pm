@@ -44,7 +44,7 @@ Decide if it's a topmenu or perhaps a new node
 before 'init_data' => sub {
 	my $self = shift;
 	my $stash = $self->stash;
-	if ($self->datanodes->rest_path eq '_jet_config') {
+	if ($self->rest_path eq '_jet_config') {
 		my $request = $self->body->request;
 		my $parent_path = $request->parameters->{parent_path};
 		# New node:

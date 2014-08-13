@@ -44,6 +44,7 @@ has body => (
 		stash
 		basenode
 		datanodes
+		rest_path
 	/],
 );
 

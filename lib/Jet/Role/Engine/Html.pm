@@ -100,8 +100,9 @@ sub template_substitute {
 
 	my $schema = $self->schema;
 	my $basetext = $1;
-	my ($basetype) = grep {$_->name eq $basetext} values %{ $schema->basetypes };
-	my ($node) = grep {$_->basetype_id == $basetype->id} $self->datanodes->all;
+	:y $basetype = $self->basetype_by_name($basetext);
+	my $node = $self->datanode_by_basetype($basetype);
+
 	my $node_path = $node->node_path;
 	$template =~ s/(.*)<.+>(.*)/$1$node_path$2/ or return;
 
@@ -126,8 +127,8 @@ templates/<domain>/node/index.tx
 sub template_name {
 	my ($self, $basenode) = @_;
 	my $schema = $self->schema;
-	my ($domain_basetype) = grep {$_->name eq 'domain'} values %{ $schema->basetypes };
-	my ($domain_node) = grep {$_->basetype_id == $domain_basetype->id} $self->datanodes->all;
+	my $domain_basetype = $self->basetype_by_name('domain');
+	my $domain_node = $self->datanode_by_basetype($domain_basetype);
 	my $node_path = $basenode->node_path || 'index';
 	my $prefix;
 	if ($domain_node) {
