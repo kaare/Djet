@@ -291,16 +291,16 @@ __PACKAGE__->set_primary_key("node_id");
 
 =head1 RELATIONS
 
-=head2 nodes
+=head2 children
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::Node>
+Related object: L<Jet::Schema::Result::Jet::DataNode>
 
 =cut
 
 __PACKAGE__->has_many(
-  "nodes",
+  "children",
   "Jet::Schema::Result::Jet::DataNode",
   { "foreign.parent_id" => "self.node_id" },
   { cascade_copy => 0, cascade_delete => 0 },
