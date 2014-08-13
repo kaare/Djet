@@ -36,12 +36,14 @@ sub to_html {
 	my $self = shift;
 	$self->content_type('html');
 
+	my $schema = $self->schema;
 	my $stash = $self->stash;
 	$stash->{node} = $self->basenode;
 	$stash->{nodes} = $self->datanodes;
 	$stash->{request} = $self->request;
+	my $domain_basetype = $schema->basetype_by_name('domain');
+	$stash->{domain_node} = $self->datanode_by_basetype($domain_basetype);
 
-	my $schema = $self->schema;
 	my $default_class = $schema->default_class->new(
 		body => $self->body,
 		schema => $self->schema,
@@ -100,7 +102,7 @@ sub template_substitute {
 
 	my $schema = $self->schema;
 	my $basetext = $1;
-	:y $basetype = $self->basetype_by_name($basetext);
+	my $basetype = $schema->basetype_by_name($basetext);
 	my $node = $self->datanode_by_basetype($basetype);
 
 	my $node_path = $node->node_path;
@@ -127,8 +129,7 @@ templates/<domain>/node/index.tx
 sub template_name {
 	my ($self, $basenode) = @_;
 	my $schema = $self->schema;
-	my $domain_basetype = $self->basetype_by_name('domain');
-	my $domain_node = $self->datanode_by_basetype($domain_basetype);
+	my $domain_node = $self->stash->{domain_node};
 	my $node_path = $basenode->node_path || 'index';
 	my $prefix;
 	if ($domain_node) {

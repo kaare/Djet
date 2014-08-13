@@ -14,6 +14,8 @@ __PACKAGE__->load_namespaces;
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z/TKrREPcrSUpNIvqFMf9g
 
+use List::Util qw/first/;
+
 =head1 NAME
 
 Jet::Schema
@@ -75,6 +77,17 @@ has default_class => (
 	},
 	lazy => 1,
 );
+
+=head2 basetype_by_name
+
+Returns a basetype from the cache, given a name
+
+=cut
+
+sub basetype_by_name {
+	my ($self, $basename) = @_;
+	return first {$_->name eq $basename} values %{ $self->basetypes };
+}
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

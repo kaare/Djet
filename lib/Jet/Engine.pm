@@ -153,17 +153,6 @@ sub urify {
 	return $uri->as_string;
 }
 
-=head2 basetype_by_name
-
-Returns a basetype from the cache, given a name
-
-=cut
-
-sub basetype_by_name {
-	my ($self, $basename) = @_;
-	return first {$_->name eq $basename} values %{ $self->schema->basetypes };
-}
-
 =head2 datanode_by_basetype
 
 Returns the first node from the datanodes, given a basetype or a basetype id
