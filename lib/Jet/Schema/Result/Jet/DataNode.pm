@@ -176,8 +176,8 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 	},
 	deflate=>sub {
 		my ($datacol, $self) = @_;
-		#	$self->field_deflate($datacol);
-		$self->update_fts($datacol);
+		# $self->field_deflate($datacol);
+		# $self->update_fts($datacol);
 		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
 });
