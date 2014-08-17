@@ -1,0 +1,9 @@
+<div id="contactform">
+  <h2><: $node.title :></h2>
+  <form method="post" id="edit-contactform" action="<: $request.path_info :>">
+: include 'generic/1col.tx' {groups => [{header => $node.title, columns => $contactform.datacolumns.fields} ] };
+: include 'generic/okcancel.tx';
+    <input type="hidden" name="sp" value="">
+    <input type="hidden" name="am" value="<: $node.id :>">
+  </form>
+</div>
