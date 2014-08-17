@@ -72,7 +72,8 @@ sub fields_class {
 					value => $cols->{$colname},
 					name => $colname,
 					title => $coltitle,
-					searchable => $column->{searchable} eq 'on',
+					required => defined($column->{required}) && $column->{required} eq 'on',
+					searchable => defined($column->{searchable}) && $column->{searchable} eq 'on',
 				);
 				$params{type} = $coltype if $coltype;
 				return $traits ?

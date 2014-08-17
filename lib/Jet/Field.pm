@@ -61,6 +61,18 @@ has value => (
 	is => 'ro',
 );
 
+=head2 required
+
+Switch to tell if the field is required
+
+=cut
+
+has required => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 1,
+);
+
 =head2 searchable
 
 Switch to tell if the field is searchable
