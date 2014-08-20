@@ -148,7 +148,6 @@ __PACKAGE__->add_columns(
 
 use JSON;
 use Encode;
-use vars qw($AUTOLOAD);
 
 =head1 JSON column handling
 
@@ -169,92 +168,15 @@ has 'json' => (
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub {
-		my ($datacol, $self) = @_;
-		my $data = $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
-#		$self->field_inflate($data);
-		return $data;
+		JSON->new->allow_nonref->decode(shift);
 	},
 	deflate=>sub {
-		my ($datacol, $self) = @_;
-		# $self->field_deflate($datacol);
-		# $self->update_fts($datacol);
-		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
+		Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
 	},
 });
 
-=head2 field_inflate
-
-Specific inflating for each field
-
-=cut
-
-sub field_inflate {
-	my ($self, $data) = @_;
-	my $fields = $self->datacolumns;
-	while (my ($name, $value) = each %$data) {
-		die "No field $name for datanode " . $self->id unless my $field = $fields->can($name);
-
-		$data->{$name} = $fields->$field->unpack($value);
-	}
-}
-
-=head2 field_deflate
-
-Specific deflating for each field
-
-=cut
-
-sub field_deflate {
-	my ($self, $datacol) = @_;
-	my $fields = $self->datacolumns;
-	while (my ($name, $value) = each %$datacol) {
-		die "No field $name for datanode " . $self->id unless my $field = $fields->can($name);
-
-		$datacol->{$name} = $fields->$field->pack($value);
-	}
-}
-
-=head2 update_fts
-
-Update the fts columns with the relevant data from datacolumns
-
-=cut
-
-sub update_fts {
-	my ($self, $datacol) = @_;
-	# jet.basetype
-	my $basetype = $self->basetype;
-
-	my $fts = $self->title;
-	for my $field (@{ $self->datacolumns->fields }) {
-		next unless $field->searchable;
-
-		$fts .= ' ' . $field->for_search;
-	}
-
-	$fts =~ s/[,-\/:)(]/ /g;
-	$self->fts(lc $fts);
-}
-
-=head2 autoload
-
-Method calls are checked to see if they match a JSON column. If so, they're handled as ordinary accessors
-
-=cut
-
-sub AUTOLOAD {
-	my $self = shift;
-	$AUTOLOAD =~ /::(\w+)$/;
-	my $method = $1;
-	return if $method eq 'fields';
-
-	my $fields = $self->datacolumns;
-	die "No field $method for datanode " . $self->id unless my $field = $fields->can($method);
-
-	return $fields->$field(@_);
-}
-
 with qw/
+	Jet::Role::DB::Result::Data
 	Jet::Role::DB::Result::Node
 /;
 

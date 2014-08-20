@@ -1,7 +1,7 @@
 <div id="basenode">
   <h2><: $node.get_column('title') :></h2>
   <form method="post" id="edit-basenode" action="<: $request.path_info :>">
-: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.datacolumns.fields} ] };
+: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.fields.fields} ] };
 : include 'generic/okcancel.tx';
 : if $basetype_id || $parent_id {
     <input type="hidden" name="basetype_id" value="<: $basetype_id :>">
