@@ -140,6 +140,7 @@ Check if it's a delete request (GET w/ a 'delete' parameter)
 
 before 'to_html' => sub {
 	my ($self) = @_;
+warn 3;
 	my $request = $self->body->request;
 	$self->set_base_object;
 	if ($request->parameters->{delete}) {
@@ -156,6 +157,7 @@ Process the edit POST
 
 sub process_post {
 	my ($self) = @_;
+warn 2;
 	my $request = $self->body->request;
 	if ($request->body_parameters->{save}) {
 		$self->set_base_object;
@@ -178,7 +180,6 @@ sub create_by_post {
 	my ($self) = @_;
 	my $request = $self->body->request;
 	$self->set_base_object;
-return \301;
 	$self->edit_submit;
 	return \301;
 
@@ -244,7 +245,6 @@ sub edit_submit {
 		my $transaction = sub {
 			if ($self->is_new) {
 				my $object = $self->edit_create($validation);
-die;
 				return unless ref $object; # local edit_create may choose not to create a new object
 
 				$self->set_object($object);
@@ -289,7 +289,13 @@ project and user components save the parameter in _text
 
 sub edit_validation {
 	my $self = shift;
+warn 6;
+
+	eval { my $ralidator = $self->get_validator; };
+warn $@;
 	my $validator = $self->get_validator;
+use Data::Dumper 'Dumper';
+warn Dumper [ $validator];
 	my $params = $self->body->request->body_parameters;
 	return $validator->validate($params);
 }
@@ -339,14 +345,19 @@ Create the node from validation results. Called from within the transaction
 
 sub edit_create {
 	my ($self, $validation)=@_;
+warn 1;
 	my $colnames = $self->get_colnames;
 	my $input_data = $validation->valid;
 	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
 	$data->{name} = $data->{title};
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
-	my $object = $self->get_resultset->new($data);
+use Data::Dumper 'Dumper';
+warn Dumper [ $data, 1 ];
+	my $object = $self->object->update($data) // $self->get_resultset->new($data);
+warn 2;
 	$object->insert;
+warn 3;
 
 	return $object;
 }

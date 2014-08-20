@@ -56,6 +56,39 @@ sub fields_as_json {
 	return [ map { $_->as_json } @{ $self->fields } ];
 }
 
+=head2 required
+
+Return an arrayref containing the names of the required fields
+
+=cut
+
+sub required {
+	my $self = shift;
+	return [ map { $_->name } grep { $_->required } @{ $self->fields } ];
+}
+
+=head2 optional
+
+Return an arrayref containing the names of the optional (non required) fields
+
+=cut
+
+sub optional {
+	my $self = shift;
+	return [ map { $_->name } grep { !$_->required } @{ $self->fields } ];
+}
+
+=head2 values
+
+Return a hashref containing the values of the fields
+
+=cut
+
+sub values {
+	my $self = shift;
+	return { map { $_->name => $_->value }  @{ $self->fields } };
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

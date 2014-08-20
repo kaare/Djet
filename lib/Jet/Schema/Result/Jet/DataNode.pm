@@ -176,9 +176,13 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 	},
 	deflate=>sub {
 		my ($datacol, $self) = @_;
+warn ref $self;
 		# $self->field_deflate($datacol);
 		# $self->update_fts($datacol);
-		return Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
+		my $values = $datacol->values if ref $datacol and ref $datacol ne 'HASH';
+use Data::Dumper 'Dumper';
+warn Dumper [ $datacol, 2 ];
+		return Encode::decode('utf-8', JSON->new->allow_nonref->encode($datacol));
 	},
 });
 

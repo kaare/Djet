@@ -266,8 +266,8 @@ has dfv => (
 	default => sub {
 		my $self = shift;
 		return {
-			required => [qw/title/],
-			optional => $self->fields->fieldnames,
+			required => $self->fields->required,
+			optional => $self->fields->optional,
 			filters  => 'trim',
 			field_filters => { },
 			constraint_methods => { },
