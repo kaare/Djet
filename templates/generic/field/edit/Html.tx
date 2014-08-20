@@ -21,4 +21,5 @@
     <a data-role='superscript' href='javascript:void(0)'><i class='fa fa-superscript'></i></a>
   </div>
 </div>
-<div id='<: $field.name :>' name='<: $field.name :>' class='htmlEditor' contenteditable="true"><: $field.value | raw :></div>
+<input type="hidden" id='<: $field.name :>_hidden' name='<: $field.name :>'>
+<div id='<: $field.name :>' class='htmlEditor' contenteditable="true"><: $field.value | raw :></div>

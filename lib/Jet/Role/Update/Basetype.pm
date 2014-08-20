@@ -96,7 +96,7 @@ sub datacolumns {
 
 	# Merge any existing values that are NOT in the web form
 	my $object = $self->object;
-	my $existing_datacolumns = $self->has_object ? { map {$_->{name} => $_}  @{ $object->datacolumns } } : {};
+	my $existing_datacolumns = $self->has_object ? { map {$_->{name} => $_}  @{ $object->fields } } : {};
 	return [ map {
 		my $new_datacolumn = $_;
 		my $existing_datacolumn = $existing_datacolumns->{$new_datacolumn->{name}} // {};

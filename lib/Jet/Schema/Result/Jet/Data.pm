@@ -174,13 +174,37 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jEEnGxnl7pYq07zdesl4lg
 
 use JSON;
+use Encode;
+
+=head1 JSON column handling
+
+=head2 inflate datacolumns
+
+The JSON columns are stored in the datacolumns database column and is autoinflated upon request.
+
+As a side-effect it updates the fts column with the relevant data from datacolumns
+
+=cut
+
+has 'json' => (
+	is => 'ro',
+	isa => 'JSON',
+	default => sub { JSON->new },
+	lazy => 1,
+);
 
 __PACKAGE__->inflate_column('datacolumns'=>{
-    inflate=>sub {
-        my ($datacol, $self) = @_;
-		return $self->basetype->fields->new( datacolumns => JSON->new->allow_nonref->decode($datacol) );
-    },
+	inflate=>sub {
+		JSON->new->allow_nonref->decode(shift);
+	},
+	deflate=>sub {
+		Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
+	},
 });
+
+with qw/
+	Jet::Role::DB::Result::Data
+/;
 
 __PACKAGE__->meta->make_immutable;
 

@@ -64,7 +64,7 @@ Get the fieldnames of the object
 
 sub get_fieldnames {
 	my $self = shift;
-	my $cols = $self->object->datacolumns;
+	my $cols = $self->object->fields;
 	return $cols->fieldnames;
 }
 
