@@ -7,7 +7,7 @@
 :   }
 :   for $group.columns -> $field {
   <tr>
-:     my $elm = 'generic/field/' ~ ($field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
+:     my $elm = 'generic/field/' ~ ($template_display != 'view' && $field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
     <td><: $field.title :></td>
     <td>
 : include $elm {field => $field};

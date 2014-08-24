@@ -289,13 +289,9 @@ project and user components save the parameter in _text
 
 sub edit_validation {
 	my $self = shift;
-warn 6;
 
 	eval { my $ralidator = $self->get_validator; };
-warn $@;
 	my $validator = $self->get_validator;
-use Data::Dumper 'Dumper';
-warn Dumper [ $validator];
 	my $params = $self->body->request->body_parameters;
 	return $validator->validate($params);
 }
@@ -345,20 +341,15 @@ Create the node from validation results. Called from within the transaction
 
 sub edit_create {
 	my ($self, $validation)=@_;
-warn 1;
 	my $colnames = $self->get_colnames;
 	my $input_data = $validation->valid;
 	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
 	$data->{name} = $data->{title};
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
-use Data::Dumper 'Dumper';
-warn Dumper [ $data, 1 ];
-	my $object = $self->object->update($data) // $self->get_resultset->new($data);
-warn 2;
+	my $object = $self->has_object ? $self->object : $self->get_resultset->new($data);
+	$object->datacolumns($data->{datacolumns});
 	$object->insert;
-warn 3;
-
 	return $object;
 }
 

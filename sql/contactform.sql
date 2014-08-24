@@ -10,8 +10,12 @@ INSERT INTO feature (name,version, description) VALUES ('contactform', 0.01, 'Co
 
 -- Basetypes
 
-INSERT INTO basetype (feature_id,name,title,handler,template) VALUES (currval('feature_id_seq'), 'contactforms','Contact Form','Jet::Engine::Contactform','/basetype/contactform.tx');
-INSERT INTO basetype (feature_id,name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'contactform','Contact Form','[
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'contactforms','Contact Form','[
+	{"name":"from","title":"From","type":"Email", "required": "on"},
+	{"name":"recipient","title":"Recipient","type":"Email", "required": "on"},
+	{"name":"template","title":"Template","type":"Str", "required": "on"}
+	]','Jet::Engine::Contactform','<domain>/basetype/contactform.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'contactform','Contact Form','[
 	{"name":"company","title":"Company","type":"Str"},
 	{"name":"name","title":"Name","type":"Str", "required": "on"},
 	{"name":"street","title":"Address","type":"Str"},
@@ -19,10 +23,11 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler) VALUES (currval
 	{"name":"city","title":"City","type":"Str"},
 	{"name":"phone","title":"Telephone","type":"Str", "required": "on"},
 	{"name":"email","title":"Email Address","type":"Email", "required": "on"},
-	{"name":"comment","title":"Comment","type":"Html", "required": "on"}]','Jet::Engine::Contactform');
+	{"name":"comment","title":"Comment","type":"Text", "required": "on"}
+	]','Jet::Engine::Contactform','<domain>/basetype/contactform.tx');
 
 -- Data Nodes
 
--- INSERT INTO data_node (basetype_id,parent_id,part,name,title) VALUES (currval('basetype_id_seq'),1,'contactform','contactform','Contact Form');
+-- INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (currval('basetype_id_seq'),1,'contactform','contactform','Contact Form','{"from":"test@test.test","recipient":"test@test.test","template":"/basetype/contactform.tx"}');
 
 COMMIT;
