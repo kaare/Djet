@@ -53,17 +53,22 @@ before 'process_post' => sub  {
 	$self->is_new(1);
 };
 
-=head2 edit_updated
+=head2 before edit_updated
 
+Send email
 
 =cut
 
-sub edit_updated {
+before 'edit_updated' => sub {
 	my ($self, $validation)=@_;
-	$self->object->discard_changes;
 	$self->send_mail;
-	$self->response->redirect($self->object->node_path);
-}
+};
+
+=head2 send_mail
+
+Actually send the email
+
+=cut
 
 sub send_mail {
 	my $self = shift;
