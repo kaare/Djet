@@ -1,7 +1,7 @@
 <div id="contactform">
   <h2><: $node.title :></h2>
   <form method="post" id="edit-contactform" action="<: $node.urify($domain_node) :>">
-: include 'generic/1col.tx' {groups => [{header => $node.title, columns => $contactform.fields.fields} ] };
+: include 'generic/1col.tx' {groups => [{columns => $contactform.fields.fields} ] };
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
     <input type="hidden" name="am" value="<: $node.id :>">
