@@ -263,7 +263,7 @@ sub urify {
 	my $domain_path = $domain_node->node_path;
 	my $node_path = $self->node_path;
 	$node_path =~ s/^$domain_path/$domain_name/;
-	return $node_path;
+	return $node_path ? "//$node_path" : $node_path;
 }
 
 __PACKAGE__->meta->make_immutable;

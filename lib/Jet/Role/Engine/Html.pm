@@ -23,6 +23,28 @@ after BUILD => sub {
 	$self->add_provided_content_type( { 'text/html' => 'to_html' });
 };
 
+=head2 stash_basic
+
+Put some basic data on the stash
+
+	node = basenode
+	nodes = datanodes
+	request = request
+	domain_node
+
+=cut
+
+sub stash_basic {
+	my $self = shift;
+	my $schema = $self->schema;
+	my $stash = $self->stash;
+	$stash->{node} = $self->basenode;
+	$stash->{nodes} = $self->datanodes;
+	$stash->{request} = $self->request;
+	my $domain_basetype = $schema->basetype_by_name('domain');
+	$stash->{domain_node} = $self->datanode_by_basetype($domain_basetype);
+}
+
 =head2 to_html
 
 Sets the content type to html, initializes the stash with node, nodes and request,
@@ -35,14 +57,9 @@ Finally renders the template and returns the result.
 sub to_html {
 	my $self = shift;
 	$self->content_type('html');
+	$self->stash_basic;
 
 	my $schema = $self->schema;
-	my $stash = $self->stash;
-	$stash->{node} = $self->basenode;
-	$stash->{nodes} = $self->datanodes;
-	$stash->{request} = $self->request;
-	my $domain_basetype = $schema->basetype_by_name('domain');
-	$stash->{domain_node} = $self->datanode_by_basetype($domain_basetype);
 
 	my $default_class = $schema->default_class->new(
 		body => $self->body,

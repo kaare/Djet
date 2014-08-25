@@ -5,6 +5,8 @@ use List::MoreUtils qw{ any uniq };
 
 use Jet::Data::Validator;
 
+requires qw/stash_basic/;
+
 =head1 NAME
 
 Jet::Role::Update - generic methods for edit / create actions
@@ -140,7 +142,6 @@ Check if it's a delete request (GET w/ a 'delete' parameter)
 
 before 'to_html' => sub {
 	my ($self) = @_;
-warn 3;
 	my $request = $self->body->request;
 	$self->set_base_object;
 	if ($request->parameters->{delete}) {
@@ -157,7 +158,7 @@ Process the edit POST
 
 sub process_post {
 	my ($self) = @_;
-warn 2;
+	$self->stash_basic;
 	my $request = $self->body->request;
 	if ($request->body_parameters->{save}) {
 		$self->set_base_object;
@@ -363,7 +364,8 @@ The validation object is passed here in case any method modifier wants to use it
 
 sub edit_updated {
 	my ($self, $validation)=@_;
-	$self->response->redirect($self->response->uri_for($self->redirect_to));
+	$self->object->discard_changes;
+	$self->response->redirect($self->object->urify($self->stash->{domain_node}));
 }
 
 =head2 edit_failed_update
