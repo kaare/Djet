@@ -84,8 +84,10 @@ sub update_fts {
 		$fts .= ' ' . $field->for_search;
 	}
 
-	$fts =~ s/[,-\/:)(]/ /g;
-	$self->fts(lc $fts);
+	$fts =~ s/[,-\/:)(']/ /g;
+	$fts = lc $fts;
+	my $q = qq{to_tsvector('danish', '$fts')};
+	$self->update({fts => \$q });
 }
 
 =head2 autoload
