@@ -168,7 +168,9 @@ sub process_post {
 		$response->redirect($response->uri_for($self->object->node_path));
 	}
 	$self->_stash_defaults;
-	$self->edit_view unless $self->dont_render_edit;
+#	$self->edit_view unless $self->dont_render_edit;
+
+	$self->response->body($self->view_page);
 }
 
 =head2 create_by_post
@@ -397,7 +399,7 @@ sub edit_view {
 sub _stash_defaults {
 	my ($self) = @_;
 	my $request = $self->body->request;
-	$self->stash->{defaults} = $request->parameters;
+	$self->stash->{defaults} = $request->parameters->as_hashref;
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
 		$self->stash->{defaults}{$fieldname} = $upload->filename;
 	}

@@ -56,6 +56,11 @@ Finally renders the template and returns the result.
 
 sub to_html {
 	my $self = shift;
+	$self->view_page;
+}
+
+sub view_page {
+	my $self = shift;
 	$self->content_type('html');
 	$self->stash_basic;
 
