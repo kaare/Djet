@@ -22,4 +22,4 @@
   </div>
 </div>
 <input type="hidden" id='<: $field.name :>_hidden' name='<: $field.name :>'>
-<div id='<: $field.name :>' class='htmlEditor' contenteditable="true"><: $field.value | raw :></div>
+<div id='<: $field.name :>' class='htmlEditor' contenteditable="true"><: $defaults[$field.name] || $field.value | raw :></div>

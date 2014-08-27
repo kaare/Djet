@@ -1,1 +1,1 @@
-<input type="text" name="<: $name || $field.name :>" value="<: $field.value :>">
+: include 'generic/field/edit/Str.tx'

@@ -1,1 +1,1 @@
-<input type="text" name="<: $name || $field.name :>" value="<: $field.value :>">
+<input type="text" name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>">

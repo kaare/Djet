@@ -1,1 +1,1 @@
-<textarea id="<: $name || $field.name :>" name="<: $name || $field.name :>"><: $field.value | html :></textarea>
+<textarea id="<: $name || $field.name :>" name="<: $name || $field.name :>"><: $defaults[$field.name] || $field.value | html :></textarea>
