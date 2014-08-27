@@ -64,9 +64,7 @@ has profile => (
 		my $self = shift;
 		my $dfv = $self->dfv;
 		$dfv->{msgs} = sub {
-			$self->error_msgs(@_, {
-				$self->msgs,
-			});
+			$self->error_msgs(@_, $self->msgs);
 		};
 		return $dfv;
 	},
@@ -105,14 +103,14 @@ sub error_msgs {
 	if ($results->has_invalid) {
 		my $invalids=$results->invalid;
 		foreach my $field (keys %$invalids) {
-			$results->{msgs}->{$field}=join ' ', grep { defined } @{$results->{msgs}->{$field} || []}, map { $defaults->{$_} || undef } @{$invalids->{$field}};
+			$results->{msgs}->{$field} = join ' ', grep { defined } @{$results->{msgs}->{$field} || []}, map { $defaults->{$_} || undef } @{$invalids->{$field}};
 		}
 	}
 
 	if ($results->has_missing) {
 		my $missings=$results->missing;
 		foreach my $field (@$missings) {
-			$results->{msgs}->{$field}= $defaults->{$field};
+			$results->{msgs}->{$field} = $defaults->{$field} // "$field is required";
 		}
 	}
 
