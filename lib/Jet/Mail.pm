@@ -24,34 +24,28 @@ Sends email
 
 has 'renderer' => (
 	is => 'ro',
-#	isa => 'Jet::Render:Html',
 );
 
-=head2 template
+=head2 mailer
+
+Email::Stuffer object
 
 =cut
 
-has 'template' => (
+has 'mailer' => (
 	is => 'ro',
-	isa => 'Str',
-);
-
-=head2 from
-
-=cut
-
-has 'from' => (
-	is => 'ro',
-	isa => 'Str',
-);
-
-=head2 to
-
-=cut
-
-has 'to' => (
-	is => 'ro',
-	isa => 'ArrayRef',
+	isa => 'Email::Stuffer',
+	default => sub {
+		my $self = shift;
+		my $mailer = Email::Stuffer->new;
+		my $transport = $self->config->config->{mail}{transport};
+		if ($transport) {
+			my ($moniker, $options) = @$transport;
+			$mailer->transport($moniker, $options);
+		}
+		return $mailer;
+	},
+	lazy => 1,
 );
 
 =head1 METHODS
@@ -61,11 +55,14 @@ has 'to' => (
 =cut
 
 sub send {
-	my $self = shift;
-	my $mailbody = $self->renderer->render($self->template, $self->stash);
-	Email::Stuffer->from($self->from)
-		->to($self->to->[0])
-		->text_body($mailbody)
+	my ($self, %args) = @_;
+	my $stash = $self->stash;
+	my $mailbody = $self->renderer->render($args{template}, $stash);
+	my @to = ref $args{to} && ref $args{to} eq 'ARRAY' ? @{ $args{to} } : ($args{to});
+	$self->mailer->from($args{from})
+		->to(@to)
+		->subject($stash->{node}->title)
+		->html_body($mailbody)
 		->send;
 }
 

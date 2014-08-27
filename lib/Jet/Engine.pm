@@ -5,6 +5,7 @@ use List::Util qw/first/;
 use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
+use Jet::Mail;
 
 extends 'Web::Machine::Resource';
 
@@ -111,6 +112,29 @@ sub _build_renderer {
 	my $type = $self->content_type =~/(html|json)/i ? $1 : 'html';
 	return $self->schema->renderers->{$type};
 }
+
+=head2 mailer
+
+Jet mailer
+
+=cut
+
+has mailer => (
+	is => 'ro',
+	isa => 'Jet::Mail',
+	default => sub {
+		my $self = shift;
+		my $config = $self->schema->config->{mail} // {};
+		my $renderer = $self->schema->renderers->{'html'};
+		my $mailer = Jet::Mail->new(
+			schema => $self->schema,
+			body => $self->body,
+			renderer => $renderer,
+		);
+		return $mailer;
+	},
+	lazy => 1,
+);
 
 =head1 METHODS
 
