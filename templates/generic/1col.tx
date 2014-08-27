@@ -1,3 +1,6 @@
+<div id="required_description">
+Felter markeret med <b>fed</b> er obligatoriske.
+</div>
 <table>
 : for $groups -> $group {
 :   if $group.header {
@@ -8,8 +11,10 @@
 :   for $group.columns -> $field {
   <tr>
 :     my $elm = 'generic/field/' ~ ($template_display != 'view' && $field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
-    <td><: $field.title :></td>
-    <td>
+    <td class="<: if $field.required { :>required<: } :>">
+		<: $field.title :>
+	</td>
+    <td class="<: if $msgs[$field.name] { :>error<: } :>">
 : include $elm {field => $field};
     </td>
 </tr>
