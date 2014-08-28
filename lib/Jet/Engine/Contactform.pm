@@ -8,12 +8,19 @@ with qw/Jet::Role::Log Jet::Role::Update::Node/;
 
 =head1 NAME
 
-Jet::Engine::Contactform - Search Engine
+Jet::Engine::Contactform
+
+=head2 DESCRIPTION
+
+A contactform where the user enters some basic information and a comment. This data is saved in a new node, and emailed to both the site admin and the user self.
+
+Based on the node update role, it includes validation as chosen for the individual fields, and all edit navigation is controlled there.
 
 =head1 METHODS
 
-=head2 init_data
+=head2 after init_data
 
+Will create a new empty contactform if it's a "parent" (contactforms) basetype. If it's a "child" contactform, will display it.
 
 =cut
 
@@ -31,8 +38,10 @@ after 'init_data' => sub  {
 	$self->stash->{contactform} = $contactform;
 };
 
-=head2 process_post
+=head2 before process_post
 
+This is processed when the contactform is submitted. A new "child" contactform is created, and the flow proceeds to
+validation.
 
 =cut
 
@@ -40,6 +49,7 @@ before 'process_post' => sub  {
 	my $self = shift;
 	my $schema = $self->schema;
 	my $basetype = $schema->basetype_by_name('contactform') or die "No basetype: contactform";
+
 	my $contactform = $self->schema->resultset('Jet::DataNode')->new({
 		parent_id => $self->basenode->id,
 		basetype_id => $basetype->id,
@@ -54,7 +64,7 @@ before 'process_post' => sub  {
 
 =head2 before edit_updated
 
-Send email
+Send email to the admin and the user if the "child" contactform was actually created.
 
 =cut
 
