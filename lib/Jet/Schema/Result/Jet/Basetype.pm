@@ -251,29 +251,9 @@ has fields => (
 	isa => 'Jet::Fields',
 	is => 'ro',
 	lazy_build => 1,
-);
-
-=head2 dfv
-
-The Data::Form::Validator init hashref for the basetype
-
-=cut
-
-has dfv => (
-	isa => 'HashRef',
-	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		return {
-			required => $self->fields->required,
-			optional => $self->fields->optional,
-			filters  => 'trim',
-			field_filters => { },
-			constraint_methods => { },
-		};
-	},
-	writer => 'set_dfv',
+	handles => [qw/
+	dfv
+	/],
 );
 
 =head1 METHODS

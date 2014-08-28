@@ -144,6 +144,22 @@ sub for_search {
 	return $self->value;
 }
 
+=head2 filters
+
+Filters for Data::FormValidator. Default is nothing
+
+=cut
+
+sub filters { }
+
+=head2 constraint_methods
+
+Constraint Methods for Data::FormValidator. Default is nothing
+
+=cut
+
+sub constraint_methods { }
+
 no Moose::Role;
 
 1;

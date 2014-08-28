@@ -96,21 +96,20 @@ sub validate {
 =cut
 
 sub error_msgs {
-	my ($self, $results, $defaults) = @_;
-	$defaults ||= {};
+	my ($self, $results) = @_;
 	$results->{msgs} ||= {};
 
 	if ($results->has_invalid) {
 		my $invalids=$results->invalid;
 		foreach my $field (keys %$invalids) {
-			$results->{msgs}->{$field} = join ' ', grep { defined } @{$results->{msgs}->{$field} || []}, map { $defaults->{$_} || undef } @{$invalids->{$field}};
+			$results->{msgs}->{$field} = "$field error";
 		}
 	}
 
 	if ($results->has_missing) {
 		my $missings=$results->missing;
 		foreach my $field (@$missings) {
-			$results->{msgs}->{$field} = $defaults->{$field} // "$field is required";
+			$results->{msgs}->{$field} = "$field is required";
 		}
 	}
 

@@ -16,4 +16,6 @@ requires qw/value/;
 
 =head1 METHODS
 
+=cut
+
 1;

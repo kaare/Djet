@@ -18,10 +18,9 @@ requires qw/value/;
 
 =cut
 
-sub validation_constraints {
-	return email();
+sub constraint_methods {
+	my $self = shift;
+	return $self->name => email();
 }
-
-=cut
 
 1;
