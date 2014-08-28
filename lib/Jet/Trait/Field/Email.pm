@@ -2,6 +2,8 @@ package Jet::Trait::Field::Email;
 
 use Moose::Role;
 
+use Data::FormValidator::Constraints qw(:closures);
+
 =head1 NAME
 
 Jet::Trait::Field::Email - decorate the email field
@@ -12,7 +14,13 @@ requires qw/value/;
 
 =head1 METHODS
 
-Nothing yet
+=head2 validation_constraints
+
+=cut
+
+sub validation_constraints {
+	return email();
+}
 
 =cut
 
