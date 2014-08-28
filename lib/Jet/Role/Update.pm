@@ -45,17 +45,6 @@ has is_new => (
 	default => 0,
 );
 
-=head2 dont_render_edit
-
-Set to true if the page isn't to be rendered after the edit action
-
-=cut
-
-has dont_render_edit => (
-	is => 'rw',
-	isa => 'Bool',
-);
-
 =head2 dfv
 
 The Data::Form::Validator init hash.
@@ -102,18 +91,9 @@ after BUILD => sub {
 	$self->add_accepted_content_type( { 'application/x-www-form-urlencoded' => 'create_by_post' });
 };
 
-=head2 _build_dfv
-
-The Data::Form::Validator init hashref for the basetype is
-overriden in Jet::Role::Update::Node and Jet::Role::Update::Basetype
-
-=cut
-
-sub _build_dfv { }
-
 =head2 _build_validator
 
-Build the validator for the node or basetype.
+Build the validator for the node.
 
 The validator is a Jet::Data::Validator and is used by (data)nodes to validate input
 
@@ -168,8 +148,6 @@ sub process_post {
 		$response->redirect($response->uri_for($self->object->node_path));
 	}
 	$self->_stash_defaults;
-#	$self->edit_view unless $self->dont_render_edit;
-
 	$self->response->body($self->view_page);
 }
 
@@ -258,7 +236,7 @@ sub edit_submit {
 
 		my $error = $self->edit_submit_handle_transaction($transaction);
 		if (!$error) {
-			$self->edit_updated($validation) unless $self->dont_render_edit;
+			$self->edit_updated($validation);
 		} else {
 			$self->edit_failed_update($validation, $error);
 		}
