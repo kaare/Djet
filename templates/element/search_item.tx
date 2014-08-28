@@ -1,7 +1,7 @@
 		<article class="search-result row">
 			<div class="col-xs-9 col-sm-9 col-md-3">
 : if $item_image {
-				<a class="thumbnail" title="<: $item.title :>" href="http://<: $item.urify($domain_node) :>"><img alt="<: $item.title :>" src="<: scale_image($item_image.value, '250x140') :>"></a>
+				<a class="thumbnail" title="<: $item.title :>" href="<: $item.urify($domain_node) :>"><img alt="<: $item.title :>" src="/img/products/<: scale_image($item_image.value, '250x140') :>"></a>
 : }
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-2">
