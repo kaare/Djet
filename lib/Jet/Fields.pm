@@ -121,7 +121,7 @@ Return an arrayref containing the constraint_methods for alle fields
 
 sub constraint_methods {
 	my $self = shift;
-	return { map {warn ref $_; $_->constraint_methods } @{ $self->fields } };
+	return { map {$_->constraint_methods } @{ $self->fields } };
 }
 
 =head2 values
