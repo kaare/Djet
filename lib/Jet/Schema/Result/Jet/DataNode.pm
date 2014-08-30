@@ -262,6 +262,8 @@ sub urify {
 	my $domain_name = $domain_node->name;
 	my $domain_path = $domain_node->node_path;
 	my $node_path = $self->node_path;
+	return $node_path unless $schema->config->config->{environment} eq 'live';
+
 	$node_path =~ s/^$domain_path/$domain_name/;
 	return $node_path ? "//$node_path" : $node_path;
 }
