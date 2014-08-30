@@ -12,7 +12,7 @@
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-7 excerpet">
 				<h3><a title="" href="http://<: $item.urify($domain_node) :>"><: $item.title :></a></h3>
-				<: $item.content_text | raw :>
+				<: $item.description | raw :>
                 <span class="plus"><a title="Lorem ipsum" href="#"><i class="glyphicon glyphicon-plus"></i></a></span>
 			</div>
 			<span class="clearfix borda"></span>
