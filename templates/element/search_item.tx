@@ -7,7 +7,7 @@
 			<div class="col-xs-9 col-sm-9 col-md-2">
 				<ul class="meta-search">
 					<li><i class="glyphicon glyphicon-calendar"></i> <span><: $item.data_modified.ymd :></span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span><: $item.basetype.title :></span></li>
+					<li><i class="glyphicon glyphicon-tags"></i><span><: $basetypes[$item.basetype_id].title :></span></li>
 				</ul>
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-7 excerpet">
