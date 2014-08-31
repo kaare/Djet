@@ -12,6 +12,19 @@ Jet::Part::List - Find a number of nodes based on some earch parameters
 
 =head1 ATTRIBUTES
 
+=head2 list_name
+
+Name of the list on the stash
+
+=cut
+
+has list_name => (
+	is => 'ro',
+	isa => 'Str',
+	writer => 'set_list_name',
+	default => 'children',
+);
+
 =head2 limit
 
 Limit the number of nodes to be returned
@@ -21,7 +34,6 @@ Limit the number of nodes to be returned
 has limit => (
 	is => 'ro',
 	isa => 'Int',
-	predicate => 'has_limit',
 	writer => 'set_limit',
 	default => 10,
 );
@@ -36,6 +48,7 @@ has fts => (
 	is => 'ro',
 	isa => 'Str',
 	predicate => 'has_fts',
+	writer => 'set_fts',
 );
 
 =head2 search
@@ -65,13 +78,16 @@ Find the nodes with the parameters given
 
 before 'data' => sub {
 	my $self = shift;
-	$self->stash->{children} = $self->_find_list;
+	$self->stash->{$self->list_name} = $self->_find_list;
 };
 
 sub _find_list {
 	my $self = shift;
 	my $options = {};
-	$options->{rows} = $self->limit if $self->has_limit;
+	$options->{rows} = $self->limit;
+	my $page = $self->request->param('page') // 1;
+	$options->{page} = $page;
+	delete $self->stash->{query_parameters}{page};
 	my $search = $self->schema->resultset('Jet::DataNode')->search($self->search, $options);
 	return $self->has_fts ? $search->ft_search($self->fts) : $search;
 }

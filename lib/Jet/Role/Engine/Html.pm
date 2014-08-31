@@ -42,6 +42,7 @@ sub stash_basic {
 	$stash->{node} = $self->basenode;
 	$stash->{nodes} = $self->datanodes;
 	$stash->{request} = $self->request;
+	$stash->{query_parameters} = $self->request->query_parameters;
 	my $domain_basetype = $schema->basetype_by_name('domain');
 	$stash->{domain_node} = $self->datanode_by_basetype($domain_basetype);
 }

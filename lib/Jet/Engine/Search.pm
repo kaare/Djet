@@ -6,6 +6,8 @@ use Encode qw/encode/;
 
 extends 'Jet::Engine::Default';
 
+with 'Jet::Part::List';
+
 =head1 NAME
 
 Jet::Engine::Search - Search Engine
@@ -23,7 +25,8 @@ after 'init_data' => sub  {
 	my $search_phrase = encode('utf-8', $self->body->request->parameters->{search_phrase});
 	return unless $search_phrase;
 
-	$self->stash->{search_nodes} = $self->schema->resultset('Jet::DataNode')->search(undef, {rows => 10})->ft_search($search_phrase);
+	$self->set_fts($search_phrase);
+	$self->set_list_name('search_nodes');
 	$self->stash->{search_phrase} = $search_phrase;
 };
 

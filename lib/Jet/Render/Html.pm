@@ -6,6 +6,7 @@ use namespace::autoclean;
 
 use Text::Xslate;
 use Locale::Maketext::Simple;
+use URI::Escape;
 
 with 'Jet::Role::Log';
 
@@ -50,7 +51,10 @@ has tx => (
 					return loc(@_);
 				},
 				scale_image => sub {
-					return scale_image(@_)
+					return scale_image(@_);
+				},
+				url_encode => sub {
+					return url_encode(@_);
 				},
 			},
 		);
@@ -75,6 +79,25 @@ sub scale_image {
 
 	my ($name, $ext) = split /\./, $filename;
 	return $name . '_' . $scale . '.' . $ext;
+}
+
+=head2 url_encode
+
+Xslate function to url encode a hashref.
+
+Write something like
+
+  <: $query_parameters | url_encode :>
+
+in the template.
+
+=cut
+
+sub url_encode {
+	my ($params) = @_;
+	return 'FAIL' unless ref $params eq 'HASH' or ref $params eq 'Hash::MultiValue';
+
+	return join '&', map{join '=', map uri_escape($_), $_, defined($params->{$_}) ? $params->{$_} : undef} keys %$params;
 }
 
 =head1 METHODS
