@@ -38,6 +38,7 @@ sub stash_basic {
 	my $self = shift;
 	my $schema = $self->schema;
 	my $stash = $self->stash;
+	$stash->{basetypes} = $self->basetypes;
 	$stash->{node} = $self->basenode;
 	$stash->{nodes} = $self->datanodes;
 	$stash->{request} = $self->request;

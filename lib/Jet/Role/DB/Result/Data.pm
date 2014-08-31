@@ -47,7 +47,9 @@ has 'fields' => (
 
 sub _build_fields {
 	my $self= shift;
-	return $self->basetype->fields->new( datacolumns =>  $self->datacolumns );
+	my $schema = $self->result_source->schema;
+	my $basetype = $schema->basetypes->{$self->basetype_id};
+	return $basetype->fields->new( datacolumns =>  $self->datacolumns );
 }
 
 =head2 field_deflate
