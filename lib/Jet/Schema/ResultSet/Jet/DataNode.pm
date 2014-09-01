@@ -3,6 +3,7 @@ use base 'DBIx::Class::ResultSet';
 
 use Moose;
 use namespace::autoclean;
+use utf8;
 
 =head1 ATTRIBUTES
 
@@ -80,6 +81,7 @@ sub normalize_part {
 	my ( $self, $text ) = @_;
 	my $part = lc $text;
 	$part =~ s/\s+/_/g;
+	$part =~ tr/æøå/aoa/;
 	return $part;
 }
 
