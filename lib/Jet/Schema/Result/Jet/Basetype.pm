@@ -45,6 +45,14 @@ __PACKAGE__->table("jet.basetype");
   is_nullable: 0
   sequence: 'jet.basetype_id_seq'
 
+=head2 feature_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
+References the feature table
+
 =head2 name
 
   data_type: 'text'
@@ -105,14 +113,14 @@ The template for this basetype
 
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 1
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =cut
@@ -125,6 +133,8 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     sequence          => "jet.basetype_id_seq",
   },
+  "feature_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 0 },
   "title",
@@ -143,13 +153,13 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -180,7 +190,7 @@ __PACKAGE__->add_unique_constraint("basetype_name_key", ["name"]);
 
 =head1 RELATIONS
 
-=head2 data
+=head2 datas
 
 Type: has_many
 
@@ -195,9 +205,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 feature
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 07:23:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SDaS2vWiSI4OkGVMkaxa+g
+Type: belongs_to
+
+Related object: L<Jet::Schema::Result::Jet::Feature>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "feature",
+  "Jet::Schema::Result::Jet::Feature",
+  { id => "feature_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:07PYb2oO8E5mC/ymqNQDbQ
 
 =head2 datanodes
 

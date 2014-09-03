@@ -75,14 +75,14 @@ Global Path parts
 
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 1
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =cut
@@ -105,13 +105,13 @@ __PACKAGE__->add_columns(
   { data_type => "prefix_range", is_nullable => 1 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -184,8 +184,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-21 09:04:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TYSAugq53FAwwsUqGh9w1g
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:E3nnAPISY+kvBJqGWDZrGw
 
 with 'Jet::Role::DB::Result::Node';
 
