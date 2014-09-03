@@ -1,1 +1,1 @@
-<input type="checkbox" id="<: $name || $field.name :>" name="<: $name || $field.name :>" <: if $field.value {'checked="checked"'} :>" class="edit<: if $field.can('class') { ' $field.class' } :>">
+<input type="checkbox" id="<: $name || $field.name :>" name="<: $name || $field.name :>" <: if $field.value {'checked="checked"'} :>">

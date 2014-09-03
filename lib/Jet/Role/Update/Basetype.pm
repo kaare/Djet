@@ -76,7 +76,7 @@ Get the attributes from input data
 sub attributes {
 	my ($self, $input_data) = @_;
 	my $prefix = 'attribute';
-	my $params = $self->request->request->body_parameters;
+	my $params = $self->request->body_parameters;
 	my $rows = $self->find_rows_from_params($prefix, $params);
 	my %attributes = map {$_->{name} => $_->{value}} grep {$_->{name}} @$rows;
 	return \%attributes;
@@ -91,12 +91,12 @@ Get the datacolumns from input data
 sub datacolumns {
 	my ($self, $input_data) = @_;
 	my $prefix = 'datacolumn'; # XXX
-	my $params = $self->request->request->body_parameters;
+	my $params = $self->request->body_parameters;
 	my $rows = $self->find_rows_from_params($prefix, $params);
 
 	# Merge any existing values that are NOT in the web form
 	my $object = $self->object;
-	my $existing_datacolumns = $self->has_object ? { map {$_->{name} => $_}  @{ $object->fields } } : {};
+	my $existing_datacolumns = $self->has_object ? { map {$_->{name} => $_}  @{ $object->datacolumns } } : {};
 	return [ map {
 		my $new_datacolumn = $_;
 		my $existing_datacolumn = $existing_datacolumns->{$new_datacolumn->{name}} // {};
@@ -146,7 +146,7 @@ Return the path to be redirected to after a successful update.
 
 sub redirect_to {
 	my $self = shift;
-	return '/jet/config/basetype/' . $self->object->name;
+	return '/jet/basetype/' . $self->object->name;
 }
 
 =head2 edit_updated
@@ -155,12 +155,11 @@ Use the new basetype upon successful update
 
 =cut
 
-before 'edit_updated' => sub {
+sub edit_updated  {
 	my ($self, $validation)=@_;
-	my $basetypes = $self->schema->basetypes;
-	my $basetype_id = $self->object->id;
-	$basetypes->{$basetype_id} = $self->object;
-};
+	$self->object->discard_changes;
+	$self->response->redirect($self->redirect_to);
+}
 
 
 1;

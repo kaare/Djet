@@ -4,7 +4,11 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine::Default';
-with qw/Jet::Role::Update::Basetype Jet::Role::Config::Topmenu/;
+with qw/
+	Jet::Role::Update::Basetype
+	Jet::Role::Config::Topmenu
+	Role::Pg::Notify
+/;
 
 =head1 DESCRIPTION
 
@@ -23,6 +27,7 @@ Override the default basetype setter. Find the basetype being edited right now
 sub set_base_object {
 	my $self = shift;
 	my $rest_path = $self->rest_path;
+	undef($rest_path) if $rest_path eq 'index.html';
 	if (!$rest_path) {
 		$self->set_object($self->schema->resultset('Jet::Basetype')->new({
 			datacolumns => '[]',
@@ -40,37 +45,31 @@ sub set_base_object {
 
 =head2 data
 
-Basically, just edit functionality
+Sort the basetypes and set the stash
 
 =cut
 
 before data => sub {
 	my $self = shift;
-	$self->edit;
-};
-
-=head2 edit_view
-
-Find the data to put on stash
-
-=cut
-
-sub edit_view {
-	my $self = shift;
 	my $stash = $self->stash;
-	$stash->{topmenu} = $self->topmenu(1);
-	$stash->{request} = $self->request;
-	my $nodes = $self->datanodes;
-	my @basetypes = $self->schema->resultset('Jet::Basetype')->search(undef, {order_by => 'id'});
-	$stash->{basetypes} = [ @basetypes ];
+	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values $self->schema->basetypes ];
 	if ($self->has_object) {
 		$stash->{title} ||= $self->object->title;
 		$stash->{current_basetype} = $self->object;
 		$self->_build_basetype_fields($self->object);
 	}
+};
 
-	$self->template('config/basetype.tx');
-}
+=head2 after edit_updated
+
+Send notification that the basetype has changed
+
+=cut
+
+after 'edit_updated' => sub  {
+	my $self = shift;
+	$self->notify(queue => 'jet:admin', payload => 'reload:basetype:' . $self->object->id);
+};
 
 sub _build_basetype_fields {
 	my ($self, $current_basetype) = @_;

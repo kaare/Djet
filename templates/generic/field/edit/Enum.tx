@@ -1,6 +1,6 @@
 <select id="<: $name || $field_name :>" name="<: $name || $field_name :>" class="edit<: if $field.class { " $field.class" } :>">
 : for $field.enum -> $field_enum {
-: 	if is_hash_ref($field_enum) || $field_enum.id {
+: 	if is_hash_ref($field_enum) {
   <option value="<: $field_enum.id :>" <: if $field_enum.id == $field.value { 'selected="selected"' } :>><: $field_enum.title :></option>
 : 	} else {
   <option value="<: $field_enum :>" <: if $field_enum == $field.value { 'selected="selected"' } :>><: $field_enum :></option>

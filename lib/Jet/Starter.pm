@@ -7,6 +7,8 @@ use Jet::Config;
 use Jet::Body;
 use Jet::Machine;
 
+with 'Role::Pg::Notify';
+
 =head1 NAME
 
 Jet::Starter
@@ -87,6 +89,7 @@ has app => (
 	default => sub {
 		my $self = shift;
 		return sub {
+			$self->check_notifications;
 			my $env = shift;
 			my $body = Jet::Body->new(
 				env => $env,
@@ -108,6 +111,24 @@ has app => (
 	},
 	lazy => 1,
 );
+
+sub check_notifications {
+	my $self = shift;
+	my $note = $self->get_notification or return;
+
+	my ($q, $pid, $payload) = @$note;
+	my ($action, $subject, $id) = split ':', $payload;
+	return unless $action eq 'reload' and $subject eq 'basetype';
+
+	my $schema = $self->schema;
+	my $basetypes = $schema->basetypes;
+	$basetypes->{$id} =  $schema->resultset('Jet::Basetype')->find({id => $id});
+}
+
+sub BUILD {
+	my $self = shift;
+	$self->listen(queue => 'jet:admin');
+}
 
 __PACKAGE__->meta->make_immutable;
 
