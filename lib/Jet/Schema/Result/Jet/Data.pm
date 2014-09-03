@@ -70,7 +70,7 @@ The Title
 =head2 datacolumns
 
   data_type: 'json'
-  default_value: '[]'
+  default_value: '{}'
   is_nullable: 0
 
 The actual column data
@@ -84,14 +84,14 @@ Full Text Search column containing the content of the searchable columns
 
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 1
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =cut
@@ -111,18 +111,18 @@ __PACKAGE__->add_columns(
   "title",
   { data_type => "text", is_nullable => 0 },
   "datacolumns",
-  { data_type => "json", default_value => "[]", is_nullable => 0 },
+  { data_type => "json", default_value => "{}", is_nullable => 0 },
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -170,8 +170,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-21 09:04:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jEEnGxnl7pYq07zdesl4lg
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aE1OCwO35VTWCHIZe7wZVg
 
 use JSON;
 use Encode;

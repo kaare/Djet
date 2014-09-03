@@ -71,12 +71,12 @@ __PACKAGE__->table("jet.data_node");
 
 =head2 data_created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =head2 data_modified
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =head2 node_id
@@ -101,12 +101,12 @@ __PACKAGE__->table("jet.data_node");
 
 =head2 node_created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =head2 node_modified
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =cut
@@ -125,9 +125,9 @@ __PACKAGE__->add_columns(
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
   "data_created",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
   "data_modified",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
   "node_id",
   { data_type => "integer", is_nullable => 0 },
   "parent_id",
@@ -137,14 +137,14 @@ __PACKAGE__->add_columns(
   "node_path",
   { data_type => "prefix_range", is_nullable => 1 },
   "node_created",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
   "node_modified",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-21 09:04:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RlQmiuz5mxXkmDoaH5QVMg
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NPiSDqlah/cFXv8N3tNlbA
 
 use JSON;
 use Encode;
