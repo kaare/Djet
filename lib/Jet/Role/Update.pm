@@ -325,12 +325,16 @@ sub edit_create {
 	my $colnames = $self->get_colnames;
 	my $input_data = $validation->valid;
 	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
-	$data->{name} = $data->{title};
+	$data->{name} ||= $data->{title};
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
+	if ($self->has_object) {
+		$self->object->$_($data->{$_}) for keys %$data;
+	}
 	my $object = $self->has_object ? $self->object : $self->get_resultset->new($data);
 	$object->datacolumns($data->{datacolumns});
 	$object->insert;
+	$object->update($data);
 	return $object;
 }
 

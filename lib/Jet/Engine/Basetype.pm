@@ -30,6 +30,7 @@ sub set_base_object {
 	undef($rest_path) if $rest_path eq 'index.html';
 	if (!$rest_path) {
 		$self->set_object($self->schema->resultset('Jet::Basetype')->new({
+			feature_id => 1,
 			datacolumns => '[]',
 			attributes => '{}',
 		}));
