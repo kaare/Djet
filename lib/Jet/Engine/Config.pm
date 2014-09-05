@@ -64,33 +64,6 @@ Control what to send when it's Jet config
 before 'data' => sub {
 	my $self = shift;
 	my $stash = $self->stash;
-
-	my $request = $self->body->request;
-	# New node. There's a first pass ('GET') to build up the display.
-	if (my $parent_id = $request->parameters->{parent_id} and my $basetype_id = $request->parameters->{basetype_id}) {
-		$stash->{parent_id} = $parent_id;
-		$stash->{basetype_id} = $basetype_id;
-		$self->set_object($self->schema->resultset('Jet::DataNode')->new({
-			parent_id => $parent_id,
-			basetype_id => $basetype_id,
-			datacolumns => '{}',
-		}));
-	}
-
-	$stash->{node} = $self->object;
-	$stash->{request} = $self->request;
-	$self->edit_view;
-};
-
-=head2 edit_view
-
-Do some view stuff
-
-=cut
-
-after edit_view => sub {
-	my $self = shift;
-	my $stash = $self->stash;
 	my $basecols = {
 		columns => [
 			{
