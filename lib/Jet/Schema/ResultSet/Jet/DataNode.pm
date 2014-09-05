@@ -16,7 +16,25 @@ The remaining part after the basenode has been found.
 has rest_path => (
 	 is => 'ro',
 	 isa => 'Str',
-	 writer => 'set_rest_path',
+	 default => sub {
+		 my $self = shift;
+		 my $raw = $self->raw_rest_path;
+		 $raw =~ s/^index.html$//;
+		 return $raw;
+	 },
+	 lazy => 1,
+);
+
+=head2 raw_rest_path
+
+The raw remaining part after the basenode has been found.
+
+=cut
+
+has raw_rest_path => (
+	 is => 'ro',
+	 isa => 'Str',
+	 writer => 'set_raw_rest_path',
 );
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
@@ -42,7 +60,7 @@ sub find_basenode {
 
 	my $base_path = $basenode->node_path;
 	if ( $path =~ m|^$base_path/(.*)|) {
-		$self->set_rest_path($1);
+		$self->set_raw_rest_path($1);
 	}
 	return \@datanodes;
 }
