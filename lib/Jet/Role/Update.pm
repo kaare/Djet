@@ -114,13 +114,13 @@ sub allowed_methods {
 	return [qw/GET HEAD POST/];
 }
 
-=head2 before to_html
+=head2 before view_page
 
 Check if it's a delete request (GET w/ a 'delete' parameter)
 
 =cut
 
-before 'to_html' => sub {
+before 'view_page' => sub {
 	my ($self) = @_;
 	my $request = $self->body->request;
 	$self->set_base_object;

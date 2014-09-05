@@ -35,29 +35,24 @@ before _build_validator => sub {
 	$self->set_dfv($dfv);
 };
 
-=head2 before init_data
+=head2 before set_base_object
 
-Decide if it's a topmenu or perhaps a new node
+Tell the update role that we will make a new node.
 
 =cut
 
-before 'init_data' => sub {
+before 'set_base_object' => sub {
 	my $self = shift;
-	my $stash = $self->stash;
-	if ($self->rest_path eq '_jet_config') {
-		my $request = $self->body->request;
-		my $parent_path = $request->parameters->{parent_path};
-		# New node:
-		if (defined $parent_path) {
-			$self->omit_run->{data} = 1;
-			return $self->choose_basetype($parent_path);
+	my $rest_path = $self->rest_path;
+	$rest_path =~ s/index.html//;
+	return if $rest_path;
 
-		}
-	} else {
-		$stash->{topmenu} = $self->topmenu;
-		$self->template('/config/basenode.tx');
-		$self->omit_run->{data} = 1;
-	}
+	$self->set_object($self->schema->resultset('Jet::DataNode')->new({
+		basetype_id => 1,
+		parent_id => 1,
+		datacolumns => '{}',
+	}));
+	$self->is_new(1);
 };
 
 =head2 before data
@@ -127,7 +122,6 @@ after edit_view => sub {
 		]
 	};
 	$stash->{basecols} = $basecols;
-	$self->template('basetype/jet/config/basenode_edit.tx');
 };
 
 =head2 post_is_create

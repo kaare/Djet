@@ -41,6 +41,10 @@ Set the object to the basenode
 
 sub set_base_object {
 	my $self = shift;
+	my $rest_path = $self->rest_path;
+	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $self->schema->resultset('Jet::DataNode')->find({node_id => $rest_path})) {
+		$self->set_object($node);
+	}
 	$self->set_object($self->basenode) unless $self->has_object;
 }
 

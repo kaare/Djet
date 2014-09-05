@@ -20,7 +20,7 @@ INSERT INTO basetype (feature_id, name,title,handler) VALUES (1, 'jet_config', '
 INSERT INTO data_node (basetype_id,part,name,title,datacolumns) VALUES (1,'','Root','Root','{}');
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (2,1,'jet','Jet Base Directory','Jet Base Directory','{}');
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (3,2,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes','{}');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (3,2,'node','Jet Configuration', 'Jet Configuration','{}');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (4,2,'node','Jet Configuration', 'Jet Configuration','{}');
 -- INSERT INTO data_node (basetype_id,part,name,title,datacolumns) VALUES (4,'not_found','not_found','Not Found','{}');
 
 -- INSERT INTO data_node (basetype_id,part,name,datacolumns) VALUES (6,'read','read','{read}');
