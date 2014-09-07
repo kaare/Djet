@@ -18,7 +18,8 @@ has rest_path => (
 	 isa => 'Str',
 	 default => sub {
 		 my $self = shift;
-		 my $raw = $self->raw_rest_path;
+		 my $raw = $self->raw_rest_path or return '';
+
 		 $raw =~ s/^index.html$//;
 		 return $raw;
 	 },

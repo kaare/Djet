@@ -43,9 +43,7 @@ Tell the update role that we will make a new node.
 
 before 'set_base_object' => sub {
 	my $self = shift;
-	my $rest_path = $self->rest_path;
-	$rest_path =~ s/index.html//;
-	return if $rest_path;
+	return if $self->rest_path or $self->has_object;
 
 	$self->set_object($self->schema->resultset('Jet::DataNode')->new({
 		basetype_id => 1,
@@ -63,38 +61,40 @@ Control what to send when it's Jet config
 
 before 'data' => sub {
 	my $self = shift;
-	my $stash = $self->stash;
+	my $object = $self->object;
+
 	my $basecols = {
 		columns => [
 			{
 				type => 'Str',
 				title => 'Basetype',
-				value => $stash->{node}->basetype->name,
+				value => $object->basetype->name,
 			},
 			{
 				type => 'Str',
 				name => 'name',
 				title => 'Name',
-				value => $stash->{node}->name,
+				value => $object->name,
 				updatable => 1,
 			},
 			{
 				type => 'Str',
 				name => 'title',
 				title => 'Title',
-				value => $stash->{node}->title,
+				value => $object->title,
 				updatable => 1,
 			},
 			{
 				type => 'Str',
 				name => 'part',
 				title => 'Part',
-				value => $stash->{node}->part,
+				value => $object->part,
 				updatable => 1,
 			},
 		]
 	};
-	$stash->{basecols} = $basecols;
+	$self->stash->{basecols} = $basecols;
+	$self->stash->{node} = $object;
 };
 
 =head2 post_is_create
