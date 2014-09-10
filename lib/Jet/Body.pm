@@ -5,6 +5,7 @@ use Moose;
 use MooseX::StrictConstructor;
 use namespace::autoclean;
 
+use List::Util qw/first/;
 use HTTP::Headers::Util qw(split_header_words);
 use Plack::Request;
 
@@ -102,6 +103,19 @@ has basenode => (
 	is => 'ro',
 	writer => '_set_basenode',
 );
+
+=head2 datanode_by_basetype
+
+Returns the first node from the datanodes, given a basetype or a basetype id
+
+=cut
+
+sub datanode_by_basetype {
+	my ($self, $basetype) = @_;
+	my $basetype_id = ref $basetype ? $basetype->id : $basetype;
+	return first {$_->basetype_id == $basetype_id} @ { $self->datanodes };
+}
+
 
 =head1 METHODS
 

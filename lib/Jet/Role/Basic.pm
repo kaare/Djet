@@ -45,6 +45,7 @@ has body => (
 		basenode
 		datanodes
 		rest_path
+		datanode_by_basetype
 	/],
 );
 

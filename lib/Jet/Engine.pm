@@ -1,7 +1,6 @@
 package Jet::Engine;
 
 use 5.010;
-use List::Util qw/first/;
 use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
@@ -175,18 +174,6 @@ sub urify {
 	my $uri = $self->request->request->base;
 	$uri->path($path);
 	return $uri->as_string;
-}
-
-=head2 datanode_by_basetype
-
-Returns the first node from the datanodes, given a basetype or a basetype id
-
-=cut
-
-sub datanode_by_basetype {
-	my ($self, $basetype) = @_;
-	my $basetype_id = ref $basetype ? $basetype->id : $basetype;
-	return first {$_->basetype_id == $basetype_id} @ { $self->datanodes };
 }
 
 __PACKAGE__->meta->make_immutable;
