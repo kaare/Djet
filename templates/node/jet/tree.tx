@@ -73,7 +73,7 @@ $(function(){
 		activate: function(event, data) {
 			var node = data.node;
 			$.ajax({
-				url: node.data.path + '/_jet_config',
+				url: '/jet/node/' + node.data.id,
 				cache: false
 			}).done(function( html ) {
 				$("#bread").html(html);

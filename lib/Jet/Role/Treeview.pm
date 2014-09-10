@@ -32,6 +32,7 @@ before to_json => sub {
 				folder => $folder,
 				lazy => $folder,
 				path => $basenode->node_path,
+				id   => $basenode->node_id,
 			} ];
 		} else { # treeview
 			my $node;
@@ -45,10 +46,11 @@ before to_json => sub {
 				{
 					title => $_->part,
 					path => $_->node_path,
+					id   => $_->node_id,
 					folder => $folder,
 					lazy => $folder,
 				}
-			} $node->nodes ],
+			} $node->children ],
 		}
 		$self->stash->{dynadata} = $dynadata;
 		$self->content_type('json');

@@ -74,9 +74,7 @@ sub take_off {
 	my $engine_class;
 	try {
 		# See if we want to use the config basetype
-		my $engine_basetype = $rest_path eq '_jet_config' ?
-			$schema->basetypes->{$config->{config}{jet_config}{basetype_id}} :
-			$basenode->basetype;
+		my $engine_basetype = $basenode->basetype;
 		$engine_class = $engine_basetype->handler || 'Jet::Engine::Default';
 		$schema->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
 	} catch {

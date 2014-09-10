@@ -83,45 +83,6 @@ sub move_child {
 	my $success = $self->schema->move($child_id, $self->get_column('id'));
 }
 
-=head2 children
-
-Return the children of the current node
-
-Extends the node method with a convenience search hashref
-
-=cut
-
-sub children {
-	my ($self, %opt) = @_;
-	return $self->nodes->search(\%opt);
-}
-
-=head2 parent
-
-Return the parent of the current node
-
-The parent, as found from the path
-
-If the parent is on the stash, this node will be returned. Otherwise it will be looked up
-in the database
-
-=cut
-
-sub parent {
-	my ($self) = @_;
-	my $stash = $self->stash;
-	my $parent_id = $self->row->{parent_id};
-	my $parent = $stash->{nodes}{$parent_id};
-	return $parent if $parent;
-
-	my $schema = $self->schema;
-	my $where = {
-		parent_id => $parent_id,
-	};
-	$parent = $schema->search($where);
-	return Jet::Node->new(row => $parent, stash => $stash);
-}
-
 =head2 ancestors
 
 Return the ancestors of the current node
@@ -191,7 +152,7 @@ A convenience method; returns true if the current node has children.
 
 sub has_children {
 	my $self = shift;
-	return $self->nodes->count;
+	return $self->children->count;
 }
 
 no Moose::Role;
