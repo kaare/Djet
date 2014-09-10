@@ -22,15 +22,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">Jet</a>
+          <a class="navbar-brand" href="/">Site</a>
         </div>
         <div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
-: for $topmenu -> $menuitem {
-			<li <: if $menuitem.active { ' class="active"' | raw } :>><a href="<: $menuitem.link :>"><: $menuitem.title :></a></li>
+: for $local.topmenu -> $menuitem {
+			<li <: if $menuitem.current { ' class="active"' | raw } :>><a href="<: $menuitem.node_path :>"><: $menuitem.title :></a></li>
 : }
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
