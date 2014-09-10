@@ -23,6 +23,9 @@ after BUILD => sub {
 	$self->add_provided_content_type( { 'text/html' => 'to_html' });
 };
 
+sub charsets_provided { ['utf-8'] }
+sub default_charset { 'utf-8' }
+
 =head2 stash_basic
 
 Put some basic data on the stash

@@ -6,7 +6,11 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Role::Treeview - handle treeview
+Jet::Role::Treeview
+
+=head1 DESCRIPTION
+
+Returns the node information for the treeview
 
 =head1 ATTRIBUTES
 

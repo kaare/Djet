@@ -147,7 +147,6 @@ __PACKAGE__->add_columns(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NPiSDqlah/cFXv8N3tNlbA
 
 use JSON;
-use Encode;
 
 =head1 JSON column handling
 
@@ -167,12 +166,8 @@ has 'json' => (
 );
 
 __PACKAGE__->inflate_column('datacolumns'=>{
-	inflate=>sub {
-		JSON->new->allow_nonref->decode(shift);
-	},
-	deflate=>sub {
-		Encode::decode('utf-8', JSON->new->allow_nonref->encode(shift));
-	},
+	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
+	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
 });
 
 with qw/

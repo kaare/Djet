@@ -83,7 +83,7 @@ has headers  => (
 		my $self = shift;
 		return $self->type =~ /json/i ?
 			[ 'Content-Type' => 'application/json' ] :
-			[ 'Content-Type' => 'text/html; charset="iso-8859-1"' ];
+			[ 'Content-Type' => 'text/html; charset="utf-8"' ];
 	},
 	lazy => 1,
 );
