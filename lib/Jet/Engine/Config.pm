@@ -4,7 +4,10 @@ use 5.010;
 use Moose;
 
 extends 'Jet::Engine::Default';
-with qw/Jet::Role::Log Jet::Role::Update::Node Jet::Role::Config::Topmenu/;
+with qw/
+	Jet::Role::Log
+	Jet::Role::Update::Node
+/;
 
 =head1 NAME
 

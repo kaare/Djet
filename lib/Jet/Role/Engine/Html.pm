@@ -104,7 +104,7 @@ sub render_template {
 	my $self= shift;
 	my $basenode = $self->basenode;
 	my $template = $basenode->basetype->template;
-	$template = $self->template_substitute($template) if $template =~ /<.+>/;
+	$template = $self->template_substitute($template) if defined($template) and $template =~ /<.+>/;
 	return $template if $template;
 
 	return $self->template_name($basenode);

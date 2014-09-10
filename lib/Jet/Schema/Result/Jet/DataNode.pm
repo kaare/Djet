@@ -243,6 +243,19 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 current
+
+Switch to set if this node is current.
+
+=cut
+
+has 'current' => (
+	is => 'rw',
+	isa => 'Bool',
+	default => 0,
+	lazy => 1,
+);
+
 =head2 urify
 
 Takes a  domain node and returns the full URI path to the node.
