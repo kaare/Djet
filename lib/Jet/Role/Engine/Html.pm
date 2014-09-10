@@ -48,6 +48,11 @@ sub stash_basic {
 	$stash->{query_parameters} = $self->request->query_parameters;
 	my $domain_basetype = $schema->basetype_by_name('domain');
 	$stash->{domain_node} = $self->datanode_by_basetype($domain_basetype);
+	$stash->{local} = $schema->local_class->new(
+		body => $self->body,
+		schema => $self->schema,
+		content_type => $self->content_type,
+	);
 }
 
 =head2 to_html
@@ -71,17 +76,9 @@ sub view_page {
 
 	my $schema = $self->schema;
 
-	my $default_class = $schema->default_class->new(
-		body => $self->body,
-		schema => $self->schema,
-		content_type => $self->content_type,
-	);
 
-	$default_class->before;
 	$self->init_data unless $self->omit_run->{init_data};
 	$self->data unless $self->omit_run->{data};
-	$default_class->after;
-
 	$self->template($self->render_template) unless $self->_has_template;
 
 	$schema->log->debug('Template ' . $self->template);

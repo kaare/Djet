@@ -57,23 +57,23 @@ has basetypes => (
 	lazy => 1,
 );
 
-=head2 default_class
+=head2 local_class
 
-The default class to do something for every node, before and after other handling
+The local class is put on the stash
 
 =cut
 
-has default_class => (
+has local_class => (
 	is => 'ro',
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $default_class = $self->config->{config}{jet_config}{default_class} || 'Jet::Correct';
-		$self->log->debug("Default Class: $default_class");
-		eval "require $default_class";
+		my $local_class = $self->config->{config}{jet_config}{local_class} || 'Jet::Correct';
+		$self->log->debug("local Class: $local_class");
+		eval "require $local_class";
 		warn $@ if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up
 
-		return $default_class;
+		return $local_class;
 	},
 	lazy => 1,
 );
