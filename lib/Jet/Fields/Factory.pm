@@ -52,7 +52,7 @@ sub fields_class {
 	my @fieldnames;
 	for my $column (@{ $columns }) {
 		my $colname = $column->{name};
-		my $coltitle = $column->{title};
+		my $coltitle = $column->{title} // ucfirst $colname;
 		my $coltype = $column->{type};
 
 		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
