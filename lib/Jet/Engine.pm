@@ -145,7 +145,7 @@ Necessary for the roles
 
 sub BUILD {}
 
-=head2 init
+=head2 init_data
 
 Init is called just before the original method is called. Add anything that belongs to all media types.
 

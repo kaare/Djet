@@ -112,6 +112,12 @@ has app => (
 	lazy => 1,
 );
 
+=head2 check_notifications
+
+Check if there has been changes to the basenode
+
+=cut
+
 sub check_notifications {
 	my $self = shift;
 	my $note = $self->get_notification or return;
@@ -124,6 +130,12 @@ sub check_notifications {
 	my $basetypes = $schema->basetypes;
 	$basetypes->{$id} =  $schema->resultset('Jet::Basetype')->find({id => $id});
 }
+
+=head2 BUILD
+
+Listen to the jet:admin queue
+
+=cut
 
 sub BUILD {
 	my $self = shift;

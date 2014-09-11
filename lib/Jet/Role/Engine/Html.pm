@@ -23,7 +23,20 @@ after BUILD => sub {
 	$self->add_provided_content_type( { 'text/html' => 'to_html' });
 };
 
+=head2 charsets_provided
+
+Return content as UTF-8
+
+=cut
+
 sub charsets_provided { ['utf-8'] }
+
+=head2 default_charset
+
+Return content as UTF-8
+
+=cut
+
 sub default_charset { 'utf-8' }
 
 =head2 stash_basic
@@ -68,6 +81,12 @@ sub to_html {
 	my $self = shift;
 	$self->view_page;
 }
+
+=head2 view_page
+
+View the page
+
+=cut
 
 sub view_page {
 	my $self = shift;

@@ -14,7 +14,7 @@ requires qw/value/;
 
 =head1 METHODS
 
-=head2 validation_constraints
+=head2 constraint_methods
 
 =cut
 

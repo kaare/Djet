@@ -94,6 +94,12 @@ sub create_path {
 	}
 }
 
+=head2 create_nodes
+
+Create the Jet nodes
+
+=cut
+
 sub create_nodes {
 	my $self = shift;
 	my $schema = $self->schema;
@@ -127,6 +133,12 @@ sub create_nodes {
 		$client->send($job);
 	}
 }
+
+=head2 file_placement
+
+Returns the path to the file
+
+=cut
 
 sub file_placement {
 	my ($self, $source_path, $basedir, $target_id) = @_;
