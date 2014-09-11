@@ -72,10 +72,12 @@ sub field_deflate {
 
 Update the fts columns with the relevant data from fields
 
+update_fts takes one optional parameter, the config. If not given, 'english' is assumed.
+
 =cut
 
 sub update_fts {
-	my ($self, $datacol) = @_;
+	my ($self, $config) = @_;
 	# jet.basetype
 	my $basetype = $self->basetype;
 
@@ -83,12 +85,13 @@ sub update_fts {
 	for my $field (@{ $self->fields->fields }) {
 		next unless $field->searchable;
 
-		$fts .= ' ' . $field->for_search;
+		$fts .= ' ' . ($field->for_search // '');
 	}
 
+	$config ||= 'english';
 	$fts =~ s/[,-\/:)(']/ /g;
 	$fts = lc $fts;
-	my $q = qq{to_tsvector('danish', '$fts')};
+	my $q = qq{to_tsvector('$config', '$fts')};
 	$self->update({fts => \$q });
 }
 
