@@ -12,9 +12,9 @@ INSERT INTO feature (name,version, description) VALUES ('basic', 0.01, 'Basic fe
 
 INSERT INTO basetype (feature_id, name,title) VALUES (1, 'domain','Domain');
 INSERT INTO basetype (feature_id, name,title) VALUES (1, 'directory','Directory');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'basetype','Jet Basetype','Jet::Engine::Basetype','[{"name":"text","type":"Str"},{"name":"parent","type":"Int"}]');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_config', 'Jet Configuration','Jet::Engine::Config','[{"name":"topmenu","type":"Boolean"}]');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_tree', 'Node Tree','Jet::Engine::ConfigTree','[{"name":"topmenu","type":"Boolean"}]');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'basetype','Jet Basetype','Jet::Engine::Basetype','[{"name":"text","title":"Text","type":"Str"},{"name":"parent","type":"Int"}]');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_config', 'Jet Configuration','Jet::Engine::Config','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_tree', 'Node Tree','Jet::Engine::ConfigTree','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
 
 -- Data Nodes
 
