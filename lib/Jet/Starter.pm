@@ -56,23 +56,44 @@ has config => (
 	lazy => 1,
 );
 
+=head2 schema_name
+
+The schema_name is found in the config
+
+=cut
+
+has schema_name => (
+	isa => 'Str',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		return $self->config->config->{schema_name} || 'Jet::Schema';
+	},
+	lazy => 1,
+);
+use Jasonic::Schema;
+
 =head2 schema
 
 The schema is initialized with the connection info found in the config
 
 =cut
+use Jasonic::Schema;
 
 has schema => (
-   isa => 'Jet::Schema',
-   is => 'ro',
-   default => sub {
-	   my $self = shift;
-	   my $connect_info = $self->config->config->{connect_info};
-	   die 'No database connection information' unless $connect_info && @$connect_info;
+	isa => 'Jet::Schema',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		my $connect_info = $self->config->config->{connect_info};
+		die 'No database connection information' unless $connect_info && @$connect_info;
 
-	   my $schema = Jet::Schema->connect(@$connect_info);
-	   $schema->config($self->config);
-	   return $schema;
+		my $schema_name = $self->schema_name;
+		eval "require $schema_name" or die "No schema named $schema_name";
+
+		my $schema = $schema_name->connect(@$connect_info);
+		$schema->config($self->config);
+		return $schema;
 	},
 	lazy => 1,
 );
