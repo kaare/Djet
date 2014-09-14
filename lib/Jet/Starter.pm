@@ -71,14 +71,12 @@ has schema_name => (
 	},
 	lazy => 1,
 );
-use Jasonic::Schema;
 
 =head2 schema
 
 The schema is initialized with the connection info found in the config
 
 =cut
-use Jasonic::Schema;
 
 has schema => (
 	isa => 'Jet::Schema',
