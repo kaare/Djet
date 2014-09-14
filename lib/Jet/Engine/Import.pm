@@ -96,7 +96,7 @@ sub create_path {
 
 =head2 create_nodes
 
-Create the Jet nodes
+Create the Jet nodes. Optionally (if the import node has a queue defined), create a JobMachine task
 
 =cut
 
@@ -104,13 +104,14 @@ sub create_nodes {
 	my $self = shift;
 	my $schema = $self->schema;
 	my $dbh = $schema->storage->dbh;
+	my $queue = $self->basenode->queue->value;
 	my $client = Job::Machine::Client->new(
 		dbh => $dbh,
-		queue => 'jet.import',
-	);
+		queue => $queue,
+	) if defined($queue);
 
 	my $parent_id = $self->basenode->id;
-	my ($uploadtype) = grep {$_->name eq 'Upload'} values %{ $schema->basetypes };
+	my $uploadtype = $schema->basetype_by_name('import');
 	my $basetype_id = $uploadtype->id;
 	my $request = $self->body->request;
 	for my $upload ($request->uploads->get_all('uploadedfile')) {
@@ -127,10 +128,10 @@ sub create_nodes {
 		my $node_id = $file_node->node_id;
 		my $file_path = $self->file_placement($upload->path, $self->basenode->path, $node_id);
 		$file_node->update({part => $node_id});
-		my $job = {
-			file_path => $file_path,
-		};
-		$client->send($job);
+		if (defined($queue)) {
+			$data->{file_path} = $file_path;
+			$client->send($data);
+		}
 	}
 }
 
