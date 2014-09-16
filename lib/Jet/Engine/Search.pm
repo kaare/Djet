@@ -2,7 +2,7 @@ package Jet::Engine::Search;
 
 use 5.010;
 use Moose;
-use Encode qw/encode/;
+use Encode qw/decode/;
 
 extends 'Jet::Engine::Default';
 
@@ -22,7 +22,7 @@ Find the nodes based on the search string
 
 after 'init_data' => sub  {
 	my $self = shift;
-	my $search_phrase = encode('utf-8', $self->body->request->parameters->{search_phrase});
+	my $search_phrase = decode('utf-8', $self->body->request->parameters->{search_phrase});
 	return unless $search_phrase;
 
 	$self->set_fts($search_phrase);
