@@ -258,7 +258,7 @@ has 'current' => (
 
 =head2 urify
 
-Takes a  domain node and returns the full URI path to the node.
+Takes a domain node and returns the full URI path to the node.
 
 It works by finding the nearest domain node, use its name as domain name and change the path to the difference between the two node_paths
 

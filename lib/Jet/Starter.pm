@@ -116,6 +116,8 @@ has app => (
 			);
 			my $flight = Jet->new(body => $body, schema => $self->schema);
 			my $engine = $flight->take_off(@_);
+			return $engine if ref $engine eq 'ARRAY'; # There's a response already
+
 			my $resource_args = [
 				body => $body,
 				schema => $self->schema,

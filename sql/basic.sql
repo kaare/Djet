@@ -19,9 +19,9 @@ INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'je
 -- Data Nodes
 
 INSERT INTO data_node (basetype_id,part,name,title,datacolumns) VALUES (1,'','Root','Root','{}');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (1,1,'jet','Jet Base Directory','Jet Base Directory','{}');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (3,2,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes','{"topmenu":"on"}');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (4,2,'node','Jet Configuration', 'Jet Configuration','{}');
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) VALUES (5,2,'tree','nodetree', 'Node Tree','{"topmenu":"on"}');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) VALUES (1,1,'jet','Jet Base Directory','Jet Base Directory','{}','{"superusers":["read"]}');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) VALUES (3,2,'basetype','Jet Configuration - Basetypes', 'Jet Configuration - Basetypes','{"topmenu":"on"}','{"superusers":["read"]}');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) VALUES (4,2,'node','Jet Configuration', 'Jet Configuration','{}','{"superusers":["read"]}');
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) VALUES (5,2,'tree','nodetree', 'Node Tree','{"topmenu":"on"}','{"superusers":["read"]}');
 
 COMMIT;

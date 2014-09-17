@@ -70,6 +70,7 @@ CREATE TABLE data (
 	name					text NOT NULL,
 	title					text NOT NULL,
 	datacolumns				json NOT NULL default '{}',
+	acl						json NOT NULL default '{}',
 	fts						tsvector,
 	created					timestamptz default now(),
 	modified				timestamptz
@@ -113,7 +114,7 @@ CREATE INDEX node_path_gist_idx ON node USING GIST (node_path);
 --
 
 CREATE VIEW data_node AS
-SELECT d.id data_id, d.basetype_id, d.name, d.title, d.datacolumns, d.fts, d.created data_created, d.modified data_modified,
+SELECT d.id data_id, d.basetype_id, d.name, d.title, d.datacolumns, d.acl, d.fts, d.created data_created, d.modified data_modified,
 	n.id node_id, n.parent_id, n.part, n.node_path, n.created node_created, n.modified node_modified
 FROM jet.data d
 JOIN jet.node n ON d.id=n.data_id;
@@ -131,7 +132,7 @@ BEGIN
 		part := NEW.part;
 	END IF;
 	WITH new_data AS (
-		INSERT INTO jet.data (basetype_id, name, title, datacolumns, fts) VALUES (NEW.basetype_id, NEW.name, NEW.title, coalesce(NEW.datacolumns, '{}'), NEW.fts) RETURNING id
+		INSERT INTO jet.data (basetype_id, name, title, datacolumns, acl, fts) VALUES (NEW.basetype_id, NEW.name, NEW.title, coalesce(NEW.datacolumns, '{}'), coalesce(NEW.acl, '{}'), NEW.fts) RETURNING id
 	)
 	INSERT INTO jet.node (id, data_id, parent_id, part, node_path) SELECT n_id, id, NEW.parent_id, part, NEW.node_path FROM new_data;
 	SELECT * INTO n FROM jet.data_node WHERE node_id = n_id;
@@ -145,7 +146,7 @@ CREATE OR REPLACE FUNCTION data_node_update() RETURNS trigger AS $$
 DECLARE
 BEGIN
 	UPDATE jet.data
-		SET basetype_id=NEW.basetype_id, name=NEW.name, title=NEW.title, datacolumns=NEW.datacolumns, fts=NEW.fts
+		SET basetype_id=NEW.basetype_id, name=NEW.name, title=NEW.title, datacolumns=NEW.datacolumns, acl=NEW.acl, fts=NEW.fts
 		WHERE id=OLD.data_id;
 	UPDATE jet.node
 		SET parent_id=NEW.parent_id, part=NEW.part, node_path=NEW.node_path

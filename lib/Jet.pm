@@ -68,6 +68,8 @@ sub take_off {
 	$schema->log->debug("Node path: $node_path");
 	my $datatree = $schema->resultset('Jet::DataNode');
 	my $datanodes = $datatree->find_basenode($node_path);
+	return $self->login($datanodes, $config, $path) if $self->check_acl($datanodes);
+
 	my $basenode = $datanodes->[0];
 	my $rest_path = $datatree->rest_path // '';
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
@@ -92,6 +94,27 @@ sub take_off {
 	$body->_set_datanodes($datanodes);
 	$body->_set_rest_path($rest_path);
 	return $engine_class;
+}
+
+sub check_acl {
+	my ($self, $datanodes) = @_;
+return 1 unless $rest_path =~ /login/;
+return;
+}
+
+=head2 login
+
+Redirect to the login page
+
+=cut
+
+sub login {
+	my ($self, $datanodes, $config, $original_path) = @_;
+	my $domain = $datanodes->[-1];
+	my $uri = $config->config->{login_page} // ($domain->urify($domain) . '/login');
+	$uri .= '?redirect=' . $original_path;
+
+	return [ 307, [ Location => $uri ], [] ];
 }
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
