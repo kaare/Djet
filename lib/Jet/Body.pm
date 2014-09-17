@@ -34,6 +34,17 @@ has env => (
 	isa => 'HashRef',
 );
 
+=head2 session
+
+The session
+
+=cut
+
+has session => (
+	is => 'ro',
+	isa => 'HashRef',
+);
+
 =head2 request
 
 The plack request

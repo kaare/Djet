@@ -64,6 +64,11 @@ __PACKAGE__->table("jet.data_node");
   data_type: 'json'
   is_nullable: 1
 
+=head2 acl
+
+  data_type: 'json'
+  is_nullable: 1
+
 =head2 fts
 
   data_type: 'tsvector'
@@ -122,6 +127,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "datacolumns",
   { data_type => "json", is_nullable => 1 },
+  "acl",
+  { data_type => "json", is_nullable => 1 },
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
   "data_created",
@@ -143,8 +150,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NPiSDqlah/cFXv8N3tNlbA
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-17 16:21:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Hf6UbeoeV4VZyP6MeBz/FA
 
 use JSON;
 

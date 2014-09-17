@@ -9,6 +9,9 @@ use Jet::Machine;
 
 with 'Role::Pg::Notify';
 
+use JSON;
+use Plack::Session::Store::DBI;
+
 =head1 NAME
 
 Jet::Starter
@@ -96,6 +99,27 @@ has schema => (
 	lazy => 1,
 );
 
+=head2 session_handler
+
+The provider for web sessions
+
+=cut
+
+has session_handler => (
+	isa => 'Plack::Session::Store',
+	is => 'ro',
+	default => sub {
+		my $self = shift;
+		my $provider = Plack::Session::Store::DBI->new(
+            dbh => $self->schema->storage->dbh,
+            serializer   => sub { JSON->new->allow_nonref->encode(shift); },
+            deserializer => sub { JSON->new->allow_nonref->decode(shift); },
+			table_name   => $self->config->config->{session}{table_name} // 'global.sessions',
+        );
+	},
+	lazy => 1,
+);
+
 =head2 app
 
 The thing that starts it all
@@ -112,6 +136,7 @@ has app => (
 			my $env = shift;
 			my $body = Jet::Body->new(
 				env => $env,
+				session => $env->{'psgix.session'},
 				stash => {},
 			);
 			my $flight = Jet->new(body => $body, schema => $self->schema);

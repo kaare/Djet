@@ -75,6 +75,12 @@ The Title
 
 The actual column data
 
+=head2 acl
+
+  data_type: 'json'
+  default_value: '{}'
+  is_nullable: 0
+
 =head2 fts
 
   data_type: 'tsvector'
@@ -111,6 +117,8 @@ __PACKAGE__->add_columns(
   "title",
   { data_type => "text", is_nullable => 0 },
   "datacolumns",
+  { data_type => "json", default_value => "{}", is_nullable => 0 },
+  "acl",
   { data_type => "json", default_value => "{}", is_nullable => 0 },
   "fts",
   { data_type => "tsvector", is_nullable => 1 },
@@ -170,8 +178,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aE1OCwO35VTWCHIZe7wZVg
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-17 16:21:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FrlCm3OI65AUa78HAesgPg
 
 use JSON;
 

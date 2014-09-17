@@ -24,10 +24,11 @@ has schema => (
 	is => 'ro',
 	isa => 'Jet::Schema',
 	handles => [qw/
-		config
+		acl
 		basetypes
-		renderers
+		config
 		log
+		renderers
 	/],
 );
 
@@ -41,11 +42,12 @@ has body => (
 	is => 'ro',
 	isa => 'Jet::Body',
 	handles => [qw/
-		stash
 		basenode
+		datanode_by_basetype
 		datanodes
 		rest_path
-		datanode_by_basetype
+		session
+		stash
 	/],
 );
 

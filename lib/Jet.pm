@@ -68,8 +68,9 @@ sub take_off {
 	$schema->log->debug("Node path: $node_path");
 	my $datatree = $schema->resultset('Jet::DataNode');
 	my $datanodes = $datatree->find_basenode($node_path);
-	return $self->login($datanodes, $config, $path) if $self->check_acl($datanodes);
+	return $self->login($datanodes, $config, $path) unless my $user = $schema->acl->check_login($self->body->session, $datanodes);
 
+	$schema->log->debug("Acting as $user");
 	my $basenode = $datanodes->[0];
 	my $rest_path = $datatree->rest_path // '';
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
@@ -96,12 +97,6 @@ sub take_off {
 	return $engine_class;
 }
 
-sub check_acl {
-	my ($self, $datanodes) = @_;
-return 1 unless $rest_path =~ /login/;
-return;
-}
-
 =head2 login
 
 Redirect to the login page
@@ -112,7 +107,7 @@ sub login {
 	my ($self, $datanodes, $config, $original_path) = @_;
 	my $domain = $datanodes->[-1];
 	my $uri = $config->config->{login_page} // ($domain->urify($domain) . '/login');
-	$uri .= '?redirect=' . $original_path;
+	$self->body->session->{redirect_uri} = $original_path;
 
 	return [ 307, [ Location => $uri ], [] ];
 }

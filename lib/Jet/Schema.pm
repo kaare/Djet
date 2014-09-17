@@ -14,6 +14,7 @@ __PACKAGE__->load_namespaces;
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z/TKrREPcrSUpNIvqFMf9g
 
+use Jet::ACL;
 use List::Util qw/first/;
 
 =head1 NAME
@@ -39,6 +40,25 @@ has config => (
 		renderers
 		log
 	/],
+);
+
+=head2 acl
+
+The acl class
+
+=cut
+
+has acl => (
+	is => 'ro',
+	isa => 'Jet::ACL',
+	default => sub {
+		my $self = shift;
+		my $acl = Jet::ACL->new(
+			roles_dbh => $self->storage->dbh,
+		);
+		return $acl;
+	},
+	lazy => 1,
 );
 
 =head2 basetypes
