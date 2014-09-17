@@ -117,7 +117,7 @@ sub login {
 	return [ 307, [ Location => $uri ], [] ];
 }
 
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);
+__PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
 
