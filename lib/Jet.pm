@@ -105,11 +105,9 @@ Redirect to the login page
 
 sub login {
 	my ($self, $datanodes, $config, $original_path) = @_;
-	my $domain = $datanodes->[-1];
-	my $uri = $config->config->{login_page} // ($domain->urify($domain) . '/login');
 	$self->body->session->{redirect_uri} = $original_path;
-
-	return [ 307, [ Location => $uri ], [] ];
+	my $uri = '/login';
+	return [ 302, [ Location => $uri ], [] ];
 }
 
 __PACKAGE__->meta->make_immutable;
