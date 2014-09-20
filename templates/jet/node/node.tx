@@ -1,3 +1,5 @@
+: cascade config::base
+: override content -> {
 <div id="basenode">
   <h2><: $node.get_column('title') :></h2>
   <form method="post" id="edit-basenode" action="<: $request.path_info :>">
@@ -9,3 +11,4 @@
 : }
   </form>
 </div>
+: }
