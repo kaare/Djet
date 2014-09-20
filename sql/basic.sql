@@ -41,16 +41,4 @@ CREATE TABLE sessions (
     session_data TEXT
 );
 
--- Roles
-
-CREATE role superusers SUPERUSER;
-GRANT ALL on SCHEMA jet TO superusers;
-GRANT ALL ON ALL TABLES IN SCHEMA jet TO superusers;
-GRANT ALL ON ALL FUNCTIONS IN SCHEMA jet TO superusers;
-
-CREATE role guest;
-GRANT USAGE on SCHEMA jet TO guest;
-GRANT SELECT ON ALL TABLES IN SCHEMA jet TO guest;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA jet TO guest;
-
 COMMIT;
