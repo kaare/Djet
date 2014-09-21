@@ -2,6 +2,7 @@ package Jet::Role::Update;
 
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any uniq };
+use Encode qw/decode/;
 
 use Jet::Data::Validator;
 
@@ -304,12 +305,8 @@ Update the object. Called from within the transaction
 
 sub edit_update {
 	my ($self, $validation)=@_;
+	my $data = $self->get_input_data($validation);
 	my $object = $self->object;
-	my $colnames = $self->get_colnames;
-	my $input_data = $validation->valid;
-	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
-	my $edit_cols = $self->edit_cols;
-	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
 	$object->update($data);
 	$object->discard_changes; # Necessary to keep db and dbic in sync
 }
@@ -322,20 +319,33 @@ Create the node from validation results. Called from within the transaction
 
 sub edit_create {
 	my ($self, $validation)=@_;
-	my $colnames = $self->get_colnames;
-	my $input_data = $validation->valid;
-	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
-	$data->{name} ||= $data->{title};
-	my $edit_cols = $self->edit_cols;
-	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
+	my $data = $self->get_input_data($validation);
 	if ($self->has_object) {
 		$self->object->$_($data->{$_}) for keys %$data;
 	}
+	$data->{name} ||= $data->{title};
 	my $object = $self->has_object ? $self->object : $self->get_resultset->new($data);
 	$object->datacolumns($data->{datacolumns});
 	$object->insert;
 	$object->update($data);
 	return $object;
+}
+
+=head2 get_input_data
+
+Get the data from the form
+
+=cut
+
+sub get_input_data {
+	my ($self, $validation)=@_;
+	my $colnames = $self->get_colnames;
+	my $input_data = $validation->valid;
+	$input_data->{$_} = decode('utf-8', $input_data->{$_}) for keys %$input_data;
+	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
+	my $edit_cols = $self->edit_cols;
+	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
+	return $data;
 }
 
 =head2 edit_updated
