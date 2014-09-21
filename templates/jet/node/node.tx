@@ -1,4 +1,7 @@
 : cascade config::base
+: after css -> {
+<link rel='stylesheet' type='text/css' href='/css/font-awesome.css'>
+: }
 : override content -> {
 <div id="basenode">
   <h2><: $node.get_column('title') :></h2>
@@ -11,4 +14,7 @@
 : }
   </form>
 </div>
+: }
+: after javascript -> {
+<script src='/js/component/html.js' type="text/javascript"></script>
 : }
