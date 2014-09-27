@@ -30,13 +30,15 @@ before to_json => sub {
 		my $basenode = $self->basenode;
 		my $dynadata;
 		if ($template eq 'top') {
-			my $folder = $basenode->has_children ? 1 : undef;
+			my $domain_basetype = $self->schema->basetype_by_name('domain');
+			my $domain_node = $self->datanode_by_basetype($domain_basetype);
+			my $folder = $domain_node->has_children ? 1 : undef;
 			$dynadata = [ {
-				title => $basenode->title,
+				title => $domain_node->title,
 				folder => $folder,
 				lazy => $folder,
-				path => $basenode->node_path,
-				id   => $basenode->node_id,
+				path => $domain_node->node_path,
+				id   => $domain_node->node_id,
 			} ];
 		} else { # treeview
 			my $node;
