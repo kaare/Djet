@@ -38,6 +38,19 @@ has raw_rest_path => (
 	 writer => 'set_raw_rest_path',
 );
 
+=head1 METHODS
+
+=head2 all_ref
+
+Returns all rows, as an arrayref
+
+=cut
+
+sub all_ref {
+	my $self = shift;
+	return [ $self->all ];
+}
+
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 =head1 METHODS

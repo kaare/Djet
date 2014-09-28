@@ -33,7 +33,7 @@ before to_json => sub {
 		my $dynadata;
 		if ($template eq 'top') {
 			my $folder = $domain_node->has_children ? 1 : undef;
-			my $path = $domain_node->urify($domain_node)
+			my $path = $domain_node->urify($domain_node);
 			$dynadata = [ {
 				title => $domain_node->title,
 				folder => $folder,
@@ -50,7 +50,7 @@ before to_json => sub {
 			}
 			$dynadata = [ map {
 				my $folder = $_->has_children ? 1 : undef;
-				my $path = $_->urify($domain_node)
+				my $path = $_->urify($domain_node);
 				{
 					title => $_->part,
 					path => $path,

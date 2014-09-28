@@ -14,7 +14,7 @@ Jet::Engine - Children Jet Engine
 
 Jet::Engine::Children is the basic Jet Engine.
 
-It includes the roles L<Jet::Role::Treeview> and L<Jet::Role::Log>.
+It includes the role L<Jet::Part::List>.
 
 =head1 METHODS
 
