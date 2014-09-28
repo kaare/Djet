@@ -37,7 +37,6 @@ after 'data' => sub  {
 	my $self = shift;
 	my $stash = $self->stash;
 	if (my $year = $self->request->param('year')) {
-warn $year;
 		$self->add_search(data_created => { '-between' => [ $year . '-01-01', $year . '-12-31' ] });
 	}
 	my $archive = $stash->{news_feed};
