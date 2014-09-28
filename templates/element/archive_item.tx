@@ -1,0 +1,6 @@
+<div class="archive_header">
+	<a href="?year=<: $item.get_column('year') :>"><: $item.get_column('year') :></a>
+</div>
+<div class="archive_box">
+  <: $item.get_column('count') :>
+</div>

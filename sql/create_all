@@ -10,6 +10,7 @@ FILES="\
  sql/basic.sql\
  sql/search.sql\
  sql/import.sql\
+ sql/news.sql\
  sql/contactform.sql\
 "
 cat $FILES

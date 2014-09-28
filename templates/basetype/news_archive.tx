@@ -1,0 +1,5 @@
+<div id="news_archive">
+: for $news_archive.all_ref -> $archive_item {
+: include '/element/archive_item.tx' {item => $archive_item};
+: }
+</div>

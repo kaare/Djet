@@ -1,0 +1,9 @@
+<div class="news_header">
+  <: $item.title :>
+</div>
+<div class="news_box">
+  <: $item.fields.news_text :>
+</div>
+<div class="news_date">
+  <: $item.data_created.ymd :>
+</div>
