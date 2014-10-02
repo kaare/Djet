@@ -122,7 +122,7 @@ Check if it's a delete request (GET w/ a 'delete' parameter)
 =cut
 
 before 'view_page' => sub {
-	my ($self) = @_;
+	my $self = shift;
 	my $request = $self->body->request;
 	$self->set_base_object;
 	if ($request->parameters->{delete}) {
@@ -130,6 +130,22 @@ before 'view_page' => sub {
 		return;
 	}
 };
+
+=head2 post_is_create
+
+Calls edit_submit and decides if continuing as process_post or create_path
+
+  Continue with create_path if the validation and store process went well
+  Continue with process_post if there was something wrong in the validation or store process
+
+=cut
+
+sub post_is_create {
+	my $self = shift;
+	$self->set_base_object;
+	$self->edit_submit;
+	return !defined $self->stash->{message};
+}
 
 =head2 process_post
 
@@ -141,15 +157,20 @@ sub process_post {
 	my ($self) = @_;
 	$self->stash_basic;
 	my $request = $self->body->request;
-	if ($request->body_parameters->{save}) {
-		$self->set_base_object;
-		$self->edit_submit;
-	} else {
-		my $response = $self->response;
-		$response->redirect($response->uri_for($self->object->node_path));
-	}
 	$self->_stash_defaults;
 	$self->response->body($self->view_page);
+}
+
+=head2 create_path
+
+Process the POST request for creating a node
+
+=cut
+
+sub create_path {
+	my $self = shift;
+	$self->stash_basic;
+	$self->object->urify($self->stash->{domain_node});
 }
 
 =head2 create_by_post
@@ -158,14 +179,7 @@ We go here if a x-www-form-urlencoded post wants to create a new node
 
 =cut
 
-sub create_by_post {
-	my ($self) = @_;
-	my $request = $self->body->request;
-	$self->set_base_object;
-	$self->edit_submit;
-	return \301;
-
-}
+sub create_by_post { return \301; }
 
 =head2 delete_resource
 
@@ -237,6 +251,7 @@ sub edit_submit {
 
 		my $error = $self->edit_submit_handle_transaction($transaction);
 		if (!$error) {
+			$self->object->discard_changes;
 			$self->edit_updated($validation);
 		} else {
 			$self->edit_failed_update($validation, $error);
@@ -350,7 +365,7 @@ sub get_input_data {
 
 =head2 edit_updated
 
-Called if the update succeeds. Redirects to the new/changed node's path
+Called if the update succeeds. Does nothing.
 
 The validation object is passed here in case any method modifier wants to use it.
 
@@ -358,8 +373,6 @@ The validation object is passed here in case any method modifier wants to use it
 
 sub edit_updated {
 	my ($self, $validation)=@_;
-	$self->object->discard_changes;
-	$self->response->redirect($self->object->urify($self->stash->{domain_node}));
 }
 
 =head2 edit_failed_update
@@ -375,17 +388,6 @@ sub edit_failed_update {
 	$self->stash->{message} = $error;
 	$self->log->debug($error);
 	$self->stash->{title}='Could not update ' . $self->object->title;
-}
-
-=head2 edit_view
-
-Show the edit page
-
-=cut
-
-sub edit_view {
-	my ($self) = @_;
-	$self->stash->{title} ||= $self->object->title;
 }
 
 sub _stash_defaults {

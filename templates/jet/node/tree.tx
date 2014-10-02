@@ -43,7 +43,15 @@ $(function(){
 		},
 		activate: function(event, data) {
 			var node = data.node;
-			var html = '<a href="/jet/node/' + node.data.id + '">Edit node</>';
+			var html = '<div class="title">' +
+				node.title +
+				'</div>' + 
+				'<div class="edit"><a href="/jet/node/' +
+				node.data.id +
+				'">Edit node</></div>' +
+				'<div class="add"><a href="/jet/node/' +
+				node.data.id +
+				'?basetype_id=child">Add child</></div>';
 			$("#bread").html(html);
 		},
 		persist: {
