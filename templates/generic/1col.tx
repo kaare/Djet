@@ -1,5 +1,7 @@
 <div id="required_description">
+: if $template_display != 'view' {
 Felter markeret med <b>fed</b> er obligatoriske.
+: }
 </div>
 <table>
 : for $groups -> $group {
