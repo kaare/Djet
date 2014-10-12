@@ -18,13 +18,13 @@ Based on the node update role, it includes validation as chosen for the individu
 
 =head1 METHODS
 
-=head2 after init_data
+=head2 before set_base_object
 
 Will create a new empty contactform if it's a "parent" (contactforms) basetype. If it's a "child" contactform, will display it.
 
 =cut
 
-after 'init_data' => sub  {
+after 'set_base_object' => sub  {
 	my $self = shift;
 	my $schema = $self->schema;
 	my $basetype = $schema->basetype_by_name('contactform') or die "No basetype: contactform";
@@ -33,7 +33,13 @@ after 'init_data' => sub  {
 		$contactform = $self->basenode;
 		$self->stash->{template_display} = 'view';
 	} else {
-		$contactform = $self->schema->resultset('Jet::DataNode')->new({basetype_id => $basetype->id, datacolumns => {}});
+		$contactform = $self->schema->resultset('Jet::DataNode')->new({
+			basetype_id => $basetype->id,
+			parent_id => $self->basenode->id,
+			datacolumns => {}
+		});
+		$self->set_object($contactform);
+		$self->is_new(1);
 	}
 	$self->stash->{contactform} = $contactform;
 };
@@ -54,13 +60,18 @@ before 'process_post' => sub  {
 		parent_id => $self->basenode->id,
 		basetype_id => $basetype->id,
 		datacolumns => {},
-		name => 'contactform',
-		title => 'contactform',
 	});
 	$self->set_object($contactform);
 	$self->stash->{contactform} = $contactform;
 	$self->is_new(1);
 };
+
+
+before 'get_input_data' => sub {
+	my ($self, $validation)=@_;
+	$validation->valid->{title} = $validation->valid->{name};
+};
+
 
 =head2 before edit_updated
 

@@ -95,7 +95,6 @@ sub view_page {
 
 	my $schema = $self->schema;
 
-
 	$self->init_data unless $self->omit_run->{init_data};
 	$self->data unless $self->omit_run->{data};
 	$self->template($self->render_template) unless $self->_has_template;

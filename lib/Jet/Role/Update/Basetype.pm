@@ -138,28 +138,4 @@ sub get_base_name {
 	return $self->object->name;
 }
 
-=head2 redirect_to
-
-Return the path to be redirected to after a successful update.
-
-=cut
-
-sub redirect_to {
-	my $self = shift;
-	return '/jet/basetype/' . $self->object->name;
-}
-
-=head2 edit_updated
-
-Use the new basetype upon successful update
-
-=cut
-
-sub edit_updated  {
-	my ($self, $validation)=@_;
-	$self->object->discard_changes;
-	$self->response->redirect($self->redirect_to);
-}
-
-
 1;

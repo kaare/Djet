@@ -106,15 +106,4 @@ sub get_base_name {
 	return $self->basenode->basetype->name;
 }
 
-=head2 redirect_to
-
-Return the path to be redirected to after a successful update.
-
-=cut
-
-sub redirect_to {
-	my $self = shift;
-	return $self->object->node_path;
-}
-
 1;

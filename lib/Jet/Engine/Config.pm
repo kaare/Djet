@@ -35,24 +35,32 @@ before _build_validator => sub {
 	return unless $self->is_new;
 
 	push @{ $dfv->{required} }, qw/part parent_id basetype_id/;
+	push @{ $dfv->{optional} }, qw/name title/;
 	$self->set_dfv($dfv);
 };
 
-=head2 before set_base_object
 
-Tell the update role that we will make a new node.
+=head2 after set_base_object
+
+Decide if we're creating a new node, and where in the process we are.
 
 =cut
 
-before 'set_base_object' => sub {
+after 'set_base_object' => sub {
 	my $self = shift;
-	return if $self->rest_path or $self->has_object;
+	my $request = $self->request;
+	return unless my $basetype_id = $request->parameters->{basetype_id};
+	return $self->choose_basetype if $basetype_id eq 'child';
 
+	my $parent_id = $self->rest_path;
 	$self->set_object($self->schema->resultset('Jet::DataNode')->new({
-		basetype_id => 1,
-		parent_id => 1,
+		basetype_id => $basetype_id,
+		parent_id => $parent_id,
 		datacolumns => '{}',
 	}));
+	my $stash = $self->stash;
+	$stash->{basetype_id} = $basetype_id;
+	$stash->{parent_id} = $parent_id;
 	$self->is_new(1);
 };
 
@@ -100,37 +108,27 @@ before 'data' => sub {
 	$self->stash->{node} = $object;
 };
 
-=head2 post_is_create
+=head2 before post_is_create
 
 Decide if we're creating a new node
 
 =cut
 
-sub post_is_create {
+before 'post_is_create' => sub {
 	my $self = shift;
 	my $request = $self->body->request;
-	return ($request->parameters->{parent_id} and $request->parameters->{basetype_id}) ?
-		$self->is_new(1) :
-		0;
-}
+	$self->is_new(1) if $request->parameters->{parent_id} and $request->parameters->{basetype_id};
+};
 
 =head2 create_path
 
-Process the POST request for creating a node
+Redirect to the edit page of the new node.
 
 =cut
 
 sub create_path {
 	my $self = shift;
-	my $request = $self->body->request;
-	my $parent_id = $request->parameters->{parent_id};
-	my $basetype_id = $request->parameters->{basetype_id};
-	$self->set_object($self->schema->resultset('Jet::DataNode')->new({
-		parent_id => $parent_id,
-		basetype_id => $basetype_id,
-		datacolumns => '{}',
-	}));
-	return join '/', $self->basenode->node_path, $request->parameters->{part};
+	$self->response->redirect('/jet/node/' . $self->object->id);
 }
 
 =head2 choose_basetype
@@ -141,18 +139,10 @@ Put parameters on the stash for the choose_basetype template
 
 sub choose_basetype {
 	my ($self, $parent_path) = @_;
-	my @basetypes = $self->schema->resultset('Jet::Basetype')->search(undef, {order_by => 'id'});
-	$self->stash->{basetypes} = [ @basetypes ];
+	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values $self->schema->basetypes;
+	$self->stash->{basetypes_choice} = \@basetypes;
 	$self->template('/config/basenode_choose_basetype.tx');
 }
-
-=head2 edit_updated
-
-Override the role method to do nothing
-
-=cut
-
-sub edit_updated {}
 
 __PACKAGE__->meta->make_immutable;
 

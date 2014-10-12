@@ -1,0 +1,64 @@
+=head1 NAME
+
+Jet::Manual::Update
+
+=head1 DESCRIPTION
+
+This is the description of the update process in Jet, covering Form based Update, Create and Delete actions.
+
+The update process of Jet is contained in the L<Jet::Role::Update> and L<Jet::Role::Update::Node> roles primarily, and there is a
+L<Jet::Role::Update::Basetype> to handle update of the basetypes. The latter role shows the flexibility of the update process, in that
+it can update other database objects than nodes.
+
+=head2 post_is_create
+
+Jet uses L<Web::Machine>, and the update process hooks into post_is_create, where it calls edit_update in L<Jet::Role::Update>. If there
+is a validation failure, or the update didn't succeed, post_is_create returns false, so process_post will be called.
+
+If edit_update was successful, post_is_create returns true, so create_path will be called.
+
+=head2 create_path
+
+Returns the uri of the node. If the request was updating a node, it's just the same uri. If the request was for adding a node,
+the path of the new node is used.
+
+After create_path, Web__machine calls the content handler, which is called create_by_post in L<Jet::Role::Update>.
+
+=head2 create_by_post
+
+Basically, create_by_post just returns \302, implementing the POST-redirect-GET pattern.
+
+By default, create_by_post returns 201, but some (most?) browsers don't redirect when recieving that status code.
+
+=head2 process_post
+
+Loads the defaults on the stash and returns to the same page for the user to correct validation errors.
+
+=head1 THE EDIT PROCESS
+
+=head2 edit_submit
+
+Called from post_is_create, validates the input and tries to update or create the node.
+
+edit_submit calls edit_validation and either edit_update or edit_create depending on the is_new attribute, if the
+validation was successful. Otherwise edit_failed_validation is called.
+
+=head2 edit_validation
+
+Validates input using Data::FormValidator.
+
+=head2 edit_failed_validation
+
+Updates the stash with msgs and error. The msgs hash can be used to highlight which input entries are failing. The error text can
+be displayed to make the user aware that there is a problem.
+
+=head2 edit_update
+
+=head2 edit_create
+
+Calls edit_submit_handle_transaction to perform the actual transaction. Calls edit_updated upon a successful transaction, and
+edit_failed_update otherwise.
+
+
+=cut
+

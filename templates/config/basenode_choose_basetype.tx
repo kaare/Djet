@@ -1,7 +1,11 @@
+: cascade config::base
+: override content -> {
 <form method="get" id="basetype_choice" action="<: $request.path_info :>">
-: include 'generic/field/edit/Enum.tx' {name => 'basetype_id', field => {enum => $basetypes, value => nil } };
+<label for="basetype_id">Basetype</label>
+: include 'generic/field/edit/Enum.tx' {name => 'basetype_id', field => {enum => $basetypes_choice, value => nil } };
 <input type="hidden" name="parent_id" value="<: $node.id :>">
 <div>
 : include 'generic/okcancel.tx';
 </div>
 </form>
+: } # content
