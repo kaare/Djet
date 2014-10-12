@@ -5,7 +5,7 @@ use Moose;
 use namespace::autoclean;
 
 use Text::Xslate;
-use Locale::Maketext::Simple;
+use Jet::I18N;
 use URI::Escape;
 
 with 'Jet::Role::Log';
@@ -48,7 +48,7 @@ has tx => (
 			path => [ map {$_ . '/' . $template_path} ('.', $self->config->jet_root) ],
 			function => {
 				l => sub {
-					return loc(@_);
+					return $self->i18n->maketext(@_);
 				},
 				scale_image => sub {
 					return scale_image(@_);
@@ -58,6 +58,23 @@ has tx => (
 				},
 			},
 		);
+	},
+);
+
+=head2 i18n
+
+The localization handler
+
+=cut
+
+has i18n => (
+	isa => 'Jet::I18N',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		my $language = $self->config->config->{language};
+		return Jet::I18N->get_handle($language);
 	},
 );
 
@@ -102,22 +119,6 @@ sub url_encode {
 
 =head1 METHODS
 
-=head2 BUILD
-
-Locale::Maketext::Simple only works with class variables. So we call import on that module.
-
-=cut
-
-sub BUILD {
-	my $self = shift;
-	my $app_root = $self->config->app_root;
-	Locale::Maketext::Simple->import(
-		Path		=> "$app_root/locale/",
-		Decode		=> 1,
-		Encoding	=> 'locale',
-	)
-}
-
 =head2 render
 
 Renders the output as HTML
@@ -126,7 +127,6 @@ Renders the output as HTML
 
 sub render {
 	my ($self, $template, $stash) = @_;
-	loc_lang($self->config->config->{language});
 	return $self->tx->render($template, $stash);
 }
 

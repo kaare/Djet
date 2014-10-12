@@ -12,7 +12,7 @@ Felter markeret med <b>fed</b> er obligatoriske.
   <tr>
 :     my $elm = 'generic/field/' ~ ($template_display != 'view' && $field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
     <td class="<: if $field.required { :>required<: } :>">
-		<: $field.title :>
+		<: l($field.title) :>
 	</td>
     <td class="<: if $msgs[$field.name] { :>error<: } :>">
 : include $elm {field => $field};
