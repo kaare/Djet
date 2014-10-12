@@ -179,7 +179,7 @@ We go here if a x-www-form-urlencoded post wants to create a new node
 
 =cut
 
-sub create_by_post { return \301; }
+sub create_by_post { return \302; }
 
 =head2 delete_resource
 
@@ -286,7 +286,6 @@ project and user components save the parameter in _text
 
 sub edit_validation {
 	my $self = shift;
-
 	eval { my $ralidator = $self->get_validator; };
 	my $validator = $self->get_validator;
 	my $params = $self->body->request->body_parameters;
