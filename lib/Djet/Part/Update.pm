@@ -179,7 +179,10 @@ We go here if a x-www-form-urlencoded post wants to create a new node
 
 =cut
 
-sub create_by_post { return \302; }
+sub create_by_post {
+	my $self = shift;
+	$self->redirect;
+}
 
 =head2 delete_resource
 

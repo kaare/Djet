@@ -57,6 +57,24 @@ has 'query_parameters' => (
 	lazy => 1,
 );
 
+=head2 flash
+
+The flash data from the session
+
+=cut
+
+has 'flash' => (
+	is => 'ro',
+	isa => 'HashRef',
+	default => sub {
+		my $self = shift;
+		my $token = $self->request->param('flash') || return {};
+
+		return delete $self->session->{flash}{$token} // {};
+	},
+	lazy => 1,
+);
+
 =head2 urify
 
 Takes a node and a domain node and returns the full URI path to the node.

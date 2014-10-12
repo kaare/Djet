@@ -4,7 +4,11 @@ use 5.010;
 use Moose;
 
 extends 'Djet::Engine::Default';
-with qw/Djet::Part::Log Djet::Part::Update::Node/;
+with qw/
+	Djet::Part::Flash
+	Djet::Part::Log
+	Djet::Part::Update::Node
+/;
 
 =head1 NAME
 
@@ -83,6 +87,7 @@ Send email to the admin and the user if the "child" contactform was actually cre
 
 before 'edit_updated' => sub {
 	my ($self, $validation)=@_;
+	$self->set_status_msg($self->basenode->fields->receipt_msg->value);
 	eval { $self->send_mail };
 	$self->model->log->error("Couldn't send email: $@") if $@;
 };
