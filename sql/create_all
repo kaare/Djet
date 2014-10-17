@@ -8,6 +8,7 @@
 FILES="\
  sql/jet.sql\
  sql/basic.sql\
+ sql/cart.sql\
  sql/search.sql\
  sql/import.sql\
  sql/news.sql\

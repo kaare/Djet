@@ -1,0 +1,1 @@
+<span class="add-to-basket" data-sku="<: $sku :>" data-qty="<: $qty :>"><: $content :></span>
