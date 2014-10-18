@@ -55,12 +55,10 @@ sub stash_basic {
 	my $schema = $self->schema;
 	my $stash = $self->stash;
 	$stash->{basetypes} = $self->basetypes;
-	my $domain_basetype = $schema->basetype_by_name('domain');
 	$stash->{local} = $schema->local_class->new(
 		body => $self->body,
 		schema => $self->schema,
 		content_type => $self->content_type,
-		domain_node => $self->datanode_by_basetype($domain_basetype),
 	);
 }
 

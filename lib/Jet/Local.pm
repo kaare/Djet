@@ -29,6 +29,12 @@ The first found domain node.
 has 'domain_node' => (
 	is => 'ro',
 	isa => 'Jet::Schema::Result::Jet::DataNode',
+	default => sub {
+		my $self = shift;
+		my $domain_basetype = $self->schema->basetype_by_name('domain');
+		return $self->datanode_by_basetype($domain_basetype);
+	},
+	lazy => 1,
 );
 
 __PACKAGE__->meta->make_immutable;
