@@ -1,0 +1,11 @@
+<div id="checkout_address">
+  <h2><: $node.title :></h2>
+: if $template_display != 'view' {
+  <form method="post" id="edit-address" action="<: $node.urify($domain_node) :>">
+: }
+: include 'generic/1col.tx' {groups => [{columns => $address.fields.fields} ] };
+: if $template_display != 'view' {
+: include 'generic/okcancel.tx';
+  </form>
+: }
+</div>
