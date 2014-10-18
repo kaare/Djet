@@ -18,7 +18,18 @@ Jet::Local is a base class for local_class.
 The purpose of this is to have a class that is put on the stash and that can contain
 anything you'd like.
 
+=head1 ATTRIBUTES
+
+=head2 domain_node
+
+The first found domain node.
+
 =cut
+
+has 'domain_node' => (
+	is => 'ro',
+	isa => 'Jet::Schema::Result::Jet::DataNode',
+);
 
 __PACKAGE__->meta->make_immutable;
 

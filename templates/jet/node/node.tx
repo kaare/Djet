@@ -4,10 +4,10 @@
 : }
 : override content -> {
 <div id="basenode">
-  <h2><: $node.get_column('title') :></h2>
+  <h2><: $local.basenode.get_column('title') :></h2>
   <div class="message"><: $message :></div>
-  <form method="post" id="edit-basenode" action="<: $request.path_info :>">
-: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.fields.fields} ] };
+  <form method="post" id="edit-basenode" action="<: $local.request.path_info :>">
+: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $local.basenode.fields.fields} ] };
 : include 'generic/okcancel.tx';
 : if $basetype_id || $parent_id {
     <input type="hidden" name="basetype_id" value="<: $basetype_id :>">

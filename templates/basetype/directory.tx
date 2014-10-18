@@ -2,10 +2,10 @@
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title><: $basenode.title :></title>
+	<title><: $local.basenode.title :></title>
 </head>
 <body>
 
-<h1><: $basenode.title :></h1>
+<h1><: $local.basenode.title :></h1>
 </body>
 </html>

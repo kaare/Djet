@@ -20,7 +20,6 @@ Jet::Body - The Jet Body
 Jet::Body is instantiated by Jet::Starter at the beginning of a request cycle.
 It holds all the volatile information, as opposed to Jet::Config.
 
-
 =head1 ATTRIBUTES
 
 =head2 env

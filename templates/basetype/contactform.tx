@@ -1,13 +1,13 @@
 <div id="contactform">
-  <h2><: $node.title :></h2>
+  <h2><: $local.basenode.title :></h2>
 : if $template_display != 'view' {
-  <form method="post" id="edit-contactform" action="<: $node.urify($domain_node) :>">
+  <form method="post" id="edit-contactform" action="<: $local.basenode.urify($local.domain_node) :>">
 : }
 : include 'generic/1col.tx' {groups => [{columns => $contactform.fields.fields} ] };
 : if $template_display != 'view' {
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
-    <input type="hidden" name="am" value="<: $node.id :>">
+    <input type="hidden" name="am" value="<: $local.basenode.id :>">
   </form>
 : }
 </div>

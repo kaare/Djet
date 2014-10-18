@@ -45,6 +45,7 @@ has body => (
 		basenode
 		datanode_by_basetype
 		datanodes
+		request
 		rest_path
 		session
 		stash
