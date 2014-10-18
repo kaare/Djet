@@ -16,6 +16,8 @@ Internationalization for Jet
 =cut
 
 our %Lexicon = (
+	Count => 'Antal',
+	Total => 'Total',
 	Company => 'Firma',
 	Name => 'Navn',
 	Address => 'Adresse',
