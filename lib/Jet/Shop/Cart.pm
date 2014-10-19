@@ -1,9 +1,10 @@
 package Jet::Shop::Cart;
 
 use Moose;
+use MooseX::NonMoose;
 use DBIx::Class::ResultClass::HashRefInflator;
 
-use base 'Nitesi::Cart';
+extends 'Nitesi::Cart';
 
 =head1 NAME
 
