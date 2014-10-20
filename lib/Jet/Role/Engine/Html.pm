@@ -39,29 +39,6 @@ Return content as UTF-8
 
 sub default_charset { 'utf-8' }
 
-=head2 stash_basic
-
-Put some basic data on the stash
-
-	node = basenode
-	nodes = datanodes
-	request = request
-	domain_node
-
-=cut
-
-sub stash_basic {
-	my $self = shift;
-	my $schema = $self->schema;
-	my $stash = $self->stash;
-	$stash->{basetypes} = $self->basetypes;
-	$stash->{local} = $schema->local_class->new(
-		body => $self->body,
-		schema => $self->schema,
-		content_type => $self->content_type,
-	);
-}
-
 =head2 to_html
 
 Sets the content type to html, initializes the stash with node, nodes and request,
@@ -85,8 +62,6 @@ View the page
 sub view_page {
 	my $self = shift;
 	$self->content_type('html');
-	$self->stash_basic;
-
 	my $schema = $self->schema;
 
 	$self->init_data unless $self->omit_run->{init_data};

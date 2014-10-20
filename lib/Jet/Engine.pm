@@ -137,13 +137,39 @@ has mailer => (
 
 =head1 METHODS
 
-=head2 BUILD
+=head2 stash_basic
 
-Necessary for the roles
+Put some basic data on the stash
+
+	node = basenode
+	nodes = datanodes
+	request = request
+	domain_node
 
 =cut
 
-sub BUILD {}
+sub stash_basic {
+	my $self = shift;
+	my $schema = $self->schema;
+	my $stash = $self->stash;
+	$stash->{basetypes} = $self->basetypes;
+	$stash->{local} = $schema->local_class->new(
+		body => $self->body,
+		schema => $self->schema,
+		content_type => $self->content_type,
+	);
+}
+
+=head2 BUILD
+
+Initializes the stash with the local object,
+
+=cut
+
+sub BUILD {
+	my $self = shift;
+	$self->stash_basic;
+}
 
 =head2 init_data
 

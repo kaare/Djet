@@ -29,10 +29,7 @@ has cart => (
 	isa => 'Jet::Shop::Cart',
 	default => sub {
 		my $self = shift;
-		my $cart = Jet::Shop::Cart->new(
-			schema => $self->schema,
-			uid => 1,
-		);
+		return $self->stash->{local}->cart;
 	},
 	lazy => 1,
 );
