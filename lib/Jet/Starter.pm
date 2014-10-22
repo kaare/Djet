@@ -134,9 +134,12 @@ has app => (
 		return sub {
 			$self->check_notifications;
 			my $env = shift;
+			my $session = $env->{'psgix.session'};
+			my $options = $env->{'psgix.session.options'};
 			my $body = Jet::Body->new(
 				env => $env,
-				session => $env->{'psgix.session'},
+				session => $session,
+				session_id => $options->{id},
 				stash => {},
 			);
 			my $flight = Jet->new(body => $body, schema => $self->schema);

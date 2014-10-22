@@ -44,6 +44,17 @@ has session => (
 	isa => 'HashRef',
 );
 
+=head2 session_id
+
+The session
+
+=cut
+
+has session_id => (
+	is => 'ro',
+	isa => 'Str',
+);
+
 =head2 request
 
 The plack request
