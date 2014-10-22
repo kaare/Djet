@@ -33,7 +33,7 @@ User id of the cart
 
 has uid => (
 	is => 'ro',
-	isa => 'Int',
+	isa => 'Str',
 	predicate => 'has_uid',
 );
 
@@ -73,16 +73,6 @@ has cart_row => (
 	lazy_build => 1,
 );
 
-=head1 METHODS
-
-=head2 load
-
-Loads cart from database.
-
-parameters: uid, session_id
-
-=cut
-
 sub _build_cart_row {
 	my $self = shift;
 	die "Neither user nor session id" unless $self->has_uid or $self->has_session_id;
@@ -90,6 +80,19 @@ sub _build_cart_row {
 	my $where = $self->has_uid ? {uid => $self->uid} : {session_id => $self->session_id};
 	my $cart_row = $self->schema->resultset('Jet::Cart')->find($where);
 	return $cart_row ? $self->_load_cart($cart_row) : $self->_create_cart;
+}
+
+=head1 METHODS
+
+=head2 BUILD
+
+Create the cart
+
+=cut
+
+sub BUILD {
+	my $self = shift;
+	$self->cart_row;
 }
 
 =head2 save
@@ -148,11 +151,15 @@ before add => sub {
 
 before update => sub {
 	my ($self, %args) = @_;
-	if (my $cart_product = $self->schema->resultset('Jet::CartProduct')->find({
-		cart => $self->cart_row->id,
-		sku => $args{sku},
-	})) {
-		$cart_product->update({quantity => $args{quantity}});
+	my $cart_id = $self->cart_row->id;
+	while (my ($sku, $qty) = each %args) {
+		my $search = {
+			cart => $cart_id,
+			sku => $sku,
+		};
+		if (my $cart_product = $self->schema->resultset('Jet::CartProduct')->find($search)) {
+			$cart_product->update({quantity => $qty});
+		}
 	}
 };
 
@@ -187,6 +194,14 @@ before clear => sub {
 		cart => $self->cart_row->id,
 		sku => $args{sku},
 	});
+};
+
+
+before items => sub {
+	my $self = shift;
+	my $items = $self->{items} || return;
+
+	map {$_->{total} = $_->{quantity} * $_->{price}} @$items;
 };
 
 __PACKAGE__->meta->make_immutable;

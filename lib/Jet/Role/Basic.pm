@@ -48,6 +48,7 @@ has body => (
 		request
 		rest_path
 		session
+		session_id
 		stash
 	/],
 );

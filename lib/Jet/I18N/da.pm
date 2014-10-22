@@ -16,16 +16,20 @@ Internationalization for Jet
 =cut
 
 our %Lexicon = (
-	Count => 'Antal',
-	Total => 'Total',
-	Company => 'Firma',
-	Name => 'Navn',
 	Address => 'Adresse',
-	'Postal Code' => 'Postnr.',
 	City => 'By',
-	Telephone => 'Telefon',
-	'Email Address' => 'Mailadresse',
 	Comment => 'Kommentar',
+	Company => 'Firma',
+	Count => 'Antal',
+	'Email Address' => 'Mailadresse',
+	Name => 'Navn',
+	Quantity => 'Antal',
+	'Postal Code' => 'Postnr.',
+	Price => 'Pris',
+	Telephone => 'Telefon',
+	Subtotal => 'Ordresaldo',
+	Total => 'Total',
+	Vat => 'Moms',
 );
 
 1;

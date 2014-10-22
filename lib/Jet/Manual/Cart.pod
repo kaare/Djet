@@ -1,0 +1,80 @@
+=head1 NAME
+
+Jet::Manual::Cart
+
+=head1 DESCRIPTION
+
+This is the description of the cart and checkout in Jet.
+
+Handling prices and shopping is a dificult subject, and Jet has to use several parts for maximal flexibility and ease of use.
+
+=head2 Basenodes
+
+There are a number of basenodes involved,
+
+=over 4
+
+=item cart
+
+Defines the cart node. This node holds the shopping cart, and it's here that products are added or removed to or from the cart.
+
+=item checkout
+
+Handles the checkout process. Exactly what is going to happen depends on how many of the next basetypes are present in the system.
+
+=over 4
+
+=item checkout_cart
+
+Responsible for displaying and updating the cart in the checkout process.
+
+=item checkout_address
+
+Responsible for displaying and updating the cart in the checkout process
+
+=item checkout_payment
+
+Handles the payment in the checkout process
+
+=back
+
+These basetypes have to be children of the checkout basetype. Their order (currently the node modification timestamp) decides the order
+they are displayed and processed by the checkout handler.
+
+The checkout handler is an ordinary L<Jet::Engine> class, whereas the other handlers are L<Jet::Shop::Checkout> classes.
+
+=back
+
+=head2 Classes
+
+=over 4
+
+=item Jet::Part::Local::Cart>
+
+Adds the cart and some important urls to the local object.
+
+Note! The cart object defined here is used in all other cart and checkout classes, as well as in the templates. This means that
+it's easy to subclass Jet::Part::Local::Cart and define your own cart.
+
+This is quite important, as all quantity price handling and other special stuff easily fits into the whole system.
+
+=item L<Jet::Engine::Cart>
+
+=item L<Jet::Engine::Checkout>
+
+=item L<Jet::Shop::Cart>
+
+Is a subclass of L<Nitesi::Cart>
+
+=item L<Jet::Shop::Checkout>
+
+=item L<Jet::Shop::Checkout::Cart>
+
+=item L<Jet::Shop::Checkout::Address>
+
+=item L<Jet::Shop::Checkout::Payment>
+
+=back
+
+=cut
+

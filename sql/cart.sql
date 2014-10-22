@@ -15,9 +15,9 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout','Shopping Cart Checkout','[
 	{"name":"steps","title":"Checkout steps","type":"Str"}
 ]','Jet::Engine::Checkout','<domain>/basetype/checkout/receipt.tx');
-INSERT INTO basetype (feature_id,name,title,datacolumns,template) VALUES (currval('feature_id_seq'), 'checkout_cart','Checkout Cart','[
-]','<domain>/basetype/checkout/cart.tx');
-INSERT INTO basetype (feature_id,name,title,datacolumns,template) VALUES (currval('feature_id_seq'), 'checkout_address','Checkout Address','[
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_cart','Checkout Cart','[
+]','Jet::Shop::Checkout::Cart','<domain>/basetype/checkout/cart.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_address','Checkout Address','[
 	{"name":"company","title":"Company","type":"Str"},
 	{"name":"name","title":"Name","type":"Str", "required": "on"},
 	{"name":"street","title":"Address","type":"Str"},
@@ -25,9 +25,9 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,template) VALUES (currva
 	{"name":"city","title":"City","type":"Str"},
 	{"name":"phone","title":"Telephone","type":"Str", "required": "on"},
 	{"name":"email","title":"Email Address","type":"Email", "required": "on"}
-]','<domain>/basetype/checkout/address.tx');
-INSERT INTO basetype (feature_id,name,title,datacolumns,template) VALUES (currval('feature_id_seq'), 'checkout_payment','Checkout Payment','[
-]','<domain>/basetype/checkout/payment.tx');
+]','Jet::Shop::Checkout::Address','<domain>/basetype/checkout/address.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_payment','Checkout Payment','[
+]','Jet::Shop::Checkout::Payment','<domain>/basetype/checkout/payment.tx');
 
 -- Data Nodes
 

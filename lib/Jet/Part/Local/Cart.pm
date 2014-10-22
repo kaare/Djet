@@ -24,15 +24,19 @@ The cart
 has 'cart' => (
 	is => 'ro',
 	isa => 'Jet::Shop::Cart',
-	default => sub {
-		my $self = shift;
-		my $cart = Jet::Shop::Cart->new(
-			schema => $self->schema,
-			uid => 1,
-		);
-	},
-	lazy => 1,
+	lazy_build => 1,
 );
+
+sub _build_cart {
+	my $self = shift;
+	my $session = $self->session;
+	my $cart = Jet::Shop::Cart->new(
+		schema => $self->schema,
+		session_id => $self->session_id,
+		uid => $session->{jet_user},
+	);
+	return $cart;
+}
 
 =head2 cart_base_url
 
