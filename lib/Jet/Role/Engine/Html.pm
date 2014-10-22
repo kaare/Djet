@@ -41,8 +41,7 @@ sub default_charset { 'utf-8' }
 
 =head2 to_html
 
-Sets the content type to html, initializes the stash with node, nodes and request,
-and calls init_data and data (if they're not omitted).
+Sets the content type to html, and calls init_data and data (if they're not omitted).
 
 Finally renders the template and returns the result.
 
