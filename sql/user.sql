@@ -1,64 +1,32 @@
---
+-- Jet basetypes and nodes for handling users
 
 BEGIN;
 
-SET search_path TO data;
+SET search_path=jet, public;
 
-CREATE TABLE person (
-	id						int NOT NULL PRIMARY KEY
-							REFERENCES jet.node
-							ON DELETE cascade
-							ON UPDATE cascade,
-	userlogin				text,
-	password				text,
-	workalbum_id			int REFERENCES jet.node
-);
+-- Features
 
-CREATE VIEW person_view AS
-SELECT
-	d.*,
-	b.name basetype,
-	n.name, n.title,
-	p.id path_id, p.part,p.node_path,parent_id
-FROM
-	person d
-JOIN
-	jet.node n USING (id)
-JOIN
-	jet.path p ON p.node_id=n.id
-JOIN
-	jet.basetype b ON basetype_id = b.id
-WHERE
-    b.name='person';
+INSERT INTO feature (name,version, description) VALUES ('user', 0.01, 'User features');
 
-CREATE TRIGGER person_view_insert INSTEAD OF INSERT ON person_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
+-- Basetypes
 
---
-
-CREATE TABLE usergroup (
-	id						int NOT NULL PRIMARY KEY
-							REFERENCES jet.node
-							ON DELETE cascade
-							ON UPDATE cascade
-);
-
-CREATE VIEW usergroup_view AS
-SELECT
-	d.*,
-	b.name basetype,
-	n.name, n.title,
-	p.id path_id, p.part,p.node_path,parent_id
-FROM
-	usergroup d
-JOIN
-	jet.node n USING (id)
-JOIN
-	jet.path p ON p.node_id=n.id
-JOIN
-	jet.basetype b ON basetype_id = b.id
-WHERE
-    b.name='usergroup';
-
-CREATE TRIGGER usergroup_view_insert INSTEAD OF INSERT ON usergroup_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'users','Users','[
+	{"type":"Structured","title":"Roles","name":"roles"}
+	{"type":"Boolean","title":"Menu","name":"topmenu"}
+]','Jet::Engine::User','<domain>/basetype/users.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'user','User','[
+	{"name":"handle","title":"Handle","type":"Str", "required": "on"},
+	{"name":"password","title":"Password","type":"Protected", "required": "on", "storage":false},
+	{"name":"username","title":"User Name","type":"Str", "required": "on"},
+	{"name":"street","title":"Address","type":"Str"},
+	{"name":"postalcode","title":"Postal Code","type":"Int"},
+	{"name":"city","title":"City","type":"Str"},
+	{"name":"phone","title":"Telephone","type":"Str", "required": "on"},
+	{"name":"email","title":"Email Address","type":"Email", "required": "on"},
+	{"name":"comment","title":"Comment","type":"Text"}
+]','Jet::Engine::User','<domain>/basetype/user.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'mypage','My Page','[
+	{"type":"Boolean","title":"Menu","name":"topmenu"}
+]','Jet::Engine::User','<domain>/basetype/mypage.tx');
 
 COMMIT;

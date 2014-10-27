@@ -32,7 +32,7 @@ sub check_login {
 
 	# Check if user has the correct group and act as that user if so
 	for my $group (@group) {
-		return $self->set(role => $user) && $user if $self->member_of(user => $user, group => $group);
+		return $self->set_role(role => $user) && $user if $self->member_of(user => $user, group => $group);
 	}
 	return;
 }

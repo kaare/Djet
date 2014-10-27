@@ -286,7 +286,6 @@ project and user components save the parameter in _text
 
 sub edit_validation {
 	my $self = shift;
-	eval { my $ralidator = $self->get_validator; };
 	my $validator = $self->get_validator;
 	my $params = $self->body->request->body_parameters;
 	return $validator->validate($params);
@@ -355,8 +354,7 @@ sub get_input_data {
 	my ($self, $validation)=@_;
 	my $colnames = $self->get_colnames;
 	my $valid_data = $validation->valid;
-	my $input_data;
-	$input_data->{$_} = decode('utf-8', $valid_data->{$_}) for map {warn $_;$_} grep {my $colname = $_;!any {$colname eq $_} @{ $self->dont_save} } keys %$valid_data;
+	my $input_data = { map { $_ => decode('utf-8', $valid_data->{$_}) } grep {my $colname = $_;!any {$colname eq $_} @{ $self->dont_save} } keys %$valid_data };
 	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
