@@ -187,21 +187,6 @@ Data is called just after the original method is called. Add anything that belon
 
 sub data {}
 
-=head2 urify
-
-Takes a node_path and returns the full URI path to the resource.
-
-It works by finding the nearest domain node, use its name as domain name and change the path to the difference between the two node_paths
-
-=cut
-
-sub urify {
-	my ($self, $path) = @_;
-	my $uri = $self->request->request->base;
-	$uri->path($path);
-	return $uri->as_string;
-}
-
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT

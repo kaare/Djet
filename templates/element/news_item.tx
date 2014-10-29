@@ -1,5 +1,5 @@
 <div class="news_header">
-  <a href="<: $item.urify($local.domain_node) :>"><: $item.title :></a>
+  <a href="<: $local.urify($item) :>"><: $item.title :></a>
 </div>
 <div class="news_box">
   <: $item.fields.news_text :>

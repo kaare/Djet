@@ -176,7 +176,7 @@ Process the POST request for creating a node
 sub create_path {
 	my $self = shift;
 	my $step = $self->stash->{cart}{next_step};
-	my $url = join '/', $self->basenode->urify($self->stash->{local}->domain_node), 
+	my $url = join '/', $self->stash->{local}->urify, 
 		$step;
 	return $url;
 }

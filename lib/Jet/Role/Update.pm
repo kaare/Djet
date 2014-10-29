@@ -170,7 +170,7 @@ Process the POST request for creating a node
 sub create_path {
 	my $self = shift;
 	$self->stash_basic;
-	$self->object->urify($self->stash->{local}->domain_node);
+	$self->stash->{local}->urify;
 }
 
 =head2 create_by_post

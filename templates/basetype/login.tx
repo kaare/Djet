@@ -1,7 +1,7 @@
 <div id="login">
   <h2><: $local.basenode.title :></h2>
 : if $template_display != 'view' {
-  <form method="post" id="edit-login" action="<: $local.basenode.urify($local.domain_node) :>">
+  <form method="post" id="edit-login" action="<: $local.urify :>">
 : }
 : include 'generic/1col.tx' {groups => [{columns => $local.basenode.fields.fields} ] };
 : if $template_display != 'view' {

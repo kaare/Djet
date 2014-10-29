@@ -263,26 +263,6 @@ has 'current' => (
 	lazy => 1,
 );
 
-=head2 urify
-
-Takes a domain node and returns the full URI path to the node.
-
-It works by finding the nearest domain node, use its name as domain name and change the path to the difference between the two node_paths
-
-=cut
-
-sub urify {
-	my ($self, $domain_node) = @_;
-	my $schema = $self->result_source->schema;
-	my $domain_name = $domain_node->name;
-	my $domain_path = $domain_node->node_path;
-	my $node_path = $self->node_path;
-	return $node_path unless $schema->config->config->{environment} eq 'live';
-
-	$node_path =~ s/^$domain_path/$domain_name/;
-	return $node_path ? "//$node_path" : $node_path;
-}
-
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT

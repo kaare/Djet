@@ -56,7 +56,7 @@ has 'cart_base_url' => (
 			basetype_id => $cart_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		});
-		return $cart_row->urify($domain_node);
+		return $self->urify(cart_row);
 	},
 	lazy => 1,
 );
