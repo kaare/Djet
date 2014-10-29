@@ -8,7 +8,11 @@ with 'Jet::Part';
 
 =head1 NAME
 
-Jet::Part::List - Find a number of nodes based on some earch parameters
+Jet::Part::List
+
+=head1 DESCRIPTION
+
+Find a number of nodes based on some search parameters, and put them on the stash
 
 =head1 ATTRIBUTES
 
@@ -28,6 +32,8 @@ has list_name => (
 =head2 limit
 
 Limit the number of nodes to be returned
+
+If the limit is negative, the search will not be performed
 
 =cut
 
@@ -83,6 +89,8 @@ before 'data' => sub {
 
 sub _find_list {
 	my $self = shift;
+	return if $self->limit < 0;
+
 	my $options = {};
 	$options->{rows} = $self->limit;
 	my $page = $self->request->param('page') // 1;
