@@ -1,0 +1,18 @@
+<table>
+  <tr>
+: for $header -> $label {
+    <th><: $label.title :></th>
+: }
+  </tr>
+: for $list.all_ref -> $row {
+<: $row.node_id :>
+  <tr>
+:   for $row.fields.fields -> $field {
+:     my $elm = 'generic/field/' ~ (($update && $field.updatable) ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
+    <td>
+: include $elm {field => $field, name => $field_name};
+    </td>
+:   }
+</tr>
+: }
+</table>
