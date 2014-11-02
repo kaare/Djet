@@ -32,6 +32,23 @@ has edit_cols => (
 	default => sub { [qw/attributes datacolumns searchable/] },
 );
 
+=head2 dont_save
+
+Names of columns that will not be saved
+
+=cut
+
+has dont_save => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		return [( @{ $self->edit_cols }, qw/id created modified/ )],
+
+	},
+);
+
 =head1 METHODS
 
 =head2 set_base_object

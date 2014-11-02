@@ -20,7 +20,7 @@ requires qw/edit_validation edit_update edit_create/;
 
 =head2 edit_cols
 
-Names of columns that will be edited in the engine itself
+Names of columns that will be edited in the engine itself, i.e. not stored
 
 =cut
 
@@ -29,6 +29,26 @@ has edit_cols => (
 	isa => 'ArrayRef',
 	lazy => 1,
 	default => sub { [qw/datacolumns/] },
+);
+
+=head2 dont_save
+
+Names of columns that will not be saved
+
+For datanodes, this will default be what's in edit_cols plus id, created, modified, plus whichever fields shouldn't be stored (storage: false)
+
+=cut
+
+has dont_save => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		my $basetype = $self->schema->basetypes->{$self->object->basetype_id}; # Should be faster; already in memory
+		my @cols = map {$_->{name}} grep {defined $_->{storage} && !$_->{storage}} @{ $basetype->datacolumns };
+		return \@cols;
+	},
 );
 
 =head1 METHODS

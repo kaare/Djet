@@ -28,6 +28,7 @@ after 'set_base_object' => sub  {
 	my $self = shift;
 	my $schema = $self->schema;
 	my $basetype = $schema->basetype_by_name('contactform') or die "No basetype: contactform";
+
 	my $contactform;
 	if ($self->basenode->basetype_id == $basetype->id) {
 		$contactform = $self->basenode;

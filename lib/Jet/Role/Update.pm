@@ -354,8 +354,9 @@ Get the data from the form
 sub get_input_data {
 	my ($self, $validation)=@_;
 	my $colnames = $self->get_colnames;
-	my $input_data = $validation->valid;
-	$input_data->{$_} = decode('utf-8', $input_data->{$_}) for keys %$input_data;
+	my $valid_data = $validation->valid;
+	my $input_data;
+	$input_data->{$_} = decode('utf-8', $valid_data->{$_}) for map {warn $_;$_} grep {my $colname = $_;!any {$colname eq $_} @{ $self->dont_save} } keys %$valid_data;
 	my $data = { map { $_ => delete $input_data->{$_} } grep {$input_data->{$_}} @$colnames };
 	my $edit_cols = $self->edit_cols;
 	$data->{$_} = $self->$_($input_data, $data) for @$edit_cols; # special columns handling
@@ -421,14 +422,17 @@ sub find_rows_from_params {
 
 =head2 get_colnames
 
-Get the colnames of the object
+Get the native colnames of the object
 
 =cut
 
 sub get_colnames {
 	my $self = shift;
 	my $edit_cols = $self->edit_cols;
-	return [ grep {my $colname = $_;!any {$colname eq $_} @$edit_cols, qw/id created modified/} $self->object->result_source->columns ];
+	return [ grep {
+		my $colname = $_;
+		!any {$colname eq $_} @$edit_cols, 'id'} $self->object->result_source->columns
+	];
 }
 
 1;
