@@ -17,7 +17,7 @@ INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'je
 INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_tree', 'Node Tree','Jet::Engine::ConfigTree','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
 INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'login', 'Login','Jet::Engine::Login','[
 	{"name":"username","title":"User","type":"Str", "required": "on"},
-	{"name":"password","title":"Password","type":"Password", "required": "on"}
+	{"name":"password","title":"Password","type":"Protected", "required": "on"}
 ]');
 
 -- Data Nodes
