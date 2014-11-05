@@ -5,7 +5,6 @@ use Moose;
 use namespace::autoclean;
 
 use Text::Xslate;
-use Jet::I18N;
 use URI::Escape;
 
 with 'Jet::Role::Log';
@@ -48,7 +47,7 @@ has tx => (
 			path => [ map {$_ . '/' . $template_path} ('.', $self->config->jet_root) ],
 			function => {
 				l => sub {
-					return $self->i18n->maketext(@_);
+					return $self->config->i18n->maketext(@_);
 				},
 				scale_image => sub {
 					return scale_image(@_);
@@ -58,23 +57,6 @@ has tx => (
 				},
 			},
 		);
-	},
-);
-
-=head2 i18n
-
-The localization handler
-
-=cut
-
-has i18n => (
-	isa => 'Jet::I18N',
-	is => 'ro',
-	lazy => 1,
-	default => sub {
-		my $self = shift;
-		my $language = $self->config->config->{language};
-		return Jet::I18N->get_handle($language);
 	},
 );
 

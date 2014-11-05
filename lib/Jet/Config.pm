@@ -10,6 +10,7 @@ use Log::Any;
 use Log::Any::Adapter;
 
 use Jet::Schema;
+use Jet::I18N;
 
 with 'Jet::Role::Log';
 
@@ -163,6 +164,24 @@ has log => (
 		return $logger;
 	},
 	lazy => 1,
+);
+
+=head2 i18n
+
+The localization handler
+
+=cut
+
+has i18n => (
+	isa => 'Jet::I18N',
+	is => 'ro',
+	lazy => 1,
+	default => sub {
+		my $self = shift;
+		my $language = $self->config->{language};
+		my $jet_root = $self->jet_root;
+		return Jet::I18N->get_handle($jet_root, $language);
+	},
 );
 
 __PACKAGE__->meta->make_immutable;
