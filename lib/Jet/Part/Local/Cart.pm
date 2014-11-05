@@ -56,7 +56,7 @@ has 'cart_base_url' => (
 			basetype_id => $cart_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		});
-		return $self->urify(cart_row);
+		return $self->urify($cart_row);
 	},
 	lazy => 1,
 );
@@ -80,7 +80,7 @@ has 'checkout_base_url' => (
 			basetype_id => $checkout_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		}) or return '';
-		return $checkout_row->urify($domain_node);
+		return $self->urify($checkout_row);
 	},
 	lazy => 1,
 );

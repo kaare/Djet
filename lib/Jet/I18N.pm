@@ -20,7 +20,7 @@ sub get_handle {
 	my ($self, $jet_root, $language) = @_;
 	Locale::Maketext::Lexicon->import({
 		$language => [
-			Gettext => "locale/$language.po",
+			#		Gettext => "locale/$language.po",
 			Gettext => "$jet_root/locale/$language.po"
 		],
 		_auto   => 1,

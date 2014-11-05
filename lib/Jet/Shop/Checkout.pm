@@ -26,6 +26,28 @@ has checkout => (
 	isa => 'HashRef',
 );
 
+=head2 step
+
+The current step
+
+=cut
+
+has 'step' => (
+	is => 'ro',
+	isa => 'Jet::Schema::Result::Jet::DataNode',
+);
+
+=head2 mailer
+
+Jet mailer. In case the checkout step needs to alert someone
+
+=cut
+
+has mailer => (
+	is => 'ro',
+	isa => 'Jet::Mail',
+);
+
 =head1 METHODS
 
 =head2 has_all_data

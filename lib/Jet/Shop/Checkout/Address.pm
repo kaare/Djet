@@ -17,8 +17,10 @@ Handles the address in the checkout process
 
 sub has_all_data {
 	my $self = shift;
-	my $stash = $self->stash;
-	my $params = $self->request->body_parameters;
+	my $checkout = $self->checkout;
+	my $params = $self->request->body_parameters->as_hashref;
+	my $step_name = $self->step->name;
+	$checkout->{data}{$step_name} = $params;
 	return 1;
 }
 

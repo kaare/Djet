@@ -2,7 +2,7 @@ BEGIN;
 
 -- Roles
 
-CREATE role superusers SUPERUSER;
+CREATE role superusers WITH SUPERUSER;
 GRANT ALL on SCHEMA jet TO superusers;
 GRANT ALL ON ALL TABLES IN SCHEMA jet TO superusers;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA jet TO superusers;

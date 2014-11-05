@@ -70,10 +70,10 @@ has checkout => (
 	isa => 'HashRef',
 	default => sub {
 		my $self = shift;
-		my $session = $self->session->{session};
-		return $session if defined $session;
+		my $session = $self->session;
+		return { next_step => 1 } unless defined $session && $session->{checkout};
 
-		return { next_step => 1 };
+		return $session->{checkout};
 	},
 	lazy => 1,
 );
@@ -112,10 +112,20 @@ before 'data' => sub {
 	my $checkout = $self->checkout;
 	my $next_step = $self->rest_path || 1;
 	$next_step = 1 unless $next_step =~ /^\d+$/;
-
 	my $steps = $self->steps;
-	$self->stash->{steps} = $steps;
+	for my $step (1 .. $next_step) {
+		unless ($checkout->{ok}[$step-1]) {
+			$next_step = $step;
+			last;
+		}
+	}
+	$self->session->{checkout}{next_step} = $next_step;
 	my $current_step = $next_step == @$steps ? $self->basenode : $steps->[$next_step - 1];
+
+	$self->stash->{steps} = $steps;
+	$self->stash->{current_step} = $current_step;
+	my $step_name = $current_step->name;
+	$self->stash->{defaults} = $checkout->{data}{$step_name} if $checkout->{data}{$step_name};
 
 	my $template //= $current_step->basetype->template;
 	$template = $self->template_substitute($template) if defined($template) and $template =~ /<.+>/;
@@ -135,21 +145,25 @@ Checks all steps up to the wanted step to see if data are entered correctly.
 sub post_is_create {
 	my ($self) = @_;
 	my $checkout = $self->checkout;
-	my $next_step = $self->rest_path // 1;
+	my $step = $checkout->{next_step} // $self->rest_path || 1;
 	my $steps = $self->steps;
+	$step = @$steps - 1 if $step >= @$steps;
+	my $current_step = $steps->[$step-1];
+	my $handler = $current_step->basetype->handler;
+	eval "require $handler" or die "No handler $handler";
 
-	for my $step (1 .. $next_step) {
-		my $current_step = $steps->[$step - 1];
-		my $handler = $current_step->basetype->handler;
-		eval "require $handler" or die "No handler $handler";
+	my $step_object = $handler->new(
+		body => $self->body,
+		schema => $self->schema,
+		mailer => $self->mailer,
+		checkout => $checkout,
+		step => $current_step,
+	);
+	return unless my $step_ok = $step_object->has_all_data;
 
-		my $step_object = $handler->new(
-			body => $self->body,
-			checkout => $self->checkout,
-		);
-		return unless $step_object->has_all_data;
-	}
-	$self->stash->{cart}{next_step} = $next_step + 1;
+	$checkout->{ok}[$step-1] = $step_ok;
+	$checkout->{next_step} = $step + 1 unless $checkout->{next_step} >= @$steps;
+	$self->session->{checkout} = $checkout;
 	return 1;
 }
 
@@ -167,6 +181,15 @@ sub process_post {
 	$self->response->body($self->view_page);
 }
 
+sub _stash_defaults {
+	my ($self) = @_;
+	my $request = $self->body->request;
+	$self->stash->{defaults} = $request->parameters->as_hashref;
+	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
+		$self->stash->{defaults}{$fieldname} = $upload->filename;
+	}
+}
+
 =head2 create_path
 
 Process the POST request for creating a node
@@ -175,7 +198,7 @@ Process the POST request for creating a node
 
 sub create_path {
 	my $self = shift;
-	my $step = $self->stash->{cart}{next_step};
+	my $step = $self->session->{checkout}{next_step};
 	my $url = join '/', $self->stash->{local}->urify, 
 		$step;
 	return $url;

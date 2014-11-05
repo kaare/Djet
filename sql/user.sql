@@ -11,7 +11,7 @@ INSERT INTO feature (name,version, description) VALUES ('user', 0.01, 'User feat
 -- Basetypes
 
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'users','Users','[
-	{"type":"Structured","title":"Roles","name":"roles"}
+	{"type":"Structured","title":"Roles","name":"roles"},
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
 ]','Jet::Engine::User','<domain>/basetype/users.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'user','User','[

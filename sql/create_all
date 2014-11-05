@@ -14,5 +14,6 @@ FILES="\
  sql/news.sql\
  sql/contactform.sql\
  sql/user.sql\
+ sql/roles.sql\
 "
 cat $FILES
