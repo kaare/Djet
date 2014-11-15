@@ -240,7 +240,7 @@ Related object: L<Jet::Schema::Result::Jet::Node>
 
 __PACKAGE__->belongs_to(
   "parent",
-  "Jet::Schema::Result::Jet::Node",
+  "Jet::Schema::Result::Jet::DataNode",
   { node_id => "parent_id" },
   {
 	is_deferrable => 0,
