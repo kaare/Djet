@@ -58,10 +58,14 @@ sub urify {
 	my $domain_name = $domain_node->name;
 	my $domain_path = $domain_node->node_path;
 	my $node_path = $node->node_path;
-	return $node_path unless $schema->config->config->{environment} eq 'live';
-
-	$node_path =~ s/^$domain_path/$domain_name/;
-	return $node_path ? "//$node_path" : $node_path;
+	if ($schema->config->config->{environment} eq 'live') {
+		$node_path =~ s/^$domain_path/$domain_name/;
+		return $node_path ? "//$node_path" : $node_path;
+	} else {
+		my $uri = '//' . $self->request->uri->host_port . $node_path;
+		$uri = $uri . '/' unless $uri =~ m|/$|;
+		return $uri;
+	}
 }
 
 __PACKAGE__->meta->make_immutable;
