@@ -1,4 +1,4 @@
-package Jet::Part::Local::Cart;
+package Jet::Part::Local::Basic;
 
 use 5.010;
 use Moose::Role;
@@ -7,11 +7,17 @@ use Jet::Shop::Cart;
 
 =head1 NAME
 
-Jet::Part::Local::Cart
+Jet::Part::Local::Basic
 
 =head1 DESCRIPTION
 
-Add cart information to the local object
+Add information about basic types to the local object
+
+Basic Jet types are
+
+	Cart
+	Search
+	User
 
 =head1 ATTRIBUTES
 
@@ -84,6 +90,56 @@ has 'checkout_base_url' => (
 	},
 	lazy => 1,
 );
+
+=head2 search_base_url
+
+The base url of the search node
+
+=cut
+
+has 'search_base_url' => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $self = shift;
+		my $schema = $self->schema;
+		my $search_basetype = $schema->basetype_by_name('search');
+		my $domain_node = $self->domain_node;
+		my $search_row = $schema->resultset('Jet::DataNode')->find({
+			basetype_id => $search_basetype->id,
+			node_path => {'<@' => $domain_node->node_path},
+		});
+		return $self->urify($search_row);
+	},
+	lazy => 1,
+);
+
+=head2 user
+
+The current user
+
+=cut
+
+has 'user' => (
+	is => 'ro',
+	isa => 'Maybe[Jet::Schema::Result::Jet::DataNode]',
+	lazy_build => 1,
+);
+
+sub _build_user {
+	my $self = shift;
+	my $user = $self->session->{jet_user} // return;
+
+	my $schema = $self->schema;
+	my $user_basetype = $schema->basetype_by_name('user') or return '';
+
+	my $user_row = $schema->resultset('Jet::DataNode')->find({
+		basetype_id => $user_basetype->id,
+		part => $user,
+	}) or return;
+
+	return $user_row;
+}
 
 no Moose::Role;
 
