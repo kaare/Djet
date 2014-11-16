@@ -15,4 +15,7 @@
 : }
   </form>
 </div>
+: } # content
+: after javascript -> {
+  <script src="/js/component/html.js" type="text/javascript"></script>
 : }
