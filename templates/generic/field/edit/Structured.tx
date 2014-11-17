@@ -1,1 +1,1 @@
-: include 'generic/field/edit/Text.tx'
+<textarea id="<: $name || $field.name :>" name="<: $name || $field.name :>"><: $defaults[$field.name] || $field.value_for_editing | html :></textarea>
