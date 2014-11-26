@@ -1,8 +1,12 @@
 <div class="news_header">
+: if $nolink {
+  <: $item.title :>
+: } else {
   <a href="<: $local.urify($item) :>"><: $item.title :></a>
+: }
 </div>
 <div class="news_box">
-  <: $item.fields.news_text :>
+  <: $item.fields.news_text | raw :>
 </div>
 <div class="news_date">
   <: $item.data_created.ymd :>
