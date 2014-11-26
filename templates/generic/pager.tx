@@ -3,16 +3,16 @@
 Viser <: $pager.first :> til <: $pager.last :> af <: $pager.total_entries :>.
 :	if $pager.current_page > 2 {
 :
-<a href="?<: $pager.first_page :>&<: $local.request.query_parameters | url_encode :>">Første side</a>
+<a href="?<: $pager.first_page :>&<: $query_parameters | url_encode :>">Første side</a>
 :	}
 :	if $pager.previous_page {
-<a href="?page=<: $pager.previous_page :>&<: $local.request.query_parameters | url_encode :>">Forrige side</a>
+<a href="?page=<: $pager.previous_page :>&<: $query_parameters | url_encode :>">Forrige side</a>
 :	}
 :	if $pager.next_page {
-<a href="?page=<: $pager.next_page :>&<: $local.request.query_parameters | url_encode :>">Næste side</a>
+<a href="?page=<: $pager.next_page :>&<: $query_parameters | url_encode :>">Næste side</a>
 :	}
 :	if $pager.current_page < $pager.last_page - 1 {
-<a href="?page=<: $pager.last_page :>&<: $local.request.query_parameters | url_encode :>">Sidste side</a>
+<a href="?page=<: $pager.last_page :>&<: $query_parameters | url_encode :>">Sidste side</a>
 :	}
 </div>
 : }
