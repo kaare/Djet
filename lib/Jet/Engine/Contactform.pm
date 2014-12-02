@@ -70,6 +70,7 @@ before 'process_post' => sub  {
 
 before 'get_input_data' => sub {
 	my ($self, $validation)=@_;
+	$validation->valid->{name} = 'Contactform';
 	$validation->valid->{title} = $validation->valid->{name};
 };
 

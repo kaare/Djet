@@ -18,7 +18,7 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 ]','Jet::Engine::Contactform','<domain>/basetype/contactform.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'contactform','Contact Form','[
 	{"name":"company","title":"Company","type":"Str"},
-	{"name":"name","title":"Name","type":"Str", "required": "on"},
+	{"name":"username","title":"Name","type":"Str", "required": "on"},
 	{"name":"street","title":"Address","type":"Str"},
 	{"name":"postalcode","title":"Postal Code","type":"Int"},
 	{"name":"city","title":"City","type":"Str"},
