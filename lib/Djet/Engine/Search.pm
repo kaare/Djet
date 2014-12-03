@@ -1,16 +1,16 @@
-package Jet::Engine::Search;
+package Djet::Engine::Search;
 
 use 5.010;
 use Moose;
 use Encode qw/decode/;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 
-with 'Jet::Part::List';
+with 'Djet::Part::List';
 
 =head1 NAME
 
-Jet::Engine::Search - Search Engine
+Djet::Engine::Search - Search Engine
 
 =head1 METHODS
 

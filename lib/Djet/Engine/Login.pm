@@ -1,13 +1,13 @@
-package Jet::Engine::Login;
+package Djet::Engine::Login;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 
 =head1 NAME
 
-Jet::Engine::Login
+Djet::Engine::Login
 
 =head2 DESCRIPTION
 

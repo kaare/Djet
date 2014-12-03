@@ -1,16 +1,16 @@
-package Jet::Role::Update;
+package Djet::Role::Update;
 
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any uniq };
 use Encode qw/decode/;
 
-use Jet::Data::Validator;
+use Djet::Data::Validator;
 
 requires qw/stash_basic/;
 
 =head1 NAME
 
-Jet::Role::Update - generic methods for edit / create actions
+Djet::Role::Update - generic methods for edit / create actions
 
 =head1 DESCRIPTION
 
@@ -50,7 +50,7 @@ has is_new => (
 
 The Data::Form::Validator init hash.
 
-This is lazy_build in Jet::Role::Update::Node and Jet::Role::Update::Basetype
+This is lazy_build in Djet::Role::Update::Node and Djet::Role::Update::Basetype
 to reflect their respective requirements.
 
 _build_dfv is also an obviuos place for method modifiers that will alter the
@@ -72,7 +72,7 @@ The Basetype validator
 =cut
 
 has 'validator' => (
-	isa => 'Jet::Data::Validator',
+	isa => 'Djet::Data::Validator',
 	is => 'ro',
 	lazy_build => 1,
 	reader => 'get_validator',
@@ -96,13 +96,13 @@ after BUILD => sub {
 
 Build the validator for the node.
 
-The validator is a Jet::Data::Validator and is used by (data)nodes to validate input
+The validator is a Djet::Data::Validator and is used by (data)nodes to validate input
 
 =cut
 
 sub _build_validator {
 	my $self= shift;
-	return Jet::Data::Validator->new(dfv => $self->dfv);
+	return Djet::Data::Validator->new(dfv => $self->dfv);
 }
 
 =head2 allowed_methods

@@ -1,4 +1,4 @@
-package Jet::Render::Json;
+package Djet::Render::Json;
 
 use 5.010;
 use Moose;
@@ -6,11 +6,11 @@ use namespace::autoclean;
 
 use JSON;
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet::Render::Json - Render json for Jet
+Djet::Render::Json - Render json for Jet
 
 =head1 DESCRIPTION
 

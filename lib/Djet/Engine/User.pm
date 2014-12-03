@@ -1,20 +1,20 @@
-package Jet::Engine::User;
+package Djet::Engine::User;
 
 use 5.010;
 use Moose;
 use Encode qw/decode/;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 with qw/
 	Role::Pg::Roles
-	Jet::Role::Log
-	Jet::Role::Update::Node
-	Jet::Part::List
+	Djet::Role::Log
+	Djet::Role::Update::Node
+	Djet::Part::List
 /;
 
 =head1 NAME
 
-Jet::Engine::User
+Djet::Engine::User
 
 =head2 DESCRIPTION
 
@@ -64,7 +64,7 @@ Create a new user row and stash it
 
 sub stash_user {
 	my ($self, $user_basetype) = @_;
-	my $user = $self->schema->resultset('Jet::DataNode')->new({
+	my $user = $self->schema->resultset('Djet::DataNode')->new({
 		basetype_id => $user_basetype->id,
 		parent_id => $self->basenode->id,
 		datacolumns => {}

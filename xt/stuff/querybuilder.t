@@ -6,11 +6,11 @@ use warnings;
 
 use Test::More;
 
-use_ok('Jet::Stuff::QueryBuilder');
+use_ok('Djet::Stuff::QueryBuilder');
 
-my $qb = Jet::Stuff::QueryBuilder->new();
+my $qb = Djet::Stuff::QueryBuilder->new();
 
-isa_ok($qb, 'Jet::Stuff::QueryBuilder', 'It\'s a QueryBuilder');
+isa_ok($qb, 'Djet::Stuff::QueryBuilder', 'It\'s a QueryBuilder');
 my $where = {parent_id => 42};
 my $opt = 'node_path';
 ok(my ($sql, @binds) = $qb->select(

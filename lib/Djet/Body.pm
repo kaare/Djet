@@ -1,4 +1,4 @@
-package Jet::Body;
+package Djet::Body;
 
 use 5.010;
 use Moose;
@@ -9,16 +9,16 @@ use List::Util qw/first/;
 use HTTP::Headers::Util qw(split_header_words);
 use Plack::Request;
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet::Body - The Jet Body
+Djet::Body - The Jet Body
 
 =head1 DESCRIPTION
 
-Jet::Body is instantiated by Jet::Starter at the beginning of a request cycle.
-It holds all the volatile information, as opposed to Jet::Config.
+Djet::Body is instantiated by Djet::Starter at the beginning of a request cycle.
+It holds all the volatile information, as opposed to Djet::Config.
 
 =head1 ATTRIBUTES
 
@@ -96,7 +96,7 @@ The node stack found
 =cut
 
 has datanodes => (
-	isa => 'ArrayRef[Jet::Schema::Result::Jet::DataNode]',
+	isa => 'ArrayRef[Djet::Schema::Result::Djet::DataNode]',
 	is => 'ro',
 	writer => '_set_datanodes',
 );
@@ -120,7 +120,7 @@ The node we're working on
 =cut
 
 has basenode => (
-	isa => 'Jet::Schema::Result::Jet::DataNode',
+	isa => 'Djet::Schema::Result::Djet::DataNode',
 	is => 'ro',
 	writer => '_set_basenode',
 );

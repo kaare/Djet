@@ -1,4 +1,4 @@
-package Jet::Part;
+package Djet::Part;
 
 use 5.010;
 use Moose::Role;
@@ -6,11 +6,11 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Part - Base classe for Jet::Parts
+Djet::Part - Base classe for Djet::Parts
 
 =head1 SYNOPSIS
 
-with 'Jet::Part';
+with 'Djet::Part';
 
 =cut
 

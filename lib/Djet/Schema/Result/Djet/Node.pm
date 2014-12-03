@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::Node;
+package Djet::Schema::Result::Djet::Node;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::Node - Node
+Djet::Schema::Result::Djet::Node - Node
 
 =cut
 
@@ -132,13 +132,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Data>
+Related object: L<Djet::Schema::Result::Djet::Data>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "data",
-  "Jet::Schema::Result::Jet::Data",
+  "Djet::Schema::Result::Djet::Data",
   { id => "data_id" },
   {
     is_deferrable => 0,
@@ -152,13 +152,13 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::Node>
+Related object: L<Djet::Schema::Result::Djet::Node>
 
 =cut
 
 __PACKAGE__->has_many(
   "nodes",
-  "Jet::Schema::Result::Jet::Node",
+  "Djet::Schema::Result::Djet::Node",
   { "foreign.parent_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -167,13 +167,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Node>
+Related object: L<Djet::Schema::Result::Djet::Node>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "parent",
-  "Jet::Schema::Result::Jet::Node",
+  "Djet::Schema::Result::Djet::Node",
   { id => "parent_id" },
   {
     is_deferrable => 0,
@@ -187,7 +187,7 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:E3nnAPISY+kvBJqGWDZrGw
 
-with 'Jet::Role::DB::Result::Node';
+with 'Djet::Role::DB::Result::Node';
 
 __PACKAGE__->meta->make_immutable;
 

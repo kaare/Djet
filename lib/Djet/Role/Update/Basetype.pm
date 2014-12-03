@@ -1,11 +1,11 @@
-package Jet::Role::Update::Basetype;
+package Djet::Role::Update::Basetype;
 
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any };
 
 =head1 NAME
 
-Jet::Role::Update::Basetype - Role for creating and editing Basetypes
+Djet::Role::Update::Basetype - Role for creating and editing Basetypes
 
 =head1 DESCRIPTION
 
@@ -13,7 +13,7 @@ Handles create and edit functionality of basetypes for Jet Engines
 
 =cut
 
-with 'Jet::Role::Update';
+with 'Djet::Role::Update';
 
 requires qw/edit_validation edit_update edit_create/;
 
@@ -141,7 +141,7 @@ Get the resultset to be used for creating objects
 
 sub get_resultset {
 	my $self = shift;
-	return $self->schema->resultset('Jet::Basetype');
+	return $self->schema->resultset('Djet::Basetype');
 }
 
 =head2 get_base_name

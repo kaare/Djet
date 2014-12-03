@@ -15,7 +15,7 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"recipient","title":"Recipient","type":"Email", "required": "on"},
 	{"name":"template","title":"Template","type":"Str", "required": "on"},
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
-]','Jet::Engine::Contactform','<domain>/basetype/contactform.tx');
+]','Djet::Engine::Contactform','<domain>/basetype/contactform.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'contactform','Contact Form','[
 	{"name":"company","title":"Company","type":"Str"},
 	{"name":"username","title":"Name","type":"Str", "required": "on"},
@@ -25,7 +25,7 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"phone","title":"Telephone","type":"Str", "required": "on"},
 	{"name":"email","title":"Email Address","type":"Email", "required": "on"},
 	{"name":"comment","title":"Comment","type":"Text", "required": "on"}
-]','Jet::Engine::Contactform','<domain>/basetype/contactform.tx');
+]','Djet::Engine::Contactform','<domain>/basetype/contactform.tx');
 
 -- Data Nodes
 

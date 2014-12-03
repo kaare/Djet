@@ -1,4 +1,4 @@
-package Jet::Role::DB::Result::Data;
+package Djet::Role::DB::Result::Data;
 
 use 5.010;
 use Moose::Role;
@@ -7,7 +7,7 @@ use vars qw($AUTOLOAD);
 
 =head1 NAME
 
-Jet::Role::DB::Result::Data
+Djet::Role::DB::Result::Data
 
 =head1 DESCRIPTION
 
@@ -35,13 +35,13 @@ sub field_inflate {
 
 =head2 fields
 
-Fields is a Jet::Fields filled with the datacolumns data
+Fields is a Djet::Fields filled with the datacolumns data
 
 =cut
 
 has 'fields' => (
 	is => 'ro',
-	isa => 'Jet::Fields',
+	isa => 'Djet::Fields',
 	lazy_build => 1,
 );
 

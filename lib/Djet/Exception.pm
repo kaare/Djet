@@ -1,4 +1,4 @@
-package Jet::Exception;
+package Djet::Exception;
 
 use 5.010;
 use Moose;
@@ -6,11 +6,11 @@ use namespace::autoclean;
 
 extends 'HTTP::Throwable::Factory';
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet::Exception - Jet Exceptions
+Djet::Exception - Jet Exceptions
 
 =cut
 

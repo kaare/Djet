@@ -1,6 +1,6 @@
 =head1 NAME
 
-Jet::Manual::Startup - Description of the startup "sequence"
+Djet::Manual::Startup - Description of the startup "sequence"
 
 =head1 DESCRIPTION
 
@@ -8,9 +8,9 @@ This document describes the way Jet performs a startup.
 
 =head1 Modules
 
-=head2 Jet::Starter
+=head2 Djet::Starter
 
-Jet::Starter is instantiated in app.psgi, making it a singleton (at least within the
+Djet::Starter is instantiated in app.psgi, making it a singleton (at least within the
 address space of a single web server process).
 
 Has the following attributes
@@ -38,7 +38,7 @@ These parameters make sense to set as environment variables:
 
 =item config
 
-Jet::Starter initializes the configuration.
+Djet::Starter initializes the configuration.
 
 =item schema
 
@@ -52,7 +52,7 @@ including the configuration.
 
 =back
 
-=head2 Jet::Config
+=head2 Djet::Config
 
 Contains the 'static' Jet data, including
 
@@ -80,13 +80,13 @@ The logger
 
 =back
 
-=head2 Jet::Schema
+=head2 Djet::Schema
 
 =over 4
 
 =item config
 
-Set from Jet::Starter, contains the entire configuration.
+Set from Djet::Starter, contains the entire configuration.
 
 =item basetypes
 
@@ -94,7 +94,7 @@ A hashref containing the basetypes is kept around for performance reasons.
 
 =item ... the rest
 
-Jet::Schema is also an ordinary DBIC Schema class.
+Djet::Schema is also an ordinary DBIC Schema class.
 
 =back
 

@@ -1,23 +1,23 @@
-package Jet::Engine::Config;
+package Djet::Engine::Config;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 with qw/
-	Jet::Role::Log
-	Jet::Role::Update::Node
+	Djet::Role::Log
+	Djet::Role::Update::Node
 /;
 
 =head1 NAME
 
-Jet::Engine - Configure Jet
+Djet::Engine - Configure Jet
 
 =head1 DESCRIPTION
 
-Jet::Engine::Config configures Jet data and nodes.
+Djet::Engine::Config configures Jet data and nodes.
 
-It includes the roles L<Jet::Role::Update::Node> and L<Jet::Role::Config::Topmenu>.
+It includes the roles L<Djet::Role::Update::Node> and L<Djet::Role::Config::Topmenu>.
 
 =head1 ATTRIBUTES
 
@@ -53,7 +53,7 @@ after 'set_base_object' => sub {
 	return $self->choose_basetype if $basetype_id eq 'child';
 
 	my $parent_id = $self->rest_path;
-	$self->set_object($self->schema->resultset('Jet::DataNode')->new({
+	$self->set_object($self->schema->resultset('Djet::DataNode')->new({
 		basetype_id => $basetype_id,
 		parent_id => $parent_id,
 		datacolumns => '{}',

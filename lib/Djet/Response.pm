@@ -1,4 +1,4 @@
-package Jet::Response;
+package Djet::Response;
 
 use 5.010;
 use Moose;
@@ -6,11 +6,11 @@ use namespace::autoclean;
 
 use HTTP::Throwable::Factory qw/http_throw/;
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet::Response - Response Class for Jet
+Djet::Response - Response Class for Jet
 
 =head1 DESCRIPTION
 
@@ -31,12 +31,12 @@ has 'stash' => (
 
 =head2 request
 
-The Jet::Request
+The Djet::Request
 
 =cut
 
 has request  => (
-	isa => 'Jet::Request',
+	isa => 'Djet::Request',
 	is => 'ro',
 );
 
@@ -47,7 +47,7 @@ The node "stack"
 =cut
 
 has data_nodes  => (
-	isa => 'Jet::Schema::ResultSet::Jet::DataNode',
+	isa => 'Djet::Schema::ResultSet::Djet::DataNode',
 	is => 'ro',
 );
 
@@ -58,7 +58,7 @@ The node we're looking at
 =cut
 
 has basenode => (
-	isa => 'Jet::Schema::Result::Jet::DataNode',
+	isa => 'Djet::Schema::Result::Djet::DataNode',
 	is => 'ro',
 );
 

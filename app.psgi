@@ -5,9 +5,9 @@ use warnings;
 
 use Plack::Builder;
 
-use Jet::Starter;
+use Djet::Starter;
 
-my $jet = Jet::Starter->new;
+my $jet = Djet::Starter->new;
 
 builder {
 #	enable 'Debug',

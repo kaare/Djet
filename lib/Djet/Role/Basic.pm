@@ -1,4 +1,4 @@
-package Jet::Role::Basic;
+package Djet::Role::Basic;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Role::Basic
+Djet::Role::Basic
 
 =head1 DESCRIPTION
 
@@ -22,7 +22,7 @@ The Jet schema. For easy access, it also contains the config, basetypes, rendere
 
 has schema => (
 	is => 'ro',
-	isa => 'Jet::Schema',
+	isa => 'Djet::Schema',
 	handles => [qw/
 		acl
 		basetypes
@@ -40,7 +40,7 @@ The Jet body. Contains the stash and basenode
 
 has body => (
 	is => 'ro',
-	isa => 'Jet::Body',
+	isa => 'Djet::Body',
 	handles => [qw/
 		basenode
 		datanode_by_basetype

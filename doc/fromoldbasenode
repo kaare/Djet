@@ -1,4 +1,4 @@
-package Jet::Basenode;
+package Djet::Basenode;
 
 use 5.010;
 use Moose;
@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Basenode - The Base Jet Node
+Djet::Basenode - The Base Jet Node
 
 =head1 DESCRIPTION
 
@@ -18,7 +18,7 @@ Jet::Basenode - The Base Jet Node
 =cut
 
 has schema => (
-	isa => 'Jet::Schema',
+	isa => 'Djet::Schema',
 	is => 'ro',
 );
 
@@ -48,7 +48,7 @@ The node data found for this node
 
 has rows => (
 	is	=> 'ro',
-	isa	=> 'Jet::Schema::ResultSet::DataNode',
+	isa	=> 'Djet::Schema::ResultSet::DataNode',
 	default	=> sub {
 		my $self = shift;
 		my $path = $self->path;
@@ -65,7 +65,7 @@ The node's basetype
 =cut
 
 has basetype => (
-	isa => 'Jet::Schema::Result::Basetype',
+	isa => 'Djet::Schema::Result::Basetype',
 	is => 'ro',
 	default	=> sub {
 		my $self = shift;

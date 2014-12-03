@@ -1,4 +1,4 @@
-package Jet::Node;
+package Djet::Node;
 
 use 5.010;
 use Moose;
@@ -8,7 +8,7 @@ with 'MooseX::Traits';
 
 =head1 NAME
 
-Jet::Node - Represents Jet Nodes
+Djet::Node - Represents Jet Nodes
 
 =head1 SYNOPSIS
 
@@ -33,7 +33,7 @@ The node's path
 =cut
 
 has schema => (
-	isa => 'Jet::Stuff',
+	isa => 'Djet::Stuff',
 	is => 'ro',
 );
 has basetypes => (
@@ -55,7 +55,7 @@ has row => (
 	},
 );
 has basetype => (
-	isa => 'Jet::Basetype',
+	isa => 'Djet::Basetype',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
@@ -152,7 +152,7 @@ sub children {
 	# Try to find basetype_id from basetype if that is defined
 	$opt{basetype_id} ||= $self->basetypes->{delete $opt{basetype}}{id} if $opt{basetype};
 	my $result = $self->schema->search_node(\%opt);
-	return [ map {Jet::Node->new(row =>  $_)} @$result ];
+	return [ map {Djet::Node->new(row =>  $_)} @$result ];
 }
 
 =head2 parent
@@ -178,7 +178,7 @@ sub parent {
 		parent_id => $parent_id,
 	};
 	$parent = $schema->search($where);
-	return Jet::Node->new(row => $parent, stash => $stash);
+	return Djet::Node->new(row => $parent, stash => $stash);
 }
 
 =head2 ancestors
@@ -239,7 +239,7 @@ sub parents {
 			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
 		}
 	}
-	return [ map {Jet::Node->new(row => $_)} @result ];
+	return [ map {Djet::Node->new(row => $_)} @result ];
 }
 
 __PACKAGE__->meta->make_immutable;

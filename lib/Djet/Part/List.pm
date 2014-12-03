@@ -1,14 +1,14 @@
-package Jet::Part::List;
+package Djet::Part::List;
 
 use 5.010;
 use Moose::Role;
 use namespace::autoclean;
 
-with 'Jet::Part';
+with 'Djet::Part';
 
 =head1 NAME
 
-Jet::Part::List
+Djet::Part::List
 
 =head1 DESCRIPTION
 
@@ -96,7 +96,7 @@ sub _find_list {
 	my $page = $self->request->param('page') // 1;
 	$options->{page} = $page;
 	delete $self->stash->{query_parameters}{page};
-	my $search = $self->schema->resultset('Jet::DataNode')->search($self->search, $options);
+	my $search = $self->schema->resultset('Djet::DataNode')->search($self->search, $options);
 	return $self->has_fts ? $search->ft_search($self->fts) : $search;
 }
 

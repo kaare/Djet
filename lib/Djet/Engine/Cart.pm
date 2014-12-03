@@ -1,16 +1,16 @@
-package Jet::Engine::Cart;
+package Djet::Engine::Cart;
 
 use 5.010;
 use Moose;
 use JSON;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 
-use Jet::Shop::Cart;
+use Djet::Shop::Cart;
 
 =head1 NAME
 
-Jet::Engine::Cart
+Djet::Engine::Cart
 
 =head2 DESCRIPTION
 
@@ -26,7 +26,7 @@ The cart object
 
 has cart => (
 	is => 'ro',
-	isa => 'Jet::Shop::Cart',
+	isa => 'Djet::Shop::Cart',
 	default => sub {
 		my $self = shift;
 		return $self->stash->{local}->cart;

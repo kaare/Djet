@@ -5,12 +5,12 @@ use strict;
 use warnings;
 use Test::More;
 
-use Jet::Starter;
+use Djet::Starter;
 
 $ENV{JET_APP_ROOT} = './t';
-my $starter = Jet::Starter->new;
+my $starter = Djet::Starter->new;
 my $schema = $starter->schema;
 my $config = $schema->config;
-ok(my $basetype = $schema->resultset('Jet::Basetype')->first, '1st basetype');
+ok(my $basetype = $schema->resultset('Djet::Basetype')->first, '1st basetype');
 
 done_testing;

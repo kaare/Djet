@@ -1,14 +1,14 @@
-package Jet::Engine::Contactform;
+package Djet::Engine::Contactform;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Default';
-with qw/Jet::Role::Log Jet::Role::Update::Node/;
+extends 'Djet::Engine::Default';
+with qw/Djet::Role::Log Djet::Role::Update::Node/;
 
 =head1 NAME
 
-Jet::Engine::Contactform
+Djet::Engine::Contactform
 
 =head2 DESCRIPTION
 
@@ -34,7 +34,7 @@ after 'set_base_object' => sub  {
 		$contactform = $self->basenode;
 		$self->stash->{template_display} = 'view';
 	} else {
-		$contactform = $self->schema->resultset('Jet::DataNode')->new({
+		$contactform = $self->schema->resultset('Djet::DataNode')->new({
 			basetype_id => $basetype->id,
 			parent_id => $self->basenode->id,
 			datacolumns => {}
@@ -57,7 +57,7 @@ before 'process_post' => sub  {
 	my $schema = $self->schema;
 	my $basetype = $schema->basetype_by_name('contactform') or die "No basetype: contactform";
 
-	my $contactform = $self->schema->resultset('Jet::DataNode')->new({
+	my $contactform = $self->schema->resultset('Djet::DataNode')->new({
 		parent_id => $self->basenode->id,
 		basetype_id => $basetype->id,
 		datacolumns => {},

@@ -1,4 +1,4 @@
-package Jet::Fields;
+package Djet::Fields;
 
 use 5.010;
 use Moose;
@@ -6,11 +6,11 @@ use namespace::autoclean;
 
 use JSON;
 
-use Jet::Field;
+use Djet::Field;
 
 =head1 NAME
 
-Jet::Fields - Jet Fields Base Class
+Djet::Fields - Jet Fields Base Class
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ Returns an arrayref with all the fields
 
 has fields => (
 	is => 'ro',
-	isa	 => 'ArrayRef[Jet::Field]',
+	isa	 => 'ArrayRef[Djet::Field]',
 	default => sub {
 		my $self = shift;
 		return [ map { $self->$_  } @{ $self->fieldnames } ];

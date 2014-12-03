@@ -12,7 +12,7 @@ INSERT INTO feature (name,version, description) VALUES ('news', 0.01, 'News feat
 
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'news','News','[
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
-]','Jet::Engine::News');
+]','Djet::Engine::News');
 INSERT INTO basetype (feature_id,name,title,datacolumns,template) VALUES (currval('feature_id_seq'), 'news-item','News Item','[
 	{"name":"news_text","title":"Text","type":"Html"}
 ]','<domain>/basetype/news_item.tx');

@@ -14,8 +14,8 @@
   all methods
   all attributes
 - Sort out split between Stuff and Node generation
-  find_node returns a Jet::Node object
-  "family" methods (parent, child, etc) returns Jet::Node iterator
+  find_node returns a Djet::Node object
+  "family" methods (parent, child, etc) returns Djet::Node iterator
   
 0.01 - CPAN
 - Test

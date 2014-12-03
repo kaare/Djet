@@ -1,11 +1,11 @@
-package Jet::Role::Breadcrumbs;
+package Djet::Role::Breadcrumbs;
 
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any uniq };
 
 =head1 NAME
 
-Jet::Role::Breadcrumbs - put breadcrumbs on the stash
+Djet::Role::Breadcrumbs - put breadcrumbs on the stash
 
 =head1 METHODS
 

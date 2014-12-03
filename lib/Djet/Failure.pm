@@ -1,25 +1,25 @@
-package Jet::Failure;
+package Djet::Failure;
 
 use 5.010;
 use Moose;
 use namespace::autoclean;
 
-use Jet::Exception;
+use Djet::Exception;
 
 =head1 NAME
 
-Jet::Failure - Something bad happened to our Jet
+Djet::Failure - Something bad happened to our Jet
 
 =head1 SYNOPSIS
 
-Jet::Failure handles the case when the Jet crashes
+Djet::Failure handles the case when the Jet crashes
 
 =head1 ATTRIBUTES
 
 =cut
 
 has exception => (
-	isa => 'Str|Jet::Exception',
+	isa => 'Str|Djet::Exception',
 	is => 'ro',
 	trigger => sub {
 		my ($self, $e) = @_;
@@ -30,8 +30,8 @@ has exception => (
 	# $nodedata = $schema->find_node({ name =>  $notfound_name });
 	# my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
 	# return $baserole ?
-		# Jet::Basenode->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
-		# Jet::Basenode->new(%nodeparams, row => $nodedata);
+		# Djet::Basenode->with_traits($baserole)->new(%nodeparams, row => $nodedata) :
+		# Djet::Basenode->new(%nodeparams, row => $nodedata);
 			$stash->{exception} = $e
 		} else {
 			$stash->{error} = $e
@@ -46,7 +46,7 @@ has stash => (
 	is => 'ro',
 );
 has body => (
-	isa => 'Jet::Body',
+	isa => 'Djet::Body',
 	is => 'ro',
 	handles => [qw/
 		basetypes
@@ -56,11 +56,11 @@ has body => (
 	/],
 );
 has basenode => (
-	isa => 'Jet::Schema::Result::Jet::DataNode',
+	isa => 'Djet::Schema::Result::Djet::DataNode',
 	is => 'ro',
 );
 has response => (
-	isa => 'Jet::Response',
+	isa => 'Djet::Response',
 	is => 'ro',
 );
 

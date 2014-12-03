@@ -1,14 +1,14 @@
-package Jet::Part::Basenode;
+package Djet::Part::Basenode;
 
 use 5.010;
 use Moose::Role;
 use namespace::autoclean;
 
-with 'Jet::Part';
+with 'Djet::Part';
 
 =head1 NAME
 
-Jet::Part - Put the basenode on the stash
+Djet::Part - Put the basenode on the stash
 
 =head1 ATTRIBUTES
 

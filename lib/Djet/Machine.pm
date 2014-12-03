@@ -1,4 +1,4 @@
-package Jet::Machine;
+package Djet::Machine;
 
 use 5.010;
 use Moose;
@@ -8,11 +8,11 @@ extends 'Web::Machine';
 
 =head1 NAME
 
-Jet::Machine
+Djet::Machine
 
 =head1 DESCRIPTION
 
-Jet::Machine handles the maze of twisty little passages, all alike that is REST.
+Djet::Machine handles the maze of twisty little passages, all alike that is REST.
 
 =cut
 

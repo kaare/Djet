@@ -13,10 +13,10 @@ INSERT INTO feature (name,version, description) VALUES ('basic', 0.01, 'Basic fe
 INSERT INTO basetype (feature_id, name,title) VALUES (1, 'domain','Domain');
 INSERT INTO basetype (feature_id, name,title) VALUES (1, 'directory','Directory');
 INSERT INTO basetype (feature_id, name,title,datacolumns,template) VALUES (1, 'textpage','Text Page','[{"name":"text","title":"Text","type":"Html"}]','<domain>/basetype/text.tx');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'basetype','Jet Basetype','Jet::Engine::Basetype','[{"name":"text","title":"Text","type":"Str"},{"name":"parent","type":"Int"}]');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_config', 'Jet Configuration','Jet::Engine::Config','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_tree', 'Node Tree','Jet::Engine::ConfigTree','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'login', 'Login','Jet::Engine::Login','[
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'basetype','Jet Basetype','Djet::Engine::Basetype','[{"name":"text","title":"Text","type":"Str"},{"name":"parent","type":"Int"}]');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_config', 'Jet Configuration','Djet::Engine::Config','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'jet_tree', 'Node Tree','Djet::Engine::ConfigTree','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'login', 'Login','Djet::Engine::Login','[
 	{"name":"username","title":"User","type":"Str", "required": "on"},
 	{"name":"password","title":"Password","type":"Protected", "required": "on"}
 ]');

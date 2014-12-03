@@ -1,4 +1,4 @@
-package Jet::Data::Validator;
+package Djet::Data::Validator;
 
 use 5.010;
 use Moose;
@@ -9,7 +9,7 @@ use Data::FormValidator::Constraints::MethodsFactory;
 
 =head1 NAME
 
-Jet::Data::Validator - basetype validator.
+Djet::Data::Validator - basetype validator.
 
 =head1 DESCRIPTION
 

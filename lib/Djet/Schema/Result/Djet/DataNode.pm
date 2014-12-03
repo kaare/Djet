@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::DataNode;
+package Djet::Schema::Result::Djet::DataNode;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::DataNode
+Djet::Schema::Result::Djet::DataNode
 
 =cut
 
@@ -178,28 +178,28 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 });
 
 with qw/
-	Jet::Role::DB::Result::Data
-	Jet::Role::DB::Result::Node
+	Djet::Role::DB::Result::Data
+	Djet::Role::DB::Result::Node
 /;
 
-# NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Data, as dbicdump didn't find them
+# NB The following attributes and parameters are 'stolen' from Djet::Schema::Result::Djet::Data, as dbicdump didn't find them
 
 =head2 basetype
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Basetype>
+Related object: L<Djet::Schema::Result::Djet::Basetype>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "basetype",
-  "Jet::Schema::Result::Jet::Basetype",
+  "Djet::Schema::Result::Djet::Basetype",
   { id => "basetype_id" },
   { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
-# NB The following attributes and parameters are 'stolen' from Jet::Schema::Result::Jet::Node, as dbicdump didn't find them
+# NB The following attributes and parameters are 'stolen' from Djet::Schema::Result::Djet::Node, as dbicdump didn't find them
 
 =head1 PRIMARY KEY
 
@@ -219,13 +219,13 @@ __PACKAGE__->set_primary_key("node_id");
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::DataNode>
+Related object: L<Djet::Schema::Result::Djet::DataNode>
 
 =cut
 
 __PACKAGE__->has_many(
   "children",
-  "Jet::Schema::Result::Jet::DataNode",
+  "Djet::Schema::Result::Djet::DataNode",
   { "foreign.parent_id" => "self.node_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -234,13 +234,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Node>
+Related object: L<Djet::Schema::Result::Djet::Node>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "parent",
-  "Jet::Schema::Result::Jet::DataNode",
+  "Djet::Schema::Result::Djet::DataNode",
   { node_id => "parent_id" },
   {
 	is_deferrable => 0,

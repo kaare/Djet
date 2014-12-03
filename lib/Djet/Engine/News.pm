@@ -1,13 +1,13 @@
-package Jet::Engine::News;
+package Djet::Engine::News;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Children';
+extends 'Djet::Engine::Children';
 
 =head1 NAME
 
-Jet::Engine::News
+Djet::Engine::News
 
 =head2 DESCRIPTION
 

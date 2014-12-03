@@ -1,19 +1,19 @@
-package Jet::Local;
+package Djet::Local;
 
 use 5.010;
 use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
 
-with 'Jet::Role::Basic';
+with 'Djet::Role::Basic';
 
 =head1 NAME
 
-Jet::Local
+Djet::Local
 
 =head1 DESCRIPTION
 
-Jet::Local is a base class for local_class.
+Djet::Local is a base class for local_class.
 
 The purpose of this is to have a class that is put on the stash and that can contain
 anything you'd like.
@@ -28,7 +28,7 @@ The first found domain node.
 
 has 'domain_node' => (
 	is => 'ro',
-	isa => 'Jet::Schema::Result::Jet::DataNode',
+	isa => 'Djet::Schema::Result::Djet::DataNode',
 	default => sub {
 		my $self = shift;
 		my $domain_basetype = $self->schema->basetype_by_name('domain');

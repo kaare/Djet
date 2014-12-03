@@ -1,4 +1,4 @@
-package Jet::Engine::Import;
+package Djet::Engine::Import;
 
 use 5.010;
 use Moose;
@@ -7,15 +7,15 @@ use File::Copy;
 use File::Path;
 use Job::Machine::Client;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 
 =head1 NAME
 
-Jet::Engine::Import
+Djet::Engine::Import
 
 =head1 DESCRIPTION
 
-Jet::Engine::Import controls import of files to the system.
+Djet::Engine::Import controls import of files to the system.
 
 It displays a form with one or more upload files and accepts a POST request with that form.
 
@@ -123,7 +123,7 @@ sub create_nodes {
 			title => $upload->filename,
 			datacolumns => $self->json->encode({ mime_type => $upload->content_type}),
 		};
-		my $file_node = $schema->resultset('Jet::DataNode')->create($data);
+		my $file_node = $schema->resultset('Djet::DataNode')->create($data);
 		$file_node->discard_changes;
 		my $node_id = $file_node->node_id;
 		my $file_path = $self->file_placement($upload->path, $self->basenode->path, $node_id);

@@ -1,18 +1,18 @@
-package Jet::Engine::Basetype;
+package Djet::Engine::Basetype;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 with qw/
-	Jet::Role::Update::Basetype
-	Jet::Role::Config::Topmenu
+	Djet::Role::Update::Basetype
+	Djet::Role::Config::Topmenu
 	Role::Pg::Notify
 /;
 
 =head1 DESCRIPTION
 
-Jet::Engine::Basetype configures Jet basetypes.
+Djet::Engine::Basetype configures Jet basetypes.
 
 =head1 ATTRIBUTES
 
@@ -29,7 +29,7 @@ sub set_base_object {
 	my $rest_path = $self->rest_path;
 	undef($rest_path) if $rest_path eq 'index.html';
 	if (!$rest_path) {
-		$self->set_object($self->schema->resultset('Jet::Basetype')->new({
+		$self->set_object($self->schema->resultset('Djet::Basetype')->new({
 			feature_id => 1,
 			datacolumns => '[]',
 			attributes => '{}',

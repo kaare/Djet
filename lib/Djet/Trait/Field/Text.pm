@@ -1,10 +1,10 @@
-package Jet::Trait::Field::Text;
+package Djet::Trait::Field::Text;
 
 use Moose::Role;
 
 =head1 NAME
 
-Jet::Trait::Field::Text
+Djet::Trait::Field::Text
 
 =head1 DESCRIPTION
 

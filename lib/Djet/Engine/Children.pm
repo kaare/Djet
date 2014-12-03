@@ -1,20 +1,20 @@
-package Jet::Engine::Children;
+package Djet::Engine::Children;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Default';
-with qw/Jet::Part::List/;
+extends 'Djet::Engine::Default';
+with qw/Djet::Part::List/;
 
 =head1 NAME
 
-Jet::Engine - Children Jet Engine
+Djet::Engine - Children Jet Engine
 
 =head1 DESCRIPTION
 
-Jet::Engine::Children is the basic Jet Engine.
+Djet::Engine::Children is the basic Jet Engine.
 
-It includes the role L<Jet::Part::List>.
+It includes the role L<Djet::Part::List>.
 
 =head1 METHODS
 

@@ -1,18 +1,18 @@
 =head1 NAME
 
-Jet::Manual::Update
+Djet::Manual::Update
 
 =head1 DESCRIPTION
 
 This is the description of the update process in Jet, covering Form based Update, Create and Delete actions.
 
-The update process of Jet is contained in the L<Jet::Role::Update> and L<Jet::Role::Update::Node> roles primarily, and there is a
-L<Jet::Role::Update::Basetype> to handle update of the basetypes. The latter role shows the flexibility of the update process, in that
+The update process of Jet is contained in the L<Djet::Role::Update> and L<Djet::Role::Update::Node> roles primarily, and there is a
+L<Djet::Role::Update::Basetype> to handle update of the basetypes. The latter role shows the flexibility of the update process, in that
 it can update other database objects than nodes.
 
 =head2 post_is_create
 
-Jet uses L<Web::Machine>, and the update process hooks into post_is_create, where it calls edit_update in L<Jet::Role::Update>. If there
+Jet uses L<Web::Machine>, and the update process hooks into post_is_create, where it calls edit_update in L<Djet::Role::Update>. If there
 is a validation failure, or the update didn't succeed, post_is_create returns false, so process_post will be called.
 
 If edit_update was successful, post_is_create returns true, so create_path will be called.
@@ -22,7 +22,7 @@ If edit_update was successful, post_is_create returns true, so create_path will 
 Returns the uri of the node. If the request was updating a node, it's just the same uri. If the request was for adding a node,
 the path of the new node is used.
 
-After create_path, Web__machine calls the content handler, which is called create_by_post in L<Jet::Role::Update>.
+After create_path, Web__machine calls the content handler, which is called create_by_post in L<Djet::Role::Update>.
 
 =head2 create_by_post
 

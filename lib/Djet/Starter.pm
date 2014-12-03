@@ -1,11 +1,11 @@
-package Jet::Starter;
+package Djet::Starter;
 
 use Moose;
 
 use Jet;
-use Jet::Config;
-use Jet::Body;
-use Jet::Machine;
+use Djet::Config;
+use Djet::Body;
+use Djet::Machine;
 
 with 'Role::Pg::Notify';
 
@@ -14,7 +14,7 @@ use Plack::Session::Store::DBI;
 
 =head1 NAME
 
-Jet::Starter
+Djet::Starter
 
 =head1 DESCRIPTION
 
@@ -51,10 +51,10 @@ Jet configuration
 
 has config => (
 	is => 'ro',
-	isa => 'Jet::Config',
+	isa => 'Djet::Config',
 	default => sub {
 		my $self = shift;
-		return Jet::Config->new(%{ $self->params} );
+		return Djet::Config->new(%{ $self->params} );
 	},
 	lazy => 1,
 );
@@ -70,7 +70,7 @@ has schema_name => (
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		return $self->config->config->{schema_name} || 'Jet::Schema';
+		return $self->config->config->{schema_name} || 'Djet::Schema';
 	},
 	lazy => 1,
 );
@@ -82,7 +82,7 @@ The schema is initialized with the connection info found in the config
 =cut
 
 has schema => (
-	isa => 'Jet::Schema',
+	isa => 'Djet::Schema',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
@@ -136,7 +136,7 @@ has app => (
 			my $env = shift;
 			my $session = $env->{'psgix.session'};
 			my $options = $env->{'psgix.session.options'};
-			my $body = Jet::Body->new(
+			my $body = Djet::Body->new(
 				env => $env,
 				session => $session,
 				session_id => $options->{id},
@@ -150,7 +150,7 @@ has app => (
 				body => $body,
 				schema => $self->schema,
 			];
-			my $app = Jet::Machine->new(
+			my $app = Djet::Machine->new(
 				resource => $engine,
 				resource_args => $resource_args,
 				tracing => 1,
@@ -177,7 +177,7 @@ sub check_notifications {
 
 	my $schema = $self->schema;
 	my $basetypes = $schema->basetypes;
-	$basetypes->{$id} =  $schema->resultset('Jet::Basetype')->find({id => $id});
+	$basetypes->{$id} =  $schema->resultset('Djet::Basetype')->find({id => $id});
 }
 
 =head2 BUILD

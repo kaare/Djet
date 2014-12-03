@@ -9,12 +9,12 @@ use Test::More;
 use lib 't/lib';
 use Test;
 
-use_ok('Jet::Stuff');
+use_ok('Djet::Stuff');
 
 my $stuff = Test::schema;
 
 ok(my $data = $stuff->insert({basetype_id=>6,parent_id=>6,title=>'Family Photo',columns=>'{"test"}'},{returning => '*'}), 'Insert node');
-isa_ok($stuff, 'Jet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
+isa_ok($stuff, 'Djet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
 ok(my $rows = $stuff->ft_search_node('test a rossa'), 'Fulltext search');
 is(@$rows, 1, 'Number of rows');
 is($rows->[0]->{title}, 'Family Photo', 'The row title');

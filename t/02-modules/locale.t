@@ -3,8 +3,8 @@ use Test;
 
 plan tests => 3;
 
-use Jet::I18N;
+use Djet::I18N;
 
-ok(my $lh = Jet::I18N->get_handle('da'));
+ok(my $lh = Djet::I18N->get_handle('da'));
 ok($lh->maketext("Company", ), "Firma");
 ok($lh->maketext("Email Address", ), "Mailadresse");

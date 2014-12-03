@@ -1,26 +1,26 @@
-package Jet::Engine::Default;
+package Djet::Engine::Default;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine';
+extends 'Djet::Engine';
 
 with qw/
-	Jet::Role::Engine
-	Jet::Role::Engine::Html
-	Jet::Role::Engine::Json
-	Jet::Role::Treeview
+	Djet::Role::Engine
+	Djet::Role::Engine::Html
+	Djet::Role::Engine::Json
+	Djet::Role::Treeview
 /;
 
 =head1 NAME
 
-Jet::Engine - Default Jet Engine
+Djet::Engine - Default Jet Engine
 
 =head1 DESCRIPTION
 
-Jet::Engine::Default is the basic Jet Engine.
+Djet::Engine::Default is the basic Jet Engine.
 
-It includes the roles L<Jet::Role::Engine Jet::Role::Engine::Html>, L<Jet::Role::Engine::Json>, L<Jet::Role::Treeview>.
+It includes the roles L<Djet::Role::Engine Djet::Role::Engine::Html>, L<Djet::Role::Engine::Json>, L<Djet::Role::Treeview>.
 
 __PACKAGE__->meta->make_immutable;
 

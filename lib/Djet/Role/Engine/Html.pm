@@ -1,4 +1,4 @@
-package Jet::Role::Engine::Html;
+package Djet::Role::Engine::Html;
 
 use Moose::Role;
 use namespace::autoclean;
@@ -6,7 +6,7 @@ use Try::Tiny;
 
 =head1 NAME
 
-Jet::Role::Engine::Html - Add functionality to html engines
+Djet::Role::Engine::Html - Add functionality to html engines
 
 requires qw/init data omit_run/;
 

@@ -1,11 +1,11 @@
-package Jet::Role::Engine::Json;
+package Djet::Role::Engine::Json;
 
 use Moose::Role;
 use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Role::Engine::Json - Add functionality to json engines
+Djet::Role::Engine::Json - Add functionality to json engines
 
 requires qw/init data omit_run/;
 

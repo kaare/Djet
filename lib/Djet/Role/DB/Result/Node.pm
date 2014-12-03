@@ -1,4 +1,4 @@
-package Jet::Role::DB::Result::Node;
+package Djet::Role::DB::Result::Node;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Role::DB::Result::Node
+Djet::Role::DB::Result::Node
 
 =head1 DESCRIPTION
 
@@ -141,7 +141,7 @@ sub parents {
 			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
 		}
 	}
-	return [ map {Jet::Node->new(row => $_)} @result ];
+	return [ map {Djet::Node->new(row => $_)} @result ];
 }
 
 =head2 has_children

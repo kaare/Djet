@@ -1,4 +1,4 @@
-package Jet::Mail;
+package Djet::Mail;
 
 use 5.010;
 use Moose;
@@ -6,11 +6,11 @@ use namespace::autoclean;
 
 use Email::Stuffer;
 
-with 'Jet::Role::Basic';
+with 'Djet::Role::Basic';
 
 =head1 NAME
 
-Jet::Mail
+Djet::Mail
 
 =head1 DESCRIPTION
 

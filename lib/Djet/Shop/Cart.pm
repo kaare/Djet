@@ -1,4 +1,4 @@
-package Jet::Shop::Cart;
+package Djet::Shop::Cart;
 
 use Moose;
 use MooseX::NonMoose;
@@ -8,7 +8,7 @@ extends 'Nitesi::Cart';
 
 =head1 NAME
 
-Jet::Shop::Cart;
+Djet::Shop::Cart;
 
 =head1 DESCRIPTION
 
@@ -22,7 +22,7 @@ The DBIC schema
 
 has schema => (
 	is => 'ro',
-	isa => 'Jet::Schema',
+	isa => 'Djet::Schema',
 );
 
 =head2 uid
@@ -69,7 +69,7 @@ The cart row
 
 has cart_row => (
 	is => 'ro',
-	isa => 'Jet::Schema::Result::Jet::Cart',
+	isa => 'Djet::Schema::Result::Djet::Cart',
 	lazy_build => 1,
 );
 
@@ -78,7 +78,7 @@ sub _build_cart_row {
 	die "Neither user nor session id" unless $self->has_uid or $self->has_session_id;
 
 	my $where = $self->has_uid ? {uid => $self->uid} : {session_id => $self->session_id};
-	my $cart_row = $self->schema->resultset('Jet::Cart')->find($where);
+	my $cart_row = $self->schema->resultset('Djet::Cart')->find($where);
 	return $cart_row ? $self->_load_cart($cart_row) : $self->_create_cart;
 }
 
@@ -108,7 +108,7 @@ sub save {
 # creates cart in database
 sub _create_cart {
 	my $self = shift;
-	return $self->schema->resultset('Jet::Cart')->create({
+	return $self->schema->resultset('Djet::Cart')->create({
 		name => $self->name,
 		uid => $self->has_uid ? $self->{uid} : 0,
 		session_id => $self->has_session_id ? $self->session_id : '',
@@ -120,7 +120,7 @@ sub _create_cart {
 sub _load_cart {
 	my ($self, $cart_row) = @_;
 	# build query for item retrieval
-	my $cart_products = $self->schema->resultset('Jet::CartProduct')->search({
+	my $cart_products = $self->schema->resultset('Djet::CartProduct')->search({
 		cart => $cart_row->code,
 	}, {
 		result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -132,13 +132,13 @@ sub _load_cart {
 before add => sub {
 	my ($self, %args) = @_;
 	my $cart_product;
-	if ($cart_product = $self->schema->resultset('Jet::CartProduct')->find({
+	if ($cart_product = $self->schema->resultset('Djet::CartProduct')->find({
 		cart => $self->cart_row->id,
 		sku => $args{sku},
 	})) {
 		$cart_product->update({quantity => $cart_product->quantity + $args{quantity}});
 	} else {
-		$cart_product = $self->schema->resultset('Jet::CartProduct')->create({
+		$cart_product = $self->schema->resultset('Djet::CartProduct')->create({
 			cart => $self->cart_row->id,
 			sku => $args{sku},
 			name => $args{name},
@@ -157,7 +157,7 @@ before update => sub {
 			cart => $cart_id,
 			sku => $sku,
 		};
-		if (my $cart_product = $self->schema->resultset('Jet::CartProduct')->find($search)) {
+		if (my $cart_product = $self->schema->resultset('Djet::CartProduct')->find($search)) {
 			$cart_product->update({quantity => $qty});
 		}
 	}
@@ -165,7 +165,7 @@ before update => sub {
 
 before remove => sub {
 	my ($self, %args) = @_;
-	if (my $cart_product = $self->schema->resultset('Jet::CartProduct')->find({
+	if (my $cart_product = $self->schema->resultset('Djet::CartProduct')->find({
 		cart => $self->cart_row->id,
 		sku => $args{sku},
 	})) {
@@ -190,7 +190,7 @@ after rename => sub {
 
 before clear => sub {
 	my ($self, %args) = @_;
-	$self->schema->resultset('Jet::CartProduct')->delete({
+	$self->schema->resultset('Djet::CartProduct')->delete({
 		cart => $self->cart_row->id,
 		sku => $args{sku},
 	});

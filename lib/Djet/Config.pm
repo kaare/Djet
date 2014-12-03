@@ -1,4 +1,4 @@
-package Jet::Config;
+package Djet::Config;
 
 use 5.010;
 use Moose;
@@ -9,14 +9,14 @@ use FindBin qw/$Bin/;
 use Log::Any;
 use Log::Any::Adapter;
 
-use Jet::Schema;
-use Jet::I18N;
+use Djet::Schema;
+use Djet::I18N;
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet::Config - Jet Configuration
+Djet::Config - Jet Configuration
 
 =head1 DESCRIPTION
 
@@ -100,7 +100,7 @@ has renderers => (
 		my $self = shift;
 		my %renderers;
 		do {
-			my $classname = "Jet::Render::$_";
+			my $classname = "Djet::Render::$_";
 			eval "require $classname" or die $@;
 			$renderers{lc $_} = $classname->new(
 				config => $self,
@@ -173,14 +173,14 @@ The localization handler
 =cut
 
 has i18n => (
-	isa => 'Jet::I18N',
+	isa => 'Djet::I18N',
 	is => 'ro',
 	lazy => 1,
 	default => sub {
 		my $self = shift;
 		my $language = $self->config->{language};
 		my $jet_root = $self->jet_root;
-		return Jet::I18N->get_handle($jet_root, $language);
+		return Djet::I18N->get_handle($jet_root, $language);
 	},
 );
 

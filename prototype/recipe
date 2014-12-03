@@ -3,7 +3,7 @@
 use 5.010;
 use JSON;
 
-use Jet::Context;
+use Djet::Context;
 
 use Data::Dumper;
 
@@ -140,7 +140,7 @@ sub update_basetype_recipe {
 
 sub update_node {
 	my ($basetype, $recipe) = @_;
-	my $c = Jet::Context->instance;
+	my $c = Djet::Context->instance;
 	my $schema = $c->schema;
 	$schema->update_basetype({name => $basetype}, {recipe => $recipe});
 	say STDERR Dumper $recipe, $schema->find_basetype({name => 'domain'});

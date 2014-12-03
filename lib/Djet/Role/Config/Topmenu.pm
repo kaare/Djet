@@ -1,4 +1,4 @@
-package Jet::Role::Config::Topmenu;
+package Djet::Role::Config::Topmenu;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Jet::Role::Config::Topmenu - topmenu for config 
+Djet::Role::Config::Topmenu - topmenu for config 
 
 =head1 ATTRIBUTES
 

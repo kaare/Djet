@@ -1,26 +1,26 @@
-package Jet::Engine;
+package Djet::Engine;
 
 use 5.010;
 use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
-use Jet::Mail;
+use Djet::Mail;
 
 extends 'Web::Machine::Resource';
 
-with 'Jet::Role::Basic';
+with 'Djet::Role::Basic';
 
 =head1 NAME
 
-Jet::Engine - Jet Engine Base Class
+Djet::Engine - Jet Engine Base Class
 
 =head1 DESCRIPTION
 
-Jet::Engine is the basic building block of all Jet Engines.
+Djet::Engine is the basic building block of all Jet Engines.
 
 In your engine you just write
 
-extends 'Jet::Engine';
+extends 'Djet::Engine';
 
 =head1 ACCESSORS
 
@@ -120,12 +120,12 @@ Jet mailer
 
 has mailer => (
 	is => 'ro',
-	isa => 'Jet::Mail',
+	isa => 'Djet::Mail',
 	default => sub {
 		my $self = shift;
 		my $config = $self->schema->config->{mail} // {};
 		my $renderer = $self->schema->renderers->{'html'};
-		my $mailer = Jet::Mail->new(
+		my $mailer = Djet::Mail->new(
 			schema => $self->schema,
 			body => $self->body,
 			renderer => $renderer,

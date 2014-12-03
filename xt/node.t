@@ -10,7 +10,7 @@ use Test;
 
 my $schema = Test::schema;
 
-use_ok('Jet::Node'); # Has to be AFTER context is set in Test
+use_ok('Djet::Node'); # Has to be AFTER context is set in Test
 
 ok($schema->txn_begin, 'Begin transaction');
 
@@ -21,7 +21,7 @@ my $args = {
 };
 
 ok(my $nodedata = $schema->find_node({ node_path => '' }), 'Get nodedata for domain');
-ok(my $domain = Jet::Node->new(row => $nodedata), 'Nodify data');
+ok(my $domain = Djet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $row = $domain->row, 'Get node row');
 is($row->{basetype_id}, 1, 'Basetype');
 $args = {

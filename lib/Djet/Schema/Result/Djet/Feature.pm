@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::Feature;
+package Djet::Schema::Result::Djet::Feature;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::Feature
+Djet::Schema::Result::Djet::Feature
 
 =head1 DESCRIPTION
 
@@ -141,13 +141,13 @@ __PACKAGE__->add_unique_constraint("feature_name_key", ["name"]);
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::Basetype>
+Related object: L<Djet::Schema::Result::Djet::Basetype>
 
 =cut
 
 __PACKAGE__->has_many(
   "basetypes",
-  "Jet::Schema::Result::Jet::Basetype",
+  "Djet::Schema::Result::Djet::Basetype",
   { "foreign.feature_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

@@ -1,4 +1,4 @@
-package Jet::Render::Html;
+package Djet::Render::Html;
 
 use 5.010;
 use Moose;
@@ -7,11 +7,11 @@ use namespace::autoclean;
 use Text::Xslate;
 use URI::Escape;
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet::Render::Html - Render html for Jet
+Djet::Render::Html - Render html for Jet
 
 =head1 DESCRIPTION
 
@@ -26,7 +26,7 @@ The Jet configuration.
 =cut
 
 has config => (
-	isa => 'Jet::Config',
+	isa => 'Djet::Config',
 	is => 'ro',
 );
 

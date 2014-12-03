@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::Cart;
+package Djet::Schema::Result::Djet::Cart;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::Cart
+Djet::Schema::Result::Djet::Cart
 
 =cut
 
@@ -138,13 +138,13 @@ __PACKAGE__->set_primary_key("code");
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::CartProduct>
+Related object: L<Djet::Schema::Result::Djet::CartProduct>
 
 =cut
 
 __PACKAGE__->has_many(
   "cart_products",
-  "Jet::Schema::Result::Jet::CartProduct",
+  "Djet::Schema::Result::Djet::CartProduct",
   { "foreign.cart" => "self.code" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

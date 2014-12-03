@@ -14,10 +14,10 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"path","title":"Path","type":"Str"},
 	{"name":"queue","title":"Queue","type":"Str"},
 	{"name":"topmenu","title":"Topmenu","type":"Boolean"}
-]','Jet::Engine::Import','basetype/import.tx');
+]','Djet::Engine::Import','basetype/import.tx');
 INSERT INTO basetype (feature_id, name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'upload', 'Uploaded File','[
 	{"name":"mime_type","title":"Mime Type","type":"Str"}
-]','Jet::Engine::Import::File');
+]','Djet::Engine::Import::File');
 
 -- Data Nodes
 

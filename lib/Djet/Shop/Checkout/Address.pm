@@ -1,13 +1,13 @@
-package Jet::Shop::Checkout::Address;
+package Djet::Shop::Checkout::Address;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Shop::Checkout';
+extends 'Djet::Shop::Checkout';
 
 =head1 NAME
 
-Jet::Shop::Checkout::Address
+Djet::Shop::Checkout::Address
 
 =head2 DESCRIPTION
 

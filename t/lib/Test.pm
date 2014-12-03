@@ -6,8 +6,8 @@ use warnings;
 	
 use Test::More;
 
-#use Jet::Context;
-#use Jet::Stuff;
+#use Djet::Context;
+#use Djet::Stuff;
 
 sub db_name {
 	return '__jet_test__';

@@ -1,4 +1,4 @@
-package Jet::Field;
+package Djet::Field;
 
 use 5.010;
 use Moose;
@@ -13,7 +13,7 @@ use overload
 
 =head1 NAME
 
-Jet::Field - Attributes and feature for Jet Fields
+Djet::Field - Attributes and feature for Jet Fields
 
 =head1 ATTRIBUTES
 

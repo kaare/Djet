@@ -7,8 +7,8 @@ use JSON;
 
 use Data::Dumper;
 
-use Jet::Config;
-use Jet::Stuff;
+use Djet::Config;
+use Djet::Stuff;
 
 our $schema;
 
@@ -20,17 +20,17 @@ sub update_basetype {
 
 sub basetypes {
 	my $conditions = {
-		'basetype_List_Jet::Engine::Condition::Compare' => {
+		'basetype_List_Djet::Engine::Condition::Compare' => {
 			one => { arg => 1},
 			two => undef,
 		},
-		'basetype_Retrieve_Jet::Engine::Condition::Compare' => {
+		'basetype_Retrieve_Djet::Engine::Condition::Compare' => {
 			one => { arg => 1},
 			two => undef,
 		},
 	};
 	my $parts = {
-		'basetype_Retrieve_Jet::Engine::Part::Stash' => {
+		'basetype_Retrieve_Djet::Engine::Part::Stash' => {
 			key  => 'id',
 			name => 'endpath',
 		},
@@ -40,11 +40,11 @@ sub basetypes {
 
 sub do_it {
 	my $configbase = 'etc/';
-	my $config = Jet::Config->new(base => $configbase);
+	my $config = Djet::Config->new(base => $configbase);
 	my @connect_info = @{ $config->jet->{connect_info} };
 	my %connect_info;
 	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-	$schema = Jet::Stuff->new(%connect_info);
+	$schema = Djet::Stuff->new(%connect_info);
 	basetypes;
 }
 

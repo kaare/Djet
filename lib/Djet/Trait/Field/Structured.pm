@@ -1,11 +1,11 @@
-package Jet::Trait::Field::Structured;
+package Djet::Trait::Field::Structured;
 
 use Moose::Role;
 use YAML::Tiny;
 
 =head1 NAME
 
-Jet::Trait::Field::Structured
+Djet::Trait::Field::Structured
 
 =head1 DESCRIPTION
 

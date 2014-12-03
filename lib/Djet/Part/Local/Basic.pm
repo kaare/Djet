@@ -1,13 +1,13 @@
-package Jet::Part::Local::Basic;
+package Djet::Part::Local::Basic;
 
 use 5.010;
 use Moose::Role;
 
-use Jet::Shop::Cart;
+use Djet::Shop::Cart;
 
 =head1 NAME
 
-Jet::Part::Local::Basic
+Djet::Part::Local::Basic
 
 =head1 DESCRIPTION
 
@@ -29,14 +29,14 @@ The cart
 
 has 'cart' => (
 	is => 'ro',
-	isa => 'Jet::Shop::Cart',
+	isa => 'Djet::Shop::Cart',
 	lazy_build => 1,
 );
 
 sub _build_cart {
 	my $self = shift;
 	my $session = $self->session;
-	my $cart = Jet::Shop::Cart->new(
+	my $cart = Djet::Shop::Cart->new(
 		schema => $self->schema,
 		session_id => $self->session_id,
 		uid => $session->{jet_user} // '',
@@ -58,7 +58,7 @@ has 'cart_base_url' => (
 		my $schema = $self->schema;
 		my $cart_basetype = $schema->basetype_by_name('cart');
 		my $domain_node = $self->domain_node;
-		my $cart_row = $schema->resultset('Jet::DataNode')->find({
+		my $cart_row = $schema->resultset('Djet::DataNode')->find({
 			basetype_id => $cart_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		});
@@ -82,7 +82,7 @@ has 'checkout_base_url' => (
 		my $checkout_basetype = $schema->basetype_by_name('checkout') or return '';
 
 		my $domain_node = $self->domain_node;
-		my $checkout_row = $schema->resultset('Jet::DataNode')->find({
+		my $checkout_row = $schema->resultset('Djet::DataNode')->find({
 			basetype_id => $checkout_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		}) or return '';
@@ -105,7 +105,7 @@ has 'search_base_url' => (
 		my $schema = $self->schema;
 		my $search_basetype = $schema->basetype_by_name('search');
 		my $domain_node = $self->domain_node;
-		my $search_row = $schema->resultset('Jet::DataNode')->find({
+		my $search_row = $schema->resultset('Djet::DataNode')->find({
 			basetype_id => $search_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		});
@@ -122,7 +122,7 @@ The current user
 
 has 'user' => (
 	is => 'ro',
-	isa => 'Maybe[Jet::Schema::Result::Jet::DataNode]',
+	isa => 'Maybe[Djet::Schema::Result::Djet::DataNode]',
 	lazy_build => 1,
 );
 
@@ -133,7 +133,7 @@ sub _build_user {
 	my $schema = $self->schema;
 	my $user_basetype = $schema->basetype_by_name('user') or return '';
 
-	my $user_row = $schema->resultset('Jet::DataNode')->find({
+	my $user_row = $schema->resultset('Djet::DataNode')->find({
 		basetype_id => $user_basetype->id,
 		part => $user,
 	}) or return;

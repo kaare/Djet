@@ -4,11 +4,11 @@ use strict;
 use warnings;
 use Test::More;
 
-use_ok 'Jet::Config';
+use_ok 'Djet::Config';
 
 use lib 't/lib';
 
-ok(my $config = Jet::Config->new(app_root => './t'), 'New Jet Config');
-isa_ok($config, 'Jet::Config', 'ISA Jet Config');
+ok(my $config = Djet::Config->new(app_root => './t'), 'New Jet Config');
+isa_ok($config, 'Djet::Config', 'ISA Jet Config');
 
 done_testing();

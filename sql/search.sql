@@ -12,7 +12,7 @@ INSERT INTO feature (name,version, description) VALUES ('search', 0.01, 'Search 
 
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'search','Search Page','[
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
-]','Jet::Engine::Search');
+]','Djet::Engine::Search');
 
 -- Data Nodes
 

@@ -1,10 +1,10 @@
-package Jet::Role::Update::Node;
+package Djet::Role::Update::Node;
 
 use MooseX::MethodAttributes::Role;
 
 =head1 NAME
 
-Jet::Role::Update::Node - Role for creating and editing Nodes
+Djet::Role::Update::Node - Role for creating and editing Nodes
 
 =head1 DESCRIPTION
 
@@ -12,7 +12,7 @@ Handles create and edit functionality of datanodes for Jet Engines
 
 =cut
 
-with 'Jet::Role::Update';
+with 'Djet::Role::Update';
 
 requires qw/edit_validation edit_update edit_create/;
 
@@ -62,7 +62,7 @@ Set the object to the basenode
 sub set_base_object {
 	my $self = shift;
 	my $rest_path = $self->rest_path;
-	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $self->schema->resultset('Jet::DataNode')->find({node_id => $rest_path})) {
+	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $self->schema->resultset('Djet::DataNode')->find({node_id => $rest_path})) {
 		$self->set_object($node);
 	}
 	$self->set_object($self->basenode) unless $self->has_object;
@@ -114,7 +114,7 @@ Get the resultset to be used for creating objects
 
 sub get_resultset {
 	my $self = shift;
-	return $self->schema->resultset('Jet::DataNode');
+	return $self->schema->resultset('Djet::DataNode');
 }
 
 =head2 get_base_name

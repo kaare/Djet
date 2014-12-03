@@ -5,9 +5,9 @@ use strict;
 use warnings;
 use Test::More;
 
-use Jet::Starter;
-use Jet::Body;
-use Jet::Response;
+use Djet::Starter;
+use Djet::Body;
+use Djet::Response;
 
 sub env {
        return {
@@ -46,27 +46,27 @@ sub env {
 
 
 $ENV{JET_APP_ROOT} = './t';
-my $starter = Jet::Starter->new;
+my $starter = Djet::Starter->new;
 my $schema = $starter->schema;
-my $body = Jet::Body->new(
+my $body = Djet::Body->new(
 	env => env(),
 	schema => $schema,
 );
 my $config = $schema->config;
 my $path = $body->request->path_info;
-my $data_nodes = $schema->resultset('Jet::DataNode')->find_basenode($path);
+my $data_nodes = $schema->resultset('Djet::DataNode')->find_basenode($path);
 my $basenode = $data_nodes->first;
 my $stash = {body => $body};
-my $response = Jet::Response->new(
+my $response = Djet::Response->new(
 	stash  => $stash,
 	body => $body,
 	data_nodes => $data_nodes,
 	basenode => $basenode,
 );
 
-use_ok('Jet::Engine::Config');
+use_ok('Djet::Engine::Config');
 
-ok(my $engine = Jet::Engine::Config->new(
+ok(my $engine = Djet::Engine::Config->new(
 	stash => $stash,
 	body => $body,
 	basenode => $basenode,

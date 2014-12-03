@@ -6,12 +6,12 @@ use warnings;
 
 use Test::More;
 
-use Jet::Context;
+use Djet::Context;
 
 use lib 't/lib';
 use Test;
 
-my $c = Jet::Context->instance;
+my $c = Djet::Context->instance;
 my $node_path = '--test--';
 is(my $node = $c->nodebox->find_node_path($node_path), undef, 'Find no node');
 $node_path = '/groups/rasmussen/kaare';
@@ -22,7 +22,7 @@ is($userlogin, 'kaare', '- correctly?');
 ok(my $children = $node->children, 'Get children');
 isa_ok($children, 'ARRAY', 'Chilren ISA ARRAY');
 ok(my $scratch = $children->[0], 'First child');
-isa_ok($scratch, 'Jet::Node', 'Node type');
+isa_ok($scratch, 'Djet::Node', 'Node type');
 is($scratch->path, '/groups/rasmussen/kaare/scratch', 'Node uri');
 is($scratch->basetype->{name}, 'photoalbum', 'Base type');
 is($scratch->get_column('title'), 'Scratchpad', 'Node title');

@@ -1,10 +1,10 @@
-package Jet::Trait::Field::Price;
+package Djet::Trait::Field::Price;
 
 use Moose::Role;
 
 =head1 NAME
 
-Jet::Trait::Field::Price - decorate the price field
+Djet::Trait::Field::Price - decorate the price field
 
 =cut
 

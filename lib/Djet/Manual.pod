@@ -1,6 +1,6 @@
 =head1 NAME
 
-Jet::Manual - Index of the Manual
+Djet::Manual - Index of the Manual
 
 =head1 DESCRIPTION
 
@@ -48,7 +48,7 @@ Something
 
 =head1 SECTIONS
 
-=head2 L<Jet::Manual::Startup>
+=head2 L<Djet::Manual::Startup>
 
 The startup sequence
 

@@ -19,7 +19,7 @@ use warnings;
 
 use JSON;
 
-use Jet::Config;
+use Djet::Config;
 
 use FindBin qw($Bin);
 use lib "$Bin/../../lib/";
@@ -39,7 +39,7 @@ pod2usage(
 
 sub do_it {
 	my $configbase = 'etc/';
-	my $config = Jet::Config->new(base => $configbase);
+	my $config = Djet::Config->new(base => $configbase);
 	my $schema = $config->schema;
 	print JSON->new->pretty->encode($schema->get_basetypes);
 }

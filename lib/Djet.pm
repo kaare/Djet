@@ -8,10 +8,10 @@ use namespace::autoclean;
 
 use Try::Tiny;
 
-use Jet::Failure;
-use Jet::Response;
+use Djet::Failure;
+use Djet::Response;
 
-with 'Jet::Role::Log';
+with 'Djet::Role::Log';
 
 # ABSTRACT: A Modern Node-based Content Management System
 
@@ -35,7 +35,7 @@ The body of the jet
 
 has body => (
 	is => 'ro',
-	isa => 'Jet::Body',
+	isa => 'Djet::Body',
 );
 
 =head2 schema
@@ -46,7 +46,7 @@ The schema
 
 has schema => (
 	is => 'ro',
-	isa => 'Jet::Schema',
+	isa => 'Djet::Schema',
 );
 
 =head1 METHODS
@@ -66,7 +66,7 @@ sub take_off {
 	# If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it.
 	my $node_path = $path =~ /\/$/ ? $path . "index.html" : $path;
 	$schema->log->debug("Node path: $node_path");
-	my $datatree = $schema->resultset('Jet::DataNode');
+	my $datatree = $schema->resultset('Djet::DataNode');
 	my $datanodes = $datatree->find_basenode($node_path);
 	return $self->login($datanodes, $config, $path) unless my $user = $schema->acl->check_login($self->body->session, $datanodes);
 
@@ -78,14 +78,14 @@ sub take_off {
 	try {
 		# See if we want to use the config basetype
 		my $engine_basetype = $basenode->basetype;
-		$engine_class = $engine_basetype->handler || 'Jet::Engine::Default';
+		$engine_class = $engine_basetype->handler || 'Djet::Engine::Default';
 		$schema->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
 	} catch {
 		my $e = shift;
 		die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack
 
 		debug($e);
-		Jet::Failure->new(
+		Djet::Failure->new(
 			exception => $e,
 			body => $body,
 			datanodes => $datanodes,

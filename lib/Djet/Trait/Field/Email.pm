@@ -1,4 +1,4 @@
-package Jet::Trait::Field::Email;
+package Djet::Trait::Field::Email;
 
 use Moose::Role;
 
@@ -6,7 +6,7 @@ use Data::FormValidator::Constraints qw(:closures);
 
 =head1 NAME
 
-Jet::Trait::Field::Email - decorate the email field
+Djet::Trait::Field::Email - decorate the email field
 
 =cut
 

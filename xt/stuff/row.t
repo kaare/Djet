@@ -9,11 +9,11 @@ use Test::More;
 use lib 't/lib';
 use Test;
 
-use_ok('Jet::Stuff');
+use_ok('Djet::Stuff');
 
 my $stuff = Test::schema;
 
-isa_ok($stuff, 'Jet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
+isa_ok($stuff, 'Djet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
 ok(my $rows = $stuff->search_node('domain', {id => 1}), 'Search domain');
 is(@$rows, 1, 'Number of rows');
 is($rows->[0]->{title}, 'Family Photo', 'The row title');

@@ -11,14 +11,14 @@ INSERT INTO feature (name,version, description) VALUES ('cart', 0.01, 'Shoppingc
 -- Basetypes
 
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'cart','Shopping Cart','[
-]','Jet::Engine::Cart','<domain>/basetype/cart.tx');
+]','Djet::Engine::Cart','<domain>/basetype/cart.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout','Shopping Cart Checkout','[
 	{"name":"steps","title":"Checkout steps","type":"Str"},
 	{"name":"orders_node","title":"Orders","type":"Str"},
 	{"name":"recipients","title":"Order Recipients","type":"Structured"}
-]','Jet::Engine::Checkout','<domain>/basetype/checkout/receipt.tx');
+]','Djet::Engine::Checkout','<domain>/basetype/checkout/receipt.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_cart','Checkout Cart','[
-]','Jet::Shop::Checkout::Cart','<domain>/basetype/checkout/cart.tx');
+]','Djet::Shop::Checkout::Cart','<domain>/basetype/checkout/cart.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_address','Checkout Address','[
 	{"name":"company","title":"Company","type":"Str"},
 	{"name":"name","title":"Name","type":"Str", "required": "on"},
@@ -26,9 +26,9 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"postalcode","title":"Postal Code","type":"Int", "required": "on"},
 	{"name":"city","title":"City","type":"Str", "required": "on"},
 	{"name":"phone","title":"Telephone","type":"Str"}
-]','Jet::Shop::Checkout::Address','<domain>/basetype/checkout/address.tx');
+]','Djet::Shop::Checkout::Address','<domain>/basetype/checkout/address.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_payment','Checkout Payment','[
-]','Jet::Shop::Checkout::Payment','<domain>/basetype/checkout/payment.tx');
+]','Djet::Shop::Checkout::Payment','<domain>/basetype/checkout/payment.tx');
 
 -- Data Nodes
 

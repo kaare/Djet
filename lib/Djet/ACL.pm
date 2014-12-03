@@ -1,4 +1,4 @@
-package Jet::ACL;
+package Djet::ACL;
 
 use 5.010;
 use Moose;
@@ -9,11 +9,11 @@ with 'Role::Pg::Roles';
 
 =head1 NAME
 
-Jet::ACL
+Djet::ACL
 
 =head1 DESCRIPTION
 
-Jet::ACL controls the roles, ie users and groups in Jet
+Djet::ACL controls the roles, ie users and groups in Jet
 
 =head1 METHODS
 

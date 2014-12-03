@@ -1,16 +1,16 @@
-package Jet::Engine::Checkout;
+package Djet::Engine::Checkout;
 
 use 5.010;
 use Moose;
 use JSON;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 
-use Jet::Shop::Cart;
+use Djet::Shop::Cart;
 
 =head1 NAME
 
-Jet::Engine::Checkout
+Djet::Engine::Checkout
 
 =head2 DESCRIPTION
 
@@ -26,10 +26,10 @@ The cart object
 
 has cart => (
 	is => 'ro',
-	isa => 'Jet::Shop::Cart',
+	isa => 'Djet::Shop::Cart',
 	default => sub {
 		my $self = shift;
-		my $cart = Jet::Shop::Cart->new(
+		my $cart = Djet::Shop::Cart->new(
 			schema => $self->schema,
 			uid => 1,
 		);
@@ -48,7 +48,7 @@ has 'steps' => (
 	isa => 'ArrayRef',
 	default => sub {
 		my $self = shift;
-		my @steps = $self->schema->resultset('Jet::DataNode')->search({
+		my @steps = $self->schema->resultset('Djet::DataNode')->search({
 			parent_id => $self->basenode->node_id,
 		},{
 			order_by => 'node_modified',

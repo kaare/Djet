@@ -20,7 +20,7 @@ $node->parents('basetype', $opt)			with options
 
 Modules
 -------
-- Jet::Config -> Jet::Context::Config
+- Djet::Config -> Djet::Context::Config
 
 REST
 ----
@@ -49,9 +49,9 @@ Plack
 
 Modules
 -------
-- Jet::Config -> Jet::Context::Config
-- Jet::Engine -> Jet::Stuff
-- Jet::Plugin -> Jet::Engine
+- Djet::Config -> Djet::Context::Config
+- Djet::Engine -> Djet::Stuff
+- Djet::Plugin -> Djet::Engine
 
 File Upload
 -----------
@@ -59,7 +59,7 @@ File Upload
   path - temporary file
   content_type
   filename - original filename
-  file_location in Jet::Node is a role
+  file_location in Djet::Node is a role
 
 Testing
 -------

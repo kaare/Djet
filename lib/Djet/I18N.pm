@@ -1,4 +1,4 @@
-package Jet::I18N;
+package Djet::I18N;
 
 use 5.010;
 use strict;
@@ -8,7 +8,7 @@ use Locale::Maketext::Lexicon;
 
 =head1 NAME
 
-Jet::I18N
+Djet::I18N
 
 =head1 DESCRIPTION
 

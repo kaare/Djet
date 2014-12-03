@@ -7,8 +7,8 @@ use JSON;
 
 use Data::Dumper;
 
-use Jet::Config;
-use Jet::Stuff;
+use Djet::Config;
+use Djet::Stuff;
 
 sub basetype_engine {
 	my $data = [
@@ -16,7 +16,7 @@ sub basetype_engine {
 			name => 'List',
 			conditions => [
 				{
-					part => 'Jet::Engine::Condition::Compare',
+					part => 'Djet::Engine::Condition::Compare',
 					default => {
 						one => {arg => 1},
 						two => undef,
@@ -25,7 +25,7 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Stash::Stuff',
+					part => 'Djet::Engine::Part::Stash::Stuff',
 					default => {
 						stashname  => 'basetypes',
 						methodname => 'get_basetypes',
@@ -38,13 +38,13 @@ sub basetype_engine {
 			name => 'Create',
 			conditions => [
 				{
-					part => 'Jet::Engine::Condition::Compare',
+					part => 'Djet::Engine::Condition::Compare',
 					default => {
 						two => undef,
 					},
 				},
 				{
-					part => 'Jet::Engine::Condition::Request::Method',
+					part => 'Djet::Engine::Condition::Request::Method',
 					default => {
 						requestmethod  => ['POST'],
 					},
@@ -52,7 +52,7 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Update',
+					part => 'Djet::Engine::Part::Update',
 					default => {
 						stashname  => 'basetype',
 						methodname => 'update_basetype',
@@ -64,13 +64,13 @@ sub basetype_engine {
 			name => 'Update',
 			conditions => [
 				{
-					part => 'Jet::Engine::Condition::Compare',
+					part => 'Djet::Engine::Condition::Compare',
 					default => {
 						two => qr/^\d+$/,
 					},
 				},
 				{
-					part => 'Jet::Engine::Condition::Request::Method',
+					part => 'Djet::Engine::Condition::Request::Method',
 					default => {
 						requestmethod  => ['POST'],
 					},
@@ -78,14 +78,14 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Update',
+					part => 'Djet::Engine::Part::Update',
 					default => {
 						stashname  => 'basetype',
 						methodname => 'update_basetype',
 					},
 				},
 				{
-					part => 'Jet::Engine::Part::Stash::Stuff',
+					part => 'Djet::Engine::Part::Stash::Stuff',
 					default => {
 						stashname  => 'basetype',
 						methodname => 'find_basetype',
@@ -99,7 +99,7 @@ sub basetype_engine {
 			conditions => [
 				{
 					name => 'arg1',
-					part => 'Jet::Engine::Condition::Compare',
+					part => 'Djet::Engine::Condition::Compare',
 					default => {
 						one => {arg => 1},
 						two => 'id',
@@ -107,7 +107,7 @@ sub basetype_engine {
 				},
 				{
 					name => 'arg2',
-					part => 'Jet::Engine::Condition::Compare',
+					part => 'Djet::Engine::Condition::Compare',
 					default => {
 						one => {arg => 2},
 						two => qr/^\d+$/,
@@ -116,7 +116,7 @@ sub basetype_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Stash::Basetype',
+					part => 'Djet::Engine::Part::Stash::Basetype',
 					default => {
 						stashname   => 'basetype',
 						stashfields => 'fields',
@@ -137,7 +137,7 @@ sub bc_engine {
 			name => 'List',
 			conditions => [
 				{
-					part => 'Jet::Engine::Condition::Response::Type',
+					part => 'Djet::Engine::Condition::Response::Type',
 					default => {
 						response_type => [qr/html/i],
 					},
@@ -145,7 +145,7 @@ sub bc_engine {
 			],
 			steps => [
 				{
-					part => 'Jet::Engine::Part::Node::BC',
+					part => 'Djet::Engine::Part::Node::BC',
 					default => {
 						stashname  => 'bc',
 						template   => 'basetype/bc.tx'
@@ -170,11 +170,11 @@ sub update_engine {
 
 sub do_it {
 	my $configbase = 'etc/';
-	my $config = Jet::Config->new(base => $configbase);
+	my $config = Djet::Config->new(base => $configbase);
 	my @connect_info = @{ $config->jet->{connect_info} };
 	my %connect_info;
 	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
-	$schema = Jet::Stuff->new(%connect_info);
+	$schema = Djet::Stuff->new(%connect_info);
 	basetype_engine;
 	bc_engine;
 }

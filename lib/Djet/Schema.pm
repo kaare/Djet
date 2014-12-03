@@ -1,5 +1,5 @@
 use utf8;
-package Jet::Schema;
+package Djet::Schema;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -14,12 +14,12 @@ __PACKAGE__->load_namespaces;
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-03 11:41:54
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z/TKrREPcrSUpNIvqFMf9g
 
-use Jet::ACL;
+use Djet::ACL;
 use List::Util qw/first/;
 
 =head1 NAME
 
-Jet::Schema
+Djet::Schema
 
 =head1 DESCRIPTION
 
@@ -29,13 +29,13 @@ The Jet database Schema
 
 =head2 config
 
-Jet configuration. Jet::Schema wants to know its surroundings upon start.
+Jet configuration. Djet::Schema wants to know its surroundings upon start.
 
 =cut
 
 has config => (
 	is => 'rw',
-	isa => 'Jet::Config',
+	isa => 'Djet::Config',
 	handles => [qw/
 		renderers
 		log
@@ -50,10 +50,10 @@ The acl class
 
 has acl => (
 	is => 'ro',
-	isa => 'Jet::ACL',
+	isa => 'Djet::ACL',
 	default => sub {
 		my $self = shift;
-		my $acl = Jet::ACL->new(
+		my $acl = Djet::ACL->new(
 			roles_dbh => $self->storage->dbh,
 		);
 		return $acl;
@@ -72,7 +72,7 @@ has basetypes => (
 	isa => 'HashRef',
 	default => sub {
 		my $self = shift;
-		return { map { $_->id =>  $_} $self->resultset('Jet::Basetype')->search };
+		return { map { $_->id =>  $_} $self->resultset('Djet::Basetype')->search };
 	},
 	lazy => 1,
 );
@@ -88,7 +88,7 @@ has local_class => (
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $local_class = $self->config->{config}{jet_config}{local_class} || 'Jet::Correct';
+		my $local_class = $self->config->{config}{jet_config}{local_class} || 'Djet::Correct';
 		$self->log->debug("local Class: $local_class");
 		eval "require $local_class";
 		warn $@ if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up

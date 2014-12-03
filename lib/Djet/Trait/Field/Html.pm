@@ -1,11 +1,11 @@
-package Jet::Trait::Field::Html;
+package Djet::Trait::Field::Html;
 
 use Moose::Role;
 use HTML::FormatText;
 
 =head1 NAME
 
-Jet::Trait::Field::Html - decorate the html field
+Djet::Trait::Field::Html - decorate the html field
 
 =cut
 

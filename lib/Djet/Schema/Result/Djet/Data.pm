@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::Data;
+package Djet::Schema::Result::Djet::Data;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::Data - Data
+Djet::Schema::Result::Djet::Data - Data
 
 =cut
 
@@ -151,13 +151,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Basetype>
+Related object: L<Djet::Schema::Result::Djet::Basetype>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "basetype",
-  "Jet::Schema::Result::Jet::Basetype",
+  "Djet::Schema::Result::Djet::Basetype",
   { id => "basetype_id" },
   { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
@@ -166,13 +166,13 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::Node>
+Related object: L<Djet::Schema::Result::Djet::Node>
 
 =cut
 
 __PACKAGE__->has_many(
   "nodes",
-  "Jet::Schema::Result::Jet::Node",
+  "Djet::Schema::Result::Djet::Node",
   { "foreign.data_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -206,7 +206,7 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 });
 
 with qw/
-	Jet::Role::DB::Result::Data
+	Djet::Role::DB::Result::Data
 /;
 
 __PACKAGE__->meta->make_immutable;

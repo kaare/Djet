@@ -1,4 +1,4 @@
-package Jet::JSON;
+package Djet::JSON;
 
 use 5.010;
 use strict;
@@ -8,7 +8,7 @@ use base 'JSON::XS';
 
 =head1 NAME
 
-Jet::JSON - (De)Serialize data
+Djet::JSON - (De)Serialize data
 
 =head1 DESCRIPTION
 

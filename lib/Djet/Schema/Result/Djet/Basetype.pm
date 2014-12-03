@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::Basetype;
+package Djet::Schema::Result::Djet::Basetype;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::Basetype - Node Base Type
+Djet::Schema::Result::Djet::Basetype - Node Base Type
 
 =cut
 
@@ -194,13 +194,13 @@ __PACKAGE__->add_unique_constraint("basetype_name_key", ["name"]);
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::Data>
+Related object: L<Djet::Schema::Result::Djet::Data>
 
 =cut
 
 __PACKAGE__->has_many(
   "datas",
-  "Jet::Schema::Result::Jet::Data",
+  "Djet::Schema::Result::Djet::Data",
   { "foreign.basetype_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -209,13 +209,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Feature>
+Related object: L<Djet::Schema::Result::Djet::Feature>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "feature",
-  "Jet::Schema::Result::Jet::Feature",
+  "Djet::Schema::Result::Djet::Feature",
   { id => "feature_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
@@ -228,18 +228,18 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Jet::Schema::Result::Jet::DataNode>
+Related object: L<Djet::Schema::Result::Djet::DataNode>
 
 =cut
 
 __PACKAGE__->has_many(
   "datanodes",
-  "Jet::Schema::Result::Jet::DataNode",
+  "Djet::Schema::Result::Djet::DataNode",
   { "foreign.basetype_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 use JSON;
-use Jet::Fields::Factory;
+use Djet::Fields::Factory;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
@@ -273,7 +273,7 @@ The Basetype fields
 =cut
 
 has fields => (
-	isa => 'Jet::Fields',
+	isa => 'Djet::Fields',
 	is => 'ro',
 	lazy_build => 1,
 	handles => [qw/
@@ -291,7 +291,7 @@ Build the handler class for the basetype
 
 sub _build_engine {
 	my $self= shift;
-	my $handler = $self->handler || 'Jet::Engine::Default';
+	my $handler = $self->handler || 'Djet::Engine::Default';
 	eval "require $handler" or die $@;
 
 	return $handler->meta->new_object;
@@ -301,7 +301,7 @@ sub _build_engine {
 
 Build the fields for the basetype.
 
-The fields are build from a superclass Jet::Fields and each field has an
+The fields are build from a superclass Djet::Fields and each field has an
 attribute called __<field> and a reader called <field>.
 
 An arrayref attribute containing fieldnames is also build.
@@ -312,7 +312,7 @@ This class is instantiated for each data or datanode requesting datacolumns from
 
 sub _build_fields {
 	my $self= shift;
-	my $factory = Jet::Fields::Factory->new(datacolumns => $self->datacolumns);
+	my $factory = Djet::Fields::Factory->new(datacolumns => $self->datacolumns);
 	return $factory->fields_class;
 }
 

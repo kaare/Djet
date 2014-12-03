@@ -1,12 +1,12 @@
 use utf8;
-package Jet::Schema::Result::Jet::CartProduct;
+package Djet::Schema::Result::Djet::CartProduct;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Jet::Schema::Result::Jet::CartProduct
+Djet::Schema::Result::Djet::CartProduct
 
 =cut
 
@@ -123,13 +123,13 @@ __PACKAGE__->set_primary_key("cart", "sku");
 
 Type: belongs_to
 
-Related object: L<Jet::Schema::Result::Jet::Cart>
+Related object: L<Djet::Schema::Result::Djet::Cart>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "cart",
-  "Jet::Schema::Result::Jet::Cart",
+  "Djet::Schema::Result::Djet::Cart",
   { code => "cart" },
   { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );

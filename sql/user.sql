@@ -13,7 +13,7 @@ INSERT INTO feature (name,version, description) VALUES ('user', 0.01, 'User feat
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'users','Users','[
 	{"type":"Structured","title":"Roles","name":"roles"},
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
-]','Jet::Engine::User','<domain>/basetype/users.tx');
+]','Djet::Engine::User','<domain>/basetype/users.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'user','User','[
 	{"name":"handle","title":"Handle","type":"Str", "required": "on"},
 	{"name":"password","title":"Password","type":"Protected", "required": "on", "storage":false},
@@ -24,9 +24,9 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"phone","title":"Telephone","type":"Str", "required": "on"},
 	{"name":"email","title":"Email Address","type":"Email", "required": "on"},
 	{"name":"comment","title":"Comment","type":"Text"}
-]','Jet::Engine::User','<domain>/basetype/user.tx');
+]','Djet::Engine::User','<domain>/basetype/user.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'mypage','My Page','[
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
-]','Jet::Engine::User','<domain>/basetype/mypage.tx');
+]','Djet::Engine::User','<domain>/basetype/mypage.tx');
 
 COMMIT;

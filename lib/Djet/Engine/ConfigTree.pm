@@ -1,24 +1,24 @@
-package Jet::Engine::ConfigTree;
+package Djet::Engine::ConfigTree;
 
 use 5.010;
 use Moose;
 
-extends 'Jet::Engine::Default';
+extends 'Djet::Engine::Default';
 
 with qw/
-	Jet::Role::Engine::Json
-	Jet::Role::Treeview
+	Djet::Role::Engine::Json
+	Djet::Role::Treeview
 /;
 
 =head1 NAME
 
-Jet::Engine::ConfigTree
+Djet::Engine::ConfigTree
 
 =head1 DESCRIPTION
 
-Jet::Engine::ConfigTree shows the node tree.
+Djet::Engine::ConfigTree shows the node tree.
 
-It includes the role L<Jet::Role::Treeview>.
+It includes the role L<Djet::Role::Treeview>.
 
 =head1 ACCESSORS
 

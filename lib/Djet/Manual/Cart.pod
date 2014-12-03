@@ -1,6 +1,6 @@
 =head1 NAME
 
-Jet::Manual::Cart
+Djet::Manual::Cart
 
 =head1 DESCRIPTION
 
@@ -41,7 +41,7 @@ Handles the payment in the checkout process
 These basetypes have to be children of the checkout basetype. Their order (currently the node modification timestamp) decides the order
 they are displayed and processed by the checkout handler.
 
-The checkout handler is an ordinary L<Jet::Engine> class, whereas the other handlers are L<Jet::Shop::Checkout> classes.
+The checkout handler is an ordinary L<Djet::Engine> class, whereas the other handlers are L<Djet::Shop::Checkout> classes.
 
 =back
 
@@ -49,30 +49,30 @@ The checkout handler is an ordinary L<Jet::Engine> class, whereas the other hand
 
 =over 4
 
-=item Jet::Part::Local::Cart>
+=item Djet::Part::Local::Cart>
 
 Adds the cart and some important urls to the local object.
 
 Note! The cart object defined here is used in all other cart and checkout classes, as well as in the templates. This means that
-it's easy to subclass Jet::Part::Local::Cart and define your own cart.
+it's easy to subclass Djet::Part::Local::Cart and define your own cart.
 
 This is quite important, as all quantity price handling and other special stuff easily fits into the whole system.
 
-=item L<Jet::Engine::Cart>
+=item L<Djet::Engine::Cart>
 
-=item L<Jet::Engine::Checkout>
+=item L<Djet::Engine::Checkout>
 
-=item L<Jet::Shop::Cart>
+=item L<Djet::Shop::Cart>
 
 Is a subclass of L<Nitesi::Cart>
 
-=item L<Jet::Shop::Checkout>
+=item L<Djet::Shop::Checkout>
 
-=item L<Jet::Shop::Checkout::Cart>
+=item L<Djet::Shop::Checkout::Cart>
 
-=item L<Jet::Shop::Checkout::Address>
+=item L<Djet::Shop::Checkout::Address>
 
-=item L<Jet::Shop::Checkout::Payment>
+=item L<Djet::Shop::Checkout::Payment>
 
 =back
 

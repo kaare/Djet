@@ -1,4 +1,4 @@
-package Jet::Fields::Factory;
+package Djet::Fields::Factory;
 
 use 5.010;
 use Moose;
@@ -6,7 +6,7 @@ use namespace::sweep;
 
 =head1 NAME
 
-Jet::Fields::Factory - Produce a Jet Fields Class
+Djet::Fields::Factory - Produce a Jet Fields Class
 
 =head1 SYNOPSIS
 
@@ -47,7 +47,7 @@ Creates the fields class
 
 sub fields_class {
 	my $self = shift;
-	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Jet::Fields']);
+	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Djet::Fields']);
 	my $columns = $self->datacolumns;
 	my @fieldnames;
 	for my $column (@{ $columns }) {
@@ -56,14 +56,14 @@ sub fields_class {
 		my $coltype = $column->{type};
 
 		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
-		my $fieldtraitname = "Jet::Trait::Field::$column->{type}";
+		my $fieldtraitname = "Djet::Trait::Field::$column->{type}";
 		eval "require $fieldtraitname";
 		push @$traits, $fieldtraitname unless $@;
 
 		push @fieldnames, $colname;
 		$meta_class->add_attribute($colname => (
 			is => 'ro',
-			isa => 'Jet::Field',
+			isa => 'Djet::Field',
 			writer => "set_$colname",
 			default => sub {
 				my $self = shift;
@@ -77,8 +77,8 @@ sub fields_class {
 				);
 				$params{type} = $coltype if $coltype;
 				return $traits ?
-					Jet::Field->with_traits(@$traits)->new(%params) :
-					Jet::Field->new(%params);
+					Djet::Field->with_traits(@$traits)->new(%params) :
+					Djet::Field->new(%params);
 			},
 			lazy => 1,
 		));

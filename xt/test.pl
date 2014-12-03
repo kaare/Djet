@@ -6,7 +6,7 @@ use warnings;
 
 use File::Find ();
 
-use Jet::Schema;
+use Djet::Schema;
 
 # Set the variable $File::Find::dont_use_nlink if you're using AFS,
 # since AFS cheats.
@@ -21,7 +21,7 @@ sub wanted;
 sub preprocess;
 
 my $dsn = 'dbi:Pg:dbname=__jet_test__';
-my $schema  = Jet::Schema->connect($dsn) or die;
+my $schema  = Djet::Schema->connect($dsn) or die;
 
 
 File::Find::find({wanted => \&wanted, preprocess => \&preprocess}, '/');
@@ -43,12 +43,12 @@ sub wanted {
 	$ldir =~ s/^\///;
 	$ldir =~ s/\//./g;
 	$ldir =~ s/[-@]/_/g;
-	my $parent = $schema->resultset('Jet::DataNode')->find({node_path => $ldir, basetype_id => 2});
-	my $node = $schema->resultset('Jet::DataNode')->create({
+	my $parent = $schema->resultset('Djet::DataNode')->find({node_path => $ldir, basetype_id => 2});
+	my $node = $schema->resultset('Djet::DataNode')->create({
 		basetype_id => 3,
 		parent_id => $parent ? $parent->node_id : undef,
 		part => $lname,
-	}) unless $schema->resultset('Jet::DataNode')->find({node_path => $lname, basetype_id => 3});
+	}) unless $schema->resultset('Djet::DataNode')->find({node_path => $lname, basetype_id => 3});
 
 }
 
@@ -63,8 +63,8 @@ warn $lname;
 	$ldir =~ s/^\///;
 	$ldir =~ s/\//./g;
 	$ldir =~ s/[-@]/_/g;
-	my $parent = $schema->resultset('Jet::DataNode')->find({node_path => $ldir, basetype_id => 2});
-	my $node = $schema->resultset('Jet::DataNode')->create({
+	my $parent = $schema->resultset('Djet::DataNode')->find({node_path => $ldir, basetype_id => 2});
+	my $node = $schema->resultset('Djet::DataNode')->create({
 		basetype_id => 2,
 		parent_id => $parent ? $parent->node_id : undef,
 		part => $lname,

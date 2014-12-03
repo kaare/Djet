@@ -1,13 +1,13 @@
-package Jet::Shop::Checkout;
+package Djet::Shop::Checkout;
 
 use 5.010;
 use Moose;
 
-with 'Jet::Role::Basic';
+with 'Djet::Role::Basic';
 
 =head1 NAME
 
-Jet::Shop::Checkout
+Djet::Shop::Checkout
 
 =head2 DESCRIPTION
 
@@ -34,7 +34,7 @@ The current step
 
 has 'step' => (
 	is => 'ro',
-	isa => 'Jet::Schema::Result::Jet::DataNode',
+	isa => 'Djet::Schema::Result::Djet::DataNode',
 );
 
 =head2 mailer
@@ -45,7 +45,7 @@ Jet mailer. In case the checkout step needs to alert someone
 
 has mailer => (
 	is => 'ro',
-	isa => 'Jet::Mail',
+	isa => 'Djet::Mail',
 );
 
 =head1 METHODS
