@@ -215,7 +215,7 @@ Packages
 
 Recipes
 -------
-- On startup, Look through all jet.basetypes and 'compile' the recipes
+- On startup, Look through all djet.basetypes and 'compile' the recipes
   require the plugin modules
   name the recipe
   cache the recipe in context->recipes
@@ -279,7 +279,7 @@ Config
 1. Rework config handling 
 2. Work stash into the module
 3. Config file structure
-   etc/jet.conf
+   etc/djet.conf
    <client_dir>/etc/somethińg
 4. What overrides what?
 5. module might be basenode instead?

@@ -128,7 +128,7 @@ Redirect to the edit page of the new node.
 
 sub create_path {
 	my $self = shift;
-	$self->response->redirect('/jet/node/' . $self->object->id);
+	$self->response->redirect('/djet/node/' . $self->object->id);
 }
 
 =head2 choose_basetype

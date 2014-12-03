@@ -1,6 +1,6 @@
 Template searching
 ------------------
-- Template lookup in <dir>/templates and <jet_root>/templates
+- Template lookup in <dir>/templates and <djet_root>/templates
 - Basetype root: templates/basetypes
 - Name: <basetype>/<templatename>, default index.tx
 - Example: templates/basetypes/domain/index.tx
@@ -33,7 +33,7 @@ REST
 Search
 ------
 - PostgreSQL FTS
-  A tsvector column on jet.node
+  A tsvector column on djet.node
 - Insert, update triggers on _view
   loop through searchable and update fts
   Only update if there has been any change in the seachable columns
@@ -69,7 +69,7 @@ Recipes
 -------
 - Ingredients list and procedure (steps)
   Ingredient list: Mapping of external data to the requirement of the plugins
-- Read recipe to jet.basetypes.
+- Read recipe to djet.basetypes.
   As a json for now
 
 Plugin overview

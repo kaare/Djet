@@ -1,4 +1,4 @@
-SET search_path=jet, public;
+SET search_path=djet, public;
 
 INSERT INTO basetype (name) VALUES ('domain');
 INSERT INTO basetype (name) VALUES ('directory');

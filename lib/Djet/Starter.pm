@@ -33,10 +33,10 @@ has params => (
 	isa => 'HashRef',
 	default => sub {
 		my %params = map {
-			m/^jet_(.*)/i;
+			m/^djet_(.*)/i;
 			my $key = lc $1;
 			$key => lc $ENV{$_}
-		} grep {/^jet_/i} keys %ENV;
+		} grep {/^djet_/i} keys %ENV;
 		$params{configbase} //= 'etc/';
 		return \%params;
 	},
@@ -182,13 +182,13 @@ sub check_notifications {
 
 =head2 BUILD
 
-Listen to the jet:admin queue
+Listen to the djet:admin queue
 
 =cut
 
 sub BUILD {
 	my $self = shift;
-	$self->listen(queue => 'jet:admin');
+	$self->listen(queue => 'djet:admin');
 }
 
 __PACKAGE__->meta->make_immutable;

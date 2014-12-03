@@ -46,10 +46,10 @@ $(function(){
 			var html = '<div class="title">' +
 				node.title +
 				'</div>' + 
-				'<div class="edit"><a href="/jet/node/' +
+				'<div class="edit"><a href="/djet/node/' +
 				node.data.id +
 				'">Edit node</></div>' +
-				'<div class="add"><a href="/jet/node/' +
+				'<div class="add"><a href="/djet/node/' +
 				node.data.id +
 				'?basetype_id=child">Add child</></div>';
 			$("#bread").html(html);
@@ -63,7 +63,7 @@ $(function(){
 		   keyup: {
 			 '+': function(node) {
 				$.ajax({
-					url: node.data.path + '/_jet_config',
+					url: node.data.path + '/_djet_config',
 					data: {parent_path: node.data.path},
 					cache: false
 				}).done(function( html ) {

@@ -21,15 +21,15 @@ CREATE EXTENSION IF NOT EXISTS pgtap;
 SELECT plan(3);
 
 -- Run the tests.
-PREPARE update_data_node AS UPDATE jet.node SET part='test' WHERE id=4;
+PREPARE update_data_node AS UPDATE djet.node SET part='test' WHERE id=4;
 SELECT lives_ok('update_data_node', 'Update the path');
 SELECT results_eq(
-    'SELECT node_path FROM jet.data_node WHERE node_id=4',
+    'SELECT node_path FROM djet.data_node WHERE node_id=4',
     ARRAY[ '/groups/test' ],
     'Node path has changed'
 );
 SELECT results_eq(
-    'SELECT node_path FROM jet.data_node WHERE node_id=5',
+    'SELECT node_path FROM djet.data_node WHERE node_id=5',
     ARRAY[ '/groups/test/kaare' ],
     'Node path has changed for children too'
 );

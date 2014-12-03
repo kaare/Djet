@@ -5,22 +5,22 @@
 
 CREATE OR REPLACE LANGUAGE plperlu;
 
-SET search_path TO jet, public;
+SET search_path TO djet, public;
 
 -- fts
 
-CREATE OR REPLACE FUNCTION jet.update_fts() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION djet.update_fts() RETURNS trigger AS $$
 use 5.010;
 use JSON;
 use HTML::FormatText;
 use subs qw/ERROR NOTICE/;
 
-	# jet.basetype
+	# djet.basetype
 	my $basetype_id = $_TD->{new}{basetype_id};
-	my $q = "SELECT * FROM jet.basetype WHERE id = $basetype_id";
+	my $q = "SELECT * FROM djet.basetype WHERE id = $basetype_id";
 	my $rv = spi_exec_query($q);
 	unless ($rv->{status} eq 'SPI_OK_SELECT' and $rv->{processed} == 1) {
-		elog(ERROR,"Basetype $basetype_id not found in jet.basetype");
+		elog(ERROR,"Basetype $basetype_id not found in djet.basetype");
 		return 'SKIP';
 	}
 
@@ -52,5 +52,5 @@ use subs qw/ERROR NOTICE/;
 $$
 LANGUAGE 'plperlu' VOLATILE;
 
-DROP trigger IF EXISTS update_fts ON jet.data;
-CREATE TRIGGER update_fts BEFORE INSERT OR UPDATE ON data FOR EACH ROW EXECUTE PROCEDURE jet.update_fts();
+DROP trigger IF EXISTS update_fts ON djet.data;
+CREATE TRIGGER update_fts BEFORE INSERT OR UPDATE ON data FOR EACH ROW EXECUTE PROCEDURE djet.update_fts();

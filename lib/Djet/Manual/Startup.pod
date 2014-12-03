@@ -26,7 +26,7 @@ These parameters make sense to set as environment variables:
 
 =over 4
 
-=item * jet_root
+=item * djet_root
 
 =item * app_root
 
@@ -58,7 +58,7 @@ Contains the 'static' Jet data, including
 
 =over 4
 
-=item jet_root
+=item djet_root
 
 The path to Jet's home directory.
 

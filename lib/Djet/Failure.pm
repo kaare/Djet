@@ -26,7 +26,7 @@ has exception => (
 		my $stash = $self->stash;
 		if (ref $_) {
 	# Find Not Found node
-	# my $notfound_name = $config->{jet}{nodenames}{notfound};
+	# my $notfound_name = $config->{djet}{nodenames}{notfound};
 	# $nodedata = $schema->find_node({ name =>  $notfound_name });
 	# my $baserole = $basetypes->{$nodedata->{basetype_id}}->node_role;
 	# return $baserole ?

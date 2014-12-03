@@ -1,8 +1,8 @@
-INSERT INTO jet.basetype (name) VALUES ('domain');
-INSERT INTO jet.basetype (name,parent) VALUES ('directory','{1}');
-INSERT INTO jet.basetype (name,parent, searchable) VALUES ('file','{2}', '{"filename","metadata"}');
+INSERT INTO djet.basetype (name) VALUES ('domain');
+INSERT INTO djet.basetype (name,parent) VALUES ('directory','{1}');
+INSERT INTO djet.basetype (name,parent, searchable) VALUES ('file','{2}', '{"filename","metadata"}');
 
--- SET search_path=jet,public;
+-- SET search_path=djet,public;
 
 -- INSERT INTO basetype (name) VALUES ('domain');
 -- INSERT INTO node (basetype_id) VALUES (1);

@@ -1,7 +1,7 @@
 .fshow {display: none; }
 .fhide:focus + .fshow {display: inline; }
 .fhide:focus { display: none; }
-.fhide:focus ~ .jet_file_chooser { display:none; }
+.fhide:focus ~ .djet_file_chooser { display:none; }
 @media print { .fhide, .fshow { display: none; } }
 
 UL.jqueryFileTree {

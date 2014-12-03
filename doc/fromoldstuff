@@ -29,7 +29,7 @@ Move a node to a new parent in the path tree
 sub move {
 	my ($self, $node_id, $parent_id) = @_;
 	my $sql = qq{UPDATE
-		jet.node
+		djet.node
 	SET
 		parent_id=?
 	WHERE

@@ -10,7 +10,7 @@ use Test::More;
 #use Djet::Stuff;
 
 sub db_name {
-	return '__jet_test__';
+	return '__djet_test__';
 }
 
 1;

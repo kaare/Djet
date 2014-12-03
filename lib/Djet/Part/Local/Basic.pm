@@ -39,7 +39,7 @@ sub _build_cart {
 	my $cart = Djet::Shop::Cart->new(
 		schema => $self->schema,
 		session_id => $self->session_id,
-		uid => $session->{jet_user} // '',
+		uid => $session->{djet_user} // '',
 	);
 	return $cart;
 }
@@ -128,7 +128,7 @@ has 'user' => (
 
 sub _build_user {
 	my $self = shift;
-	my $user = $self->session->{jet_user} // return;
+	my $user = $self->session->{djet_user} // return;
 
 	my $schema = $self->schema;
 	my $user_basetype = $schema->basetype_by_name('user') or return '';

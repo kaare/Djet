@@ -3,7 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
 	<title><: $local.basenode.get_column('title') :></title>
-	<link rel="stylesheet" href="/css/jet.css">
+	<link rel="stylesheet" href="/css/djet.css">
 </head>
 <body>
 <h1><: $local.basenode.get_column('title') :></h1>

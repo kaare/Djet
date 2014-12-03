@@ -29,7 +29,7 @@ Experimental CMS
 
 =head2 body
 
-The body of the jet
+The body of the djet
 
 =cut
 

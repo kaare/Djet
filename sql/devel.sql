@@ -12,11 +12,11 @@ BEGIN
 	IF new.parent_id IS NULL THEN
 		RETURN NEW;
 	END IF;
-	SELECT parent INTO parent_array FROM jet.basetype WHERE id = NEW.basetype_id;
+	SELECT parent INTO parent_array FROM djet.basetype WHERE id = NEW.basetype_id;
 	IF parent_array IS NULL THEN
 		RETURN NEW;
 	END IF;
-	SELECT basetype_id INTO parent_type FROM jet.node WHERE id = NEW.parent_id;
+	SELECT basetype_id INTO parent_type FROM djet.node WHERE id = NEW.parent_id;
 	IF parent_type = ANY (parent_array) THEN
 		RETURN NEW;
 	ELSE

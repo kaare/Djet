@@ -26,13 +26,13 @@ sub topmenu {
 		{
 			name => 'nodes',
 			title => 'Nodes',
-			link => '/jet/config',
+			link => '/djet/config',
 			active => !$is_basetype,
 		},
 		{
 			name => 'basetype',
 			title => 'Basetypes',
-			link => '/jet/config/basetype',
+			link => '/djet/config/basetype',
 			active => $is_basetype,
 		},
 	];

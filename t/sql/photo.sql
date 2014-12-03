@@ -6,7 +6,7 @@ SET search_path TO data;
 
 CREATE TABLE domain (
 	id						int NOT NULL PRIMARY KEY
-	                        REFERENCES jet.node
+	                        REFERENCES djet.node
 							ON DELETE cascade
 							ON UPDATE cascade);
 
@@ -19,21 +19,21 @@ SELECT
 FROM
 	data.domain d
 JOIN
-	jet.node n USING (id)
+	djet.node n USING (id)
 JOIN
-	jet.path p ON p.node_id=n.id
+	djet.path p ON p.node_id=n.id
 JOIN
-	jet.basetype b ON basetype_id = b.id
+	djet.basetype b ON basetype_id = b.id
 WHERE
     b.name='domain';
 
-CREATE TRIGGER domain_view_insert INSTEAD OF INSERT ON domain_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
+CREATE TRIGGER domain_view_insert INSTEAD OF INSERT ON domain_view FOR EACH ROW EXECUTE PROCEDURE djet.data_view_insert();
 
 --
 
 CREATE TABLE photoalbum (
 	id						int NOT NULL PRIMARY KEY
-							REFERENCES jet.node
+							REFERENCES djet.node
 							ON DELETE cascade
 							ON UPDATE cascade
 );
@@ -47,21 +47,21 @@ SELECT
 FROM
 	photoalbum d
 JOIN
-	jet.node n USING (id)
+	djet.node n USING (id)
 JOIN
-	jet.path p ON p.node_id=n.id
+	djet.path p ON p.node_id=n.id
 JOIN
-	jet.basetype b ON basetype_id = b.id
+	djet.basetype b ON basetype_id = b.id
 WHERE
     b.name='photoalbum';
 
-CREATE TRIGGER photoalbum_view_insert INSTEAD OF INSERT ON photoalbum_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
+CREATE TRIGGER photoalbum_view_insert INSTEAD OF INSERT ON photoalbum_view FOR EACH ROW EXECUTE PROCEDURE djet.data_view_insert();
 
 --
 
 CREATE TABLE photo (
 	id						 int NOT NULL PRIMARY KEY
-	                         REFERENCES jet.node
+	                         REFERENCES djet.node
 									 ON DELETE cascade
 									 ON UPDATE cascade,
 	content_type			 text,
@@ -77,14 +77,14 @@ SELECT
 FROM
 	photo d
 JOIN
-	jet.node n USING (id)
+	djet.node n USING (id)
 JOIN
-	jet.path p ON p.node_id=n.id
+	djet.path p ON p.node_id=n.id
 JOIN
-	jet.basetype b ON basetype_id = b.id
+	djet.basetype b ON basetype_id = b.id
 WHERE
     b.name='photo';
 
-CREATE TRIGGER photo_view_insert INSTEAD OF INSERT ON photo_view FOR EACH ROW EXECUTE PROCEDURE jet.data_view_insert();
+CREATE TRIGGER photo_view_insert INSTEAD OF INSERT ON photo_view FOR EACH ROW EXECUTE PROCEDURE djet.data_view_insert();
 
 COMMIT;

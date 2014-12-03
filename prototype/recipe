@@ -131,11 +131,11 @@ sub update_basetype_recipe {
 			],
 		},
 		html_templates => {
-			basetypes => 'jet/config/basetypes',
+			basetypes => 'djet/config/basetypes',
 		},
 	};
 	say STDERR Dumper( JSON->new->encode($data));
-	update_node('jet_config', $data);
+	update_node('djet_config', $data);
 }
 
 sub update_node {

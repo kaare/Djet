@@ -69,7 +69,7 @@ Send notification that the basetype has changed
 
 after 'edit_updated' => sub  {
 	my $self = shift;
-	$self->notify(queue => 'jet:admin', payload => 'reload:basetype:' . $self->object->id);
+	$self->notify(queue => 'djet:admin', payload => 'reload:basetype:' . $self->object->id);
 };
 
 sub _build_basetype_fields {

@@ -88,7 +88,7 @@ has local_class => (
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $local_class = $self->config->{config}{jet_config}{local_class} || 'Djet::Correct';
+		my $local_class = $self->config->{config}{djet_config}{local_class} || 'Djet::Correct';
 		$self->log->debug("local Class: $local_class");
 		eval "require $local_class";
 		warn $@ if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up

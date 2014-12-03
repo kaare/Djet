@@ -35,13 +35,13 @@ sub basetypes {
 			name => 'endpath',
 		},
 	};
-	update_basetype('jet_basetype', $conditions, $parts);
+	update_basetype('djet_basetype', $conditions, $parts);
 }
 
 sub do_it {
 	my $configbase = 'etc/';
 	my $config = Djet::Config->new(base => $configbase);
-	my @connect_info = @{ $config->jet->{connect_info} };
+	my @connect_info = @{ $config->djet->{connect_info} };
 	my %connect_info;
 	$connect_info{$_} = shift @connect_info for qw/dbname username password connect_options/;
 	$schema = Djet::Stuff->new(%connect_info);

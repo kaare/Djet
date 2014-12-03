@@ -31,11 +31,11 @@ extends 'DBIx::Class::Core';
 __PACKAGE__->load_components("InflateColumn::DateTime");
 __PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 
-=head1 TABLE: C<jet.data_node>
+=head1 TABLE: C<djet.data_node>
 
 =cut
 
-__PACKAGE__->table("jet.data_node");
+__PACKAGE__->table("djet.data_node");
 
 =head1 ACCESSORS
 

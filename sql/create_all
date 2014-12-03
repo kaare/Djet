@@ -6,7 +6,7 @@
 
 # sql/functionality.sql\
 FILES="\
- sql/jet.sql\
+ sql/djet.sql\
  sql/basic.sql\
  sql/cart.sql\
  sql/search.sql\

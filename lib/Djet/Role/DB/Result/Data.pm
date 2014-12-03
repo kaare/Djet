@@ -78,7 +78,7 @@ update_fts takes one optional parameter, the config. If not given, 'english' is 
 
 sub update_fts {
 	my ($self, $config) = @_;
-	# jet.basetype
+	# djet.basetype
 	my $basetype = $self->basetype;
 
 	my $fts = $self->title;

@@ -7,7 +7,7 @@ use Plack::Builder;
 
 use Djet::Starter;
 
-my $jet = Djet::Starter->new;
+my $djet = Djet::Starter->new;
 
 builder {
 #	enable 'Debug',
@@ -26,5 +26,5 @@ builder {
 	enable 'Static',
 		path => qr{^/(fonts|images|js|css)/}, root => './public/';
 
-	$jet->app;
+	$djet->app;
 };

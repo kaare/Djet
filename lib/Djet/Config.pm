@@ -25,13 +25,13 @@ to know about how to operate themselves.
 
 =head1 ATTRIBUTES
 
-=head2 jet_root
+=head2 djet_root
 
 Jet's root path. This is the path to where the Jet software is - NOT the application!
 
 =cut
 
-has jet_root => (
+has djet_root => (
 	is => 'ro',
 	isa => 'Str',
 	default => sub {
@@ -82,7 +82,7 @@ has config => (
 	default => sub {
 		my $self = shift;
 		my $config_path = $self->app_root . '/' . $self->base;
-		my $config = Config::JFDI->new(name => "jet", path => $config_path);
+		my $config = Config::JFDI->new(name => "djet", path => $config_path);
 		return $config->get;
 	},
 );
@@ -113,7 +113,7 @@ has renderers => (
 
 =head2 log_category
 
-Jet logger's category. Default 'jet'.
+Jet logger's category. Default 'djet'.
 
 =cut
 
@@ -123,7 +123,7 @@ has log_category => (
 	default => sub {
 		my $self = shift;
 		my $config = $self->config->{log} // {};
-		return $config->{category} // 'jet';
+		return $config->{category} // 'djet';
 	},
 	lazy => 1,
 );
@@ -179,8 +179,8 @@ has i18n => (
 	default => sub {
 		my $self = shift;
 		my $language = $self->config->{language};
-		my $jet_root = $self->jet_root;
-		return Djet::I18N->get_handle($jet_root, $language);
+		my $djet_root = $self->djet_root;
+		return Djet::I18N->get_handle($djet_root, $language);
 	},
 );
 

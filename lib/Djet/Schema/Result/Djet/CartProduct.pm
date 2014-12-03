@@ -30,11 +30,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime");
 
-=head1 TABLE: C<jet.cart_products>
+=head1 TABLE: C<djet.cart_products>
 
 =cut
 
-__PACKAGE__->table("jet.cart_products");
+__PACKAGE__->table("djet.cart_products");
 
 =head1 ACCESSORS
 

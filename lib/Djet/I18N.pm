@@ -17,11 +17,11 @@ Internationalization for Jet
 =cut
 
 sub get_handle {
-	my ($self, $jet_root, $language) = @_;
+	my ($self, $djet_root, $language) = @_;
 	Locale::Maketext::Lexicon->import({
 		$language => [
 			#		Gettext => "locale/$language.po",
-			Gettext => "$jet_root/locale/$language.po"
+			Gettext => "$djet_root/locale/$language.po"
 		],
 		_auto   => 1,
 	});

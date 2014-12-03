@@ -4,10 +4,10 @@
 <div style="float: right;">
 	<a href="#" class="fhide">[hide]</a>
 	<a href="#" class="fshow">[show]</a>
-	<div class="jet_file_chooser"> </div>
-	<img class="jet_file_image">
-	<figcaption class="jet_file_name"></figcaption>
-	<button onClick="$('.file_chosen input').val($('.jet_file_name').html());return false">OK</button>
+	<div class="djet_file_chooser"> </div>
+	<img class="djet_file_image">
+	<figcaption class="djet_file_name"></figcaption>
+	<button onClick="$('.file_chosen input').val($('.djet_file_name').html());return false">OK</button>
 </div>
 </script>
 

@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime");
 
-=head1 TABLE: C<jet.feature>
+=head1 TABLE: C<djet.feature>
 
 =cut
 
-__PACKAGE__->table("jet.feature");
+__PACKAGE__->table("djet.feature");
 
 =head1 ACCESSORS
 
@@ -47,7 +47,7 @@ __PACKAGE__->table("jet.feature");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'jet.feature_id_seq'
+  sequence: 'djet.feature_id_seq'
 
 =head2 name
 
@@ -90,7 +90,7 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "jet.feature_id_seq",
+    sequence          => "djet.feature_id_seq",
   },
   "name",
   { data_type => "text", is_nullable => 0 },

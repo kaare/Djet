@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SET search_path=jet, public;
+SET search_path=djet, public;
 
 -- Features
 

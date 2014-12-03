@@ -20,7 +20,7 @@ use vars qw/*name *dir *prune/;
 sub wanted;
 sub preprocess;
 
-my $dsn = 'dbi:Pg:dbname=__jet_test__';
+my $dsn = 'dbi:Pg:dbname=__djet_test__';
 my $schema  = Djet::Schema->connect($dsn) or die;
 
 

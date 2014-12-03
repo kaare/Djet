@@ -39,7 +39,7 @@ sub process_post {
 	return $self->response->body($self->view_page) unless my $username = $params->{username} and my $password = $params->{password};
 	return $self->response->body($self->view_page) unless $self->acl->check_user(user => $username, password => $password);
 
-	$self->session->{jet_user} = $username;
+	$self->session->{djet_user} = $username;
 	my $redirect_uri = delete $self->session->{redirect_uri} // '/';
 	$self->response->header('Location' => $redirect_uri);
 	return \302;
