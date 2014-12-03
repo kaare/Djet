@@ -1,4 +1,4 @@
--- Jet development functions
+-- Djet development functions
 --
 -- Check that a row has the correct parent type
 --

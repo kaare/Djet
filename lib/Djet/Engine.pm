@@ -12,11 +12,11 @@ with 'Djet::Role::Basic';
 
 =head1 NAME
 
-Djet::Engine - Jet Engine Base Class
+Djet::Engine - Djet Engine Base Class
 
 =head1 DESCRIPTION
 
-Djet::Engine is the basic building block of all Jet Engines.
+Djet::Engine is the basic building block of all Djet Engines.
 
 In your engine you just write
 
@@ -114,7 +114,7 @@ sub _build_renderer {
 
 =head2 mailer
 
-Jet mailer
+Djet mailer
 
 =cut
 

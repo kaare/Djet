@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title><: block title -> { :>Powered By Jet<: } :></title>
+	<title><: block title -> { :>Powered By Djet<: } :></title>
 : block css -> {
 	<link rel='stylesheet' type='text/css' href='/css/djet.css'>
 	<link rel='stylesheet' href='/css/bootstrap.css'>

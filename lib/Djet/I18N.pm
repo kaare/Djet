@@ -12,7 +12,7 @@ Djet::I18N
 
 =head1 DESCRIPTION
 
-Internationalization for Jet
+Internationalization for Djet
 
 =cut
 

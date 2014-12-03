@@ -9,7 +9,7 @@ Djet::Role::Update::Basetype - Role for creating and editing Basetypes
 
 =head1 DESCRIPTION
 
-Handles create and edit functionality of basetypes for Jet Engines
+Handles create and edit functionality of basetypes for Djet Engines
 
 =cut
 

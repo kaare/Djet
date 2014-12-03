@@ -13,7 +13,7 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Djet::Body - The Jet Body
+Djet::Body - The Djet Body
 
 =head1 DESCRIPTION
 

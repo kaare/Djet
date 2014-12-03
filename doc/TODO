@@ -18,7 +18,7 @@ Framework
 Template
 --------
 - Searching
-  Standard templates in Jet with File::ShareDir
+  Standard templates in Djet with File::ShareDir
   Set path as e.g. Text::Xslate->new( path => \@path );
   Should probably be by type in config file
   template
@@ -117,10 +117,10 @@ Caching
 - Mark recipe step as cacable
   cache => {name => 'foo', expiration => bar}
 
-Jet Schema
+Djet Schema
 ----------
 - basetype
-  pathmatch - a regex to match the endpath (see Jet.pm)
+  pathmatch - a regex to match the endpath (see Djet.pm)
   templatename - relative/absolute?
   response types we can/can't handle
   "traits" like menu, breadcrumbs for each REST type
@@ -283,4 +283,4 @@ Config
    <client_dir>/etc/somethińg
 4. What overrides what?
 5. module might be basenode instead?
-6. recipe may be better in ;Stuff, where the current :Stuff stuff belongs in Jet ?
+6. recipe may be better in ;Stuff, where the current :Stuff stuff belongs in Djet ?

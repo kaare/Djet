@@ -1,4 +1,4 @@
--- Jet basetypes and nodes for the Search Feature
+-- Djet basetypes and nodes for the Search Feature
 
 BEGIN;
 

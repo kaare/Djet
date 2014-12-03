@@ -1,4 +1,4 @@
--- Jet basetypes and nodes for the News Feature
+-- Djet basetypes and nodes for the News Feature
 
 BEGIN;
 

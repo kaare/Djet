@@ -8,11 +8,11 @@ with qw/Djet::Part::List/;
 
 =head1 NAME
 
-Djet::Engine - Children Jet Engine
+Djet::Engine - Children Djet Engine
 
 =head1 DESCRIPTION
 
-Djet::Engine::Children is the basic Jet Engine.
+Djet::Engine::Children is the basic Djet Engine.
 
 It includes the role L<Djet::Part::List>.
 

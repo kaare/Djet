@@ -1,4 +1,4 @@
--- Jet basetypes and nodes for the Contactform Feature
+-- Djet basetypes and nodes for the Contactform Feature
 
 BEGIN;
 

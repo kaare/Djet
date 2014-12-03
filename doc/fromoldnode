@@ -8,7 +8,7 @@ with 'MooseX::Traits';
 
 =head1 NAME
 
-Djet::Node - Represents Jet Nodes
+Djet::Node - Represents Djet Nodes
 
 =head1 SYNOPSIS
 

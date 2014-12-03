@@ -10,11 +10,11 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Djet::Render::Json - Render json for Jet
+Djet::Render::Json - Render json for Djet
 
 =head1 DESCRIPTION
 
-This is the Json class for L<Jet>.
+This is the Json class for L<Djet>.
 
 =head1 ATTRIBUTES
 

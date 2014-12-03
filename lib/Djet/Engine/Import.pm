@@ -96,7 +96,7 @@ sub create_path {
 
 =head2 create_nodes
 
-Create the Jet nodes. Optionally (if the import node has a queue defined), create a JobMachine task
+Create the Djet nodes. Optionally (if the import node has a queue defined), create a JobMachine task
 
 =cut
 

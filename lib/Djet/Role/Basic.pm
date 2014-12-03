@@ -10,13 +10,13 @@ Djet::Role::Basic
 
 =head1 DESCRIPTION
 
-The basic attributes for Jet classes.
+The basic attributes for Djet classes.
 
 =head1 ATTRIBUTES
 
 =head2 schema
 
-The Jet schema. For easy access, it also contains the config, basetypes, renderers and log
+The Djet schema. For easy access, it also contains the config, basetypes, renderers and log
 
 =cut
 
@@ -34,7 +34,7 @@ has schema => (
 
 =head2 body
 
-The Jet body. Contains the stash and basenode
+The Djet body. Contains the stash and basenode
 
 =cut
 

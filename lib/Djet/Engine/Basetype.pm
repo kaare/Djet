@@ -12,7 +12,7 @@ with qw/
 
 =head1 DESCRIPTION
 
-Djet::Engine::Basetype configures Jet basetypes.
+Djet::Engine::Basetype configures Djet basetypes.
 
 =head1 ATTRIBUTES
 

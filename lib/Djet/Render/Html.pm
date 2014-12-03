@@ -11,17 +11,17 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Djet::Render::Html - Render html for Jet
+Djet::Render::Html - Render html for Djet
 
 =head1 DESCRIPTION
 
-This is the Render::Html class for L<Jet>.
+This is the Render::Html class for L<Djet>.
 
 =head1 ATTRIBUTES
 
 =head2 config
 
-The Jet configuration.
+The Djet configuration.
 
 =cut
 

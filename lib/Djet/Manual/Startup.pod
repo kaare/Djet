@@ -4,7 +4,7 @@ Djet::Manual::Startup - Description of the startup "sequence"
 
 =head1 DESCRIPTION
 
-This document describes the way Jet performs a startup.
+This document describes the way Djet performs a startup.
 
 =head1 Modules
 
@@ -42,25 +42,25 @@ Djet::Starter initializes the configuration.
 
 =item schema
 
-The schema acts as a model containing all the relevant data for Jet, including the
+The schema acts as a model containing all the relevant data for Djet, including the
 DBIC database schema, the configuration, and a hashref with the basetypes.
 
 =item app
 
-The sub that plack will call. Contains the schema, which holds the Jet view of the world,
+The sub that plack will call. Contains the schema, which holds the Djet view of the world,
 including the configuration.
 
 =back
 
 =head2 Djet::Config
 
-Contains the 'static' Jet data, including
+Contains the 'static' Djet data, including
 
 =over 4
 
 =item djet_root
 
-The path to Jet's home directory.
+The path to Djet's home directory.
 
 =item app_root
 

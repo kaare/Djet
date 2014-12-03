@@ -4,19 +4,19 @@ Djet::Manual - Index of the Manual
 
 =head1 DESCRIPTION
 
-This is the L<Jet> users manual. Jet is Node based Content Management System (CMS).
+This is the L<Djet> users manual. Djet is Node based Content Management System (CMS).
 
-The primary features of Jet are
+The primary features of Djet are
 
 =over
 
 =item *
 
-Jet uses advanced features from the Perl ecosystem, such as L<Plack>/PSGI, L<DBIx::Class>, L<Moose> to do the hard work
+Djet uses advanced features from the Perl ecosystem, such as L<Plack>/PSGI, L<DBIx::Class>, L<Moose> to do the hard work
 
 =item *
 
-Jet also uses L<PostgreSQL|http://www.postgresql.org>
+Djet also uses L<PostgreSQL|http://www.postgresql.org>
 
 PostgreSQL provides many advanced features, such as 
 

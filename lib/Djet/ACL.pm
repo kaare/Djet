@@ -13,7 +13,7 @@ Djet::ACL
 
 =head1 DESCRIPTION
 
-Djet::ACL controls the roles, ie users and groups in Jet
+Djet::ACL controls the roles, ie users and groups in Djet
 
 =head1 METHODS
 

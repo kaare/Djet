@@ -8,11 +8,11 @@ use Djet::Exception;
 
 =head1 NAME
 
-Djet::Failure - Something bad happened to our Jet
+Djet::Failure - Something bad happened to our Djet
 
 =head1 SYNOPSIS
 
-Djet::Failure handles the case when the Jet crashes
+Djet::Failure handles the case when the Djet crashes
 
 =head1 ATTRIBUTES
 

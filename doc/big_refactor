@@ -26,4 +26,4 @@ sqltree --dbtype Pg --drop --table node --pk id --pktype int --parent parent_id 
  - Remove MooseX::Singleton and find a better solution
  - Some content follows the worker. This is truly singleton.
  - Some content follows the request. Perhaps the request could be a subclass og Plack::Request.
- - But there's a need for a global context object. Perhaps all objects should inherit from one generic Jet object (Djet::Base) with some magic.
+ - But there's a need for a global context object. Perhaps all objects should inherit from one generic Djet object (Djet::Base) with some magic.

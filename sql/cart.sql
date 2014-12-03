@@ -1,4 +1,4 @@
--- Jet basetypes and nodes for the Shoppingcart Feature
+-- Djet basetypes and nodes for the Shoppingcart Feature
 
 BEGIN;
 

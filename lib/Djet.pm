@@ -1,8 +1,6 @@
-package Jet;
+package Djet;
 
 use 5.010;
-package Jet;
-
 use Moose;
 use namespace::autoclean;
 
@@ -17,7 +15,7 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Jet
+Djet
 
 =head1 DESCRIPTION
 

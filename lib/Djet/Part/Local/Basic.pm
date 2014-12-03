@@ -13,7 +13,7 @@ Djet::Part::Local::Basic
 
 Add information about basic types to the local object
 
-Basic Jet types are
+Basic Djet types are
 
 	Cart
 	Search

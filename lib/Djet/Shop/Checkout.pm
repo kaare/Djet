@@ -39,7 +39,7 @@ has 'step' => (
 
 =head2 mailer
 
-Jet mailer. In case the checkout step needs to alert someone
+Djet mailer. In case the checkout step needs to alert someone
 
 =cut
 

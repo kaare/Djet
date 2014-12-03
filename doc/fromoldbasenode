@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Djet::Basenode - The Base Jet Node
+Djet::Basenode - The Base Djet Node
 
 =head1 DESCRIPTION
 

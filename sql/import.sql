@@ -1,4 +1,4 @@
--- Jet basetypes and nodes for the Import Feature
+-- Djet basetypes and nodes for the Import Feature
 
 BEGIN;
 

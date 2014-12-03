@@ -2,7 +2,7 @@ package Djet::Starter;
 
 use Moose;
 
-use Jet;
+use Djet;
 use Djet::Config;
 use Djet::Body;
 use Djet::Machine;
@@ -18,13 +18,13 @@ Djet::Starter
 
 =head1 DESCRIPTION
 
-What it takes to start a Jet
+What it takes to start a Djet
 
 =head1 ATTRIBUTES
 
 =head2 params
 
-Jet parameters, from the environment
+Djet parameters, from the environment
 
 =cut
 
@@ -45,7 +45,7 @@ has params => (
 
 =head2 config
 
-Jet configuration
+Djet configuration
 
 =cut
 
@@ -142,7 +142,7 @@ has app => (
 				session_id => $options->{id},
 				stash => {},
 			);
-			my $flight = Jet->new(body => $body, schema => $self->schema);
+			my $flight = Djet->new(body => $body, schema => $self->schema);
 			my $engine = $flight->take_off(@_);
 			return $engine if ref $engine eq 'ARRAY'; # There's a response already
 

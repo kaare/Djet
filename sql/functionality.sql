@@ -1,5 +1,5 @@
 --
--- Jet functionality
+-- Djet functionality
 --
 -- Full Text Search (fts)
 

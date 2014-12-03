@@ -13,7 +13,7 @@ use overload
 
 =head1 NAME
 
-Djet::Field - Attributes and feature for Jet Fields
+Djet::Field - Attributes and feature for Djet Fields
 
 =head1 ATTRIBUTES
 

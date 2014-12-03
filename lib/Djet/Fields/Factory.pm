@@ -6,11 +6,11 @@ use namespace::sweep;
 
 =head1 NAME
 
-Djet::Fields::Factory - Produce a Jet Fields Class
+Djet::Fields::Factory - Produce a Djet Fields Class
 
 =head1 SYNOPSIS
 
-This class probably only makes sense for the Jet system itself
+This class probably only makes sense for the Djet system itself
 
 =head1 ATTRIBUTES
 

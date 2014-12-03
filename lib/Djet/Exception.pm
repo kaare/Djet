@@ -10,7 +10,7 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Djet::Exception - Jet Exceptions
+Djet::Exception - Djet Exceptions
 
 =cut
 

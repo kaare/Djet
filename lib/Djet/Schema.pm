@@ -23,13 +23,13 @@ Djet::Schema
 
 =head1 DESCRIPTION
 
-The Jet database Schema
+The Djet database Schema
 
 =head1 ATTRIBUTES
 
 =head2 config
 
-Jet configuration. Djet::Schema wants to know its surroundings upon start.
+Djet configuration. Djet::Schema wants to know its surroundings upon start.
 
 =cut
 
@@ -63,7 +63,7 @@ has acl => (
 
 =head2 basetypes
 
-Jet Basetypes
+Djet Basetypes
 
 =cut
 

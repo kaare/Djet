@@ -10,7 +10,7 @@ use Djet::Field;
 
 =head1 NAME
 
-Djet::Fields - Jet Fields Base Class
+Djet::Fields - Djet Fields Base Class
 
 =head1 SYNOPSIS
 

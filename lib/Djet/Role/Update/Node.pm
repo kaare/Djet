@@ -8,7 +8,7 @@ Djet::Role::Update::Node - Role for creating and editing Nodes
 
 =head1 DESCRIPTION
 
-Handles create and edit functionality of datanodes for Jet Engines
+Handles create and edit functionality of datanodes for Djet Engines
 
 =cut
 

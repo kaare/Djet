@@ -22,7 +22,7 @@ Set one of the following entries to true in this hashref:
 	to_html
 	data
 
-To stop Jet from processing that method.
+To stop Djet from processing that method.
 
 =cut
 

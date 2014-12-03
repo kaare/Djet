@@ -14,11 +14,11 @@ with qw/
 
 =head1 NAME
 
-Djet::Engine - Default Jet Engine
+Djet::Engine - Default Djet Engine
 
 =head1 DESCRIPTION
 
-Djet::Engine::Default is the basic Jet Engine.
+Djet::Engine::Default is the basic Djet Engine.
 
 It includes the roles L<Djet::Role::Engine Djet::Role::Engine::Html>, L<Djet::Role::Engine::Json>, L<Djet::Role::Treeview>.
 

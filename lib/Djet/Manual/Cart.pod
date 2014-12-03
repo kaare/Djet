@@ -4,9 +4,9 @@ Djet::Manual::Cart
 
 =head1 DESCRIPTION
 
-This is the description of the cart and checkout in Jet.
+This is the description of the cart and checkout in Djet.
 
-Handling prices and shopping is a dificult subject, and Jet has to use several parts for maximal flexibility and ease of use.
+Handling prices and shopping is a dificult subject, and Djet has to use several parts for maximal flexibility and ease of use.
 
 =head2 Basenodes
 

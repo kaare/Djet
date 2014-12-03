@@ -20,8 +20,8 @@ my %tables = (
 );
 
 # Test
-ok(my $stuff = Djet::Stuff->new(dbname => $db_name), 'New Jet Stuff');
-isa_ok($stuff, 'Djet::Stuff', 'ISA Jet Stuff');
+ok(my $stuff = Djet::Stuff->new(dbname => $db_name), 'New Djet Stuff');
+isa_ok($stuff, 'Djet::Stuff', 'ISA Djet Stuff');
 ok(my @tables = $stuff->schema->tables(), 'Data tables');
 is(@tables, 6, 'Correct number of tables');
 is($_->columns->all, shift @{$tables{columns}}, 'Table ' .$_->name . ' columns') for @tables;

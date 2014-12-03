@@ -11,11 +11,11 @@ with qw/
 
 =head1 NAME
 
-Djet::Engine - Configure Jet
+Djet::Engine - Configure Djet
 
 =head1 DESCRIPTION
 
-Djet::Engine::Config configures Jet data and nodes.
+Djet::Engine::Config configures Djet data and nodes.
 
 It includes the roles L<Djet::Role::Update::Node> and L<Djet::Role::Config::Topmenu>.
 
@@ -66,7 +66,7 @@ after 'set_base_object' => sub {
 
 =head2 before data
 
-Control what to send when it's Jet config
+Control what to send when it's Djet config
 
 =cut
 

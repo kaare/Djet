@@ -14,7 +14,7 @@ Djet::Role::Update - generic methods for edit / create actions
 
 =head1 DESCRIPTION
 
-Handles edit functionality for Jet Engines
+Handles edit functionality for Djet Engines
 
 =head1 ATTRIBUTES
 

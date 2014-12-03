@@ -1,4 +1,4 @@
--- Jet basetypes and nodes for handling users
+-- Djet basetypes and nodes for handling users
 
 BEGIN;
 

@@ -10,11 +10,11 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Djet::Response - Response Class for Jet
+Djet::Response - Response Class for Djet
 
 =head1 DESCRIPTION
 
-This is the Response class for L<Jet>.
+This is the Response class for L<Djet>.
 
 =head1 ATTRIBUTES
 

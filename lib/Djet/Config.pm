@@ -16,18 +16,18 @@ with 'Djet::Role::Log';
 
 =head1 NAME
 
-Djet::Config - Jet Configuration
+Djet::Config - Djet Configuration
 
 =head1 DESCRIPTION
 
-The Jet configuration is a collection of all the data that Jet and its application need
+The Djet configuration is a collection of all the data that Djet and its application need
 to know about how to operate themselves.
 
 =head1 ATTRIBUTES
 
 =head2 djet_root
 
-Jet's root path. This is the path to where the Jet software is - NOT the application!
+Djet's root path. This is the path to where the Djet software is - NOT the application!
 
 =cut
 
@@ -36,7 +36,7 @@ has djet_root => (
 	isa => 'Str',
 	default => sub {
 		my $path = __FILE__;
-		$path =~ s|lib/+Jet/Config.pm||;
+		$path =~ s|lib/+Djet/Config.pm||;
 		return $path;
 	},
 	lazy => 1,
@@ -44,7 +44,7 @@ has djet_root => (
 
 =head2 app_root
 
-Jet's root path. This is the path to where the application software is
+Djet's root path. This is the path to where the application software is
 
 =cut
 
@@ -89,7 +89,7 @@ has config => (
 
 =head2 renderers
 
-Jet Renderers
+Djet Renderers
 
 =cut
 
@@ -113,7 +113,7 @@ has renderers => (
 
 =head2 log_category
 
-Jet logger's category. Default 'djet'.
+Djet logger's category. Default 'djet'.
 
 =cut
 
@@ -130,7 +130,7 @@ has log_category => (
 
 =head2 log_adapter
 
-The name of Jet logger's adapter. Default 'Stdout'.
+The name of Djet logger's adapter. Default 'Stdout'.
 
 =cut
 
@@ -147,7 +147,7 @@ has log_adapter => (
 
 =head2 log
 
-Jet logger
+Djet logger
 
 =cut
 
