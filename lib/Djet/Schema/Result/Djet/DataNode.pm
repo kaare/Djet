@@ -150,8 +150,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-17 16:21:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Hf6UbeoeV4VZyP6MeBz/FA
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nF30Ey7UBbbMD4hL1+pDYw
 
 use JSON;
 

@@ -184,8 +184,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-03 17:27:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:E3nnAPISY+kvBJqGWDZrGw
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8A0nNTqsuvGsB2INQKX9DQ
 
 with 'Djet::Role::DB::Result::Node';
 

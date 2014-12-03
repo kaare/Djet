@@ -178,8 +178,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-09-17 16:21:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FrlCm3OI65AUa78HAesgPg
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+NHFIK6Oe/vhtwHLaWGwsA
 
 use JSON;
 
