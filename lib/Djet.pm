@@ -19,9 +19,21 @@ Djet
 
 =head1 DESCRIPTION
 
-Faster than an AWE2
+Djet is a Modern Content Management System. It's Node-based, which means that each path endpoint, as well as all the branch elements, is a Node.
 
-Experimental CMS
+Djet builds on top of the most awesome technology known to Mankind:
+
+ - Advanced PostgreSQL features
+ - Plack
+ - Moose
+ - DBIx::Class
+ - Web::Machine
+
+Just to name a few.
+
+=head1 TAGLINE
+
+A Djet is faster than an AWE2
 
 =head1 ATTRIBUTES
 
