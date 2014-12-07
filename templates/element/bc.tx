@@ -1,0 +1,7 @@
+<ul class="breadcrumb">
+: for $local.breadcrumbs -> $bc {
+	<li>
+		<a href="<: $local.urify($bc) :>"><: $bc.title :></a> <span class="divider">></span>
+	</li>
+: } # breadcrumbs
+</ul>

@@ -11,6 +11,12 @@ Djet::Part::Local::Basic
 
 =head1 DESCRIPTION
 
+Add commonly used attributes to the local object
+
+Attributes are
+
+	breadcrumbs
+
 Add information about basic types to the local object
 
 Basic Djet types are
@@ -20,6 +26,39 @@ Basic Djet types are
 	User
 
 =head1 ATTRIBUTES
+
+=head2 breadcrumbs
+
+Return the data nodes in reverse order.
+
+The nodes "over" the domain node will be omitted.
+
+The current node is omitted.
+
+If the node's datatype has a breadcrumbs attribute, it will be omitted.
+
+=cut
+
+has 'breadcrumbs' => (
+	is => 'ro',
+	isa => 'ArrayRef',
+	lazy_build => 1,
+);
+
+sub _build_breadcrumbs {
+	my $self = shift;
+	my @datanodes = @{ $self->datanodes };
+	shift @datanodes;
+	my $domain_node = $self->domain_node;
+	my $domain_found = 0;
+	return [ reverse grep {
+		my $use_it = (!$domain_found &&
+		!$_->basetype->attributes->{breadcrumbs} &&
+		$_->part ne 'index.html');
+		$domain_found ||= $domain_node->id == $_->id;
+		$use_it;
+	} @datanodes ];
+}
 
 =head2 cart
 
