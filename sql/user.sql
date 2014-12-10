@@ -28,5 +28,15 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'mypage','My Page','[
 	{"type":"Boolean","title":"Menu","name":"topmenu"}
 ]','Djet::Engine::User','<domain>/basetype/mypage.tx');
+INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (currval('feature_id_seq'), 'login', 'Login','Djet::Engine::Login','[
+	{"name":"username","title":"User","type":"Str", "required": "on"},
+	{"name":"password","title":"Password","type":"Protected", "required": "on"}
+]');
+INSERT INTO basetype (feature_id, name,title,handler) VALUES (currval('feature_id_seq'), 'logout', 'Logout','Djet::Engine::Logout');
+
+-- Data Nodes
+
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT id,1,'login','login', 'Login','{}' FROM basetype WHERE name='login';
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT id,1,'logout','logout', 'Logout','{}' FROM basetype WHERE name='logout';
 
 COMMIT;

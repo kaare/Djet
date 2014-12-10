@@ -16,10 +16,6 @@ INSERT INTO basetype (feature_id, name,title,datacolumns,template) VALUES (1, 't
 INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'basetype','Djet Basetype','Djet::Engine::Basetype','[{"name":"text","title":"Text","type":"Str"},{"name":"parent","type":"Int"}]');
 INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'djet_config', 'Djet Configuration','Djet::Engine::Config','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
 INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'djet_tree', 'Node Tree','Djet::Engine::ConfigTree','[{"name":"topmenu","title":"Topmenu","type":"Boolean"}]');
-INSERT INTO basetype (feature_id, name,title,handler,datacolumns) VALUES (1, 'login', 'Login','Djet::Engine::Login','[
-	{"name":"username","title":"User","type":"Str", "required": "on"},
-	{"name":"password","title":"Password","type":"Protected", "required": "on"}
-]');
 
 -- Data Nodes
 
@@ -28,8 +24,6 @@ INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) SE
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) SELECT id,2,'basetype','Djet Configuration - Basetypes', 'Djet Configuration - Basetypes','{"topmenu":"on"}','{"superusers":["read"]}' FROM basetype WHERE name='basetype';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) SELECT id,2,'node','Djet Configuration', 'Djet Configuration','{}','{"superusers":["read"]}' FROM basetype WHERE name='djet_config';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns,acl) SELECT id,2,'tree','nodetree', 'Node Tree','{"topmenu":"on"}','{"superusers":["read"]}' FROM basetype WHERE name='djet_tree';
-
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT id,1,'login','login', 'Login','{}' FROM basetype WHERE name='login';
 
 -- Global
 
