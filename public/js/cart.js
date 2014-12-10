@@ -1,9 +1,14 @@
 $(function() {
 	// there's the gallery and the trash
 	$(".add-to-basket").click(function() {
+		var data = $(this).data();
+		if (data.fixed != 1) {
+			var qty = $("#basket-add-quantity-" + data.sku + " input").val()
+				data.qty = qty;
+		}
 		$.post(
 			$("#cart_url").text(),
-			$(this).data(),
+			data,
 			function (data) {
 				// Show minicart
 				$('#minicart').removeClass('hidden');
