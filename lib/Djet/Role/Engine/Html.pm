@@ -4,11 +4,11 @@ use Moose::Role;
 use namespace::autoclean;
 use Try::Tiny;
 
+# requires qw/init data return_value/;
+
 =head1 NAME
 
 Djet::Role::Engine::Html - Add functionality to html engines
-
-requires qw/init data omit_run/;
 
 =head1 METHODS
 
@@ -62,11 +62,13 @@ sub view_page {
 	my $self = shift;
 	$self->content_type('html');
 	my $schema = $self->schema;
+	$self->init_data;
+	return $self->return_value if $self->has_return_value;
 
-	$self->init_data unless $self->omit_run->{init_data};
-	$self->data unless $self->omit_run->{data};
+	$self->data;
+	return $self->return_value if $self->has_return_value;
+
 	$self->template($self->render_template) unless $self->_has_template;
-
 	$schema->log->debug('Template ' . $self->template);
 	my $result;
 	try {

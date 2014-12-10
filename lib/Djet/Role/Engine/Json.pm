@@ -3,11 +3,11 @@ package Djet::Role::Engine::Json;
 use Moose::Role;
 use namespace::autoclean;
 
+# requires qw/init data return_value/;
+
 =head1 NAME
 
 Djet::Role::Engine::Json - Add functionality to json engines
-
-requires qw/init data omit_run/;
 
 =head1 METHODS
 
@@ -34,8 +34,14 @@ around to_json => sub {
 	$self->content_type('json');
 
 	$self->init;
+	return $self->return_value if $self->has_return_value;
+
 	$self->$orig(@_);
-	$self->data unless $self->omit_run->{all};
+	return $self->return_value if $self->has_return_value;
+
+	$self->data;
+	return $self->return_value if $self->has_return_value;
+
 	return $self->renderer->render($self->stash);
 };
 

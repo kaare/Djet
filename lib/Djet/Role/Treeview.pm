@@ -64,7 +64,6 @@ before to_json => sub {
 		$self->stash->{dynadata} = $dynadata;
 		$self->content_type('json');
 		$self->renderer->set_expose_stash('dynadata');
-		$self->omit_run->{all} = 1;
 	}
 };
 

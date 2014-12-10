@@ -14,22 +14,19 @@ The parts that go into an engine.
 
 =head1 ATTRIBUTES
 
-=head2 omit_run
+=head2 return_value
 
-Set one of the following entries to true in this hashref:
+Set return_value in init_data or data to skip the rest of the processing and return directly.
 
-	init_data
-	to_html
-	data
+Example
 
-To stop Djet from processing that method.
+	$self->return_value(\302);
 
 =cut
 
-has 'omit_run' => (
-	is => 'ro',
-	isa => 'HashRef',
-	default => sub { {} },
+has 'return_value' => (
+	is => 'rw',
+	predicate => 'has_return_value',
 );
 
 no Moose::Role;
