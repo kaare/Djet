@@ -12,6 +12,7 @@ GRANT ALL ON ALL SEQUENCES IN SCHEMA djet TO superusers;
 GRANT USAGE on SCHEMA global TO superusers;
 GRANT SELECT,INSERT,UPDATE ON global.sessions TO superusers;
 GRANT ALL ON ALL TABLES IN SCHEMA pg_catalog TO superusers;
+GRANT ALL ON pg_authid TO superusers;
 
 GRANT USAGE on SCHEMA djet TO guest;
 GRANT SELECT ON ALL TABLES IN SCHEMA djet TO guest;
@@ -20,5 +21,6 @@ GRANT ALL ON ALL SEQUENCES IN SCHEMA djet TO guest;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA djet TO guest;
 GRANT USAGE on SCHEMA global TO guest;
 GRANT SELECT,INSERT,UPDATE ON global.sessions TO guest;
+GRANT SELECT ON pg_authid TO guest;
 
 COMMIT;
