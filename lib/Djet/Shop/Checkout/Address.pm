@@ -13,6 +13,10 @@ Djet::Shop::Checkout::Address
 
 Handles the address in the checkout process
 
+=head2 has_all_data
+
+Returns 1 if all the necessary data is entered correctly
+
 =cut
 
 sub has_all_data {

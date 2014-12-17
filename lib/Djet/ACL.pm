@@ -17,7 +17,7 @@ Djet::ACL controls the roles, ie users and groups in Djet
 
 =head1 METHODS
 
-=head2 check_user
+=head2 check_login
 
 Checks if a user is logged in and allowed to access the basenode
 
@@ -36,8 +36,6 @@ sub check_login {
 	}
 	return;
 }
-
-=cut
 
 __PACKAGE__->meta->make_immutable;
 

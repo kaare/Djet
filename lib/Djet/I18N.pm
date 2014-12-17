@@ -14,6 +14,10 @@ Djet::I18N
 
 Internationalization for Djet
 
+=head2 get_handle
+
+Get the Locale::Maketext handle
+
 =cut
 
 sub get_handle {
