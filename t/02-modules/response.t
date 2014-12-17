@@ -45,7 +45,7 @@ sub env {
 }
 
 
-$ENV{JET_APP_ROOT} = './t';
+$ENV{DJET_APP_ROOT} = './t';
 my $starter = Djet::Starter->new;
 my $schema = $starter->schema;
 my $body = Djet::Body->new(
