@@ -5,8 +5,8 @@ use Moose;
 
 extends 'Djet::Engine::Default';
 with qw/
-	Djet::Role::Log
-	Djet::Role::Update::Node
+	Djet::Part::Log
+	Djet::Part::Update::Node
 /;
 
 =head1 NAME
@@ -17,7 +17,7 @@ Djet::Engine - Configure Djet
 
 Djet::Engine::Config configures Djet data and nodes.
 
-It includes the roles L<Djet::Role::Update::Node> and L<Djet::Role::Config::Topmenu>.
+It includes the roles L<Djet::Part::Update::Node> and L<Djet::Part::Config::Topmenu>.
 
 =head1 ATTRIBUTES
 

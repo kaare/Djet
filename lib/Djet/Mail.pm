@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use Email::Stuffer;
 
-with 'Djet::Role::Basic';
+with 'Djet::Part::Basic';
 
 =head1 NAME
 

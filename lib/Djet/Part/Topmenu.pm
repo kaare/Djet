@@ -1,4 +1,4 @@
-package Djet::Role::Topmenu;
+package Djet::Part::Topmenu;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Djet::Role::Topmenu
+Djet::Part::Topmenu
 
 =head1 DESCRIPTION
 

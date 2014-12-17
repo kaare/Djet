@@ -1,4 +1,4 @@
-package Djet::Role::Engine::Json;
+package Djet::Part::Engine::Json;
 
 use Moose::Role;
 use namespace::autoclean;
@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Djet::Role::Engine::Json - Add functionality to json engines
+Djet::Part::Engine::Json - Add functionality to json engines
 
 =head1 METHODS
 

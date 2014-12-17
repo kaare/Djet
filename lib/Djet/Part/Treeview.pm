@@ -1,4 +1,4 @@
-package Djet::Role::Treeview;
+package Djet::Part::Treeview;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Djet::Role::Treeview
+Djet::Part::Treeview
 
 =head1 DESCRIPTION
 

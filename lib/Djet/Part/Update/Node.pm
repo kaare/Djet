@@ -1,10 +1,10 @@
-package Djet::Role::Update::Node;
+package Djet::Part::Update::Node;
 
 use MooseX::MethodAttributes::Role;
 
 =head1 NAME
 
-Djet::Role::Update::Node - Role for creating and editing Nodes
+Djet::Part::Update::Node - Role for creating and editing Nodes
 
 =head1 DESCRIPTION
 
@@ -12,7 +12,7 @@ Handles create and edit functionality of datanodes for Djet Engines
 
 =cut
 
-with 'Djet::Role::Update';
+with 'Djet::Part::Update';
 
 requires qw/edit_validation edit_update edit_create/;
 

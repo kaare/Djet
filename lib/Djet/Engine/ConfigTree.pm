@@ -6,8 +6,8 @@ use Moose;
 extends 'Djet::Engine::Default';
 
 with qw/
-	Djet::Role::Engine::Json
-	Djet::Role::Treeview
+	Djet::Part::Engine::Json
+	Djet::Part::Treeview
 /;
 
 =head1 NAME
@@ -18,7 +18,7 @@ Djet::Engine::ConfigTree
 
 Djet::Engine::ConfigTree shows the node tree.
 
-It includes the role L<Djet::Role::Treeview>.
+It includes the role L<Djet::Part::Treeview>.
 
 =head1 ACCESSORS
 

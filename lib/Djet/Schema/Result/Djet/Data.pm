@@ -206,7 +206,7 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 });
 
 with qw/
-	Djet::Role::DB::Result::Data
+	Djet::Part::DB::Result::Data
 /;
 
 __PACKAGE__->meta->make_immutable;

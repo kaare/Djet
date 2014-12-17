@@ -1,4 +1,4 @@
-package Djet::Role::Engine;
+package Djet::Part::Engine;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Djet::Role::Engine
+Djet::Part::Engine
 
 =head1 DESCRIPTION
 

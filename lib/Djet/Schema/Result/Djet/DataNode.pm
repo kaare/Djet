@@ -178,8 +178,8 @@ __PACKAGE__->inflate_column('datacolumns'=>{
 });
 
 with qw/
-	Djet::Role::DB::Result::Data
-	Djet::Role::DB::Result::Node
+	Djet::Part::DB::Result::Data
+	Djet::Part::DB::Result::Node
 /;
 
 # NB The following attributes and parameters are 'stolen' from Djet::Schema::Result::Djet::Data, as dbicdump didn't find them

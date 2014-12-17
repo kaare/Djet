@@ -12,7 +12,7 @@ use Log::Any::Adapter;
 use Djet::Schema;
 use Djet::I18N;
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 =head1 NAME
 

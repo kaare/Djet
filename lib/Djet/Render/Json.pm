@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use JSON;
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 =head1 NAME
 

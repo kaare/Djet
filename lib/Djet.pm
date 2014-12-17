@@ -9,7 +9,7 @@ use Try::Tiny;
 use Djet::Failure;
 use Djet::Response;
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 # ABSTRACT: A Modern Node-based Content Management System
 

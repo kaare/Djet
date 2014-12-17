@@ -9,7 +9,7 @@ use List::Util qw/first/;
 use HTTP::Headers::Util qw(split_header_words);
 use Plack::Request;
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 =head1 NAME
 

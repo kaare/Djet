@@ -7,7 +7,7 @@ use namespace::autoclean;
 use Text::Xslate;
 use URI::Escape;
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 =head1 NAME
 

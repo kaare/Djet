@@ -8,7 +8,7 @@ use Djet::Mail;
 
 extends 'Web::Machine::Resource';
 
-with 'Djet::Role::Basic';
+with 'Djet::Part::Basic';
 
 =head1 NAME
 

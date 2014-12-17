@@ -1,4 +1,4 @@
-package Djet::Role::Log;
+package Djet::Part::Log;
 
 use 5.010;
 use Moose::Role;
@@ -8,11 +8,11 @@ use JSON -convert_blessed_universally;
 
 =head1 NAME
 
-Djet::Role::Log - Debug logging made easy
+Djet::Part::Log - Debug logging made easy
 
 =head1 SYNOPSIS
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 =head1 METHODS
 

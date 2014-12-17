@@ -1,4 +1,4 @@
-package Djet::Role::DB::Result::Node;
+package Djet::Part::DB::Result::Node;
 
 use 5.010;
 use Moose::Role;
@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 =head1 NAME
 
-Djet::Role::DB::Result::Node
+Djet::Part::DB::Result::Node
 
 =head1 DESCRIPTION
 

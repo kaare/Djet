@@ -7,8 +7,8 @@ use Encode qw/decode/;
 extends 'Djet::Engine::Default';
 with qw/
 	Role::Pg::Roles
-	Djet::Role::Log
-	Djet::Role::Update::Node
+	Djet::Part::Log
+	Djet::Part::Update::Node
 	Djet::Part::List
 /;
 

@@ -1,11 +1,11 @@
-package Djet::Role::Update::Basetype;
+package Djet::Part::Update::Basetype;
 
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any };
 
 =head1 NAME
 
-Djet::Role::Update::Basetype - Role for creating and editing Basetypes
+Djet::Part::Update::Basetype - Role for creating and editing Basetypes
 
 =head1 DESCRIPTION
 
@@ -13,7 +13,7 @@ Handles create and edit functionality of basetypes for Djet Engines
 
 =cut
 
-with 'Djet::Role::Update';
+with 'Djet::Part::Update';
 
 requires qw/edit_validation edit_update edit_create/;
 

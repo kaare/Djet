@@ -5,8 +5,8 @@ use Moose;
 
 extends 'Djet::Engine::Default';
 with qw/
-	Djet::Role::Update::Basetype
-	Djet::Role::Config::Topmenu
+	Djet::Part::Update::Basetype
+	Djet::Part::Config::Topmenu
 	Role::Pg::Notify
 /;
 

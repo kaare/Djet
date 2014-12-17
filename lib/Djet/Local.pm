@@ -5,7 +5,7 @@ use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
 
-with 'Djet::Role::Basic';
+with 'Djet::Part::Basic';
 
 =head1 NAME
 

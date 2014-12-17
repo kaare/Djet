@@ -4,7 +4,7 @@ use 5.010;
 use Moose;
 
 extends 'Djet::Engine::Default';
-with qw/Djet::Role::Log Djet::Role::Update::Node/;
+with qw/Djet::Part::Log Djet::Part::Update::Node/;
 
 =head1 NAME
 

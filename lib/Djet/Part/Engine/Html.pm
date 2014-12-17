@@ -1,4 +1,4 @@
-package Djet::Role::Engine::Html;
+package Djet::Part::Engine::Html;
 
 use Moose::Role;
 use namespace::autoclean;
@@ -8,7 +8,7 @@ use Try::Tiny;
 
 =head1 NAME
 
-Djet::Role::Engine::Html - Add functionality to html engines
+Djet::Part::Engine::Html - Add functionality to html engines
 
 =head1 METHODS
 

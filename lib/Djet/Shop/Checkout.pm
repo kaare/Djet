@@ -3,7 +3,7 @@ package Djet::Shop::Checkout;
 use 5.010;
 use Moose;
 
-with 'Djet::Role::Basic';
+with 'Djet::Part::Basic';
 
 =head1 NAME
 

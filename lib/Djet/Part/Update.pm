@@ -1,4 +1,4 @@
-package Djet::Role::Update;
+package Djet::Part::Update;
 
 use MooseX::MethodAttributes::Role;
 use List::MoreUtils qw{ any uniq };
@@ -10,7 +10,7 @@ requires qw/stash_basic/;
 
 =head1 NAME
 
-Djet::Role::Update - generic methods for edit / create actions
+Djet::Part::Update - generic methods for edit / create actions
 
 =head1 DESCRIPTION
 
@@ -50,7 +50,7 @@ has is_new => (
 
 The Data::Form::Validator init hash.
 
-This is lazy_build in Djet::Role::Update::Node and Djet::Role::Update::Basetype
+This is lazy_build in Djet::Part::Update::Node and Djet::Part::Update::Basetype
 to reflect their respective requirements.
 
 _build_dfv is also an obviuos place for method modifiers that will alter the

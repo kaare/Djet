@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 extends 'HTTP::Throwable::Factory';
 
-with 'Djet::Role::Log';
+with 'Djet::Part::Log';
 
 =head1 NAME
 

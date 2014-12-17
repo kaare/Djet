@@ -1,4 +1,4 @@
-package Djet::Role::DB::Result::Data;
+package Djet::Part::DB::Result::Data;
 
 use 5.010;
 use Moose::Role;
@@ -7,7 +7,7 @@ use vars qw($AUTOLOAD);
 
 =head1 NAME
 
-Djet::Role::DB::Result::Data
+Djet::Part::DB::Result::Data
 
 =head1 DESCRIPTION
 
