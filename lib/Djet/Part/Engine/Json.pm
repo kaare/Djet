@@ -33,7 +33,7 @@ around to_json => sub {
 	my $self = shift;
 	$self->content_type('json');
 
-	$self->init;
+	$self->init_data;
 	return $self->return_value if $self->has_return_value;
 
 	$self->$orig(@_);

@@ -1,4 +1,4 @@
-package Djet::Engine::ConfigTree;
+package Djet::Engine::Admin::ConfigTree;
 
 use 5.010;
 use Moose;
@@ -12,15 +12,15 @@ with qw/
 
 =head1 NAME
 
-Djet::Engine::ConfigTree
+Djet::Engine::Admin::ConfigTree
 
 =head1 DESCRIPTION
 
-Djet::Engine::ConfigTree shows the node tree.
+Djet::Engine::Admin::ConfigTree shows the node tree.
 
 It includes the role L<Djet::Part::Treeview>.
 
-=head1 ACCESSORS
+=cut
 
 __PACKAGE__->meta->make_immutable;
 

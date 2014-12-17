@@ -1,4 +1,4 @@
-package Djet::Engine::Basetype;
+package Djet::Engine::Admin::Basetype;
 
 use 5.010;
 use Moose;
@@ -12,7 +12,7 @@ with qw/
 
 =head1 DESCRIPTION
 
-Djet::Engine::Basetype configures Djet basetypes.
+Djet::Engine::Admin::Basetype configures Djet basetypes.
 
 =head1 ATTRIBUTES
 

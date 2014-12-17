@@ -1,4 +1,4 @@
-package Djet::Engine::Config;
+package Djet::Engine::Admin::Config;
 
 use 5.010;
 use Moose;
@@ -11,13 +11,13 @@ with qw/
 
 =head1 NAME
 
-Djet::Engine - Configure Djet
+Djet::Engine::Admin::Config - Configure Djet
 
 =head1 DESCRIPTION
 
-Djet::Engine::Config configures Djet data and nodes.
+Djet::Engine::Admin::Config configures Djet data and nodes.
 
-It includes the roles L<Djet::Part::Update::Node> and L<Djet::Part::Config::Topmenu>.
+It includes the role L<Djet::Part::Update::Node>.
 
 =head1 ATTRIBUTES
 
@@ -38,7 +38,6 @@ before _build_validator => sub {
 	push @{ $dfv->{optional} }, qw/name title/;
 	$self->set_dfv($dfv);
 };
-
 
 =head2 after set_base_object
 

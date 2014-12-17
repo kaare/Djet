@@ -14,6 +14,8 @@ The basic attributes for Djet classes.
 
 =head1 ATTRIBUTES
 
+There are two attributes. The one following the server process, schema. And the one following the request, body.
+
 =head2 schema
 
 The Djet schema. For easy access, it also contains the config, basetypes, renderers and log
