@@ -134,12 +134,12 @@ has app => (
 		return sub {
 			$self->check_notifications;
 			my $env = shift;
-			my $session = $env->{'psgix.session'};
-			my $options = $env->{'psgix.session.options'};
+			my $session = $env->{'psgix.session'} // {};
+			my $options = $env->{'psgix.session.options'} // {};
 			my $body = Djet::Body->new(
 				env => $env,
 				session => $session,
-				session_id => $options->{id},
+				session_id => $options->{id} // 0,
 				stash => {},
 			);
 			my $flight = Djet->new(body => $body, schema => $self->schema);
