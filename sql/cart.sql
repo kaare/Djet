@@ -15,8 +15,8 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout','Shopping Cart Checkout','[
 	{"name":"steps","title":"Checkout steps","type":"Str"},
 	{"name":"orders_node","title":"Orders","type":"Str"},
-	{"name":"recipients","title":"Order Recipients","type":"Structured"}
-	{"name":"order_template","title":"Order Template","type":"Str"}
+	{"name":"recipients","title":"Order Recipients","type":"Structured"},
+	{"name":"order_template","title":"Order Template","type":"Str"},
 	{"name":"mail_template","title":"Mail Template","type":"Str"}
 ]','Djet::Engine::Checkout','<domain>/basetype/checkout/receipt.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_cart','Checkout Cart','[
