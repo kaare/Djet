@@ -1,0 +1,29 @@
+Djet
+
+Now that I've put Djet https://github.com/kaare/Djet into production, I recon it's time I at least told about it.
+
+Djet is a Content Management System. It's a rather advanced one, using features from modern Perl and PostgreSQL. It's meant to be used behind some kind of frontend server, e.g. Nginx,
+or at least a Web Cache like Varnish.
+
+Djet Components
+Some people seem to believe that all database systems are created equal. They're not. People deceive themselves into thinking of DBMS'es as pure datastores. PostgreSQL adds
+some very advanced features, of which I currently use the support for JSON, triggers, and Full-Text Search. Plus an extension to find the node using the request path, and probably more
+I forgot at this moment.
+
+Djet is running on "raw" PSGI, a wonderfully simple interface. A big part of what Djet does is to find the matching node, and as such the "route" in Mojo- and Dancer-land, so
+any higer level framework wouldn't add anything in that direction.
+
+With PSGI there's access to all the wonderful middleware that's already written. 
+
+Apart from Moose, perhaps the most important Perl piece of Djet is Web::Machine At some point during a refactor, I realized that I needed help to do REST in a proper fashion. This somewhat
+underdocumented module applies pure magic to the request to decide what to return. Well, perhaps not magic, but taking care of all the small twists and turns coming from the various headers
+is no small task. Web::Machine does just that.
+
+Djet Right Now
+Djet is ready to use - I use it! But having said that, it is still under heavy development and being refactored on a regular basis. I _think_ that the major parts are where they should be now,
+but some parts feel a bit "weak", underdeveloped, or just a bit wrong.
+
+I have loads of ideas for Djet features, including a blog, a discussion system, and some way to get an overview of my projects. First, though, is a webshop and some kind of payment integration.
+
+Djet is currently not on CPAN. I haven't figured out how to make sure that the required software is installed, and skip the tests if e.g. PostgreSQL is not up to the minimum release (soon to be
+9.4). It will probably be released there as well, but for now, the place to find it is https://github.com/kaare/Djet.
