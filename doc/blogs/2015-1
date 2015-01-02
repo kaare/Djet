@@ -2,8 +2,10 @@ Djet
 
 Now that I've put Djet https://github.com/kaare/Djet into production, I recon it's time I at least told about it.
 
-Djet is a Content Management System. It's a rather advanced one, using features from modern Perl and PostgreSQL. It's meant to be used behind some kind of frontend server, e.g. Nginx,
+Djet is a Node Based Content Management System. It's a rather advanced one, using features from modern Perl and PostgreSQL. It's meant to be used behind some kind of frontend server, e.g. Nginx,
 or at least a Web Cache like Varnish.
+
+Being Node Based means that every end point and every waypoint in the system is a node in the database. A node is connected to its parent node (excep the root node), and every node is also associated with some data, and a basetype that decides what to do when someone requests that specific path pointing to that specific node.
 
 Djet Components
 Some people seem to believe that all database systems are created equal. They're not. People deceive themselves into thinking of DBMS'es as pure datastores. PostgreSQL adds
