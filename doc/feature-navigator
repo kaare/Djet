@@ -1,0 +1,18 @@
+FEATURE NAVIGATOR
+
+Goals
+
+Separate path finding into a class (Djet::Navigator)
+ - Doesn't belong in Djet.pm
+ - Should be moosifiable to allow path munging
+
+Other
+
+Code cleanup
+ - Djet.pm shouldn't do anything, just pass information around.
+ - A chance that the Node / DataNode resultset classes can be cleaner. At least *rest_path doesn't really belong there
+
+Redirecting nodes
+ - Get rid of the ridicolous 'If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it'
+ - Add a redirect meta. Perhaps there could be a default index.html.
+ - Should work for all nodes, and should be able to redirect anywhere
