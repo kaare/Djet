@@ -1,4 +1,4 @@
-package Djet;
+package Djet::Navigator;
 
 use 5.010;
 use Moose;
@@ -6,35 +6,18 @@ use namespace::autoclean;
 
 use Try::Tiny;
 
-use Djet::Navigator;
 use Djet::Failure;
 use Djet::Response;
 
 with 'Djet::Part::Log';
 
-# ABSTRACT: A Modern Node-based Content Management System
-
 =head1 NAME
 
-Djet
+Djet::Navigator
 
 =head1 DESCRIPTION
 
-Djet is a Modern Content Management System. It's Node-based, which means that each path endpoint, as well as all the branch elements, is a Node.
-
-Djet builds on top of the most awesome technology known to Mankind:
-
- - Advanced PostgreSQL features
- - Plack
- - Moose
- - DBIx::Class
- - Web::Machine
-
-Just to name a few.
-
-=head1 TAGLINE
-
-A Djet is faster than an AWE2
+Attributes and methods to navigate the World.
 
 =head1 ATTRIBUTES
 
@@ -85,27 +68,6 @@ sub take_off {
 	my $basenode = $datanodes->[0];
 	my $rest_path = $datatree->rest_path // '';
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
-	my $engine_class;
-	try {
-		# See if we want to use the config basetype
-		my $engine_basetype = $basenode->basetype;
-		$engine_class = $engine_basetype->handler || 'Djet::Engine::Default';
-		$schema->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
-	} catch {
-		my $e = shift;
-		die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack
-
-		debug($e);
-		Djet::Failure->new(
-			exception => $e,
-			body => $body,
-			datanodes => $datanodes,
-		);
-	};
-	$body->_set_basenode($basenode);
-	$body->_set_datanodes($datanodes);
-	$body->_set_rest_path($rest_path);
-	return $engine_class;
 }
 
 =head2 login
@@ -126,3 +88,4 @@ __PACKAGE__->meta->make_immutable;
 # COPYRIGHT
 
 __END__
+
