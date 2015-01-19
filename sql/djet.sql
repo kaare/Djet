@@ -100,7 +100,7 @@ CREATE TABLE node (
 );
 
 COMMENT ON TABLE node IS 'Node';
-COMMENT ON COLUMN node.parent_id IS 'Pointer to the data row';
+COMMENT ON COLUMN node.data_id IS 'Pointer to the data row';
 COMMENT ON COLUMN node.parent_id IS 'Parent of this uri';
 COMMENT ON COLUMN node.part IS 'Path part';
 COMMENT ON COLUMN node.node_path IS 'Global Path parts';
