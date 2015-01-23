@@ -5,39 +5,6 @@ use Moose;
 use namespace::autoclean;
 use utf8;
 
-=head1 ATTRIBUTES
-
-=head2 rest_path
-
-The remaining part after the basenode has been found.
-
-=cut
-
-has rest_path => (
-	 is => 'ro',
-	 isa => 'Str',
-	 default => sub {
-		 my $self = shift;
-		 my $raw = $self->raw_rest_path or return '';
-
-		 $raw =~ s/^index.html$//;
-		 return $raw;
-	 },
-	 lazy => 1,
-);
-
-=head2 raw_rest_path
-
-The raw remaining part after the basenode has been found.
-
-=cut
-
-has raw_rest_path => (
-	 is => 'ro',
-	 isa => 'Str',
-	 writer => 'set_raw_rest_path',
-);
-
 =head1 METHODS
 
 =head2 all_ref
@@ -54,30 +21,6 @@ sub all_ref {
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 =head1 METHODS
-
-=head2 find_basenode
-
-Find the basenode
-
-Returns a set of rows as an arrayref, starting from the basenode and with the root last.
-
-Thus, we're sure always to have to whole branch, and we can also find the arguments of the request
-
-As a side effect this method sets rest_path.
-
-=cut
-
-sub find_basenode {
-	my ($self, $path) = @_;
-	my @datanodes = $self->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' })->all;
-	my $basenode = $datanodes[0] or return;
-
-	my $base_path = $basenode->node_path;
-	if ( $path =~ m|^$base_path/(.*)|) {
-		$self->set_raw_rest_path($1);
-	}
-	return \@datanodes;
-}
 
 =head2 ft_search
 

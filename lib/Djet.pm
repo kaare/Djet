@@ -72,22 +72,18 @@ sub take_off {
 	my ($self) = @_;
 	my $body = $self->body;
 	my $schema = $self->schema;
-	my $config = $schema->config;
-	my $path = $body->request->path_info;
-	# If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it.
-	my $node_path = $path =~ /\/$/ ? $path . "index.html" : $path;
-	$schema->log->debug("Node path: $node_path");
-	my $datatree = $schema->resultset('Djet::DataNode');
-	my $datanodes = $datatree->find_basenode($node_path);
-	return $self->login($datanodes, $config, $path) unless my $user = $schema->acl->check_login($self->body->session, $datanodes);
+	my $navigator = Djet::Navigator->new(
+		schema => $schema,
+		request => $body->request,
+		session => $body->session,
+	);
+	$navigator->check_route;
+	return $navigator->result if $navigator->has_result;
 
-	$schema->log->debug("Acting as $user");
-	my $basenode = $datanodes->[0];
-	my $rest_path = $datatree->rest_path // '';
-	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
+	$body->set_navigator($navigator);
+	my $basenode = $navigator->basenode;
 	my $engine_class;
 	try {
-		# See if we want to use the config basetype
 		my $engine_basetype = $basenode->basetype;
 		$engine_class = $engine_basetype->handler || 'Djet::Engine::Default';
 		$schema->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
@@ -99,12 +95,9 @@ sub take_off {
 		Djet::Failure->new(
 			exception => $e,
 			body => $body,
-			datanodes => $datanodes,
+			datanodes => $navigator->datanodes,
 		);
 	};
-	$body->_set_basenode($basenode);
-	$body->_set_datanodes($datanodes);
-	$body->_set_rest_path($rest_path);
 	return $engine_class;
 }
 

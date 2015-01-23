@@ -122,7 +122,7 @@ has session_handler => (
 
 =head2 app
 
-The thing that starts it all
+The thing that starts it all. Returns a Plack app
 
 =cut
 
@@ -133,7 +133,8 @@ has app => (
 		my $self = shift;
 		return sub {
 			$self->check_notifications;
-			my $env = shift;
+			my @args = @_;
+			my $env = shift @args;
 			my $session = $env->{'psgix.session'} // {};
 			my $options = $env->{'psgix.session.options'} // {};
 			my $body = Djet::Body->new(

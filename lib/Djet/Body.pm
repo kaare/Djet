@@ -5,7 +5,6 @@ use Moose;
 use MooseX::StrictConstructor;
 use namespace::autoclean;
 
-use List::Util qw/first/;
 use HTTP::Headers::Util qw(split_header_words);
 use Plack::Request;
 
@@ -18,7 +17,7 @@ Djet::Body - The Djet Body
 =head1 DESCRIPTION
 
 Djet::Body is instantiated by Djet::Starter at the beginning of a request cycle.
-It holds all the volatile information, as opposed to Djet::Config.
+It holds all the volatile information, as opposed to Djet::Model.
 
 =head1 ATTRIBUTES
 
@@ -71,6 +70,25 @@ has request => (
 	lazy => 1,
 );
 
+=head2 navigator
+
+The plack navigator
+
+=cut
+
+has navigator => (
+	is => 'ro',
+	isa => 'Djet::Navigator',
+	handles => [qw/
+		basenode
+		datanodes
+		datanode_by_basetype
+		rest_path
+		raw_rest_path
+	/],
+	writer => 'set_navigator',
+);
+
 =head2 stash
 
 The stash keeps data throughout a request cycle
@@ -88,59 +106,6 @@ has stash => (
 		clear_stash => 'clear',
 	},
 );
-
-=head2 datanodes
-
-The node stack found
-
-=cut
-
-has datanodes => (
-	isa => 'ArrayRef[Djet::Schema::Result::Djet::DataNode]',
-	is => 'ro',
-	writer => '_set_datanodes',
-);
-
-=head2 rest_path
-
-The rest_path is the part that wasn't found by a node
-
-=cut
-
-has rest_path => (
-	isa => 'Str',
-	is => 'ro',
-	writer => '_set_rest_path',
-);
-
-=head2 basenode
-
-The node we're working on
-
-=cut
-
-has basenode => (
-	isa => 'Djet::Schema::Result::Djet::DataNode',
-	is => 'ro',
-	writer => '_set_basenode',
-);
-
-=head2 datanode_by_basetype
-
-Returns the first node from the datanodes, given a basetype or a basetype id
-
-=cut
-
-sub datanode_by_basetype {
-	my ($self, $basetype) = @_;
-	my $basetype_id = ref $basetype ? $basetype->id : $basetype;
-	return first {$_->basetype_id == $basetype_id} @ { $self->datanodes };
-}
-
-
-=head1 METHODS
-
-=cut
 
 __PACKAGE__->meta->make_immutable;
 

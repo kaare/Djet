@@ -5,6 +5,10 @@ Goals
 Separate path finding into a class (Djet::Navigator)
  - Doesn't belong in Djet.pm
  - Should be moosifiable to allow path munging
+ - Move resulting data into Djet::Navigator
+   basenode
+   datanodes
+   rest_path
 
 Other
 
