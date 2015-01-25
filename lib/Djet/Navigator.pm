@@ -172,19 +172,34 @@ sub check_route {
 	my $schema = $self->schema;
 	my $config = $schema->config;
 	my $path = $self->request->path_info;
-	# If the basenode is a directory (ends in "/") we try to see if there is an index.html node for it.
-	my $node_path = $path =~ /\/$/ ? $path . "index.html" : $path;
-	$schema->log->debug("Node path: $node_path");
-	my $datanodes = $self->find_basenode($node_path);
+	$schema->log->debug("Node path: $path");
+	my $datanodes = $self->find_basenode($path);
+	my $basenode = $datanodes->[0];
+	return if $self->check_node_redirect($basenode);
+
 	$self->_set_datanodes($datanodes);
 	return $self->login($datanodes, $config, $path) unless my $user = $schema->acl->check_login($self->session, $datanodes);
 
 	$schema->log->debug("Acting as $user");
-	my $basenode = $datanodes->[0];
 	$self->_set_basenode($basenode);
 
 	my $rest_path = $self->rest_path;
 	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
+}
+
+=head2 check_node_redirect
+
+Check if the node has a redirect attribute. If it does, set the result accordingly.
+
+=cut
+
+sub check_node_redirect {
+	my ($self, $basenode) = @_;
+	return unless first {$_ eq 'redirect'} @ { $basenode->fields->fieldnames };
+
+	my $redirect = $basenode->fields->redirect;
+	my $uri = $redirect =~ m{^(/|\w+://)} ? $redirect : $basenode->node_path . "/$redirect";
+	return $self->set_result([ 302, [ Location => $uri ], [] ]);
 }
 
 =head2 login
@@ -196,7 +211,10 @@ Redirect to the login page
 sub login {
 	my ($self, $datanodes, $config, $original_path) = @_;
 	$self->session->{redirect_uri} = $original_path;
-	my $uri = '/login';
+
+	my $domain_basetype = $self->schema->basetype_by_name('domain');
+	my $domain_node = $self->datanode_by_basetype($domain_basetype);
+	my $uri = $domain_node->node_path . '/login';
 	$self->set_result([ 302, [ Location => $uri ], [] ]);
 	return;
 }
