@@ -37,6 +37,24 @@ has 'domain_node' => (
 	lazy => 1,
 );
 
+=head2 query_parameters
+
+The query parameters, less the page stuff
+
+=cut
+
+has 'query_parameters' => (
+	is => 'ro',
+	isa => 'Hash::MultiValue',
+	default => sub {
+		my $self = shift;
+		my $query_parameters = $self->request->query_parameters;
+		delete $query_parameters->{page};
+		return $query_parameters;
+	},
+	lazy => 1,
+);
+
 =head2 urify
 
 Takes a node and a domain node and returns the full URI path to the node.
