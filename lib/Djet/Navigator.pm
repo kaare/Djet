@@ -196,8 +196,8 @@ Check if the node has a redirect attribute. If it does, set the result according
 sub check_node_redirect {
 	my ($self, $basenode) = @_;
 	return unless first {$_ eq 'redirect'} @ { $basenode->fields->fieldnames };
+	return unless my $redirect = $basenode->fields->redirect;
 
-	my $redirect = $basenode->fields->redirect;
 	my $uri = $redirect =~ m{^(/|\w+://)} ? $redirect : $basenode->node_path . "/$redirect";
 	return $self->set_result([ 302, [ Location => $uri ], [] ]);
 }
