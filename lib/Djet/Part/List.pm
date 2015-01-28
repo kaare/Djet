@@ -97,7 +97,11 @@ sub _find_list {
 	$options->{page} = $page;
 	delete $self->stash->{query_parameters}{page};
 	my $search = $self->schema->resultset('Djet::DataNode')->search($self->search, $options);
-	return $self->has_fts ? $search->ft_search($self->fts) : $search;
+	return $search unless $self->has_fts;
+
+	my $config = $self->config;
+	my $fts_config = $config->config->{fts_config};
+	return $search->ft_search($fts_config, $self->fts);
 }
 
 no Moose::Role;

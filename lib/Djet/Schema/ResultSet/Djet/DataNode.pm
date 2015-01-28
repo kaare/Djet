@@ -31,14 +31,14 @@ params is either an arrayref or a text with search items
 =cut
 
 sub ft_search {
-	my ( $self, $params ) = @_;
+	my ( $self, $search_language, $params ) = @_;
 	my @words = ref $params eq 'ARRAY' ? @$params :
 		!ref $params ? split /\s+/, $params :
 		return $self; # We can't handle this
 
 	my $q = $self->result_source->schema->storage->dbh->quote( join '|',  @words );
 	return $self->search( {
-			fts => \"@@ to_tsquery( $q )",
+			fts => \"@@ to_tsquery( '$search_language', $q )",
 		}
 	);
 }
