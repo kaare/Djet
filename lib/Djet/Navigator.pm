@@ -143,7 +143,7 @@ sub find_basenode {
 	my @datanodes = $schema->resultset('Djet::DataNode')->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' })->all;
 	my $basenode = $datanodes[0] or return;
 
-	my $base_path = $basenode->node_path;
+	my $base_path = quotemeta $basenode->node_path;
 	if ( $path =~ m|^$base_path/(.*)|) {
 		$self->set_raw_rest_path($1);
 	}
@@ -191,12 +191,15 @@ sub check_route {
 
 Check if the node has a redirect attribute. If it does, set the result accordingly.
 
+Redirections can be avoided by setting the noredirect parameter.
+
 =cut
 
 sub check_node_redirect {
 	my ($self, $basenode) = @_;
 	return unless first {$_ eq 'redirect'} @ { $basenode->fields->fieldnames };
 	return unless my $redirect = $basenode->fields->redirect;
+	return if $self->request->parameters->{noredirect};
 
 	my $uri = $redirect =~ m{^(/|\w+://)} ? $redirect : $basenode->node_path . "/$redirect";
 	return $self->set_result([ 302, [ Location => $uri ], [] ]);

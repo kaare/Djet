@@ -30,6 +30,7 @@ $(function(){
 			url: "/",
 			data: {
 				template: "treetop",
+				noredirect: 1
 			}
 		},
 		lazyload: function(event, data) {
@@ -38,6 +39,7 @@ $(function(){
 				url: node.data.path + '/',
 				data: {
 					template: "treeview",
+					noredirect: 1
 				}
 			}
 		},
