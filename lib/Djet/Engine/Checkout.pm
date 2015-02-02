@@ -30,7 +30,7 @@ has cart => (
 	default => sub {
 		my $self = shift;
 		my $cart = Djet::Shop::Cart->new(
-			schema => $self->schema,
+			model => $self->model,
 			uid => 1,
 		);
 	},
@@ -48,7 +48,7 @@ has 'steps' => (
 	isa => 'ArrayRef',
 	default => sub {
 		my $self = shift;
-		my @steps = $self->schema->resultset('Djet::DataNode')->search({
+		my @steps = $self->model->resultset('Djet::DataNode')->search({
 			parent_id => $self->basenode->node_id,
 		},{
 			order_by => 'node_modified',
@@ -154,7 +154,7 @@ sub post_is_create {
 
 	my $step_object = $handler->new(
 		body => $self->body,
-		schema => $self->schema,
+		model => $self->model,
 		mailer => $self->mailer,
 		checkout => $checkout,
 		step => $current_step,

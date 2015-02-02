@@ -31,7 +31,7 @@ has 'domain_node' => (
 	isa => 'Djet::Schema::Result::Djet::DataNode',
 	default => sub {
 		my $self = shift;
-		my $domain_basetype = $self->schema->basetype_by_name('domain');
+		my $domain_basetype = $self->model->basetype_by_name('domain');
 		return $self->datanode_by_basetype($domain_basetype);
 	},
 	lazy => 1,
@@ -69,14 +69,14 @@ It works by finding the nearest domain node, use its name as domain name and cha
 
 sub urify {
 	my ($self, $node, $domain_node) = @_;
-	my $schema = $self->schema;
+	my $model = $self->model;
 	$node ||= $self->basenode;
 	$domain_node ||= $self->domain_node;
 
 	my $domain_name = $domain_node->name;
 	my $domain_path = $domain_node->node_path;
 	my $node_path = $node->node_path;
-	if ($schema->config->config->{environment} eq 'live') {
+	if ($model->config->config->{environment} eq 'live') {
 		$node_path =~ s/^$domain_path/$domain_name/;
 		return $node_path ? "//$node_path" : $node_path;
 	} else {

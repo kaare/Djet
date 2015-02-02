@@ -61,7 +61,7 @@ View the page
 sub view_page {
 	my $self = shift;
 	$self->content_type('html');
-	my $schema = $self->schema;
+	my $model = $self->model;
 	$self->init_data;
 	return $self->return_value if $self->has_return_value;
 
@@ -69,13 +69,13 @@ sub view_page {
 	return $self->return_value if $self->has_return_value;
 
 	$self->template($self->render_template) unless $self->_has_template;
-	$schema->log->debug('Template ' . $self->template);
+	$model->log->debug('Template ' . $self->template);
 	my $result;
 	try {
 		$result = $self->renderer->render($self->template, $self->stash);
 	} catch {
 		my $e = shift;
-		$schema->log->error($e);
+		$model->log->error($e);
 	};
 	return $result;
 };
@@ -112,9 +112,9 @@ sub template_substitute {
 	my ($self, $template) = @_;
 	$template =~ /<(.+)>/ or return;
 
-	my $schema = $self->schema;
+	my $model = $self->model;
 	my $basetext = $1;
-	my $basetype = $schema->basetype_by_name($basetext);
+	my $basetype = $model->basetype_by_name($basetext);
 	my $node = $self->datanode_by_basetype($basetype);
 
 	my $node_path = $node->node_path;
@@ -140,7 +140,7 @@ templates/<domain>/node/index.tx
 
 sub template_name {
 	my ($self, $basenode) = @_;
-	my $schema = $self->schema;
+	my $model = $self->model;
 	my $domain_node = $self->stash->{local}->domain_node;
 	my $node_path = $basenode->node_path || 'index';
 	my $prefix;
@@ -150,7 +150,7 @@ sub template_name {
 	}
 	$prefix .= '/node';
 	$node_path =~ s/\.html$//;
-	return $prefix . $node_path . $schema->config->config->{template_suffix};
+	return $prefix . $node_path . $model->config->config->{template_suffix};
 }
 
 no Moose::Role;

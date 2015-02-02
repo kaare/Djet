@@ -109,7 +109,7 @@ sub _build_renderer {
 	return unless $self->_has_content_type;
 
 	my $type = $self->content_type =~/(html|json)/i ? $1 : 'html';
-	return $self->schema->renderers->{$type};
+	return $self->model->renderers->{$type};
 }
 
 =head2 mailer
@@ -123,10 +123,10 @@ has mailer => (
 	isa => 'Djet::Mail',
 	default => sub {
 		my $self = shift;
-		my $config = $self->schema->config->{mail} // {};
-		my $renderer = $self->schema->renderers->{'html'};
+		my $config = $self->model->config->{mail} // {};
+		my $renderer = $self->model->renderers->{'html'};
 		my $mailer = Djet::Mail->new(
-			schema => $self->schema,
+			model => $self->model,
 			body => $self->body,
 			renderer => $renderer,
 		);
@@ -150,12 +150,12 @@ Put some basic data on the stash
 
 sub stash_basic {
 	my $self = shift;
-	my $schema = $self->schema;
+	my $model = $self->model;
 	my $stash = $self->stash;
 	$stash->{basetypes} = $self->basetypes;
-	$stash->{local} = $schema->local_class->new(
+	$stash->{local} = $model->local_class->new(
 		body => $self->body,
-		schema => $self->schema,
+		model => $self->model,
 		content_type => $self->content_type,
 	);
 }

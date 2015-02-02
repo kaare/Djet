@@ -28,7 +28,7 @@ before to_json => sub {
 	my $self = shift;
 	if (my ($template) = $self->request->parameters->{template} =~ /^tree(top|view)$/) {
 		my $basenode = $self->basenode;
-		my $domain_basetype = $self->schema->basetype_by_name('domain');
+		my $domain_basetype = $self->model->basetype_by_name('domain');
 		my $domain_node = $self->datanode_by_basetype($domain_basetype);
 		my $local = $self->stash->{local};
 		my $dynadata;

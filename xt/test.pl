@@ -6,7 +6,7 @@ use warnings;
 
 use File::Find ();
 
-use Djet::Schema;
+use Djet::Model;
 
 # Set the variable $File::Find::dont_use_nlink if you're using AFS,
 # since AFS cheats.
@@ -21,7 +21,7 @@ sub wanted;
 sub preprocess;
 
 my $dsn = 'dbi:Pg:dbname=__djet_test__';
-my $schema  = Djet::Schema->connect($dsn) or die;
+my $schema  = Djet::Model->connect($dsn) or die;
 
 
 File::Find::find({wanted => \&wanted, preprocess => \&preprocess}, '/');

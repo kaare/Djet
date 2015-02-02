@@ -45,7 +45,7 @@ has dont_save => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $basetype = $self->schema->basetypes->{$self->object->basetype_id}; # Should be faster; already in memory
+		my $basetype = $self->model->basetypes->{$self->object->basetype_id}; # Should be faster; already in memory
 		my @cols = map {$_->{name}} grep {defined $_->{storage} && !$_->{storage}} @{ $basetype->datacolumns };
 		return \@cols;
 	},
@@ -62,7 +62,7 @@ Set the object to the basenode
 sub set_base_object {
 	my $self = shift;
 	my $rest_path = $self->rest_path;
-	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $self->schema->resultset('Djet::DataNode')->find({node_id => $rest_path})) {
+	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $self->model->resultset('Djet::DataNode')->find({node_id => $rest_path})) {
 		$self->set_object($node);
 	}
 	$self->set_object($self->basenode) unless $self->has_object;
@@ -114,7 +114,7 @@ Get the resultset to be used for creating objects
 
 sub get_resultset {
 	my $self = shift;
-	return $self->schema->resultset('Djet::DataNode');
+	return $self->model->resultset('Djet::DataNode');
 }
 
 =head2 get_base_name

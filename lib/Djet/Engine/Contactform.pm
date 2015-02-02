@@ -26,15 +26,15 @@ Will create a new empty contactform if it's a "parent" (contactforms) basetype. 
 
 after 'set_base_object' => sub  {
 	my $self = shift;
-	my $schema = $self->schema;
-	my $basetype = $schema->basetype_by_name('contactform') or die "No basetype: contactform";
+	my $model = $self->model;
+	my $basetype = $model->basetype_by_name('contactform') or die "No basetype: contactform";
 
 	my $contactform;
 	if ($self->basenode->basetype_id == $basetype->id) {
 		$contactform = $self->basenode;
 		$self->stash->{template_display} = 'view';
 	} else {
-		$contactform = $self->schema->resultset('Djet::DataNode')->new({
+		$contactform = $self->model->resultset('Djet::DataNode')->new({
 			basetype_id => $basetype->id,
 			parent_id => $self->basenode->id,
 			datacolumns => {}
@@ -54,10 +54,10 @@ validation.
 
 before 'process_post' => sub  {
 	my $self = shift;
-	my $schema = $self->schema;
-	my $basetype = $schema->basetype_by_name('contactform') or die "No basetype: contactform";
+	my $model = $self->model;
+	my $basetype = $model->basetype_by_name('contactform') or die "No basetype: contactform";
 
-	my $contactform = $self->schema->resultset('Djet::DataNode')->new({
+	my $contactform = $self->model->resultset('Djet::DataNode')->new({
 		parent_id => $self->basenode->id,
 		basetype_id => $basetype->id,
 		datacolumns => {},
@@ -84,7 +84,7 @@ Send email to the admin and the user if the "child" contactform was actually cre
 before 'edit_updated' => sub {
 	my ($self, $validation)=@_;
 	eval { $self->send_mail };
-	$self->schema->log->error("Couldn't send email: $@") if $@;
+	$self->model->log->error("Couldn't send email: $@") if $@;
 };
 
 =head2 send_mail

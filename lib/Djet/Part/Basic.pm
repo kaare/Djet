@@ -14,17 +14,17 @@ The basic attributes for Djet classes.
 
 =head1 ATTRIBUTES
 
-There are two attributes. The one following the server process, schema. And the one following the request, body.
+There are two attributes. The one following the server process, model. And the one following the request, body.
 
-=head2 schema
+=head2 model
 
-The Djet schema. For easy access, it also contains the config, basetypes, renderers and log
+The Djet model. For easy access, it also contains the config, basetypes, renderers and log
 
 =cut
 
-has schema => (
+has model => (
 	is => 'ro',
-	isa => 'Djet::Schema',
+	isa => 'Djet::Model',
 	handles => [qw/
 		acl
 		basetypes

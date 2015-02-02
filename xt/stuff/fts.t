@@ -11,7 +11,7 @@ use Test;
 
 use_ok('Djet::Stuff');
 
-my $stuff = Test::schema;
+my $stuff = Test::Model;
 
 ok(my $data = $stuff->insert({basetype_id=>6,parent_id=>6,title=>'Family Photo',columns=>'{"test"}'},{returning => '*'}), 'Insert node');
 isa_ok($stuff, 'Djet::Stuff', 'It\'s a Plane, it\'s a bird. No...');

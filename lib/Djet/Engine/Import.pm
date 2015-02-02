@@ -83,7 +83,7 @@ sub create_path {
 	my $transaction = sub {
 		$self->create_nodes;
 	};
-	eval { $self->schema->txn_do($transaction) };
+	eval { $self->model->txn_do($transaction) };
 	my $error=$@;
 
 	if ($error) {
@@ -102,8 +102,8 @@ Create the Djet nodes. Optionally (if the import node has a queue defined), crea
 
 sub create_nodes {
 	my $self = shift;
-	my $schema = $self->schema;
-	my $dbh = $schema->storage->dbh;
+	my $model = $self->model;
+	my $dbh = $model->storage->dbh;
 	my $queue = $self->basenode->queue->value;
 	my $client = Job::Machine::Client->new(
 		dbh => $dbh,
@@ -111,7 +111,7 @@ sub create_nodes {
 	) if defined($queue);
 
 	my $parent_id = $self->basenode->id;
-	my $uploadtype = $schema->basetype_by_name('import');
+	my $uploadtype = $model->basetype_by_name('import');
 	my $basetype_id = $uploadtype->id;
 	my $request = $self->body->request;
 	for my $upload ($request->uploads->get_all('uploadedfile')) {
@@ -123,7 +123,7 @@ sub create_nodes {
 			title => $upload->filename,
 			datacolumns => $self->json->encode({ mime_type => $upload->content_type}),
 		};
-		my $file_node = $schema->resultset('Djet::DataNode')->create($data);
+		my $file_node = $model->resultset('Djet::DataNode')->create($data);
 		$file_node->discard_changes;
 		my $node_id = $file_node->node_id;
 		my $file_path = $self->file_placement($upload->path, $self->basenode->path, $node_id);

@@ -43,7 +43,7 @@ sub process_order {
 		$self->create_order($checkout, $cart);
 		$self->reset_data($checkout, $cart);
 	};
-	eval { $self->schema->txn_do($transaction) };
+	eval { $self->model->txn_do($transaction) };
 	my $error=$@;
 
 	if ($error) {

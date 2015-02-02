@@ -29,7 +29,7 @@ sub set_base_object {
 	my $rest_path = $self->rest_path;
 	undef($rest_path) if $rest_path eq 'index.html';
 	if (!$rest_path) {
-		$self->set_object($self->schema->resultset('Djet::Basetype')->new({
+		$self->set_object($self->model->resultset('Djet::Basetype')->new({
 			feature_id => 1,
 			datacolumns => '[]',
 			attributes => '{}',
@@ -39,7 +39,7 @@ sub set_base_object {
 		return;
 	}
 
-	if (my ($current_basetype) = grep {$rest_path eq $_->name} values %{ $self->schema->basetypes }) {
+	if (my ($current_basetype) = grep {$rest_path eq $_->name} values %{ $self->model->basetypes }) {
 		$self->set_object($current_basetype);
 	}
 }
@@ -53,7 +53,7 @@ Sort the basetypes and set the stash
 before data => sub {
 	my $self = shift;
 	my $stash = $self->stash;
-	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values $self->schema->basetypes ];
+	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values $self->model->basetypes ];
 	if ($self->has_object) {
 		$stash->{title} ||= $self->object->title;
 		$stash->{current_basetype} = $self->object;

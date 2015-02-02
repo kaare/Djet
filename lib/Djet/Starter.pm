@@ -59,42 +59,42 @@ has config => (
 	lazy => 1,
 );
 
-=head2 schema_name
+=head2 model_name
 
-The schema_name is found in the config
+The model_name is found in the config
 
 =cut
 
-has schema_name => (
+has model_name => (
 	isa => 'Str',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
-		return $self->config->config->{schema_name} || 'Djet::Schema';
+		return $self->config->config->{model_name} || 'Djet::Model';
 	},
 	lazy => 1,
 );
 
-=head2 schema
+=head2 model
 
-The schema is initialized with the connection info found in the config
+The model is initialized with the connection info found in the config
 
 =cut
 
-has schema => (
-	isa => 'Djet::Schema',
+has model => (
+	isa => 'Djet::Model',
 	is => 'ro',
 	default => sub {
 		my $self = shift;
 		my $connect_info = $self->config->config->{connect_info};
 		die 'No database connection information' unless $connect_info && @$connect_info;
 
-		my $schema_name = $self->schema_name;
-		eval "require $schema_name" or die "No schema named $schema_name";
+		my $model_name = $self->model_name;
+		eval "require $model_name" or die "No model named $model_name";
 
-		my $schema = $schema_name->connect(@$connect_info);
-		$schema->config($self->config);
-		return $schema;
+		my $model = $model_name->connect(@$connect_info);
+		$model->config($self->config);
+		return $model;
 	},
 	lazy => 1,
 );
@@ -111,7 +111,7 @@ has session_handler => (
 	default => sub {
 		my $self = shift;
 		my $provider = Plack::Session::Store::DBI->new(
-            dbh => $self->schema->storage->dbh,
+            dbh => $self->model->storage->dbh,
             serializer   => sub { JSON->new->allow_nonref->encode(shift); },
             deserializer => sub { JSON->new->allow_nonref->decode(shift); },
 			table_name   => $self->config->config->{session}{table_name} // 'global.sessions',
@@ -143,13 +143,13 @@ has app => (
 				session_id => $options->{id} // 0,
 				stash => {},
 			);
-			my $flight = Djet->new(body => $body, schema => $self->schema);
+			my $flight = Djet->new(body => $body, model => $self->model);
 			my $engine = $flight->take_off(@_);
 			return $engine if ref $engine eq 'ARRAY'; # There's a response already
 
 			my $resource_args = [
 				body => $body,
-				schema => $self->schema,
+				model => $self->model,
 			];
 			my $app = Djet::Machine->new(
 				resource => $engine,
@@ -176,9 +176,9 @@ sub check_notifications {
 	my ($action, $subject, $id) = split ':', $payload;
 	return unless $action eq 'reload' and $subject eq 'basetype';
 
-	my $schema = $self->schema;
-	my $basetypes = $schema->basetypes;
-	$basetypes->{$id} =  $schema->resultset('Djet::Basetype')->find({id => $id});
+	my $model = $self->model;
+	my $basetypes = $model->basetypes;
+	$basetypes->{$id} =  $model->resultset('Djet::Basetype')->find({id => $id});
 }
 
 =head2 BUILD
@@ -190,6 +190,17 @@ Listen to the djet:admin queue
 sub BUILD {
 	my $self = shift;
 	$self->listen(queue => 'djet:admin');
+}
+
+=head2 _build_notify_dbh
+
+Build the notify dbh from the model's storage.
+
+=cut
+
+sub _build_notify_dbh {
+	my $self = shift;
+	return $self->model->storage->dbh;
 }
 
 __PACKAGE__->meta->make_immutable;

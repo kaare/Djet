@@ -50,9 +50,9 @@ The schema
 
 =cut
 
-has schema => (
+has model => (
 	is => 'ro',
-	isa => 'Djet::Schema',
+	isa => 'Djet::Model',
 );
 
 =head2 basenode
@@ -139,8 +139,8 @@ As a side effect this method sets raw_rest_path.
 
 sub find_basenode {
 	my ($self, $path) = @_;
-	my $schema = $self->schema;
-	my @datanodes = $schema->resultset('Djet::DataNode')->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' })->all;
+	my $model = $self->model;
+	my @datanodes = $model->resultset('Djet::DataNode')->search({node_path => { '@>' => $path } }, {order_by => \'length(node_path) DESC' })->all;
 	my $basenode = $datanodes[0] or return;
 
 	my $base_path = quotemeta $basenode->node_path;
@@ -169,22 +169,22 @@ are all set.
 
 sub check_route {
 	my $self = shift;
-	my $schema = $self->schema;
-	my $config = $schema->config;
+	my $model = $self->model;
+	my $config = $model->config;
 	my $path = $self->request->path_info;
-	$schema->log->debug("Node path: $path");
+	$model->log->debug("Node path: $path");
 	my $datanodes = $self->find_basenode($path);
 	my $basenode = $datanodes->[0];
 	return if $self->check_node_redirect($basenode);
 
 	$self->_set_datanodes($datanodes);
-	return $self->login($datanodes, $config, $path) unless my $user = $schema->acl->check_login($self->session, $datanodes);
+	return $self->login($datanodes, $config, $path) unless my $user = $model->acl->check_login($self->session, $datanodes);
 
-	$schema->log->debug("Acting as $user");
+	$model->log->debug("Acting as $user");
 	$self->_set_basenode($basenode);
 
 	my $rest_path = $self->rest_path;
-	$schema->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
+	$model->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
 }
 
 =head2 check_node_redirect
@@ -215,7 +215,7 @@ sub login {
 	my ($self, $datanodes, $config, $original_path) = @_;
 	$self->session->{redirect_uri} = $original_path;
 
-	my $domain_basetype = $self->schema->basetype_by_name('domain');
+	my $domain_basetype = $self->model->basetype_by_name('domain');
 	my $domain_node = $self->datanode_by_basetype($domain_basetype);
 	my $uri = $domain_node->node_path . '/login';
 	$self->set_result([ 302, [ Location => $uri ], [] ]);

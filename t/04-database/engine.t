@@ -47,14 +47,14 @@ sub env {
 
 $ENV{JET_APP_ROOT} = './t';
 my $starter = Djet::Starter->new;
-my $schema = $starter->schema;
+my $model = $starter->model;
 my $body = Djet::Body->new(
 	env => env(),
-	schema => $schema,
+	model => $model,
 );
-my $config = $schema->config;
+my $config = $model->config;
 my $path = $body->request->path_info;
-my $data_nodes = $schema->resultset('Djet::DataNode')->find_basenode($path);
+my $data_nodes = $model->resultset('Djet::DataNode')->find_basenode($path);
 my $basenode = $data_nodes->first;
 my $stash = {body => $body};
 my $response = Djet::Response->new(

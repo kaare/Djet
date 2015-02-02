@@ -52,7 +52,7 @@ after 'set_base_object' => sub {
 	return $self->choose_basetype if $basetype_id eq 'child';
 
 	my $parent_id = $self->rest_path;
-	$self->set_object($self->schema->resultset('Djet::DataNode')->new({
+	$self->set_object($self->model->resultset('Djet::DataNode')->new({
 		basetype_id => $basetype_id,
 		parent_id => $parent_id,
 		datacolumns => '{}',
@@ -138,7 +138,7 @@ Put parameters on the stash for the choose_basetype template
 
 sub choose_basetype {
 	my ($self, $parent_path) = @_;
-	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values $self->schema->basetypes;
+	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values $self->model->basetypes;
 	$self->stash->{basetypes_choice} = \@basetypes;
 	$self->template('/config/basenode_choose_basetype.tx');
 }

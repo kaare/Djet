@@ -36,7 +36,7 @@ before 'init_data' => sub {
 	}
 	return $self->new_form if $self->rest_path eq 'new';
 
-	$self->stash->{header_children} = $self->schema->basetype_by_name('user')->datacolumns or die "No basetype: user";
+	$self->stash->{header_children} = $self->model->basetype_by_name('user')->datacolumns or die "No basetype: user";
 	$self->add_search(parent_id => $self->basenode->node_id);
 };
 
@@ -49,8 +49,8 @@ Display the form for a new user
 sub new_form {
 	my $self = shift;
 	$self->set_limit(-1);
-	my $schema = $self->schema;
-	my $user_basetype = $schema->basetype_by_name('user') or die "No basetype: user";
+	my $model = $self->model;
+	my $user_basetype = $model->basetype_by_name('user') or die "No basetype: user";
 
 	$self->template($self->template_substitute($user_basetype->template));
 	$self->stash_user($user_basetype) unless $self->stash->{user};
@@ -64,7 +64,7 @@ Create a new user row and stash it
 
 sub stash_user {
 	my ($self, $user_basetype) = @_;
-	my $user = $self->schema->resultset('Djet::DataNode')->new({
+	my $user = $self->model->resultset('Djet::DataNode')->new({
 		basetype_id => $user_basetype->id,
 		parent_id => $self->basenode->id,
 		datacolumns => {}
@@ -85,8 +85,8 @@ before 'post_is_create' => sub  {
 	my $self = shift;
 	return if $self->basenode->basetype->name eq 'user';
 
-	my $schema = $self->schema;
-	my $user_basetype = $schema->basetype_by_name('user') or die "No basetype: user";
+	my $model = $self->model;
+	my $user_basetype = $model->basetype_by_name('user') or die "No basetype: user";
 
 	$self->stash_user($user_basetype);
 };

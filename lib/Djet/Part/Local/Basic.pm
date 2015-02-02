@@ -76,7 +76,7 @@ sub _build_cart {
 	my $self = shift;
 	my $session = $self->session;
 	my $cart = Djet::Shop::Cart->new(
-		schema => $self->schema,
+		model => $self->model,
 		session_id => $self->session_id,
 		uid => $session->{djet_user} // '',
 	);
@@ -94,10 +94,10 @@ has 'cart_base_url' => (
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $schema = $self->schema;
-		my $cart_basetype = $schema->basetype_by_name('cart');
+		my $model = $self->model;
+		my $cart_basetype = $model->basetype_by_name('cart');
 		my $domain_node = $self->domain_node;
-		my $cart_row = $schema->resultset('Djet::DataNode')->find({
+		my $cart_row = $model->resultset('Djet::DataNode')->find({
 			basetype_id => $cart_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		});
@@ -117,11 +117,11 @@ has 'checkout_base_url' => (
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $schema = $self->schema;
-		my $checkout_basetype = $schema->basetype_by_name('checkout') or return '';
+		my $model = $self->model;
+		my $checkout_basetype = $model->basetype_by_name('checkout') or return '';
 
 		my $domain_node = $self->domain_node;
-		my $checkout_row = $schema->resultset('Djet::DataNode')->find({
+		my $checkout_row = $model->resultset('Djet::DataNode')->find({
 			basetype_id => $checkout_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		}) or return '';
@@ -141,10 +141,10 @@ has 'search_base_url' => (
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $schema = $self->schema;
-		my $search_basetype = $schema->basetype_by_name('search');
+		my $model = $self->model;
+		my $search_basetype = $model->basetype_by_name('search');
 		my $domain_node = $self->domain_node;
-		my $search_row = $schema->resultset('Djet::DataNode')->find({
+		my $search_row = $model->resultset('Djet::DataNode')->find({
 			basetype_id => $search_basetype->id,
 			node_path => {'<@' => $domain_node->node_path},
 		});
@@ -169,10 +169,10 @@ sub _build_user {
 	my $self = shift;
 	my $user = $self->session->{djet_user} // return;
 
-	my $schema = $self->schema;
-	my $user_basetype = $schema->basetype_by_name('user') or return '';
+	my $model = $self->model;
+	my $user_basetype = $model->basetype_by_name('user') or return '';
 
-	my $user_row = $schema->resultset('Djet::DataNode')->find({
+	my $user_row = $model->resultset('Djet::DataNode')->find({
 		basetype_id => $user_basetype->id,
 		part => $user,
 	}) or return;

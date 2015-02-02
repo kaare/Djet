@@ -28,8 +28,8 @@ sub add {
 	}
 
 	my $opts = {returning => '*'};
-	my $row = $self->schema->insert($self->basetype, $args, $opts);
-	$self->_row($self->schema->row($row, $self->basetype));
+	my $row = $self->model->insert($self->basetype, $args, $opts);
+	$self->_row($self->model->row($row, $self->basetype));
 }
 
 =head2 move
@@ -43,7 +43,7 @@ sub move {
 	return unless $parent_id and $self->row;
 
 	my $opts = {returning => '*'};
-	my $success = $self->schema->move($self->path_id, $parent_id);
+	my $success = $self->model->move($self->path_id, $parent_id);
 }
 
 =head2 add_child
@@ -65,7 +65,7 @@ sub add_child {
 	my $basetype = delete $args->{basetype};
 	my $opts = {returning => '*'};
 	return $self->new(
-		row => $self->schema->insert($args, $opts),
+		row => $self->model->insert($args, $opts),
 	);
 }
 
@@ -80,7 +80,7 @@ sub move_child {
 	return unless $child_id and $self->row;
 
 	my $opts = {returning => '*'};
-	my $success = $self->schema->move($child_id, $self->get_column('id'));
+	my $success = $self->model->move($child_id, $self->get_column('id'));
 }
 
 =head2 ancestors
@@ -126,19 +126,19 @@ sub parents {
 		base_type => $self->basetype,
 		node_id => $node_id,
 	};
-	my $nodes = $self->schema->search_nodepath(\%opt);
+	my $nodes = $self->model->search_nodepath(\%opt);
 	my %nodes;
 	for my $node (@$nodes) {
 		push @{ $nodes{$node->{base_type}} }, $node;
 	}
 	my @result;
-	my $schema = $self->schema;
+	my $model = $self->model;
 	while (my ($base_type, $nodes) = each %nodes) {
 		for my $node (@{ $nodes }) {
 			$where = {
 				id => $node->{node_id},
 			};
-			push @result, map {{%$node, %$_}} @{ $schema->search($base_type, $where) };
+			push @result, map {{%$node, %$_}} @{ $model->search($base_type, $where) };
 		}
 	}
 	return [ map {Djet::Node->new(row => $_)} @result ];

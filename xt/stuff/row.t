@@ -11,7 +11,7 @@ use Test;
 
 use_ok('Djet::Stuff');
 
-my $stuff = Test::schema;
+my $stuff = Test::Model;
 
 isa_ok($stuff, 'Djet::Stuff', 'It\'s a Plane, it\'s a bird. No...');
 ok(my $rows = $stuff->search_node('domain', {id => 1}), 'Search domain');

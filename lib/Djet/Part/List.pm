@@ -95,7 +95,7 @@ sub _find_list {
 	$options->{rows} = $self->limit;
 	my $page = $self->request->param('page') // 1;
 	$options->{page} = $page;
-	my $search = $self->schema->resultset('Djet::DataNode')->search($self->search, $options);
+	my $search = $self->model->resultset('Djet::DataNode')->search($self->search, $options);
 	return $search unless $self->has_fts;
 
 	my $config = $self->config;

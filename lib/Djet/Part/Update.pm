@@ -204,7 +204,7 @@ sub delete_submit {
 	my $transaction = sub {
 		$self->delete_object($self->object);
 	};
-	eval { $self->schema->txn_do($transaction) };
+	eval { $self->model->txn_do($transaction) };
 	my $error=$@;
 
 	if ($error) {
@@ -271,7 +271,7 @@ sub edit_submit_handle_transaction {
 	my ($self, $transaction) = @_;
 	my $rs;
 	eval {
-		$rs = $self->schema->txn_do($transaction);
+		$rs = $self->model->txn_do($transaction);
 	};
 	return $@;
 }

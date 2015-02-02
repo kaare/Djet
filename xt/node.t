@@ -8,11 +8,11 @@ use lib 't/lib';
 
 use Test;
 
-my $schema = Test::schema;
+my $model = Test::Model;
 
 use_ok('Djet::Node'); # Has to be AFTER context is set in Test
 
-ok($schema->txn_begin, 'Begin transaction');
+ok($model->txn_begin, 'Begin transaction');
 
 my $args = {
 	title => 'domain',
@@ -20,7 +20,7 @@ my $args = {
 	name => 'domain',
 };
 
-ok(my $nodedata = $schema->find_node({ node_path => '' }), 'Get nodedata for domain');
+ok(my $nodedata = $model->find_node({ node_path => '' }), 'Get nodedata for domain');
 ok(my $domain = Djet::Node->new(row => $nodedata), 'Nodify data');
 ok(my $row = $domain->row, 'Get node row');
 is($row->{basetype_id}, 1, 'Basetype');
@@ -40,6 +40,6 @@ is(@$children, 1, 'Number of directory children');
 ok($children = $domain->children(basetype => 'xyzzy'), 'All xyzzy children');
 is(@$children, 0, 'Number of xyzzy children (none)');
 
-$schema->txn_rollback;
+$model->txn_rollback;
 
 done_testing();

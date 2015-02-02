@@ -141,7 +141,7 @@ Get the resultset to be used for creating objects
 
 sub get_resultset {
 	my $self = shift;
-	return $self->schema->resultset('Djet::Basetype');
+	return $self->model->resultset('Djet::Basetype');
 }
 
 =head2 get_base_name

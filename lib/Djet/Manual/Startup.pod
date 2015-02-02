@@ -40,14 +40,14 @@ These parameters make sense to set as environment variables:
 
 Djet::Starter initializes the configuration.
 
-=item schema
+=item model
 
-The schema acts as a model containing all the relevant data for Djet, including the
-DBIC database schema, the configuration, and a hashref with the basetypes.
+The model acts as a model containing all the relevant data for Djet, including the
+DBIC database model, the configuration, and a hashref with the basetypes.
 
 =item app
 
-The sub that plack will call. Contains the schema, which holds the Djet view of the world,
+The sub that plack will call. Contains the model, which holds the Djet view of the world,
 including the configuration.
 
 =back
@@ -80,7 +80,7 @@ The logger
 
 =back
 
-=head2 Djet::Schema
+=head2 Djet::Model
 
 =over 4
 

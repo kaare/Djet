@@ -49,15 +49,15 @@ has body => (
 	isa => 'Djet::Body',
 );
 
-=head2 schema
+=head2 model
 
-The schema
+The model
 
 =cut
 
-has schema => (
+has model => (
 	is => 'ro',
-	isa => 'Djet::Schema',
+	isa => 'Djet::Model',
 );
 
 =head1 METHODS
@@ -71,9 +71,9 @@ Process the request.  Entry point from psgi
 sub take_off {
 	my ($self) = @_;
 	my $body = $self->body;
-	my $schema = $self->schema;
+	my $model = $self->model;
 	my $navigator = Djet::Navigator->new(
-		schema => $schema,
+		model => $model,
 		request => $body->request,
 		session => $body->session,
 	);
@@ -86,7 +86,7 @@ sub take_off {
 	try {
 		my $engine_basetype = $basenode->basetype;
 		$engine_class = $engine_basetype->handler || 'Djet::Engine::Default';
-		$schema->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
+		$model->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
 	} catch {
 		my $e = shift;
 		die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack

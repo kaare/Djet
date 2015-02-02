@@ -28,8 +28,8 @@ has 'menu_basenode' => (
 
 sub _build_menu_basenode {
 	my $self= shift;
-	my $schema = $self->schema;
-	my $domain_basetype = $schema->basetype_by_name('domain');
+	my $model = $self->model;
+	my $domain_basetype = $model->basetype_by_name('domain');
 	return $self->datanode_by_basetype($domain_basetype);
 }
 

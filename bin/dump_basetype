@@ -40,8 +40,8 @@ pod2usage(
 sub do_it {
 	my $configbase = 'etc/';
 	my $config = Djet::Config->new(base => $configbase);
-	my $schema = $config->schema;
-	print JSON->new->pretty->encode($schema->get_basetypes);
+	my $model = $config->model;
+	print JSON->new->pretty->encode($model->get_basetypes);
 }
 
 do_it;
