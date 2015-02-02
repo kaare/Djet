@@ -6,6 +6,9 @@ package Djet::Schema;
 
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
+
+use Text::CleanFragment;
+
 extends 'DBIx::Class::Schema';
 
 __PACKAGE__->load_namespaces;
@@ -107,6 +110,18 @@ Returns a basetype from the cache, given a name
 sub basetype_by_name {
 	my ($self, $basename) = @_;
 	return first {$_->name eq $basename} values %{ $self->basetypes };
+}
+
+=head2 normalize_part
+
+Take some text and make a nice part out of it
+
+
+=cut
+
+sub normalize_part {
+	my ( $self, $text ) = @_;
+	return join("_", clean_fragment($text));
 }
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);

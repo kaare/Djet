@@ -43,24 +43,6 @@ sub ft_search {
 	);
 }
 
-=head2 normalize_part
-
-Take some text and make a nice part out of it
-
- - lowercase it
- - turn spaces into underscores
-
-=cut
-
-sub normalize_part {
-	my ( $self, $text ) = @_;
-	my $part = lc $text;
-	$part =~ s/^\s+|\s+$//g;
-	$part =~ s/\s+/_/g;
-	$part =~ tr/æøå/aoa/;
-	return $part;
-}
-
 1;
 
 # COPYRIGHT
