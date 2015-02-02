@@ -141,7 +141,7 @@ templates/<domain>/node/index.tx
 sub template_name {
 	my ($self, $basenode) = @_;
 	my $model = $self->model;
-	my $domain_node = $self->stash->{local}->domain_node;
+	my $domain_node = $self->stash->{payload}->domain_node;
 	my $node_path = $basenode->node_path || 'index';
 	my $prefix;
 	if ($domain_node) {

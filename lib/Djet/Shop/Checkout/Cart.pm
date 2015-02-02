@@ -28,7 +28,7 @@ sub has_all_data {
 		my ($identifier, $sku) = split/_/, $param;
 		$sku => $params->{$param};
 	} grep {/^qty_/} keys %$params;
-	my $cart = $self->stash->{local}->cart;
+	my $cart = $self->stash->{payload}->cart;
 	$cart->update(%items);
 
 	return if $params->{update}; # Just update the cart

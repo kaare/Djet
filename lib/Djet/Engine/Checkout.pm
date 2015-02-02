@@ -199,7 +199,7 @@ Process the POST request for creating a node
 sub create_path {
 	my $self = shift;
 	my $step = $self->session->{checkout}{next_step};
-	my $url = $self->stash->{local}->urify;
+	my $url = $self->stash->{payload}->urify;
 	$url .= '/' unless $url =~ m|/$|;
 	$url .= $step;
 	return $url;

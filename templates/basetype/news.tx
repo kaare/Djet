@@ -1,5 +1,5 @@
 <div id="news">
-  <h2><: $local.basenode.title :></h2>
+  <h2><: $payload.basenode.title :></h2>
 : for $news_feed.all_ref -> $news_item {
 : include '/element/news_item.tx' {item => $news_item};
 : }

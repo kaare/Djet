@@ -49,12 +49,12 @@ The checkout handler is an ordinary L<Djet::Engine> class, whereas the other han
 
 =over 4
 
-=item Djet::Part::Local::Cart>
+=item Djet::Part::Payload::Cart>
 
-Adds the cart and some important urls to the local object.
+Adds the cart and some important urls to the payload object.
 
 Note! The cart object defined here is used in all other cart and checkout classes, as well as in the templates. This means that
-it's easy to subclass Djet::Part::Local::Cart and define your own cart.
+it's easy to subclass Djet::Part::Payload::Cart and define your own cart.
 
 This is quite important, as all quantity price handling and other special stuff easily fits into the whole system.
 

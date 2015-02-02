@@ -26,7 +26,7 @@
         </div>
         <div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
-: for $local.topmenu -> $menuitem {
+: for $payload.topmenu -> $menuitem {
 			<li <: if $menuitem.current { ' class="active"' | raw } :>><a href="<: $menuitem.node_path :>"><: $menuitem.title :></a></li>
 : }
           </ul>

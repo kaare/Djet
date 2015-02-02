@@ -61,7 +61,7 @@ sub send {
 	my @to = ref $args{to} && ref $args{to} eq 'ARRAY' ? @{ $args{to} } : ($args{to});
 	$self->mailer->from($args{from})
 		->to(@to)
-		->subject($stash->{local}->basenode->title)
+		->subject($stash->{payload}->basenode->title)
 		->html_body($mailbody)
 		->send;
 }

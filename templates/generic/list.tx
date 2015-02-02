@@ -9,7 +9,7 @@
   <tr>
 :   for $row.fields.fields -> $field {
 :     my $elm = 'generic/field/' ~ (($update && $field.updatable) ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
-    <td><: if $link == $field_name or $link == $field.name  { '<a href="' ~ $local.urify($row) ~ '">' | raw } :>
+    <td><: if $link == $field_name or $link == $field.name  { '<a href="' ~ $payload.urify($row) ~ '">' | raw } :>
 : include $elm {field => $field, name => $field_name};
     <: if $link == $field_name or $link == $field.name  { '</a>' | raw } :></td>
 :   }

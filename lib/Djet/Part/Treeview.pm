@@ -30,11 +30,11 @@ before to_json => sub {
 		my $basenode = $self->basenode;
 		my $domain_basetype = $self->model->basetype_by_name('domain');
 		my $domain_node = $self->datanode_by_basetype($domain_basetype);
-		my $local = $self->stash->{local};
+		my $payload = $self->stash->{payload};
 		my $dynadata;
 		if ($template eq 'top') {
 			my $folder = $domain_node->has_children ? 1 : undef;
-			my $path = $local->urify;
+			my $path = $payload->urify;
 			$dynadata = [ {
 				title => $domain_node->title,
 				folder => $folder,
@@ -51,7 +51,7 @@ before to_json => sub {
 			}
 			$dynadata = [ map {
 				my $folder = $_->has_children ? 1 : undef;
-				my $path = $local->urify($_);
+				my $path = $payload->urify($_);
 				{
 					title => $_->part,
 					path => $path,

@@ -153,7 +153,7 @@ sub stash_basic {
 	my $model = $self->model;
 	my $stash = $self->stash;
 	$stash->{basetypes} = $self->basetypes;
-	$stash->{local} = $model->local_class->new(
+	$stash->{payload} = $model->payload_class->new(
 		body => $self->body,
 		model => $self->model,
 		content_type => $self->content_type,
@@ -162,7 +162,7 @@ sub stash_basic {
 
 =head2 BUILD
 
-Initializes the stash with the local object,
+Initializes the stash with the payload object,
 
 =cut
 

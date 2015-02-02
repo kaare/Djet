@@ -1,4 +1,4 @@
-package Djet::Part::Local::Basic;
+package Djet::Part::Payload::Basic;
 
 use 5.010;
 use Moose::Role;
@@ -7,17 +7,17 @@ use Djet::Shop::Cart;
 
 =head1 NAME
 
-Djet::Part::Local::Basic
+Djet::Part::Payload::Basic
 
 =head1 DESCRIPTION
 
-Add commonly used attributes to the local object
+Add commonly used attributes to the payload object
 
 Attributes are
 
 	breadcrumbs
 
-Add information about basic types to the local object
+Add information about basic types to the payload object
 
 Basic Djet types are
 

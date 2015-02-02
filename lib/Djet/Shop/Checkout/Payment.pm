@@ -38,7 +38,7 @@ Checks if there is a terms parameter and processes the order if so
 sub process_order {
 	my $self = shift;
 	my $checkout = $self->checkout;
-	my $cart = $self->stash->{local}->cart;
+	my $cart = $self->stash->{payload}->cart;
 	my $transaction = sub {
 		$self->create_order($checkout, $cart);
 		$self->reset_data($checkout, $cart);
@@ -89,7 +89,7 @@ sub send_mail {
 	my $self = shift;
 	my $mailer = $self->mailer;
 	my $base_fields = $self->basenode->fields;
-	my $user = $self->stash->{local}->user;
+	my $user = $self->stash->{payload}->user;
 	my $to = $base_fields->recipients->value;
 	push @$to, $user->email->value;
 	$self->stash->{template_display} = 'view';

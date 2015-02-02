@@ -2,7 +2,7 @@
 : if $nolink {
   <: $item.title :>
 : } else {
-  <a href="<: $local.urify($item) :>"><: $item.title :></a>
+  <a href="<: $payload.urify($item) :>"><: $item.title :></a>
 : }
 </div>
 <div class="news_box">

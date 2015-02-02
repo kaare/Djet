@@ -1,4 +1,4 @@
-package Djet::Local;
+package Djet::Payload;
 
 use 5.010;
 use Moose;
@@ -9,14 +9,16 @@ with 'Djet::Part::Basic';
 
 =head1 NAME
 
-Djet::Local
+Djet::Payload
 
 =head1 DESCRIPTION
 
-Djet::Local is a base class for local_class.
+Djet::Payload is a base class for payload_class.
 
 The purpose of this is to have a class that is put on the stash and that can contain
 anything you'd like.
+
+A good idea is to have lazy attributes which will only be used if necessary.
 
 =head1 ATTRIBUTES
 

@@ -70,23 +70,23 @@ has basetypes => (
 	lazy => 1,
 );
 
-=head2 local_class
+=head2 payload_class
 
-The local class is put on the stash
+The payload class is put on the stash
 
 =cut
 
-has local_class => (
+has payload_class => (
 	is => 'ro',
 	isa => 'Str',
 	default => sub {
 		my $self = shift;
-		my $local_class = $self->config->{config}{djet_config}{local_class} || 'Djet::Local';
-		$self->log->debug("local Class: $local_class");
-		eval "require $local_class";
+		my $payload_class = $self->config->{config}{djet_config}{payload_class} || 'Djet::Payload';
+		$self->log->debug("Payload Class: $payload_class");
+		eval "require $payload_class";
 		warn $@ if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up
 
-		return $local_class;
+		return $payload_class;
 	},
 	lazy => 1,
 );

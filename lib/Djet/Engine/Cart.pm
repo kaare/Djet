@@ -29,7 +29,7 @@ has cart => (
 	isa => 'Djet::Shop::Cart',
 	default => sub {
 		my $self = shift;
-		return $self->stash->{local}->cart;
+		return $self->stash->{payload}->cart;
 	},
 	lazy => 1,
 );

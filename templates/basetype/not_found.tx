@@ -1,2 +1,2 @@
 <h1>Not Found</h1>
-The requested URL <: $local.request.path :> was not found on this server.
+The requested URL <: $payload.request.path :> was not found on this server.

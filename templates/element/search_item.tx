@@ -1,17 +1,17 @@
 		<article class="search-result row">
 			<div class="col-xs-9 col-sm-9 col-md-3">
 : if $item_image {
-				<a class="thumbnail" title="<: $item.title :>" href="<: $local.urify($item) :>"><img alt="<: $item.title :>" src="/img/products/<: scale_image($item_image.value, '250x140') :>"></a>
+				<a class="thumbnail" title="<: $item.title :>" href="<: $payload.urify($item) :>"><img alt="<: $item.title :>" src="/img/products/<: scale_image($item_image.value, '250x140') :>"></a>
 : }
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-2">
 				<ul class="meta-search">
 					<li><i class="glyphicon glyphicon-calendar"></i> <span><: $item.data_modified.ymd :></span></li>
-					<li><i class="glyphicon glyphicon-tags"></i><span><: $local.basetypes[$item.basetype_id].title :></span></li>
+					<li><i class="glyphicon glyphicon-tags"></i><span><: $payload.basetypes[$item.basetype_id].title :></span></li>
 				</ul>
 			</div>
 			<div class="col-xs-9 col-sm-9 col-md-7 excerpet">
-				<h3><a title="" href="http://<: $local.urify($item) :>"><: $item.title :></a></h3>
+				<h3><a title="" href="http://<: $payload.urify($item) :>"><: $item.title :></a></h3>
 				<: $item.description | raw :>
                 <span class="plus"><a title="Lorem ipsum" href="#"><i class="glyphicon glyphicon-plus"></i></a></span>
 			</div>
