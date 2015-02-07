@@ -1,6 +1,6 @@
 <div id="required_description">
 : if $template_display != 'view' {
-Felter markeret med <b>fed</b> er obligatoriske.
+<: l('Fields in bold are mandatory') :>
 : }
 </div>
 <table>
