@@ -1,0 +1,10 @@
+: cascade '/base.tx';
+: override content -> {
+<div id="blogs">
+	<div>
+: for $blogs.all_ref -> $blog {
+: 	include '/element/blog.tx' {item => $blog};
+: }
+	</div>
+</div>
+: } # content

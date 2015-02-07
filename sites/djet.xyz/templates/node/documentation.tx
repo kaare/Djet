@@ -1,0 +1,9 @@
+: cascade '/base.tx';
+: override subheading -> {
+<: $title :>
+: } # subheading
+: override content -> {
+	<div class="box">
+<: $pod | raw :>
+	</div>
+: } # content

@@ -1,0 +1,9 @@
+: cascade '/base.tx';
+: override content -> {
+	<div class="box">
+		<a href="<: $payload.basenode.image :>">
+			<img class="img-responsive img-border-left" src="/images/<: $payload.basenode.image :>" alt="">
+		</a>
+<: $payload.basenode.content_text | raw :>
+	</div>
+: } # content

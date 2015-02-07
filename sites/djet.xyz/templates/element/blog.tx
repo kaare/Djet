@@ -1,0 +1,13 @@
+<div class="post-preview">
+	<a href="post.html">
+	<a href="<: $payload.urify($item) :>">
+		<h2 class="post-title">
+			<: $item.title :>
+		</h2>
+		<h3 class="post-subtitle">
+			<: $item.teaser | raw :>
+		</h3>
+	</a>
+	<p class="post-meta">Posted by <a href="#"><: $item.node_owner_name :></a> on <: $item.publish_date :></p>
+</div>
+<hr>

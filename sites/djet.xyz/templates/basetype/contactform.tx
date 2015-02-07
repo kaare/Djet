@@ -1,0 +1,6 @@
+: cascade '/base.tx';
+: override content -> {
+	<div class="box">
+: include 'element/contactform.tx';
+	</div>
+: }
