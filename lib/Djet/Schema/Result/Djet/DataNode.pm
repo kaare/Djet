@@ -291,6 +291,47 @@ has 'current' => (
 	lazy => 1,
 );
 
+# Owner methods are here. They could also be on the node and data classes respectively, but there's a name problem with that (modified_by vs node_modified_by etc).
+
+=head2 node_owner
+
+Return a result row with the owner.
+
+=cut
+
+sub node_owner {
+	my $self = shift;
+	my $user_type = $self->result_source->schema->resultset('Djet::Basetype')->find({name => 'user'}) or return;
+
+	return $user_type->find_related('datanodes', {part => $self->node_modified_by});
+}
+
+=head2 node_owner_name
+
+Either the name from the owner row, or the modified_by
+
+=cut
+
+sub node_owner_name {
+	my $self = shift;
+	my $node_owner = $self->node_owner or return $self->node_modified_by;
+
+	return $node_owner->user_name;
+}
+
+=head2 data_owner
+
+Return a result row with the owner.
+
+=cut
+
+sub data_owner {
+	my $self = shift;
+	my $user_type = $self->result_source->schema->resultset('Djet::Basetype')->find({name => 'user'}) or return;
+
+	return $user_type->find_related('datanodes', {part => $self->data_modified_by});
+}
+
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
