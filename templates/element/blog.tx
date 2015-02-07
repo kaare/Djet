@@ -1,0 +1,13 @@
+<div class="blog_header">
+: if $nolink {
+  <: $item.title :>
+: } else {
+  <a href="<: $payload.urify($item) :>"><: $item.title :></a>
+: }
+</div>
+<div class="blog_box">
+  <: $item.fields.news_text | raw :>
+</div>
+<div class="blog_date">
+  <: $item.data_created.ymd :>
+</div>
