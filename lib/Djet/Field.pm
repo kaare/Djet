@@ -61,6 +61,17 @@ has value => (
 	is => 'ro',
 );
 
+=head2 default
+
+The field's default value
+
+=cut
+
+has default => (
+	is => 'ro',
+	predicate => 'has_default',
+);
+
 =head2 required
 
 Switch to tell if the field is required
@@ -95,6 +106,17 @@ has updatable => (
 	is => 'ro',
 	isa => 'Bool',
 	default => 1,
+);
+
+=head2 css_class
+
+The field's css class
+
+=cut
+
+has css_class => (
+	is => 'ro',
+	predicate => 'has_css_class',
 );
 
 =head1 METHODS
