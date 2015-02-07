@@ -127,7 +127,7 @@ sub _build_basetype_fields {
 				name => 'type',
 				title => 'Type',
 				type => 'Enum',
-				enum => [qw/Boolean Email Enum File Html Int Price Str Structured/],
+				default => [qw/Boolean Email Enum File Html Int Price Str Structured/],
 				value => $col->{type},
 				updatable => 1,
 			},
