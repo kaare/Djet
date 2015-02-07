@@ -25,6 +25,32 @@ sub has_children {
 	return $self->children->count;
 }
 
+=head2 node_owner
+
+Return a result row with the owner.
+
+=cut
+
+sub node_owner {
+	my $self = shift;
+	my $user_type = $self->result_source->schema->resultset('Djet::Basetype')->find({name => 'user'}) or return;
+
+	return $user_type->find_related('datanodes', {part => $self->node_modified_by});
+}
+
+=head2 data_owner
+
+Return a result row with the owner.
+
+=cut
+
+sub data_owner {
+	my $self = shift;
+	my $user_type = $self->result_source->schema->resultset('Djet::Basetype')->find({name => 'user'}) or return;
+
+	return $user_type->find_related('datanodes', {part => $self->data_modified_by});
+}
+
 no Moose::Role;
 
 1;
