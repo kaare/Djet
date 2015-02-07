@@ -123,6 +123,17 @@ The template for this basetype
   data_type: 'timestamp with time zone'
   is_nullable: 1
 
+=head2 created_by
+
+  data_type: 'text'
+  default_value: "current_user"()
+  is_nullable: 1
+
+=head2 modified_by
+
+  data_type: 'text'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -160,6 +171,14 @@ __PACKAGE__->add_columns(
   },
   "modified",
   { data_type => "timestamp with time zone", is_nullable => 1 },
+  "created_by",
+  {
+    data_type     => "text",
+    default_value => \"\"current_user\"()",
+    is_nullable   => 1,
+  },
+  "modified_by",
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -221,8 +240,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jR+ZSWjNRRWfOIvMJ7Ni4Q
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-02-07 04:21:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PcRzjPSvvGLqBLbgemG3tw
 
 =head2 datanodes
 

@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION set_modified () RETURNS "trigger" AS $$
 BEGIN
 	NEW.created = OLD.created;
 	NEW.modified = now();
+	NEW.created_by = OLD.created_by;
+	NEW.modified_by = current_user;
 	RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
@@ -24,13 +26,17 @@ CREATE TABLE feature (
 	version					decimal,
 	description				text,
 	created					timestamp default now(),
-	modified				timestamp
+	modified				timestamp,
+	created_by 				text default current_user,
+	modified_by 			text
 );
 
 COMMENT ON TABLE feature IS 'A feature is a collection of basetypes that forms or supports a set of functions or methods';
 COMMENT ON COLUMN feature.name IS 'Feature Name';
 COMMENT ON COLUMN feature.version IS 'Feature Version';
 COMMENT ON COLUMN feature.description IS 'Feature Description';
+COMMENT ON COLUMN feature.created_by IS 'The user (role) name that created the feature';
+COMMENT ON COLUMN feature.modified_by IS 'The user (role) name that modified the feature last';
 
 CREATE TRIGGER set_modified BEFORE UPDATE ON feature FOR EACH ROW EXECUTE PROCEDURE public.set_modified();
 
@@ -46,7 +52,9 @@ CREATE TABLE basetype (
 	handler					text,
 	template				text,
 	created					timestamptz default now(),
-	modified				timestamptz
+	modified				timestamptz,
+	created_by 				text default current_user,
+	modified_by 			text
 );
 
 COMMENT ON TABLE basetype IS 'Node Base Type';
@@ -73,7 +81,9 @@ CREATE TABLE data (
 	acl						json NOT NULL default '{}',
 	fts						tsvector,
 	created					timestamptz default now(),
-	modified				timestamptz
+	modified				timestamptz,
+	created_by 				text default current_user,
+	modified_by 			text
 );
 
 COMMENT ON TABLE data IS 'Data';
@@ -96,7 +106,9 @@ CREATE TABLE node (
 	part					text,
 	node_path				prefix_range,
 	created					timestamptz default now(),
-	modified				timestamptz
+	modified				timestamptz,
+	created_by 				text default current_user,
+	modified_by 			text
 );
 
 COMMENT ON TABLE node IS 'Node';
@@ -114,8 +126,8 @@ CREATE INDEX node_path_gist_idx ON node USING GIST (node_path);
 --
 
 CREATE VIEW data_node AS
-SELECT d.id data_id, d.basetype_id, d.name, d.title, d.datacolumns, d.acl, d.fts, d.created data_created, d.modified data_modified,
-	n.id node_id, n.parent_id, n.part, n.node_path, n.created node_created, n.modified node_modified
+SELECT d.id data_id, d.basetype_id, d.name, d.title, d.datacolumns, d.acl, d.fts, d.created data_created, d.modified data_modified, d.created_by data_created_by, d.modified_by data_modified_by,
+	n.id node_id, n.parent_id, n.part, n.node_path, n.created node_created, n.modified node_modified, n.created_by node_created_by, n.modified_by node_modified_by
 FROM djet.data d
 JOIN djet.node n ON d.id=n.data_id;
 

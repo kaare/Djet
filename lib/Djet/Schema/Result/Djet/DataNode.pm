@@ -84,6 +84,16 @@ __PACKAGE__->table("djet.data_node");
   data_type: 'timestamp with time zone'
   is_nullable: 1
 
+=head2 data_created_by
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 data_modified_by
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 node_id
 
   data_type: 'integer'
@@ -114,6 +124,16 @@ __PACKAGE__->table("djet.data_node");
   data_type: 'timestamp with time zone'
   is_nullable: 1
 
+=head2 node_created_by
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 node_modified_by
+
+  data_type: 'text'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -135,6 +155,10 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "data_modified",
   { data_type => "timestamp with time zone", is_nullable => 1 },
+  "data_created_by",
+  { data_type => "text", is_nullable => 1 },
+  "data_modified_by",
+  { data_type => "text", is_nullable => 1 },
   "node_id",
   { data_type => "integer", is_nullable => 0 },
   "parent_id",
@@ -147,11 +171,15 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "node_modified",
   { data_type => "timestamp with time zone", is_nullable => 1 },
+  "node_created_by",
+  { data_type => "text", is_nullable => 1 },
+  "node_modified_by",
+  { data_type => "text", is_nullable => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nF30Ey7UBbbMD4hL1+pDYw
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-02-07 04:21:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2jatFbQnKsY9TTMUHVFlzQ
 
 use JSON;
 

@@ -100,6 +100,17 @@ Full Text Search column containing the content of the searchable columns
   data_type: 'timestamp with time zone'
   is_nullable: 1
 
+=head2 created_by
+
+  data_type: 'text'
+  default_value: "current_user"()
+  is_nullable: 1
+
+=head2 modified_by
+
+  data_type: 'text'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -131,6 +142,14 @@ __PACKAGE__->add_columns(
   },
   "modified",
   { data_type => "timestamp with time zone", is_nullable => 1 },
+  "created_by",
+  {
+    data_type     => "text",
+    default_value => \"\"current_user\"()",
+    is_nullable   => 1,
+  },
+  "modified_by",
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -178,8 +197,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+NHFIK6Oe/vhtwHLaWGwsA
+# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-02-07 04:21:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8U0RSluBmG7NcS1KQuZwiA
 
 use JSON;
 
