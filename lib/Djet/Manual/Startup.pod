@@ -8,7 +8,7 @@ This document describes the way Djet performs a startup.
 
 =head1 Modules
 
-=head2 Djet::Starter
+=head2 L<Djet::Starter>
 
 Djet::Starter is instantiated in app.psgi, making it a singleton (at least within the
 address space of a single web server process).
@@ -52,7 +52,7 @@ including the configuration.
 
 =back
 
-=head2 Djet::Config
+=head2 L<Djet::Config>
 
 Contains the 'static' Djet data, including
 
@@ -68,7 +68,7 @@ The path to the application's home directory
 
 =item config
 
-The configuration, fetched from the configuration file(s)a.
+The configuration, fetched from the configuration file(s).
 
 =item renderers
 
@@ -80,13 +80,16 @@ The logger
 
 =back
 
-=head2 Djet::Model
+=head2 L<Djet::Model>
+
+Is Djet's Model of the world. It's a subclass of Djet::Schema, a L<DBIx::Class> Schema, but holds more data
+vital to L<Djet>. Some of them are
 
 =over 4
 
 =item config
 
-Set from Djet::Starter, contains the entire configuration.
+Set from L<Djet::Starter>, contains the entire configuration.
 
 =item basetypes
 
@@ -94,7 +97,7 @@ A hashref containing the basetypes is kept around for performance reasons.
 
 =item ... the rest
 
-Djet::Schema is also an ordinary DBIC Schema class.
+Djet::Schema is an ordinary DBIC Schema class, so L<Djet::Model> acts as one too.
 
 =back
 
