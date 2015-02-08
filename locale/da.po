@@ -29,8 +29,8 @@ msgstr "Antal"
 msgid "Email Address"
 msgstr "Email"
 
-msgid "Fields in bold> are mandatory"
-msgstr "Felter markeret med fed> er obligatoriske"
+msgid "Fields in bold are mandatory"
+msgstr "Felter markeret med fed er obligatoriske"
 
 msgid "Name"
 msgstr "Navn"
