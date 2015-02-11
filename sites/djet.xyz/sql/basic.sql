@@ -35,7 +35,6 @@ UPDATE data_node SET basetype_id = 1,
 	datacolumns='{"redirect":"index.html"}' WHERE parent_id IS NULL;
 
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'index.html','frontpage','Home of Djet','{"content_text":"Djet.xyz", "image":"img/private_djet.jpg"}' FROM basetype b, data_node n WHERE b.name='frontpage' AND n.name='www.djet.xyz';
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'about','about','About','{"text":"About this","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='textpage' AND n.name='www.djet.xyz';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'documentation','Documentation','Documentation','{"topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='documentation' AND n.name='www.djet.xyz';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'blogs','blogs','Blogs','{"text":"All the blogs","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='blogs' AND n.name='www.djet.xyz';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'contactform','contactform','Contact','{"from":"test@test.test","recipient":"test@test.test","template":"/basetype/contactform.tx","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='contactforms' AND n.name='www.djet.xyz';
