@@ -3,5 +3,5 @@
 <: $payload.basenode.teaser | raw :>
 : } # content
 : override content -> {
-<: $payload.basenode.content_text | raw :>
+		<: $payload.basenode.content_text | raw :>
 : } # content
