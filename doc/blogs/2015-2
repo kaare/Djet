@@ -1,0 +1,41 @@
+Welcome!
+
+Welcome to my own site featuring Djet, now with built-in blog!
+
+Well, everything is new here, so that's not surprising. It's based on the really nice http://startbootstrap.com/template-overviews/clean-blog/ - just adapted to a dynamyc template.
+
+I kinda stumbled into talking about Djet last month. I got this idea that I would blog once a month for a year, and it being January, and me realizing that I would be travelling for the next long time, I opened the topic.
+
+When you invite people into your unfinished building, you notice all the missing parts, the remaining scaffolding, the dirty patches, and the machine-compacted soil. But that's how it is, and I got some interesting feedback.
+
+Part of the feedback was that I really should create my own blog and talk about Djet there. So I did; this is it. I also received some nice supporting comments, and even a pull request (from ferz++). Thanks for both types - and keep them coming ;-)
+
+So now I'm looking for my notes where I explained what Djet is. I guess I left them in the other suit, or something. I have to write up something again. For now, I can say that it's a node (or vertex) based CMS, not node.js based. It's Perl, and it's PostgreSQL.
+
+Some people don't like these choices, and I'm fine with that. There are plenty of solutions for them.
+
+What's new
+
+Despite of travelling and sickness taking up time, there is a lot of changes to Djet, including
+
+Navigator
+I put all the navigation stuff into its own module. Navigations is about finding the correct node giving the path. It's better to have all this in one place, and it will be easily modifiable / subclassable. Currently I think this area needs another refactor to get 100% correct; the right feel is not there yet.
+
+Code cleanup
+ - I purged old code, which was part of earlier attempts, abandoned long time ago. At one point in time I tried to go without DBIx::Class. Seriously, don't!
+ - I also separated the DBIC schema from the Djet::Model.
+ - And turned some clumsy internal redirect into proper redirects when necessary.
+ - I renamed some modules to be more meaningful. Djet::Payload really carries the payload of the Djet Flight.
+
+Blog Engine
+I added this Blog. Not sure there is a specification of what a blog is, so I stole some features from http://www.blog.dk. You might notice there are some features missing, most notably there's no talkback. To be honest, it's no probkem to implement, but I ran out of time. Or steam, I have other things to do.
+
+Also, I'm not really sharp on the distinction between categories, tags, and keywords. As far as I can tell, the two latter are almost interchangeable. And should a blog really have a rss feed? Is that still important?
+
+Finally I built djet.xyz incl documentation. Currently it lives in the sites/ subdirectory of Djet itself. There is a small Engine to present the POD of Djet. It's 50 lines of code, most of it is about manipulating Pod::Simple to do some sane things in this environment.
+
+So once again I realize that the wiring is visible, the footpanels are loose and the railings missing, ie the POD stinks.
+
+But I've started, and will push it further for the time to come. Why? Because it's fun, and because I need Djet for my family business. Ideas are always welcome, productive feedback even more so.
+
+
