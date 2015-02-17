@@ -28,30 +28,7 @@ before 'init_data' => sub  {
 	$self->set_list_name('blogs');
 	$self->add_search("datacolumns->>'status'" => [qw/published scheduled/]);
 	$self->add_search("datacolumns->>'publish_date'" => {'<=' => DateTime->now->ymd});
-};
-
-=head2 after data
-
-Set the list name to 'news_feed'
-
-
-after 'data' => sub  {
-	my $self = shift;
-	my $stash = $self->stash;
-	if (my $year = $self->request->param('year')) {
-		$self->add_search(data_created => { '-between' => [ $year . '-01-01', $year . '-12-31' ] });
-	}
-	my $archive = $stash->{blogs};
-use Data::Dumper 'Dumper';
-$Data::Dumper::Maxdepth = 4;
-warn Dumper [ $stash->{blogs} ];
-	$stash->{blogs} = $archive->search(undef, {
-		select => [ \"date_part('year', data_created)", \"count(*)" ],
-		as => [qw/year count/],
-		group_by => 1,
-		order_by => { '-desc' => 1},
-	});
-warn Dumper [ $stash->{blogs}->all_ref ];
+	$self->add_options(order_by => {'-desc' => "datacolumns->>'publish_date'"});
 };
 
 =cut
