@@ -31,8 +31,6 @@ before 'init_data' => sub  {
 	$self->add_options(order_by => {'-desc' => "datacolumns->>'publish_date'"});
 };
 
-=cut
-
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
