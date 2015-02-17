@@ -59,7 +59,7 @@ has fts => (
 
 =head2 search
 
-A generic DBIC seach parameter arrayref
+A generic DBIC search parameter arrayref
 
 =cut
 
@@ -71,6 +71,23 @@ has search => (
 	default => sub { {} },
 	handles => {
 		add_search => 'set',
+	},
+);
+
+=head2 options
+
+A generic DBIC options parameter arrayref
+
+=cut
+
+has options => (
+	is => 'ro',
+	isa => 'HashRef',
+	traits => [qw/Hash/],
+	lazy => 1,
+	default => sub { {} },
+	handles => {
+		add_options => 'set',
 	},
 );
 
@@ -91,7 +108,7 @@ sub _find_list {
 	my $self = shift;
 	return if $self->limit < 0;
 
-	my $options = {};
+	my $options = $self->options;
 	$options->{rows} = $self->limit;
 	my $page = $self->request->param('page') // 1;
 	$options->{page} = $page;
