@@ -7,36 +7,6 @@
     float: left;
 }
 
-/* Html Editor */
-
-.editHtml {
-  text-align:center;
-  padding:5px;
-  margin:5px;
-}
-
-.htmlEditor {
-  resize:vertical;
-  overflow:auto;
-  border:1px solid silver;
-  border-radius:5px;
-  min-height:100px;
-  box-shadow: inset 0 0 10px silver;
-  padding:1em;
-}
-
-.editHtml a:link {text-decoration:none;}
-.editHtml a:visited {text-decoration:none;}
-.editHtml a:hover {text-decoration:none;}
-.editHtml a:active {text-decoration:none;}
-.editHtml a{
-  color:black;
-  padding:5px;
-  border:1px solid silver;
-  border-radius:5px;
-  width:1em;
-}
-
 /* Clutter below -------------------------------- */
 
 /* Layout
