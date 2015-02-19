@@ -1,8 +1,1 @@
-<textarea id="<: $field.title :>" class='editHtml'><: $defaults[$field.name] || $field.value :></textarea>
-  <script type="text/javascript">
-	$(function() {
-	  $("#<: $field.title :>").YellowText({
-	    defaultFont: 'Georgia'
-	  });
-	});
-  </script>
+<textarea id='<: $field.name :>_hidden' name='<: $field.name :>' class='editHtml'><: $defaults[$field.name] || $field.value :></textarea>
