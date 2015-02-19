@@ -1,6 +1,8 @@
-<textarea id="<: $field.title :>" class='editHtml'><: $defaults[$field.name] || $field.value | raw :></textarea>
+<textarea id="<: $field.title :>" class='editHtml'><: $defaults[$field.name] || $field.value :></textarea>
   <script type="text/javascript">
-	$(document).ready( function() {
-		$("#<: $field.title :>").Editor();
+	$(function() {
+	  $("#<: $field.title :>").YellowText({
+	    defaultFont: 'Georgia'
+	  });
 	});
   </script>
