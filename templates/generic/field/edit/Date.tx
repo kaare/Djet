@@ -1,1 +1,1 @@
-<input type="text" id="<: $field.name :>" name="<: $field.name :>" class="datepicker">
+<input type="text" id="<: $field.name :>" name="<: $field.name :>" value='<: $defaults[$field.name] || $field.value | raw :>' class="datepicker">
