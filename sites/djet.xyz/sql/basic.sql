@@ -38,6 +38,6 @@ INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'about','about','About','{"text":"About this","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='textpage' AND n.name='www.djet.xyz';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'documentation','Documentation','Documentation','{"topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='documentation' AND n.name='www.djet.xyz';
 INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'blogs','blogs','Blogs','{"text":"All the blogs","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='blogs' AND n.name='www.djet.xyz';
-INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'contactform','contactform','Contact','{"from":"test@test.test","recipient":"test@test.test","template":"/basetype/contactform.tx","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='contactforms' AND n.name='www.djet.xyz';
+INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT b.id,n.node_id,'contactform','contactform','Contact','{"from":"info@djet.xyz","recipient":"info@djet.xyz","receipt_msg":"Thanks for your feedback","template":"/basetype/contactform.tx","topmenu":"on"}' FROM basetype b, data_node n WHERE b.name='contactforms' AND n.name='www.djet.xyz';
 
 COMMIT;
