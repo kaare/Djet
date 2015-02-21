@@ -187,6 +187,14 @@ Data is called just after the original method is called. Add anything that belon
 
 sub data {}
 
+=head2 redirect
+
+Call this if you want to redirect to the already set url
+
+=cut
+
+sub redirect { return \302; }
+
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT

@@ -10,4 +10,5 @@
     <input type="hidden" name="am" value="<: $payload.basenode.id :>">
   </form>
 : }
+<div><: $payload.flash.status :></div>
 </div>
