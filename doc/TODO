@@ -1,20 +1,113 @@
+T E C H N O L O G I C A L   D E B T
+-----------------------------------
+
+All the things that need to be corrected, but where there is a reason not to do it now.
+
+Engines
+-------
+- Flash
+  The location rewrite of the before redirect modifier should be normalized and put in a proper place for more generic use.
+  The problem is to find the right place.
+  There's a 'use URI' which is a red flag that this is the wrong place.
+
+Framework
+---------
+- Best Practices
+  namespace::autoclean
+
+Parts
+-----
+- Update
+  The default is the processed data upon failure.
+  - Check this: html field w/markup. The html tags are visible if there is a failure.
+
+E N H A N C E M E N T S
+-----------------------
+
+I D E A S / T E S T I N G
+-------------------------
+
+All the more or less crazy ideas that might work. Or perhaps not. 
+
+Update process
+- More dynamic properties
+  Reorder fields
+  - In some cases, the default (from basetype) order is not the desired one. Perhaps there could be a field-order attribute.
+  Add / remove fields
+  - As an example, there's a password on the user basetype.
+    When entering a new password, it should be doubled, and checked for equality
+  - There's a "dont save" way for fields to be declared. That way, a datacolumn
+    can be declard "storage": false and thecolumn will not be saved on the
+    data_node.
+
+Attributes of a data node (datacolumns) should not (all) come from the basetype. If the corresponding engine is with a role, that role could require some columns.
+
+Archiving
+- Some kind of history of data
+- Implementation
+  Mark columns as archivable in the basetype
+  Upon update or delete, add an entry to the archive.
+
+Search
+------
+- PostgreSQL FTS
+  fts should be combinable with ACL for searching, so the search result should reflect the user's permissions
+  samecase searches? (test necessesity)
+- CPAN
+  http://search.cpan.org/dist/Search-Tools/
+  https://metacpan.org/release/Data-SearchEngine
+  Write a specific Pg fts engine
+
+Path Modifiers
+--------------
+1. Implementation
+  a) For every request, look up each path part and process its modifiers
+  b) When inserting a node, let the database update modifiers from upstream
+     When updating a node, let the database update modifiers downstream
+
+2. Types
+  a) pre - called on the way down
+  b) post - called on the way back up
+
+3. Examples
+  a) Simple
+    1. Breadcrumbs - leave a bc on the stash
+    2. Make a choice based on the path part, e.g. choose language
+
+Plack
+-----
+- Image handling
+  http://search.cpan.org/dist/Plack-Middleware-Image-Scale/ seems to have different problems, most notably w/gifs (not really confirmed)
+
+Paging
+------
+- http://wiki.postgresql.org/wiki/Count_estimate
+
+D O C U M E N T A T I O N
+-------------------------
+
+Update the pod, please. This is a holding place for text or ideas to enhance the documentation
+
+Basic, how it's working
+  - Split into server process information and per-request information.
+    Process information
+      schema, config, 
+    Per-request information
+      rest, stash, node, recipe, response
+
+A T T I C
+---------
+
+All the stuff that didn't work, doesn't make sense, or otherwise is not current. But that still holds some value of some kind.
+
 Framework
 ---------
 - Context
   https://metacpan.org/module/DBIx::Connector
   Context replacement
-  - Split into server process information and per-request information.
-    Process information
-      schema, cache, 
-    Per-request information
-      rest, stash, node, recipe, response
-      Perhaps subclass Plack::Request
 - encoding
   https://metacpan.org/release/utf8-all
-- Best Practices
-  namespace::autoclean
   
-
 Template
 --------
 - Searching
@@ -28,81 +121,14 @@ Template
 - Javascript
   http://search.cpan.org/dist/HTML-JQuery/
 
-Stash
------
-- node
-  - row
-  - basetype
+AAA
+---
 
 Relations
 ---------
-$node->descendants							all descendants
-$node->descendants('basetype')				all descendants with that basetype
-$node->descendants([qw/type1 type2])		more basetypes
-$node->descendants('basetype', $opt)		with options
 
-Improvements for ->child(ren), parent(s)
-
-$opt
-	order_by
-	limit
-	offset
-
-$node->descendants uses PostgreSQL's WITH RECURSIVE-construct or the node_path array (making use of the gin index)
-
-There might be a case for choosing between returning Djet::Stuff::Result and an array of Djet::Node
-Or refactor (and rename) Djet::Stuff::Result to return an array of Djet::Stuff::Row or Djet::Node.
-- Or perhaps just introduce a generic iterator to handle the results.
-
-Laziness
---------
-Hopefully it will be possible to make relations "lazy", in the sense that they can gather more information before
-actually being used. Examples
-
-$node->parents('basetype')->descendants
-$node->childen('basetype')->children('basetype')
-
-Each can in effect be one sql select, offering vastly better performance
-
-Idea
-----
-- node->children, ->parents, etc returns a Djet::Node::Search object
-- JNO also has ->children, ->parents, etc
-- Building up a search parameter list on the way.
-- Also has ->next, ->all
-- Fires when ->next, ->all is called
-- Returns node(s)
-- Possibly has parameters to in/exclude nodes on the route
-
-
-AAA
----
-- Users, groups
-- ACL handling
-
-REST
-----
-- Process: ability to check or set context->rest->type
-  Some processing depends on REST type
-
-Search
-------
-- PostgreSQL FTS
-  fts should be combinable with ACL for searching, so the search result should reflect the user's permissions
-  samecase searches? (test necessesity)
-- Checkbox for a column: "searchable"
-  If checked, a fts column on the node is updated with this column's content.
-- CPAN
-  http://search.cpan.org/dist/Search-Tools/
-  https://metacpan.org/release/Data-SearchEngine
-  Write a specific Pg fts engine
-
-Paging
-------
-- limit, offset
-- CPAN module?
-  Probably https://metacpan.org/module/Data::Paginator
-- http://wiki.postgresql.org/wiki/Count_estimate
+Stash
+-----
 
 Transactions
 ------------
@@ -114,7 +140,7 @@ Caching
 - Mark page as cachable
   Render first time
   Get from cache and compare expiration time
-- Mark recipe step as cacable
+- Mark recipe step as cachable
   cache => {name => 'foo', expiration => bar}
 
 Djet Schema
@@ -153,31 +179,10 @@ Djet Schema
   path1->path2->path3->path1 should be disallowed
   incl test
 
-Stuff class
-------------
-- delete, update
-
-Result class
-------------
-- Row maker - insert column accessors
-  Perhaps use cases from some other classses
-  http://search.cpan.org/dist/Moose/lib/Moose/Meta/Class.pm
-  Moose::Meta::Class->create or ->create_anon_class
-  then $meta->add_attribute for each column
-  then cache the result of that so you don't do it again next time you run the same query
-
-Node class
-----------
-- children (etc)
-  search can be optimized for the different scenarios
-  right now there's a select for each child even when the search could be smarter
-
 Plack
 -----
 - Authentication
   ACL for images still a problem
-- Image handling
-  http://search.cpan.org/dist/Plack-Middleware-Image-Scale/
 
 Plugins
 -------

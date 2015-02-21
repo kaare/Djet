@@ -1,6 +1,18 @@
 Revision history for Jet
 
 {{$NEXT}}
+ - Rename Jet to Djet, Djet::Local to Djet::Payload, Djet::Role to Djet::Part
+ - Gather all navigation parts from all around and separate them into Djet::Navigator
+ - Use CL editor for html fields
+ - Flash engine
+
+0.03 2014-12-2
+ - Use Web::Machine
+ - Move Jet::Import into its own distribution, Data::Importer
+ - Move fts functionality from a database func up into a Perl module.
+ - Contactform, Cart engines
+ - The local class carries lazy properties to the templates (later renamed payload class)
+ - Add ACL to Jet, using PostgreSQL's ACL system through Role::Pg::Roles
 
 0.02 2014-3-24
  - Tests work again
