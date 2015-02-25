@@ -243,6 +243,9 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-02-07 04:21:08
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PcRzjPSvvGLqBLbgemG3tw
 
+use JSON;
+use Djet::NodeData::Factory;
+
 =head2 datanodes
 
 Type: has_many
@@ -257,8 +260,6 @@ __PACKAGE__->has_many(
   { "foreign.basetype_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
-use JSON;
-use Djet::Fields::Factory;
 
 __PACKAGE__->inflate_column('datacolumns'=>{
 	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
@@ -285,18 +286,18 @@ has engine => (
 	lazy_build => 1,
 );
 
-=head2 fields
+=head2 nodedata
 
-The Basetype fields
+The Basetype nodedata
 
 =cut
 
-has fields => (
-	isa => 'Djet::Fields',
+has nodedata => (
+	isa => 'Djet::NodeData',
 	is => 'ro',
 	lazy_build => 1,
 	handles => [qw/
-	dfv
+		dfv
 	/],
 );
 
@@ -316,11 +317,11 @@ sub _build_engine {
 	return $handler->meta->new_object;
 }
 
-=head2 _build_fields
+=head2 _build_nodedata
 
-Build the fields for the basetype.
+Build the nodedata for the basetype.
 
-The fields are build from a superclass Djet::Fields and each field has an
+The nodedata is built from a superclass Djet::NodeData and each field has an
 attribute called __<field> and a reader called <field>.
 
 An arrayref attribute containing fieldnames is also build.
@@ -329,10 +330,15 @@ This class is instantiated for each data or datanode requesting datacolumns from
 
 =cut
 
-sub _build_fields {
+sub _build_nodedata {
 	my $self= shift;
-	my $factory = Djet::Fields::Factory->new(datacolumns => $self->datacolumns);
-	return $factory->fields_class;
+	my $model = $self->result_source->schema;
+	my $config = $model->config;
+	my $factory = Djet::NodeData::Factory->new(
+		config => $config,
+		datacolumns => $self->datacolumns,
+	);
+	return $factory->nodedata_class;
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -76,8 +76,8 @@ Build the dfv for a node
 
 sub _build_dfv {
 	my $self = shift;
-	my $fields = $self->object->fields;
-	return $fields->dfv;
+	my $nodedata = $self->object->nodedata;
+	return $nodedata->dfv;
 }
 
 =head2 get_fieldnames
@@ -88,7 +88,7 @@ Get the fieldnames of the object
 
 sub get_fieldnames {
 	my $self = shift;
-	my $cols = $self->object->fields;
+	my $cols = $self->object->nodedata;
 	return $cols->fieldnames;
 }
 
@@ -101,9 +101,9 @@ Get the datacolumns from input data
 sub datacolumns {
 	my ($self, $input_data) = @_;
 	my $fieldnames = $self->get_fieldnames;
-	my $fields = $self->object->fields;
+	my $nodedata = $self->object->nodedata;
 	# call unpack on each datacolumns field. Perhaps there is a convertion
-	return { map { $_ => $fields->$_->unpack($input_data->{$_}) } @$fieldnames };
+	return { map { $_ => $nodedata->$_->unpack($input_data->{$_}) } @$fieldnames };
 }
 
 =head2 get_resultset

@@ -88,15 +88,15 @@ Send the order email(s)
 sub send_mail {
 	my $self = shift;
 	my $mailer = $self->mailer;
-	my $base_fields = $self->basenode->fields;
+	my $nodedata = $self->basenode->nodedata;
 	my $user = $self->stash->{payload}->user;
-	my $to = $base_fields->recipients->value;
+	my $to = $nodedata->recipients->value;
 	push @$to, $user->email->value;
 	$self->stash->{template_display} = 'view';
 	$mailer->send(
-		template => $base_fields->mail_template->value,
+		template => $nodedata->mail_template->value,
 		to => $to,
-		from => $base_fields->sender->value,
+		from => $nodedata->sender->value,
 	);
 }
 

@@ -87,7 +87,7 @@ Send email to the admin and the user if the "child" contactform was actually cre
 
 before 'edit_updated' => sub {
 	my ($self, $validation)=@_;
-	$self->set_status_msg($self->basenode->fields->receipt_msg->value);
+	$self->set_status_msg($self->basenode->nodedata->receipt_msg->value);
 	eval { $self->send_mail };
 	$self->model->log->error("Couldn't send email: $@") if $@;
 };
@@ -101,16 +101,16 @@ Actually send the email
 sub send_mail {
 	my $self = shift;
 	my $mailer = $self->mailer;
-	my $base_fields = $self->basenode->fields;
+	my $nodedata = $self->basenode->nodedata;
 	my $in_fields = $self->object->fields;
-	my @to = $base_fields->recipient->value, $in_fields->email->value;
+	my @to = $nodedata->recipient->value, $in_fields->email->value;
 	$self->stash->{template_display} = 'view';
 	$self->object->discard_changes;
 	$self->stash->{contactform} = $self->object;
 	$mailer->send(
-		template => $base_fields->template->value,
+		template => $nodedata->template->value,
 		to => \@to,
-		from => $base_fields->from->value,
+		from => $nodedata->from->value,
 	);
 }
 

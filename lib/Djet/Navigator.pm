@@ -197,8 +197,8 @@ Redirections can be avoided by setting the noredirect parameter.
 
 sub check_node_redirect {
 	my ($self, $basenode) = @_;
-	return unless first {$_ eq 'redirect'} @ { $basenode->fields->fieldnames };
-	return unless my $redirect = $basenode->fields->redirect;
+	return unless first {$_ eq 'redirect'} @ { $basenode->nodedata->fieldnames };
+	return unless my $redirect = $basenode->nodedata->redirect;
 	return if $self->request->parameters->{noredirect};
 
 	my $uri = $redirect =~ m{^(/|\w+://)} ? $redirect : $basenode->node_path . "/$redirect";

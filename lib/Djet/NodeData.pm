@@ -1,4 +1,4 @@
-package Djet::Fields;
+package Djet::NodeData;
 
 use 5.010;
 use Moose;
@@ -10,9 +10,11 @@ use Djet::Field;
 
 =head1 NAME
 
-Djet::Fields - Djet Fields Base Class
+Djet::NodeData - Djet nodedata Base Class
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+The baseclass for all nodedata of the basetypes
 
 =head1 ATTRIBUTES
 
@@ -136,8 +138,6 @@ sub values {
 }
 
 __PACKAGE__->meta->make_immutable;
-
-1;
 
 # COPYRIGHT
 

@@ -33,23 +33,23 @@ sub field_inflate {
 
 =head1 ATTRIBUTES
 
-=head2 fields
+=head2 nodedata
 
-Fields is a Djet::Fields filled with the datacolumns data
+Aa Djet::NodeData object filled with the datacolumns data
 
 =cut
 
-has 'fields' => (
+has 'nodedata' => (
 	is => 'ro',
-	isa => 'Djet::Fields',
+	isa => 'Djet::NodeData',
 	lazy_build => 1,
 );
 
-sub _build_fields {
+sub _build_nodedata {
 	my $self= shift;
 	my $schema = $self->result_source->schema;
 	my $basetype = $schema->basetypes->{$self->basetype_id};
-	return $basetype->fields->new( datacolumns =>  $self->datacolumns );
+	return $basetype->nodedata->new( datacolumns =>  $self->datacolumns );
 }
 
 =head2 field_deflate
@@ -82,7 +82,7 @@ sub update_fts {
 	my $basetype = $self->basetype;
 
 	my $fts = $self->title;
-	for my $field (@{ $self->fields->fields }) {
+	for my $field (@{ $self->nodedata->fields }) {
 		next unless $field->searchable;
 
 		$fts .= ' ' . ($field->for_search // '');
@@ -105,12 +105,12 @@ sub AUTOLOAD {
 	my $self = shift;
 	$AUTOLOAD =~ /::(\w+)$/;
 	my $method = $1;
-	return if $method eq 'fields';
+	return if $method eq 'nodedata';
 
-	my $fields = $self->fields or return;
-	die "No field $method for datanode " . $self->id unless my $field = $fields->can($method);
+	my $nodedata = $self->nodedata or return;
+	die "No field $method for datanode " . $self->id unless my $field = $nodedata->can($method);
 
-	return $fields->$field(@_);
+	return $nodedata->$field(@_);
 }
 
 no Moose::Role;

@@ -3,7 +3,7 @@
 : if $template_display != 'view' {
   <form method="post" id="edit-login" action="<: $payload.urify :>">
 : }
-: include 'generic/1col.tx' {groups => [{columns => $payload.basenode.fields.fields} ] };
+: include 'generic/1col.tx' {groups => [{columns => $payload.basenode.nodedata.fields} ] };
 : if $template_display != 'view' {
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">

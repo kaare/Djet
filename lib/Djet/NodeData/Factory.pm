@@ -1,4 +1,4 @@
-package Djet::Fields::Factory;
+package Djet::NodeData::Factory;
 
 use 5.010;
 use Moose;
@@ -6,29 +6,21 @@ use namespace::sweep;
 
 =head1 NAME
 
-Djet::Fields::Factory - Produce a Djet Fields Class
+Djet::NodeData::Factory - Produce a Djet NodeData Class
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
-This class probably only makes sense for the Djet system itself
+This class produces the nodedataclasses of the different basetypes, based on
+
+	The nodedata class, default Djet::NodeData
+	The nodedata role of the basetype
+	The datacolumns of the basetype
 
 =head1 ATTRIBUTES
 
 =head2 datacolumns
 
-The raw data columns, an arrayref. Each array element is a hashref containing
-
-=over 4
-
-=item * name (Required)
-
-=item * title (Required)
-
-=item * type (Required)
-
-=item * traits (Optional)
-
-=back
+The raw data columns, an arrayref. Each array element is a hashref with the basetype id as key and the basetype row as value
 
 =cut
 
@@ -37,17 +29,28 @@ has datacolumns => (
 	is => 'ro',
 );
 
-=head1 METHODS
+=head2 config
 
-=head2 fields_class
-
-Creates the fields class
+The Djet configuration
 
 =cut
 
-sub fields_class {
+has config => (
+	is => 'rw',
+	isa => 'Djet::Config',
+);
+
+=head1 METHODS
+
+=head2 nodedata_class
+
+Creates the nodedata class
+
+=cut
+
+sub nodedata_class {
 	my $self = shift;
-	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Djet::Fields']);
+	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Djet::NodeData']);
 	my $columns = $self->datacolumns;
 	my @fieldnames;
 	for my $column (@{ $columns }) {

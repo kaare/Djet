@@ -105,7 +105,7 @@ before 'edit_validation' => sub {
 	my $self = shift;
 	return unless $self->is_new;
 
-	my $groups = $self->basenode->fields->roles->value;
+	my $groups = $self->basenode->nodedata->roles->value;
 	my $check_role = sub {
 		my $name = pop;
 		my $missing;

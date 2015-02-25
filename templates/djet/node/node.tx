@@ -8,7 +8,7 @@
   <h2><: $node.get_column('title') :></h2>
   <div class="message"><: $message :></div>
   <form method="post" id="edit-basenode" action="<: $payload.request.path_info :>">
-: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.fields.fields} ] };
+: include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.nodedata.fields} ] };
 : include 'generic/okcancel.tx';
 : if $basetype_id || $parent_id {
     <input type="hidden" name="basetype_id" value="<: $basetype_id :>">

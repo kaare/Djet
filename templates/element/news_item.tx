@@ -6,7 +6,7 @@
 : }
 </div>
 <div class="news_box">
-  <: $item.fields.news_text | raw :>
+  <: $item.news_text | raw :>
 </div>
 <div class="news_date">
   <: $item.data_created.ymd :>
