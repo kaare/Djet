@@ -335,6 +335,7 @@ sub _build_nodedata {
 	my $model = $self->result_source->schema;
 	my $config = $model->config;
 	my $factory = Djet::NodeData::Factory->new(
+		name => $self->name,
 		config => $config,
 		datacolumns => $self->datacolumns,
 	);

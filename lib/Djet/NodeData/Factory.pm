@@ -13,7 +13,7 @@ Djet::NodeData::Factory - Produce a Djet NodeData Class
 This class produces the nodedataclasses of the different basetypes, based on
 
 	The nodedata class, default Djet::NodeData
-	The nodedata role of the basetype
+	The nodedata role of the basetype, if any
 	The datacolumns of the basetype
 
 =head1 ATTRIBUTES
@@ -36,8 +36,19 @@ The Djet configuration
 =cut
 
 has config => (
-	is => 'rw',
+	is => 'ro',
 	isa => 'Djet::Config',
+);
+
+=head2 name
+
+The basetype name
+
+=cut
+
+has name => (
+	is => 'ro',
+	isa => 'Str',
 );
 
 =head1 METHODS
@@ -46,11 +57,31 @@ has config => (
 
 Creates the nodedata class
 
+If there is a nodedata_class in the djet configuration, it will be used as the superclass. The default is 'Djet::NodeData'
+
+Each basetype can be amended with a separate role, if
+
+	The djet configuration parameter nodedata_roles is set
+	There is a role in a file with a name looking like <nodedata_roles>::basetype
+	(with all non-alphanumeric or underscore characters translated to underscore)
+
+Furthermore, the individual columns, or fields, can be amended with traits, either by explicitely stating it in the column definition name
+'traits', or by one of the standard Djet traits found in Djet::Trait::Field::<field_name>.
+
 =cut
 
 sub nodedata_class {
 	my $self = shift;
-	my $meta_class = Moose::Meta::Class->create_anon_class(superclasses => ['Djet::NodeData']);
+	my $config = $self->config->config;
+	my %meta_params = (superclasses => [$config->{djet_config}{nodedata_class} || 'Djet::NodeData']);
+	if (my $roles_prefix = $config->{djet_config}{nodedata_roles}) {
+		my $basetype_name = $self->name;
+		$basetype_name =~ s/[^a-zA-Z0-9_]/_/g;
+		my $role_name = join '::', $roles_prefix, $basetype_name;
+		eval "require $role_name" and $meta_params{roles} = [$role_name];
+	}
+	my $meta_class = Moose::Meta::Class->create_anon_class(%meta_params);
+
 	my $columns = $self->datacolumns;
 	my @fieldnames;
 	for my $column (@{ $columns }) {
