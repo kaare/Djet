@@ -24,10 +24,13 @@ Parts
 E N H A N C E M E N T S
 -----------------------
 
-I D E A S / T E S T I N G
--------------------------
-
-All the more or less crazy ideas that might work. Or perhaps not. 
+Basetype modifiers
+- Branch is feature-basetype_modifier
+- Used from a data node (probably the data part of the node) to extend the functionality of the node.
+- Should work for basenodes as well as common DBIC searches
+- Implementation:
+  Perhaps something like 
+  Have a function on the data node finding the basetype, instantiates a class and calling a method there with the data node as parameter
 
 Update process
 - More dynamic properties
@@ -40,7 +43,25 @@ Update process
     can be declard "storage": false and thecolumn will not be saved on the
     data_node.
 
+Plack
+-----
+- Image handling
+  http://search.cpan.org/dist/Plack-Middleware-Image-Scale/ seems to have different problems, most notably w/gifs (not really confirmed)
+
+I D E A S / T E S T I N G
+-------------------------
+
+All the more or less crazy ideas that might work. Or perhaps not. 
+
 Attributes of a data node (datacolumns) should not (all) come from the basetype. If the corresponding engine is with a role, that role could require some columns.
+
+Use an array instead of the string (using extension prefix) as path. 
+- Branch is feature-array_index
+- More flexible. Could potentially be flexible on every node in the array
+- Could be achieved using a postgresql function to look up the node(s)
+- There's work in PostgreSQL on anyarray; should be kinda intarray
+- Problem w/ PostgreSQL and arrays is that [1,2,3,4] @> [3,4] and even [1,2,3,4] @> [2,4] is true
+  Seems pg handles arrays as sets, not as arrays.
 
 Archiving
 - Some kind of history of data
@@ -73,11 +94,6 @@ Path Modifiers
   a) Simple
     1. Breadcrumbs - leave a bc on the stash
     2. Make a choice based on the path part, e.g. choose language
-
-Plack
------
-- Image handling
-  http://search.cpan.org/dist/Plack-Middleware-Image-Scale/ seems to have different problems, most notably w/gifs (not really confirmed)
 
 Paging
 ------
