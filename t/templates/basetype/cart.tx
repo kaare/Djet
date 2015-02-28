@@ -1,5 +1,3 @@
-: cascade '/jasonic/basetype/checkout/base.tx';
-: after content -> {
 : $local.cart.apply_cost(amount => 0.25, name => 'tax', label => 'VAT', relative => 1) == 1;
 <form method="post">
 <div id="checkout_content" class="box">
@@ -48,4 +46,3 @@
   </div>
 </div>
 </form>
-:} # content
