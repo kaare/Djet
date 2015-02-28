@@ -1,0 +1,30 @@
+How things get done in Djet.
+
+Djet is a PSGI application, so any Plack server can run it. Currently I'm satisfied just using starman behind an Nginx frontend, but any combination will do.
+
+I don't think I have to explain what Plack is, or the big benefits an application has when using it, but I love the fact that I don't have to worry about
+sessions, image handling, log, debugging, etc. Plack Middleware does it all.
+(http://plackperl.org/ ...)
+
+Djet::Navigator
+- Basenode
+- Datanodes
+- rest_path
+- result
+
+Djet::Engines
+Web::Machine, but really only W:M:R
+
+- Djet engines
+  Djet admin
+  Blog
+  gah
+  gyh
+
+
+Extending Djet
+- Write your own Engine
+- Payload
+- Fields
+- NodeData
+
