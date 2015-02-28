@@ -43,8 +43,9 @@ has tx => (
 	default => sub {
 		my $self = shift;
 		my $template_path = $self->config->config->{template_path};
+		my $search_path = [ map {$_ . '/' . $template_path} ($self->config->app_root, $self->config->djet_root) ];
 		my $tx = Text::Xslate->new(
-			path => [ map {$_ . '/' . $template_path} ('.', $self->config->djet_root) ],
+			path => $search_path,
 			function => {
 				l => sub {
 					return $self->config->i18n->maketext(@_);

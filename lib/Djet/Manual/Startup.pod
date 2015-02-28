@@ -19,8 +19,8 @@ Has the following attributes
 
 =item params
 
-Searches the environment for parameters starting with JET_ (case insensitive) and hands them over to config.
-The JET_ prefix is removed, such that JET_APP_ROOT sets the config parameter app_root.
+Searches the environment for parameters starting with DJET_ (case insensitive) and hands them over to config.
+The DJET_ prefix is removed, such that DJET_APP_ROOT sets the config parameter app_root.
 
 These parameters make sense to set as environment variables:
 
