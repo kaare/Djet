@@ -1,0 +1,51 @@
+: cascade '/jasonic/basetype/checkout/base.tx';
+: after content -> {
+: $local.cart.apply_cost(amount => 0.25, name => 'tax', label => 'VAT', relative => 1) == 1;
+<form method="post">
+<div id="checkout_content" class="box">
+  <table>
+    <thead>
+	  <tr>
+	    <th><: l('Name') :></th>
+	    <th class="number"><: l('Quantity') :></th>
+	    <th class="number"><: l('Price') :></th>
+	    <th class="number"><: l('Total') :></th>
+	    <th></th>
+	  </tr>
+	</thead>
+	<tbody>
+: for $local.cart.items -> $item {
+      <tr>
+	    <td><: $item.name :></td>
+	    <td class="number qty"><input type="text" name="qty_<: $item.sku :>" value="<: $item.quantity :>"></td>
+	    <td class="number"><: $item.price :></td>
+	    <td class="number"><: $item.total :></td>
+	    <td class="number"><a onclick="return confirm('Er du sikker på at du ønsker at slette varen fra indkøbskurven');" href="">x</a></td>
+      </tr>
+: } # item
+      <tr>
+	    <td colspan="3"><: l('Subtotal') :></td>
+	    <td class="number"><: $local.cart.subtotal :></td>
+	    <td></td>
+      </tr>
+      <tr>
+	    <td colspan="3"><: l('Vat') :></td>
+	    <td class="number"><: $local.cart.cost('tax') :></td>
+	    <td></td>
+      </tr>
+      <tr>
+	    <td colspan="3"><: l('Total') :></td>
+	    <td class="number"><: $local.cart.total :></td>
+	    <td></td>
+      </tr>
+	</tbody>
+  </table>
+  <div id="submits">
+    <input class="" type="submit" name="update" value="Opdater">
+    <div class="pull-right">
+      <input class="continue" type="submit" value="Gå til levering">
+	</div>
+  </div>
+</div>
+</form>
+:} # content
