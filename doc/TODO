@@ -44,9 +44,12 @@ Update process
     data_node.
 
 Plack
------
 - Image handling
   http://search.cpan.org/dist/Plack-Middleware-Image-Scale/ seems to have different problems, most notably w/gifs (not really confirmed)
+
+Stash
+- Catalyst is moving its Stash to Plack Middleware. When/if that is done, it's possible better to use that.
+
 
 I D E A S / T E S T I N G
 -------------------------
