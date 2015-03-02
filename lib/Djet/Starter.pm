@@ -26,6 +26,10 @@ What it takes to start a Djet
 
 Djet parameters, from the environment
 
+It's possible to set Djet::Starter attributes on the Command Line, e.g.
+
+DJET_APP_ROOT=/somewhere/else starman
+
 =cut
 
 has params => (
@@ -195,6 +199,8 @@ sub BUILD {
 =head2 _build_notify_dbh
 
 Build the notify dbh from the model's storage.
+
+Keeps Role::Pg::Notify happy.
 
 =cut
 

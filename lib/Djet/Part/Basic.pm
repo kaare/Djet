@@ -18,7 +18,7 @@ There are two attributes. The one following the server process, model. And the o
 
 =head2 model
 
-The Djet model. For easy access, it also contains the config, basetypes, renderers and log
+The Djet model. The model extends L<Djet::Schema>, but there are also accessors for configuration, basetypes, renderers and log
 
 =cut
 
