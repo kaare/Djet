@@ -8,6 +8,7 @@ use Plack::Builder;
 use Djet::Starter;
 
 my $djet = Djet::Starter->new;
+my $session_handler = $djet->session_handler;
 
 builder {
 #	enable 'Debug',
@@ -21,8 +22,7 @@ builder {
 	enable 'HTTPExceptions', rethrow => 1;
 	enable 'Plack::Middleware::AccessLog::Timed',
 		format => '%v %h %l %u %t \"%r\" %>s %b %D';
-	enable 'Session',
-		store => 'File';
+	enable 'Session', store => $session_handler;
 	enable 'Static',
 		path => qr{^/(fonts|images|js|css)/}, root => './public/';
 
