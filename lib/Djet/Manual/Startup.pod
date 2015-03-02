@@ -8,12 +8,11 @@ This document describes the way Djet performs a startup.
 
 =head1 Modules
 
-=head2 L<Djet::Starter>
+=head2 L<Djet>
 
-Djet::Starter is instantiated in app.psgi, making it a singleton (at least within the
-address space of a single web server process).
+Djet is instantiated in app.psgi, and calls the navigator and finds the engine.
 
-Has the following attributes
+Djet has the following attributes
 
 =over 4
 
@@ -38,7 +37,7 @@ These parameters make sense to set as environment variables:
 
 =item config
 
-Djet::Starter initializes the configuration.
+Djet initializes the configuration.
 
 =item model
 
@@ -89,7 +88,7 @@ vital to L<Djet>. Some of them are
 
 =item config
 
-Set from L<Djet::Starter>, contains the entire configuration.
+Set from L<Djet>, contains the entire configuration.
 
 =item basetypes
 

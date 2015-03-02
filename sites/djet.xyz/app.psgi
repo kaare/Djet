@@ -5,9 +5,9 @@ use warnings;
 
 use Plack::Builder;
 
-use Djet::Starter;
+use Djet;
 
-my $djet = Djet::Starter->new;
+my $djet = Djet->new;
 my $session_handler = $djet->session_handler;
 
 builder {
