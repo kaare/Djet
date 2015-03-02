@@ -45,20 +45,6 @@ has stash => (
 	isa => 'HashRef',
 	is => 'ro',
 );
-has body => (
-	isa => 'Djet::Body',
-	is => 'ro',
-	handles => [qw/
-		basetypes
-		cache
-		config
-		schema
-	/],
-);
-has basenode => (
-	isa => 'Djet::Schema::Result::Djet::DataNode',
-	is => 'ro',
-);
 has response => (
 	isa => 'Djet::Response',
 	is => 'ro',

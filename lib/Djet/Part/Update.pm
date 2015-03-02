@@ -123,7 +123,7 @@ Check if it's a delete request (GET w/ a 'delete' parameter)
 
 before 'view_page' => sub {
 	my $self = shift;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	$self->set_base_object;
 	if ($request->parameters->{delete}) {
 		$self->delete_submit;
@@ -156,7 +156,7 @@ Process the edit POST
 sub process_post {
 	my ($self) = @_;
 	$self->stash_basic;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	$self->_stash_defaults;
 	$self->response->body($self->view_page);
 }
@@ -290,7 +290,7 @@ project and user components save the parameter in _text
 sub edit_validation {
 	my $self = shift;
 	my $validator = $self->get_validator;
-	my $params = $self->body->request->body_parameters;
+	my $params = $self->request->body_parameters;
 	return $validator->validate($params);
 }
 
@@ -393,7 +393,7 @@ sub edit_failed_update {
 
 sub _stash_defaults {
 	my ($self) = @_;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	$self->stash->{defaults} = $request->parameters->as_hashref;
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
 		$self->stash->{defaults}{$fieldname} = $upload->filename;

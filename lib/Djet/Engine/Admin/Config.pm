@@ -115,7 +115,7 @@ Decide if we're creating a new node
 
 before 'post_is_create' => sub {
 	my $self = shift;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	$self->is_new(1) if $request->parameters->{parent_id} and $request->parameters->{basetype_id};
 };
 

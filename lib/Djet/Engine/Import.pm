@@ -113,7 +113,7 @@ sub create_nodes {
 	my $parent_id = $self->basenode->id;
 	my $uploadtype = $model->basetype_by_name('import');
 	my $basetype_id = $uploadtype->id;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	for my $upload ($request->uploads->get_all('uploadedfile')) {
 		my $uploadfile = $upload->path;
 		my $data = {

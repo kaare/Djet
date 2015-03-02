@@ -64,7 +64,7 @@ has model => (
 
 =head2 take_off
 
-Process the request.  Entry point from psgi
+Process the request. Entry point from psgi
 
 =cut
 
@@ -72,15 +72,6 @@ sub take_off {
 	my ($self) = @_;
 	my $body = $self->body;
 	my $model = $self->model;
-	my $navigator = Djet::Navigator->new(
-		model => $model,
-		request => $body->request,
-		session => $body->session,
-	);
-	$navigator->check_route;
-	return $navigator->result if $navigator->has_result;
-
-	$body->set_navigator($navigator);
 	my $basenode = $navigator->basenode;
 	my $engine_class;
 	try {
@@ -99,19 +90,6 @@ sub take_off {
 		);
 	};
 	return $engine_class;
-}
-
-=head2 login
-
-Redirect to the login page
-
-=cut
-
-sub login {
-	my ($self, $datanodes, $config, $original_path) = @_;
-	$self->body->session->{redirect_uri} = $original_path;
-	my $uri = '/login';
-	return [ 302, [ Location => $uri ], [] ];
 }
 
 __PACKAGE__->meta->make_immutable;

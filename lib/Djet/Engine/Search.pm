@@ -22,7 +22,7 @@ Find the nodes based on the search string
 
 after 'init_data' => sub  {
 	my $self = shift;
-	my $search_phrase = decode('utf-8', $self->body->request->parameters->{search_phrase});
+	my $search_phrase = decode('utf-8', $self->request->parameters->{search_phrase});
 	return unless $search_phrase;
 
 	$self->add_search(node_path => {'<@', $self->stash->{payload}->domain_node->node_path});

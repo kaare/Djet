@@ -22,6 +22,8 @@ A good idea is to have lazy attributes which will only be used if necessary.
 
 =head1 ATTRIBUTES
 
+See L<Djet::Part::Basic> for the basic attributes
+
 =head2 domain_node
 
 The first found domain node.

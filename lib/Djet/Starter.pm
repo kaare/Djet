@@ -2,14 +2,20 @@ package Djet::Starter;
 
 use Moose;
 
-use Djet;
-use Djet::Config;
-use Djet::Body;
-use Djet::Machine;
+use Try::Tiny;
 
-with 'Role::Pg::Notify';
+use Djet::Config;
+use Djet::Failure;
+use Djet::Machine;
+use Djet::Navigator;
+
+with qw/
+	Djet::Part::Log
+	Role::Pg::Notify
+/;
 
 use JSON;
+use Plack::Request;
 use Plack::Session::Store::DBI;
 
 =head1 NAME
@@ -140,23 +146,44 @@ has app => (
 			my @args = @_;
 			my $env = shift @args;
 			my $session = $env->{'psgix.session'} // {};
-			my $options = $env->{'psgix.session.options'} // {};
-			my $body = Djet::Body->new(
-				env => $env,
+			my $request = Plack::Request->new($env);
+
+			my $model = $self->model;
+			my $navigator = Djet::Navigator->new(
+				model => $model,
+				request => $request,
 				session => $session,
-				session_id => $options->{id} // 0,
-				stash => {},
 			);
-			my $flight = Djet->new(body => $body, model => $self->model);
-			my $engine = $flight->take_off(@_);
-			return $engine if ref $engine eq 'ARRAY'; # There's a response already
+			$navigator->check_route;
+			return $navigator->result if $navigator->has_result; # The navigator finds a detour
+
+			my $engine_class;
+			try {
+				my $basenode = $navigator->basenode;
+				my $engine_basetype = $basenode->basetype;
+				$engine_class = $engine_basetype->handler || 'Djet::Engine::Default';
+				$model->log->debug('Class: ' . $engine_basetype->name . ' found, using '. $engine_class);
+			} catch {
+				my $e = shift;
+				die $e if blessed $e && ($e->can('as_psgi') || $e->can('code')); # Leave it to Plack
+
+				debug($e);
+				Djet::Failure->new(
+					exception => $e,
+					datanodes => $navigator->datanodes,
+				);
+			};
+			return $engine_class if ref $engine_class eq 'ARRAY'; # There's a response already
 
 			my $resource_args = [
-				body => $body,
 				model => $self->model,
+				env => $env,
+				request => $request,
+				navigator => $navigator,
+				stash => {},
 			];
 			my $app = Djet::Machine->new(
-				resource => $engine,
+				resource => $engine_class,
 				resource_args => $resource_args,
 				tracing => 1,
 			);

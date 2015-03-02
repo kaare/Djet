@@ -153,8 +153,11 @@ sub post_is_create {
 	eval "require $handler" or die "No handler $handler";
 
 	my $step_object = $handler->new(
-		body => $self->body,
 		model => $self->model,
+		env => $self->env,
+		request => $self->request,
+		navigator => $self->navigator,
+		stash => $self->stash,
 		mailer => $self->mailer,
 		checkout => $checkout,
 		step => $current_step,
@@ -176,14 +179,14 @@ Process the edit POST
 sub process_post {
 	my ($self) = @_;
 	$self->stash_basic;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	$self->_stash_defaults;
 	$self->response->body($self->view_page);
 }
 
 sub _stash_defaults {
 	my ($self) = @_;
-	my $request = $self->body->request;
+	my $request = $self->request;
 	$self->stash->{defaults} = $request->parameters->as_hashref;
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
 		$self->stash->{defaults}{$fieldname} = $upload->filename;
