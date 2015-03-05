@@ -1,30 +1,48 @@
 How things get done in Djet.
 
-Djet is a PSGI application, so any Plack server can run it. Currently I'm satisfied just using starman behind an Nginx frontend, but any combination will do.
+Djet is a PSGI application, so any Plack server can run it. Currently I'm satisfied just using starman behind an Nginx frontend for my own business, but any combination will do.
+People have different preferences.
 
-I don't think I have to explain what Plack is, or the big benefits an application has when using it, but I love the fact that I don't have to worry about
-sessions, image handling, log, debugging, etc. Plack Middleware does it all.
+I love the fact that I don't have to worry about sessions, image handling, log, debugging, etc. Plack Middleware does it all.
 (http://plackperl.org/ ...)
 
-Djet::Navigator
-- Basenode
-- Datanodes
-- rest_path
-- result
+After Plack Middleware has done its work, there is still a little work to be done. I'll try to explain how Djet does it.
 
-Djet::Engines
-Web::Machine, but really only W:M:R
+Now, the jon of a web server is really a simple thing. Or should be. A client (usually a web browser) sends a request, and expects a reply. In Plack world even the reply is simple, it's just an arrayref looking like this: [ $status, $headers, $body ].
 
-- Djet engines
-  Djet admin
-  Blog
-  gah
-  gyh
+Simple, eh? Well, except that the status (and headers) depend on a lot of hints and clues offered by the request (https://raw.githubusercontent.com/wiki/basho/webmachine/images/http-headers-status-v3.png).
 
+One of the clues, if you can call it that, is the path. The path is central in Djet. It's used by Djet::Navigator to determine which Djet::Engine to use to produce the reply.
 
-Extending Djet
-- Write your own Engine
-- Payload
-- Fields
-- NodeData
+Djet::Navigator looks up the requested, or the closest, path and sets these attributes
+- Basenode is the node corresponding to the requested path
+- Datanodes are all the nodes found from the "top"
+- rest_path contains whatever didn't match any path
+- result is a plack response and is set if the navigator decides to take a detour
 
+Let's say that the path is /where/do/you/want/to/go/today and that there are nodes covering until the "go" part, then the result will be
+
+- basenode: /where/do/you/want/to/go
+- datanodes:
+	/where/do/you/want/to/go
+	/where/do/you/want/to
+	/where/do/you/want/
+	/where/do/you
+	/where/do
+	/where
+- rest_path: today
+	Note that the rest_path is the leftover from the path, NOT the uri parameters. They are treated normally, using Plack::Request.
+- or, if the access control settings prevents the user from accessing that path, the result will be set to redirect the user to a login page.
+
+The basenode points to a Djet::Engine. A Djet::Engine is a Web::Machine (Well, really Web::Machine::Resource) object, that determines what to reply. Web::Machine (https://metacpan.org/pod/Web::Machine) is an amazing, albeit underdocumented, module, that guides you through the maze of twisty little passages, all alike, shown in the image above. 
+
+There are a few Djet::Engines already with more to come. But this is also the main extending point in Djet. It's impossible to foresee every need that everybody will have anytime. Instead,
+it's possible to write a custom engine for any specific purpose.
+
+There are Admin engines to update basetypes and datanodes, blog, contactform, news and search engies to handle specific areas. There are engines for ordering products, for login and logout, and
+there's a default engine that just presents the node's data to the templating system.
+
+Latest progress
+- Removed my own, very basic HTML5 editor. No idea having to maintain yamp (yet another moving part). Finding a replacement proved harder than I thought. I ended up with cleditor (http://designhuntr.com/jquery-text-editor-plugins/) though it's not perfect. Especially it doesn't handle file (image) uploads out of the box.
+- Added a flash feature, a little like the one in Catalyst (https://metacpan.org/pod/Catalyst::Plugin::StatusMessage).
+- Added a way to extend the individual basetypes. This is way more cool than it sounds, it adds control to (almost all) aspects of the system.

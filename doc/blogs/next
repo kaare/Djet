@@ -1,4 +1,9 @@
-Routing. The way through a Djet. The Path a Djet takes. Djet::Navigator
+Extending Djet
+- Write your own Engine
+- Payload
+- Fields
+- NodeData
+
 Nodes, Data, JSON, column expansion.
 Full-Text Search.
 About server stuff (Schema -> Model) and transient, request dependant stuff, body
