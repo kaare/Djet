@@ -128,4 +128,32 @@ sub get_base_name {
 	return $self->basenode->basetype->name;
 }
 
+=head2 after edit_update
+
+Do an update_fts
+
+=cut
+
+after 'edit_update' => sub {
+	my ($self, $validation)=@_;
+	my $config = $self->config;
+	my $fts_config = $config->config->{fts_config};
+	my $object = $self->object;
+	$object->update_fts($fts_config);
+};
+
+=head2 after edit_create
+
+Do an update_fts
+
+=cut
+
+after 'edit_create' => sub {
+	my ($self, $validation)=@_;
+	my $config = $self->config;
+	my $fts_config = $config->config->{fts_config};
+	my $object = $self->object;
+	$object->update_fts($fts_config);
+};
+
 1;
