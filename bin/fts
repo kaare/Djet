@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use Moose;
+use FindBin qw($Bin);
+
+use Djet;
+
+my $djet = Djet->new(params => {app_root => "$Bin/.."});
+my $model = $djet->model;
+my $config = $djet->config;
+my $fts_config = $config->config->{fts_config};
+
+for my $node ($model->resultset('Djet::DataNode')->all) {
+	$node->update_fts($fts_config);
+}
