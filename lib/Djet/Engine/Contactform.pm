@@ -6,7 +6,6 @@ use Moose;
 extends 'Djet::Engine::Default';
 with qw/
 	Djet::Part::Flash
-	Djet::Part::Log
 	Djet::Part::Update::Node
 /;
 
@@ -77,7 +76,6 @@ before 'get_input_data' => sub {
 	$validation->valid->{name} = 'Contactform';
 	$validation->valid->{title} = $validation->valid->{name};
 };
-
 
 =head2 before edit_updated
 

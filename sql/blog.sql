@@ -22,6 +22,10 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"keywords","title":"Keywords","type":"Str"}
 ]','Djet::Engine::Blog','<domain>/basetype/blog.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'blog_reply','Reply','[
+	{"name":"username","title":"Name","type":"Str", "required": "on"},
+	{"name":"email","title":"Email Address","type":"Email", "required": "on"},
+	{"name":"subject","title":"Subject","type":"Str", "required": "on"},
+	{"name":"comment","title":"Comment","type":"Text", "required": "on"}
 ]','Djet::Engine::Blog','<domain>/basetype/blog_reply.tx');
 
 
