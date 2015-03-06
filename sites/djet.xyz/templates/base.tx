@@ -113,12 +113,10 @@ Djet
                             </a>
                         </li>
                         <li>
-                            <a href="#">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+									<a href="https://github.com/kaare/Djet" target="_blank"><i class="fa fa-github fa-stack-1x fa-inverse"></i></a>
                                 </span>
-                            </a>
                         </li>
                     </ul>
                     <p class="copyright text-muted">Copyright &copy; Kaare Rasmussen 2015</p>

@@ -1,0 +1,13 @@
+<div id="blog_comments">
+: for $comments.all_ref -> $comment {
+: 	include '/element/blog_comment.tx' {comment => $comment};
+: }
+<h2>Comments</h2>
+<: $template_display :>
+  <form method="post" id="edit-comment" action="<: $payload.urify :>">
+: include 'generic/1col.tx' {groups => [{columns => $blog_reply.nodedata.fields} ] };
+: include 'generic/okcancel.tx';
+    <input type="hidden" name="sp" value="">
+    <input type="hidden" name="am" value="<: $payload.basenode.id :>">
+  </form>
+<div><: $payload.flash.status :></div></div>

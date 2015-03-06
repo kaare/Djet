@@ -1,5 +1,4 @@
 <div class="post-preview">
-	<a href="post.html">
 	<a href="<: $payload.urify($item) :>">
 		<h2 class="post-title">
 			<: $item.title :>
