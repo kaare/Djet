@@ -10,7 +10,9 @@ use List::Util qw/first/;
 use Djet::Failure;
 use Djet::Response;
 
-with 'Djet::Part::Log';
+with qw/
+	Djet::Part::Generic::Urify
+/;
 
 =head1 NAME
 
@@ -231,7 +233,7 @@ sub login {
 	};
 	my $login_node = $self->model->resultset('Djet::DataNode')->find($find, $options) or return;
 
-	my $uri = $login_node->node_path;
+	my $uri = $self->urify($login_node, $domain_node);
 	$self->set_result([ 302, [ Location => $uri ], [] ]);
 	return;
 }
