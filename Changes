@@ -3,8 +3,10 @@ Revision history for Jet
 {{$NEXT}}
  - Rename Jet to Djet, Djet::Local to Djet::Payload, Djet::Role to Djet::Part
  - Gather all navigation parts from all around and separate them into Djet::Navigator
- - Use CL editor for html fields
  - Flash engine
+ - Replaced the very basic HTML5 editor with cleditor (http://designhuntr.com/jquery-text-editor-plugins/)
+ - Added NodeData, a way to extend the individual basetypes. This is way more cool than it sounds, it adds control to (almost all) aspects of the system.
+ - Blog engine
 
 0.03 2014-12-2
  - Use Web::Machine
