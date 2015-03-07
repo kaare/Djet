@@ -209,15 +209,29 @@ sub check_node_redirect {
 
 Redirect to the login page
 
+If there is a login node in the current domain, it will be used. Otherwise, any login node (there's probably only one) is used.
+
 =cut
 
 sub login {
 	my ($self, $datanodes, $config, $original_path) = @_;
 	$self->session->{redirect_uri} = $original_path;
 
+	my $login_basetype = $self->model->basetype_by_name('login') or return;
+
 	my $domain_basetype = $self->model->basetype_by_name('domain');
 	my $domain_node = $self->datanode_by_basetype($domain_basetype);
-	my $uri = $domain_node->node_path . '/login';
+	my $find = {
+		basetype_id => $login_basetype->id,
+		node_path => {'<@' => [$domain_node->node_path, '/']},
+	};
+	my $options = {
+		order_by => \'length(node_path)',
+		rows => 1,
+	};
+	my $login_node = $self->model->resultset('Djet::DataNode')->find($find, $options) or return;
+
+	my $uri = $login_node->node_path;
 	$self->set_result([ 302, [ Location => $uri ], [] ]);
 	return;
 }
