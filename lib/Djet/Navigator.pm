@@ -177,9 +177,9 @@ sub check_route {
 	$model->log->debug("Node path: $path");
 	my $datanodes = $self->find_basenode($path);
 	my $basenode = $datanodes->[0];
+	$self->_set_datanodes($datanodes);
 	return if $self->check_node_redirect($basenode);
 
-	$self->_set_datanodes($datanodes);
 	return $self->login($datanodes, $config, $path) unless my $user = $model->acl->check_login($self->session, $datanodes);
 
 	$model->log->debug("Acting as $user");
@@ -203,7 +203,7 @@ sub check_node_redirect {
 	return unless my $redirect = $basenode->nodedata->redirect;
 	return if $self->request->parameters->{noredirect};
 
-	my $uri = $redirect =~ m{^(/|\w+://)} ? $redirect : $basenode->node_path . "/$redirect";
+	my $uri = $self->urify({node => $basenode, path => $redirect});
 	return $self->set_result([ 302, [ Location => $uri ], [] ]);
 }
 
