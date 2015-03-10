@@ -70,6 +70,11 @@ before 'process_post' => sub  {
 	$self->is_new(1);
 };
 
+=head2 before get_input_data
+
+Seeds the input data name and title
+
+=cut
 
 before 'get_input_data' => sub {
 	my ($self, $validation)=@_;
