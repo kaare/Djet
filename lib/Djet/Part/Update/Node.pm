@@ -2,19 +2,19 @@ package Djet::Part::Update::Node;
 
 use MooseX::MethodAttributes::Role;
 
-=head1 NAME
-
-Djet::Part::Update::Node - Role for creating and editing Nodes
-
-=head1 DESCRIPTION
-
-Handles create and edit functionality of datanodes for Djet Engines
-
-=cut
-
 with 'Djet::Part::Update';
 
 requires qw/edit_validation edit_update edit_create/;
+
+=head1 NAME
+
+Djet::Part::Update::Node
+
+=head1 DESCRIPTION
+
+A Role for creating and editing Nodes
+
+Handles create and edit functionality of datanodes for Djet Engines
 
 =head1 ATTRIBUTES
 

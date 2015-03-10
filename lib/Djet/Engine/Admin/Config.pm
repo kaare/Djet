@@ -11,7 +11,7 @@ with qw/
 
 =head1 NAME
 
-Djet::Engine::Admin::Config - Configure Djet
+Djet::Engine::Admin::Config
 
 =head1 DESCRIPTION
 
@@ -22,6 +22,24 @@ It includes the role L<Djet::Part::Update::Node>.
 =head1 ATTRIBUTES
 
 =head1 METHODS
+
+=head2 _build_dfv
+
+Build the dfv for a node
+
+=cut
+
+sub _build_dfv {
+	my $self = shift;
+	my $nodedata = $self->object->nodedata;
+	my $dfv = $nodedata->dfv;
+	$dfv->{required} = [qw/
+		part
+		name
+		title
+	/];
+	return $dfv;
+}
 
 =head2 _build_validator
 
@@ -82,16 +100,16 @@ before 'data' => sub {
 			},
 			{
 				type => 'Str',
-				name => 'name',
-				title => 'Name',
-				value => $object->name,
+				name => 'title',
+				title => 'Title',
+				value => $object->title,
 				updatable => 1,
 			},
 			{
 				type => 'Str',
-				name => 'title',
-				title => 'Title',
-				value => $object->title,
+				name => 'name',
+				title => 'Name',
+				value => $object->name,
 				updatable => 1,
 			},
 			{
@@ -116,18 +134,24 @@ Decide if we're creating a new node
 before 'post_is_create' => sub {
 	my $self = shift;
 	my $request = $self->request;
+	if ($request->parameters->{cancel}) {
+		$self->response->location('/djet/tree');
+		return;
+	}
+
 	$self->is_new(1) if $request->parameters->{parent_id} and $request->parameters->{basetype_id};
 };
 
 =head2 create_path
 
-Redirect to the edit page of the new node.
+Redirect to the edit page of the new node - or to the already set response location.
 
 =cut
 
 sub create_path {
 	my $self = shift;
-	$self->response->redirect('/djet/node/' . $self->object->id);
+	my $response_location = $self->response->location;
+	return $response_location ? $response_location : $self->response->redirect('/djet/node/' . $self->object->id);
 }
 
 =head2 choose_basetype

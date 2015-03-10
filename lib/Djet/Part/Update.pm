@@ -133,15 +133,22 @@ before 'view_page' => sub {
 
 =head2 post_is_create
 
+Required by Web::Machine::Resource
+
+Returns true if the response location is already set. This is to allow for redirects to avoid the validation process.
+
 Calls edit_submit and decides if continuing as process_post or create_path
 
   Continue with create_path if the validation and store process went well
   Continue with process_post if there was something wrong in the validation or store process
 
+
 =cut
 
 sub post_is_create {
 	my $self = shift;
+	return 1 if $self->response->location;
+
 	$self->set_base_object;
 	$self->edit_submit;
 	return !defined $self->stash->{message};
