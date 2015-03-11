@@ -71,6 +71,17 @@ has dfv => (
 
 =head1 METHODS
 
+=head2 display_fields
+
+Returns an arrayref with all the fields to display
+
+=cut
+
+sub display_fields {
+	my $self = shift;
+	return $self->fields;
+}
+
 =head2 fields_as_json
 
 Return the fields (type, title, value) as JSON

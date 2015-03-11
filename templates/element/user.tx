@@ -3,7 +3,7 @@
 : if $template_display != 'view' {
   <form method="post" id="edit-user" action="<: $payload.request.path :>">
 : }
-: include 'generic/1col.tx' {groups => [{columns => $user.nodedata.fields} ] };
+: include 'generic/1col.tx' {groups => [{columns => $user.nodedata.display_fields} ] };
 : if $template_display != 'view' {
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
