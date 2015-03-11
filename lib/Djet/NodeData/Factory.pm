@@ -79,6 +79,10 @@ sub nodedata_class {
 		$basetype_name =~ s/[^a-zA-Z0-9_]/_/g;
 		my $role_name = join '::', $roles_prefix, $basetype_name;
 		eval "require $role_name" and $meta_params{roles} = [$role_name];
+		unless (exists $meta_params{roles}) { # Fall back to Djet behaviour if there is no local
+			$role_name = join '::', 'Djet::Part::NodeData', $basetype_name;
+			eval "require $role_name" and $meta_params{roles} = [$role_name];
+		}
 	}
 	my $meta_class = Moose::Meta::Class->create_anon_class(%meta_params);
 
