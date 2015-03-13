@@ -18,7 +18,6 @@ Filters out password
 
 sub display_fields {
 	my $self = shift;
-warn 1213121;
 	return [ grep {$_->name ne 'password'} @{ $self->fields } ];
 }
 
