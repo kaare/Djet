@@ -7,6 +7,16 @@
     float: left;
 }
 
+/* Logout */
+
+.logout {
+	float: right;
+}
+
+.logout_name {
+	color: white;
+}
+
 /* Clutter below -------------------------------- */
 
 /* Layout

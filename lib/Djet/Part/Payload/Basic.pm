@@ -180,6 +180,37 @@ sub _build_user {
 	return $user_row;
 }
 
+=head2 logout_node
+
+The logoout node
+
+If there is a logout node in the current domain, it will be used. Otherwise, any logout node (there's probably only one) is used.
+
+=cut
+
+has 'logout_node' => (
+	is => 'ro',
+	isa => 'Maybe[Djet::Schema::Result::Djet::DataNode]',
+	lazy_build => 1,
+);
+
+sub _build_logout_node {
+	my $self = shift;
+	my $logout_basetype = $self->model->basetype_by_name('logout') or return;
+
+	my $domain_basetype = $self->model->basetype_by_name('domain');
+	my $domain_node = $self->datanode_by_basetype($domain_basetype);
+	my $find = {
+		basetype_id => $logout_basetype->id,
+		node_path => {'<@' => [$domain_node->node_path, '/']},
+	};
+	my $options = {
+		order_by => \'length(node_path)',
+		rows => 1,
+	};
+	return $self->model->resultset('Djet::DataNode')->find($find, $options);
+}
+
 no Moose::Role;
 
 1;

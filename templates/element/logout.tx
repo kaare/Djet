@@ -1,0 +1,6 @@
+: if $payload.user {
+<div class="logout">
+	<div class="logout_name"><: l('You are logget in as') :> <a href="<: $payload.urify($payload.user) :>"><: $payload.user.name :></a> (<: $payload.user.username :>)</div>
+	<div class="logout_text"><a href="<: $payload.urify($payload.logout_node) :>"><: l('log out') :></a></div>
+</div>
+: }
