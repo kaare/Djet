@@ -1,4 +1,4 @@
 : if !$qty {
 <label for="basket-add-quantity-<: $sku :>"><: l('Quantity') :></label><span id="basket-add-quantity-<: $sku :>"><input type="text" value="1"></span>
 : }
-<span class="add-to-basket" data-sku="<: $sku :>" <: if $qty { 'data-qty="' ~ $qty ~ '" data-fixed="1"' } :>><: $content :></span>
+<span class="add-to-basket" data-sku="<: $sku :>" <: if $qty { 'data-qty="' ~ $qty ~ '" data-fixed="1"' | raw } :>><: $content :></span>
