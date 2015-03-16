@@ -18,6 +18,17 @@ Sends email
 
 =head1 ATTRIBUTES
 
+=head2 stash
+
+The stash
+
+=cut
+
+has 'stash' => (
+	is => 'ro',
+	isa => 'HashRef',
+);
+
 =head2 renderer
 
 =cut
