@@ -158,7 +158,11 @@ before update => sub {
 			sku => $sku,
 		};
 		if (my $cart_product = $self->model->resultset('Djet::CartProduct')->find($search)) {
-			$cart_product->update({quantity => $qty});
+			if ($qty) { 
+				$cart_product->update({quantity => $qty});
+			} else {
+				$cart_product->delete;
+			}
 		}
 	}
 };
