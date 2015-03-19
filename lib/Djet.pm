@@ -150,7 +150,9 @@ has session_handler => (
 
 =head2 app
 
-The thing that starts it all. Returns a Plack app
+The thing that starts it all. Returns a Plack app, built on Web::Machine.
+
+In Web::Engine::Resource, you can define custom arguments, resource_args. Here, they are arguments to the Djet::Engine.
 
 =cut
 
@@ -198,7 +200,7 @@ has app => (
 
 =head2 check_notifications
 
-Check if there has been changes to the basenode
+Check if there has been changes to a basenode.
 
 =cut
 

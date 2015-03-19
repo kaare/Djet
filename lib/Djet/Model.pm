@@ -16,7 +16,24 @@ Djet::Model
 
 =head1 DESCRIPTION
 
-The Djet Model is a model of the World, as seen from Djet. It builds on the Djet Schema and includes configuration, acl, and payload attributes, and more.
+Djet::Model extends Djet::Schema, which itself extends DBIx::Class.
+
+The Djet Model is a model of the World, as seen from Djet. It builds on the Djet Schema and includes configuration, acl, payload attributes, and more.
+
+Djet::Model is instantiated for every server process, or, in case it's not running in a web environment, it is instantiated upon startup.
+
+There are a number of volatile attributes:
+
+	env
+	navigator
+	payload
+	request
+	session
+	session_id
+	stash
+
+Whenever the web server processes a request, these volatile attributes are cleared and set to the new value.
+This happens only one place in the request cycle.
 
 =head1 ATTRIBUTES
 
