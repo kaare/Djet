@@ -115,7 +115,7 @@ has type => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		my $request = $self->request;
+		my $request = $self->model->request;
 		return $request->accept_types->[0];
 	},
 );
@@ -155,10 +155,11 @@ Chooses the output renderer based on the requested response types
 
 sub render {
 	my $self = shift;
-	my $request = $self->request;
+	my $model = $self->model;
+	my $request = $model->request;
 	$request->log->info(join ' ', 'Rendering', $self->template, 'as', $self->type);
-	$request->log->debug('Stashed items: ' . join ', ', keys %{ $self->stash });
-	my $output = $self->renderer->render($self->template, $self->stash);
+	$request->log->debug('Stashed items: ' . join ', ', keys %{ $model->stash });
+	my $output = $self->renderer->render($self->template, $model->stash);
 	$self->output([ $output ]);
 }
 
@@ -181,7 +182,8 @@ Takes a path and returns the full URI path to the resource.
 
 sub uri_for {
 	my ($self, $path) = @_;
-	my $uri = $self->request->request->base;
+	my $model = $self->model;
+	my $uri = $model->request->request->base;
 	$uri->path($path);
 	return $uri->as_string;
 }

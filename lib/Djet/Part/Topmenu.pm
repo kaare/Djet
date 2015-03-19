@@ -30,7 +30,7 @@ sub _build_menu_basenode {
 	my $self= shift;
 	my $model = $self->model;
 	my $domain_basetype = $model->basetype_by_name('domain');
-	return $self->datanode_by_basetype($domain_basetype);
+	return $model->datanode_by_basetype($domain_basetype);
 }
 
 =head2 topmenu
@@ -47,8 +47,9 @@ has 'topmenu' => (
 
 sub _build_topmenu {
 	my $self= shift;
+	my $model = $self->model;
 	my $menu_node = $self->menu_basenode;
-	my $current_path = $self->basenode->node_path;
+	my $current_path = $model->basenode->node_path;
 	my $search = {
 		"datacolumns->>'topmenu'" => 'on',
 	};

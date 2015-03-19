@@ -1,5 +1,5 @@
 <div id="blogs">
-  <h2><: $payload.basenode.title :></h2>
+  <h2><: $payload.model.basenode.title :></h2>
 	<div>
 : for $blogs.all_ref -> $blog {
 : 	include '/element/blog.tx' {item => $blog};

@@ -39,20 +39,21 @@ Override the default basetype setter. Find the basetype being edited right now
 
 sub set_base_object {
 	my $self = shift;
-	my $rest_path = $self->rest_path;
+	my $model = $self->model;
+	my $rest_path = $model->rest_path;
 	undef($rest_path) if $rest_path eq 'index.html';
 	if (!$rest_path) {
-		$self->set_object($self->model->resultset('Djet::Basetype')->new({
+		$self->set_object($model->resultset('Djet::Basetype')->new({
 			feature_id => 1,
 			datacolumns => '[]',
 			attributes => '{}',
 		}));
-		$self->stash->{title} = 'New basetype';
+		$model->stash->{title} = 'New basetype';
 		$self->is_new(1);
 		return;
 	}
 
-	if (my ($current_basetype) = grep {$rest_path eq $_->name} values %{ $self->model->basetypes }) {
+	if (my ($current_basetype) = grep {$rest_path eq $_->name} values %{ $model->basetypes }) {
 		$self->set_object($current_basetype);
 	}
 }
@@ -65,8 +66,9 @@ Sort the basetypes and set the stash
 
 before data => sub {
 	my $self = shift;
-	my $stash = $self->stash;
-	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values $self->model->basetypes ];
+	my $model = $self->model;
+	my $stash = $model->stash;
+	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values $model->basetypes ];
 	if ($self->has_object) {
 		$stash->{title} ||= $self->object->title;
 		$stash->{current_basetype} = $self->object;
@@ -181,9 +183,10 @@ sub _build_basetype_fields {
 			},
 		]} sort keys %{ $current_basetype->attributes }, ''],
 	};
-	$self->stash->{fields} = $fields;
-	$self->stash->{datacolumns} = $datacolumns;
-	$self->stash->{attributes} = $attributes;
+	my $model = $self->model;
+	$model->stash->{fields} = $fields;
+	$model->stash->{datacolumns} = $datacolumns;
+	$model->stash->{attributes} = $attributes;
 }
 
 __PACKAGE__->meta->make_immutable;

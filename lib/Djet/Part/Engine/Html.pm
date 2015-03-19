@@ -72,7 +72,9 @@ sub view_page {
 	$model->log->debug('Template ' . $self->template);
 	my $result;
 	try {
-		$result = $self->renderer->render($self->template, $self->stash);
+		my $stash = $model->stash;
+		my $payload = $model->payload;
+		$result = $self->renderer->render($self->template, {%$stash, payload => $payload});
 	} catch {
 		my $e = shift;
 		$model->log->error($e);
@@ -90,7 +92,8 @@ Use the basetype template name, and if it's not there, find it with $self->templ
 
 sub render_template {
 	my $self= shift;
-	my $basenode = $self->basenode;
+	my $model = $self->model;
+	my $basenode = $model->basenode;
 	my $template = $basenode->basetype->template;
 	$template = $self->template_substitute($template) if defined($template) and $template =~ /<.+>/;
 	return $template if $template;
@@ -115,7 +118,7 @@ sub template_substitute {
 	my $model = $self->model;
 	my $basetext = $1;
 	my $basetype = $model->basetype_by_name($basetext);
-	my $node = $self->datanode_by_basetype($basetype);
+	my $node = $model->datanode_by_basetype($basetype);
 
 	my $node_path = $node->node_path;
 	$template =~ s/(.*)<.+>(.*)/$1$node_path$2/ or return;
@@ -141,7 +144,7 @@ templates/<domain>/node/index.tx
 sub template_name {
 	my ($self, $basenode) = @_;
 	my $model = $self->model;
-	my $domain_node = $self->stash->{payload}->domain_node;
+	my $domain_node = $model->payload->domain_node;
 	my $node_path = $basenode->node_path || 'index';
 	my $prefix;
 	if ($domain_node) {

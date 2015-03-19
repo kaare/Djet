@@ -22,13 +22,14 @@ Find the nodes based on the search string
 
 after 'init_data' => sub  {
 	my $self = shift;
-	my $search_phrase = decode('utf-8', $self->request->parameters->{search_phrase});
+	my $model = $self->model;
+	my $search_phrase = decode('utf-8', $model->request->parameters->{search_phrase});
 	return unless $search_phrase;
 
-	$self->add_search(node_path => {'<@', $self->stash->{payload}->domain_node->node_path});
+	$self->add_search(node_path => {'<@', $model->stash->{payload}->domain_node->node_path});
 	$self->set_fts($search_phrase);
 	$self->set_list_name('search_nodes');
-	$self->stash->{search_phrase} = $search_phrase;
+	$model->stash->{search_phrase} = $search_phrase;
 };
 
 __PACKAGE__->meta->make_immutable;

@@ -33,19 +33,19 @@ after 'set_base_object' => sub  {
 	my $basetype = $model->basetype_by_name('contactform') or die "No basetype: contactform";
 
 	my $contactform;
-	if ($self->basenode->basetype_id == $basetype->id) {
-		$contactform = $self->basenode;
-		$self->stash->{template_display} = 'view';
+	if ($model->basenode->basetype_id == $basetype->id) {
+		$contactform = $model->basenode;
+		$model->stash->{template_display} = 'view';
 	} else {
-		$contactform = $self->model->resultset('Djet::DataNode')->new({
+		$contactform = $model->resultset('Djet::DataNode')->new({
 			basetype_id => $basetype->id,
-			parent_id => $self->basenode->id,
+			parent_id => $model->basenode->id,
 			datacolumns => {}
 		});
 		$self->set_object($contactform);
 		$self->is_new(1);
 	}
-	$self->stash->{contactform} = $contactform;
+	$model->stash->{contactform} = $contactform;
 };
 
 =head2 before process_post
@@ -60,8 +60,8 @@ before 'process_post' => sub  {
 	my $model = $self->model;
 	my $basetype = $model->basetype_by_name('contactform') or die "No basetype: contactform";
 
-	my $contactform = $self->model->resultset('Djet::DataNode')->new({
-		parent_id => $self->basenode->id,
+	my $contactform = $model->resultset('Djet::DataNode')->new({
+		parent_id => $model->basenode->id,
 		basetype_id => $basetype->id,
 		datacolumns => {},
 	});
@@ -90,9 +90,10 @@ Send email to the admin and the user if the "child" contactform was actually cre
 
 before 'edit_updated' => sub {
 	my ($self, $validation)=@_;
-	$self->set_status_msg($self->basenode->nodedata->receipt_msg->value);
+	my $model = $self->model;
+	$self->set_status_msg($model->basenode->nodedata->receipt_msg->value);
 	eval { $self->send_mail };
-	$self->model->log->error("Couldn't send email: $@") if $@;
+	$model->log->error("Couldn't send email: $@") if $@;
 };
 
 =head2 send_mail
@@ -104,12 +105,13 @@ Actually send the email
 sub send_mail {
 	my $self = shift;
 	my $mailer = $self->mailer;
-	my $nodedata = $self->basenode->nodedata;
+	my $model = $self->model;
+	my $nodedata = $model->basenode->nodedata;
 	my $in_fields = $self->object->fields;
 	my @to = $nodedata->recipient->value, $in_fields->email->value;
-	$self->stash->{template_display} = 'view';
+	$model->stash->{template_display} = 'view';
 	$self->object->discard_changes;
-	$self->stash->{contactform} = $self->object;
+	$model->stash->{contactform} = $self->object;
 	$mailer->send(
 		template => $nodedata->template->value,
 		to => \@to,

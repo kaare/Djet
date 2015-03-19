@@ -86,11 +86,12 @@ sub create_path {
 	eval { $self->model->txn_do($transaction) };
 	my $error=$@;
 
+	my $model = $self->model;
 	if ($error) {
-		$self->config->log->debug($error);
-		$self->stash->{message} = $error;
+		$model->config->log->debug($error);
+		$model->stash->{message} = $error;
 	} else {
-		return $self->basenode->node_path;
+		return $model->basenode->node_path;
 	}
 }
 
@@ -104,16 +105,16 @@ sub create_nodes {
 	my $self = shift;
 	my $model = $self->model;
 	my $dbh = $model->storage->dbh;
-	my $queue = $self->basenode->queue->value;
+	my $queue = $model->basenode->queue->value;
 	my $client = Job::Machine::Client->new(
 		dbh => $dbh,
 		queue => $queue,
 	) if defined($queue);
 
-	my $parent_id = $self->basenode->id;
+	my $parent_id = $model->basenode->id;
 	my $uploadtype = $model->basetype_by_name('import');
 	my $basetype_id = $uploadtype->id;
-	my $request = $self->request;
+	my $request = $model->request;
 	for my $upload ($request->uploads->get_all('uploadedfile')) {
 		my $uploadfile = $upload->path;
 		my $data = {
@@ -126,7 +127,7 @@ sub create_nodes {
 		my $file_node = $model->resultset('Djet::DataNode')->create($data);
 		$file_node->discard_changes;
 		my $node_id = $file_node->node_id;
-		my $file_path = $self->file_placement($upload->path, $self->basenode->path, $node_id);
+		my $file_path = $self->file_placement($upload->path, $model->basenode->path, $node_id);
 		$file_node->update({part => $node_id});
 		if (defined($queue)) {
 			$data->{file_path} = $file_path;

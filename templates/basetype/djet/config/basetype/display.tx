@@ -2,15 +2,15 @@
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title><: $payload.basenode.get_column('title') :></title>
+	<title><: $payload.model.basenode.get_column('title') :></title>
 	<link rel="stylesheet" href="/css/djet.css">
 </head>
 <body>
-<h1><: $payload.basenode.get_column('title') :></h1>
+<h1><: $payload.model.basenode.get_column('title') :></h1>
 basetype.name: <: $basetype.name :>
 <h2>Fields</h2>
 <ul>
-: for $payload.basenode.nodedata -> $item {
+: for $payload.model.basenode.nodedata -> $item {
 	<li><: $item.title :>: <: $item.value :>
 : }
 </ul>

@@ -48,12 +48,13 @@ has 'steps' => (
 	isa => 'ArrayRef',
 	default => sub {
 		my $self = shift;
-		my @steps = $self->model->resultset('Djet::DataNode')->search({
-			parent_id => $self->basenode->node_id,
+		my $model = $self->model;
+		my @steps = $model->resultset('Djet::DataNode')->search({
+			parent_id => $model->basenode->node_id,
 		},{
 			order_by => 'node_modified',
 		});
-		push @steps, {title => $self->basenode->basetype->attributes->{step_name}};
+		push @steps, {title => $model->basenode->basetype->attributes->{step_name}};
 		return \@steps;
 	},
 	lazy => 1,
@@ -70,7 +71,8 @@ has checkout => (
 	isa => 'HashRef',
 	default => sub {
 		my $self = shift;
-		my $session = $self->session;
+		my $model = $self->model;
+		my $session = $model->session;
 		return { next_step => 1 } unless defined $session && $session->{checkout};
 
 		return $session->{checkout};
@@ -119,13 +121,14 @@ before 'data' => sub {
 			last;
 		}
 	}
-	$self->session->{checkout}{next_step} = $next_step;
-	my $current_step = $next_step == @$steps ? $self->basenode : $steps->[$next_step - 1];
+	my $model = $self->model;
+	$model->session->{checkout}{next_step} = $next_step;
+	my $current_step = $next_step == @$steps ? $model->basenode : $steps->[$next_step - 1];
 
-	$self->stash->{steps} = $steps;
-	$self->stash->{current_step} = $current_step;
+	$model->stash->{steps} = $steps;
+	$model->stash->{current_step} = $current_step;
 	my $step_name = $current_step->name;
-	$self->stash->{defaults} = $checkout->{data}{$step_name} if $checkout->{data}{$step_name};
+	$model->stash->{defaults} = $checkout->{data}{$step_name} if $checkout->{data}{$step_name};
 
 	my $template //= $current_step->basetype->template;
 	$template = $self->template_substitute($template) if defined($template) and $template =~ /<.+>/;
@@ -152,12 +155,9 @@ sub post_is_create {
 	my $handler = $current_step->basetype->handler;
 	eval "require $handler" or die "No handler $handler";
 
+	my $model = $self->model;
 	my $step_object = $handler->new(
-		model => $self->model,
-		env => $self->env,
-		request => $self->request,
-		navigator => $self->navigator,
-		stash => $self->stash,
+		model => $model,
 		mailer => $self->mailer,
 		checkout => $checkout,
 		step => $current_step,
@@ -166,7 +166,7 @@ sub post_is_create {
 
 	$checkout->{ok}[$step-1] = $step_ok;
 	$checkout->{next_step} = $step + 1 unless $checkout->{next_step} >= @$steps;
-	$self->session->{checkout} = $checkout;
+	$model->session->{checkout} = $checkout;
 	return 1;
 }
 
@@ -179,17 +179,19 @@ Process the edit POST
 sub process_post {
 	my ($self) = @_;
 	$self->stash_basic;
-	my $request = $self->request;
+	my $model = $self->model;
+	my $request = $model->request;
 	$self->_stash_defaults;
 	$self->response->body($self->view_page);
 }
 
 sub _stash_defaults {
 	my ($self) = @_;
-	my $request = $self->request;
-	$self->stash->{defaults} = $request->parameters->as_hashref;
+	my $model = $self->model;
+	my $request = $model->request;
+	$model->stash->{defaults} = $request->parameters->as_hashref;
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
-		$self->stash->{defaults}{$fieldname} = $upload->filename;
+		$model->stash->{defaults}{$fieldname} = $upload->filename;
 	}
 }
 
@@ -201,8 +203,9 @@ Process the POST request for creating a node
 
 sub create_path {
 	my $self = shift;
-	my $step = $self->session->{checkout}{next_step};
-	my $url = $self->stash->{payload}->urify;
+	my $model = $self->model;
+	my $step = $model->session->{checkout}{next_step};
+	my $url = $model->stash->{payload}->urify;
 	$url .= '/' unless $url =~ m|/$|;
 	$url .= $step;
 	return $url;

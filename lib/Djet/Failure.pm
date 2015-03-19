@@ -23,7 +23,8 @@ has exception => (
 	is => 'ro',
 	trigger => sub {
 		my ($self, $e) = @_;
-		my $stash = $self->stash;
+		my $model = $self->model;
+		my $stash = $model->stash;
 		if (ref $_) {
 	# Find Not Found node
 	# my $notfound_name = $config->{djet}{nodenames}{notfound};
@@ -37,13 +38,9 @@ has exception => (
 			$stash->{error} = $e
 		}
 		my $response = $self->response;
-		$response->template('generic/error' . $self->config->config->{template_suffix});
+		$response->template('generic/error' . $model->config->config->{template_suffix});
 		$response->render;
 	},
-);
-has stash => (
-	isa => 'HashRef',
-	is => 'ro',
 );
 has response => (
 	isa => 'Djet::Response',

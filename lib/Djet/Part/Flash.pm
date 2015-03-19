@@ -126,7 +126,7 @@ has 'messages' => (
 	default   => sub {
 		my $self = shift;
 		my $token = $self->flash_token;
-		return $self->session->{flash}{$token} //= {};
+		return $self->model->session->{flash}{$token} //= {};
 	},
 	lazy => 1,
 	handles   => {

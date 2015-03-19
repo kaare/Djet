@@ -59,7 +59,7 @@ Set the object to the basenode
 
 sub set_base_object {
 	my $self = shift;
-	$self->set_object($self->basenode->basetype);
+	$self->set_object($self->model->basenode->basetype);
 }
 
 =head2 _build_dfv
@@ -93,7 +93,7 @@ Get the attributes from input data
 sub attributes {
 	my ($self, $input_data) = @_;
 	my $prefix = 'attribute';
-	my $params = $self->request->body_parameters;
+	my $params = $self->model->request->body_parameters;
 	my $rows = $self->find_rows_from_params($prefix, $params);
 	my %attributes = map {$_->{name} => $_->{value}} grep {$_->{name}} @$rows;
 	return \%attributes;
@@ -108,7 +108,7 @@ Get the datacolumns from input data
 sub datacolumns {
 	my ($self, $input_data) = @_;
 	my $prefix = 'datacolumn'; # XXX
-	my $params = $self->request->body_parameters;
+	my $params = $self->model->request->body_parameters;
 	my $rows = $self->find_rows_from_params($prefix, $params);
 
 	# Merge any existing values that are NOT in the web form

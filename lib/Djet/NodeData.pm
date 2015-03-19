@@ -18,6 +18,17 @@ The baseclass for all nodedata of the basetypes
 
 =head1 ATTRIBUTES
 
+=head2 model
+
+The model object
+
+=cut
+
+has 'model' => (
+	is => 'ro',
+	isa => 'Djet::Model',
+);
+
 =head2 datacolumns
 
 The raw data columns

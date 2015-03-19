@@ -15,17 +15,6 @@ Base class for checkout subhandlers
 
 =head1 ATTRIBUTES
 
-=head2 stash
-
-The stash
-
-=cut
-
-has stash => (
-	is => 'ro',
-	isa => 'HashRef',
-);
-
 =head2 checkout
 
 The checkout data

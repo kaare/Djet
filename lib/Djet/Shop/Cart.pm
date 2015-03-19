@@ -75,10 +75,11 @@ has cart_row => (
 
 sub _build_cart_row {
 	my $self = shift;
-	die "Neither user nor session id" unless $self->has_uid or $self->has_session_id;
+	my $model = $self->model;
+	die "Neither user nor session id" unless $self->has_uid or $model->has_session_id;
 
-	my $where = $self->has_uid ? {uid => $self->uid} : {session_id => $self->session_id};
-	my $cart_row = $self->model->resultset('Djet::Cart')->find($where);
+	my $where = $self->has_uid ? {uid => $self->uid} : {session_id => $model->session_id};
+	my $cart_row = $model->resultset('Djet::Cart')->find($where);
 	return $cart_row ? $self->_load_cart($cart_row) : $self->_create_cart;
 }
 
@@ -108,10 +109,11 @@ sub save {
 # creates cart in database
 sub _create_cart {
 	my $self = shift;
-	return $self->model->resultset('Djet::Cart')->create({
+	my $model = $self->model;
+	return $model->resultset('Djet::Cart')->create({
 		name => $self->name,
 		uid => $self->has_uid ? $self->{uid} : 0,
-		session_id => $self->has_session_id ? $self->session_id : '',
+		session_id => $model->has_session_id ? $model->session_id : '',
 		name => $self->cart_name,
 	});
 }
@@ -132,13 +134,14 @@ sub _load_cart {
 before add => sub {
 	my ($self, %args) = @_;
 	my $cart_product;
-	if ($cart_product = $self->model->resultset('Djet::CartProduct')->find({
+	my $model = $self->model;
+	if ($cart_product = $model->resultset('Djet::CartProduct')->find({
 		cart => $self->cart_row->id,
 		sku => $args{sku},
 	})) {
 		$cart_product->update({quantity => $cart_product->quantity + $args{quantity}});
 	} else {
-		$cart_product = $self->model->resultset('Djet::CartProduct')->create({
+		$cart_product = $model->resultset('Djet::CartProduct')->create({
 			cart => $self->cart_row->id,
 			sku => $args{sku},
 			name => $args{name},
@@ -152,12 +155,13 @@ before add => sub {
 before update => sub {
 	my ($self, %args) = @_;
 	my $cart_id = $self->cart_row->id;
+	my $model = $self->model;
 	while (my ($sku, $qty) = each %args) {
 		my $search = {
 			cart => $cart_id,
 			sku => $sku,
 		};
-		if (my $cart_product = $self->model->resultset('Djet::CartProduct')->find($search)) {
+		if (my $cart_product = $model->resultset('Djet::CartProduct')->find($search)) {
 			if ($qty) { 
 				$cart_product->update({quantity => $qty});
 			} else {
@@ -169,28 +173,14 @@ before update => sub {
 
 before remove => sub {
 	my ($self, %args) = @_;
-	if (my $cart_product = $self->model->resultset('Djet::CartProduct')->find({
+	my $model = $self->model;
+	if (my $cart_product = $model->resultset('Djet::CartProduct')->find({
 		cart => $self->cart_row->id,
 		sku => $args{sku},
 	})) {
 		$cart_product->delete;
 	}
 };
-
-=pod
-
-after rename => sub {
-	my ($self, @args) = @_;
-
-	unless ($self eq $args[0]) {
-		# not our cart
-		return;
-	}
-
-	$self->{sqla}->update('carts', {name => $args[2]}, {code => $self->{id}});
-};
-
-=cut
 
 before clear => sub {
 	my ($self, %args) = @_;

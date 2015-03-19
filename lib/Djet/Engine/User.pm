@@ -30,14 +30,15 @@ Init the list part
 
 before 'init_data' => sub {
 	my $self = shift;
-	if ($self->basenode->basetype->name eq 'user') {
-		$self->stash->{user} = $self->basenode;
+	my $model = $self->model;
+	if ($model->basenode->basetype->name eq 'user') {
+		$model->stash->{user} = $model->basenode;
 		return;
 	}
-	return $self->new_form if $self->rest_path eq 'new';
+	return $self->new_form if $model->rest_path eq 'new';
 
-	$self->stash->{header_children} = $self->model->basetype_by_name('user')->datacolumns or die "No basetype: user";
-	$self->add_search(parent_id => $self->basenode->node_id);
+	$model->stash->{header_children} = $model->basetype_by_name('user')->datacolumns or die "No basetype: user";
+	$self->add_search(parent_id => $model->basenode->node_id);
 };
 
 =head2 new_form
@@ -53,7 +54,7 @@ sub new_form {
 	my $user_basetype = $model->basetype_by_name('user') or die "No basetype: user";
 
 	$self->template($self->template_substitute($user_basetype->template));
-	$self->stash_user($user_basetype) unless $self->stash->{user};
+	$self->stash_user($user_basetype) unless $model->stash->{user};
 }
 
 =head2 stash_user
@@ -64,12 +65,13 @@ Create a new user row and stash it
 
 sub stash_user {
 	my ($self, $user_basetype) = @_;
-	my $user = $self->model->resultset('Djet::DataNode')->new({
+	my $model = $self->model;
+	my $user = $model->resultset('Djet::DataNode')->new({
 		basetype_id => $user_basetype->id,
-		parent_id => $self->basenode->id,
+		parent_id => $model->basenode->id,
 		datacolumns => {}
 	});
-	$self->stash->{user} = $user;
+	$model->stash->{user} = $user;
 	$self->set_object($user);
 	$self->is_new(1);
 }
@@ -83,7 +85,7 @@ validation.
 
 before 'post_is_create' => sub  {
 	my $self = shift;
-	return if $self->basenode->basetype->name eq 'user';
+	return if $model->basenode->basetype->name eq 'user';
 
 	my $model = $self->model;
 	my $user_basetype = $model->basetype_by_name('user') or die "No basetype: user";
@@ -105,7 +107,8 @@ before 'edit_validation' => sub {
 	my $self = shift;
 	return unless $self->is_new;
 
-	my $groups = $self->basenode->nodedata->roles->value;
+	my $model = $self->model;
+	my $groups = $model->basenode->nodedata->roles->value;
 	my $check_role = sub {
 		my $name = pop;
 		my $missing;

@@ -23,8 +23,9 @@ Remove the user's session, and redirect to whatever was set as redirect_uri, or 
 
 before 'data' => sub  {
 	my $self = shift;
-	my $redirect_uri = delete $self->session->{redirect_uri} // '/';
-	delete $self->session->{djet_user};
+	my $model = $self->model;
+	my $redirect_uri = delete $model->session->{redirect_uri} // '/';
+	delete $model->session->{djet_user};
 	$self->response->header('Location' => $redirect_uri);
 	$self->return_value(\302);
 };

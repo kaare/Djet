@@ -21,8 +21,9 @@ Checks if there is a terms parameter and processes the order if so
 
 sub has_all_data {
 	my $self = shift;
-	my $stash = $self->stash;
-	my $params = $self->request->body_parameters;
+	my $model = $self->model;
+	my $stash = $model->stash;
+	my $params = $model->request->body_parameters;
 
 	return unless $params->{terms}; # user has to accept the terms
 
@@ -38,7 +39,8 @@ Checks if there is a terms parameter and processes the order if so
 sub process_order {
 	my $self = shift;
 	my $checkout = $self->checkout;
-	my $cart = $self->stash->{payload}->cart;
+	my $model = $self->model;
+	my $cart = $model->payload->cart;
 	my $transaction = sub {
 		$self->create_order($checkout, $cart);
 		$self->reset_data($checkout, $cart);
@@ -47,8 +49,8 @@ sub process_order {
 	my $error=$@;
 
 	if ($error) {
-		$self->config->log->debug($error);
-		$self->stash->{message} = $error;
+		$model->config->log->debug($error);
+		$model->stash->{message} = $error;
 		return;
 	}
 
@@ -88,8 +90,9 @@ Send the order email(s)
 sub send_mail {
 	my $self = shift;
 	my $mailer = $self->mailer;
-	my $nodedata = $self->basenode->nodedata;
-	my $user = $self->stash->{payload}->user;
+	my $model = $self->model;
+	my $nodedata = $model->basenode->nodedata;
+	my $user = $model->payload->user;
 	my $to = $nodedata->recipients->value;
 	push @$to, $user->email->value;
 	$self->stash->{template_display} = 'view';

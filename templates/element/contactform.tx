@@ -1,5 +1,5 @@
 <div id="contactform">
-  <h2><: $payload.basenode.title :></h2>
+  <h2><: $payload.model.basenode.title :></h2>
 : if $template_display != 'view' {
   <form method="post" id="edit-contactform" action="<: $payload.urify :>">
 : }
@@ -7,7 +7,7 @@
 : if $template_display != 'view' {
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
-    <input type="hidden" name="am" value="<: $payload.basenode.id :>">
+    <input type="hidden" name="am" value="<: $payload.model.basenode.id :>">
   </form>
 : }
 <div><: $payload.flash.status :></div>

@@ -22,7 +22,7 @@ Returns 1 if all the necessary data is entered correctly
 sub has_all_data {
 	my $self = shift;
 	my $checkout = $self->checkout;
-	my $params = $self->request->body_parameters->as_hashref;
+	my $params = $self->model->request->body_parameters->as_hashref;
 	my $step_name = $self->step->name;
 	$checkout->{data}{$step_name} = $params;
 	return 1;

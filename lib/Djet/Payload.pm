@@ -6,8 +6,8 @@ use MooseX::NonMoose;
 use namespace::autoclean;
 
 with qw/
-	Djet::Part::Generic::Urify
 	Djet::Part::Basic
+	Djet::Part::Generic::Urify
 /;
 
 =head1 NAME
@@ -25,7 +25,7 @@ A good idea is to have lazy attributes which will only be used if necessary.
 
 =head1 ATTRIBUTES
 
-See L<Djet::Part::Basic> for the basic attributes
+See L<Djet::Part::Basic>
 
 =head2 query_parameters
 
@@ -38,7 +38,7 @@ has 'query_parameters' => (
 	isa => 'Hash::MultiValue',
 	default => sub {
 		my $self = shift;
-		my $query_parameters = $self->request->query_parameters;
+		my $query_parameters = $self->model->request->query_parameters;
 		delete $query_parameters->{page};
 		return $query_parameters;
 	},
@@ -56,9 +56,9 @@ has 'flash' => (
 	isa => 'HashRef',
 	default => sub {
 		my $self = shift;
-		my $token = $self->request->param('flash') || return {};
+		my $token = $self->model->request->param('flash') || return {};
 
-		return delete $self->session->{flash}{$token} // {};
+		return delete $self->model->session->{flash}{$token} // {};
 	},
 	lazy => 1,
 );

@@ -26,7 +26,7 @@ Init the list part
 
 after 'init_data' => sub {
 	my $self = shift;
-	$self->add_search(parent_id => $self->basenode->node_id);
+	$self->add_search(parent_id => $self->model->basenode->node_id);
 };
 
 __PACKAGE__->meta->make_immutable;

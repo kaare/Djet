@@ -38,24 +38,6 @@ Web::Machine's response accessor
 
 See L<Djet::Part::Basic> for the basic attributes
 
-=head2 stash
-
-The stash keeps data throughout a request cycle
-
-=cut
-
-has stash => (
-	isa => 'HashRef',
-	traits => ['Hash'],
-	is => 'ro',
-	lazy => 1,
-	default => sub { {} },
-	handles => {
-		set_stash => 'set',
-		clear_stash => 'clear',
-	},
-);
-
 =head2 content_types_provided
 
 The provided content types
@@ -143,15 +125,8 @@ has mailer => (
 	isa => 'Djet::Mail',
 	default => sub {
 		my $self = shift;
-		my $config = $self->model->config->{mail} // {};
-		my $renderer = $self->model->renderers->{'html'};
 		my $mailer = Djet::Mail->new(
 			model => $self->model,
-			env => $self->env,
-			request => $self->request,
-			navigator => $self->navigator,
-			stash => $self->stash,
-			renderer => $renderer,
 		);
 		return $mailer;
 	},
@@ -174,17 +149,8 @@ Put some basic data on the stash
 sub stash_basic {
 	my $self = shift;
 	my $model = $self->model;
-	my $stash = $self->stash;
-	$stash->{basetypes} = $self->basetypes;
-	$stash->{payload} = $model->payload_class->new(
-		model => $self->model,
-		env => $self->env,
-		session => $self->session,
-		session_id => $self->options->{id} // 0,
-		request => $self->request,
-		navigator => $self->navigator,
-		content_type => $self->content_type,
-	);
+	my $stash = $model->stash;
+	$stash->{basetypes} = $model->basetypes;
 }
 
 =head2 BUILD

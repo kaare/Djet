@@ -31,15 +31,15 @@ before 'init_data' => sub  {
 	my $self = shift;
 	my $model = $self->model;
 	my $basetype = $model->basetype_by_name('blog') or die "No basetype: blog";
-	if ($self->basenode->basetype_id == $basetype->id) { # Single blog; no list
+	if ($model->basenode->basetype_id == $basetype->id) { # Single blog; no list
 		$self->set_list_name('comments');
 		$self->add_options(order_by => {'-asc' => 'node_created'});
 
 		my $blog_reply_type = $model->basetype_by_name('blog_reply') or die "No basetype: blog_reply";
 
-		$self->stash->{blog_reply} = $self->model->resultset('Djet::DataNode')->new({
+		$model->stash->{blog_reply} = $model->resultset('Djet::DataNode')->new({
 			basetype_id => $blog_reply_type->id,
-			parent_id => $self->basenode->id,
+			parent_id => $model->basenode->id,
 			datacolumns => {}
 		});
 		return;
@@ -61,17 +61,17 @@ after 'set_base_object' => sub  {
 	my $self = shift;
 	my $model = $self->model;
 	my $blog_reply;
-	if ($self->request->method eq 'POST') {
+	if ($model->request->method eq 'POST') {
 		my $blog_reply_type = $model->basetype_by_name('blog_reply') or die "No basetype: blog_reply";
-		$blog_reply = $self->model->resultset('Djet::DataNode')->new({
+		$blog_reply = $model->resultset('Djet::DataNode')->new({
 			basetype_id => $blog_reply_type->id,
-			parent_id => $self->basenode->id,
+			parent_id => $model->basenode->id,
 			datacolumns => {}
 		});
 		$self->set_object($blog_reply);
 		$self->is_new(1);
 	}
-	$self->stash->{blog_reply} = $blog_reply;
+	$model->stash->{blog_reply} = $blog_reply;
 };
 
 =head2 before get_input_data
@@ -95,7 +95,7 @@ Redirect to the blog post
 sub create_path {
 	my ($self, $validation)=@_;
 	my $blog_post = $self->object->parent;
-	$self->stash->{payload}->urify($blog_post);
+	$model->stash->{payload}->urify($blog_post);
 }
 
 __PACKAGE__->meta->make_immutable;

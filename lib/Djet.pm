@@ -165,15 +165,9 @@ has app => (
 			$self->check_notifications;
 			my @args = @_;
 			my $env = shift @args;
-			my $session = $env->{'psgix.session'} // {};
-			my $request = Plack::Request->new($env);
-
 			my $model = $self->model;
-			my $navigator = Djet::Navigator->new(
-				model => $model,
-				request => $request,
-				session => $session,
-			);
+			$model->_set_env($env);
+			my $navigator = $model->navigator;
 			$navigator->check_route;
 			return $navigator->result if $navigator->has_result; # The navigator found a detour
 
@@ -182,10 +176,6 @@ has app => (
 
 			my $resource_args = [
 				model => $self->model,
-				env => $env,
-				request => $request,
-				navigator => $navigator,
-				stash => {},
 			];
 			my $app = Djet::Machine->new(
 				resource => $engine_class,

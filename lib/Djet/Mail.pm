@@ -18,16 +18,7 @@ Sends email
 
 =head1 ATTRIBUTES
 
-=head2 stash
-
-The stash
-
-=cut
-
-has 'stash' => (
-	is => 'ro',
-	isa => 'HashRef',
-);
+See L<Djet::Part::Basic> for the basic attributes
 
 =head2 renderer
 
@@ -35,6 +26,11 @@ has 'stash' => (
 
 has 'renderer' => (
 	is => 'ro',
+	default => sub {
+		my $self = shift;
+		my $renderer = $self->model->renderers->{'html'};
+	},
+	lazy => 1,
 );
 
 =head2 mailer
@@ -49,7 +45,7 @@ has 'mailer' => (
 	default => sub {
 		my $self = shift;
 		my $mailer = Email::Stuffer->new;
-		my $transport = $self->config->config->{mail}{transport};
+		my $transport = $self->model->config->config->{mail}{transport};
 		if ($transport) {
 			my ($moniker, $options) = @$transport;
 			$mailer->transport($moniker, $options);
@@ -67,7 +63,7 @@ has 'mailer' => (
 
 sub send {
 	my ($self, %args) = @_;
-	my $stash = $self->stash;
+	my $stash = $self->model->stash;
 	my $mailbody = $self->renderer->render($args{template}, $stash);
 	my @to = ref $args{to} && ref $args{to} eq 'ARRAY' ? @{ $args{to} } : ($args{to});
 	$self->mailer->from($args{from})

@@ -18,13 +18,14 @@ Djet::Part - Put the basenode on the stash
 
 =head2 data
 
-Puts the basenode on the stash (as $self->stash->{basenode};
+Puts the basenode on the stash (as $model->stash->{basenode};
 
 =cut
 
 sub data {
 	my $self = shift;
-	$self->stash->{basenode} = $self->basenode;
+	my $model = $self->model;
+	$model->stash->{basenode} = $model->basenode;
 }
 
 no Moose::Role;

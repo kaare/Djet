@@ -26,11 +26,12 @@ Control what to send when it's JSON
 
 before to_json => sub {
 	my $self = shift;
-	if (my ($template) = $self->request->parameters->{template} =~ /^tree(top|view)$/) {
-		my $basenode = $self->basenode;
-		my $domain_basetype = $self->model->basetype_by_name('domain');
-		my $domain_node = $self->datanode_by_basetype($domain_basetype);
-		my $payload = $self->stash->{payload};
+	my $model = $self->model;
+	if (my ($template) = $model->request->parameters->{template} =~ /^tree(top|view)$/) {
+		my $basenode = $model->basenode;
+		my $domain_basetype = $model->basetype_by_name('domain');
+		my $domain_node = $model->datanode_by_basetype($domain_basetype);
+		my $payload = $model->payload;
 		my $dynadata;
 		if ($template eq 'top') {
 			my $folder = $domain_node->has_children ? 1 : undef;
@@ -45,7 +46,7 @@ before to_json => sub {
 		} else { # treeview
 			my $node;
 			if ($basenode->node_path =~ /index.html$/) {
-				$node = $self->datanodes->[-2];
+				$node = $model->datanodes->[-2];
 			} else {
 				$node = $basenode;
 			}
@@ -61,7 +62,7 @@ before to_json => sub {
 				}
 			} $node->children ],
 		}
-		$self->stash->{dynadata} = $dynadata;
+		$model->stash->{dynadata} = $dynadata;
 		$self->content_type('json');
 		$self->renderer->set_expose_stash('dynadata');
 	}

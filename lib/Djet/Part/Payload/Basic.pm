@@ -47,7 +47,8 @@ has 'breadcrumbs' => (
 
 sub _build_breadcrumbs {
 	my $self = shift;
-	my @datanodes = @{ $self->datanodes };
+	my $model = $self->model;
+	my @datanodes = @{ $model->datanodes };
 	shift @datanodes;
 	my $domain_node = $self->domain_node;
 	my $domain_found = 0;
@@ -74,10 +75,11 @@ has 'cart' => (
 
 sub _build_cart {
 	my $self = shift;
-	my $session = $self->session;
+	my $model = $self->model;
+	my $session = $model->session;
 	my $cart = Djet::Shop::Cart->new(
-		model => $self->model,
-		session_id => $self->session_id,
+		model => $model,
+		session_id => $model->session_id,
 		uid => $session->{djet_user} // '',
 	);
 	return $cart;
@@ -167,9 +169,9 @@ has 'user' => (
 
 sub _build_user {
 	my $self = shift;
-	my $user = $self->session->{djet_user} // return;
-
 	my $model = $self->model;
+	my $user = $model->session->{djet_user} // return;
+
 	my $user_basetype = $model->basetype_by_name('user') or return '';
 
 	my $user_row = $model->resultset('Djet::DataNode')->find({
@@ -196,10 +198,11 @@ has 'logout_node' => (
 
 sub _build_logout_node {
 	my $self = shift;
-	my $logout_basetype = $self->model->basetype_by_name('logout') or return;
+	my $model = $self->model;
+	my $logout_basetype = $model->basetype_by_name('logout') or return;
 
-	my $domain_basetype = $self->model->basetype_by_name('domain');
-	my $domain_node = $self->datanode_by_basetype($domain_basetype);
+	my $domain_basetype = $model->basetype_by_name('domain');
+	my $domain_node = $model->datanode_by_basetype($domain_basetype);
 	my $find = {
 		basetype_id => $logout_basetype->id,
 		node_path => {'<@' => [$domain_node->node_path, '/']},
@@ -208,7 +211,7 @@ sub _build_logout_node {
 		order_by => \'length(node_path)',
 		rows => 1,
 	};
-	return $self->model->resultset('Djet::DataNode')->find($find, $options);
+	return $model->resultset('Djet::DataNode')->find($find, $options);
 }
 
 no Moose::Role;

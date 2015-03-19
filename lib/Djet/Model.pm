@@ -108,6 +108,149 @@ has payload_class => (
 	lazy => 1,
 );
 
+=head1 VOLATILE ATTRIBUTES
+
+=head2 env
+
+The web environment
+
+=cut
+
+has 'env' => (
+	is => 'ro',
+	isa => 'HashRef',
+	trigger => sub {
+		my $self = shift;
+		$self->_clear_session;
+		$self->_clear_session_id;
+		$self->_clear_request;
+		$self->_clear_navigator;
+		$self->_clear_payload;
+		$self->_clear_stash;
+	},
+	writer => '_set_env',
+);
+
+=head2 session
+
+The session
+
+=cut
+
+has session => (
+	is => 'ro',
+	isa => 'HashRef',
+	default => sub {
+		my $self = shift;
+		my $env = $self->env;
+		return $env->{'psgix.session'} // {};
+	},
+	lazy => 1,
+	clearer => '_clear_session',
+);
+
+=head2 session_id
+
+The session
+
+=cut
+
+has session_id => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $self = shift;
+		my $env = $self->env;
+		my $options = $env->{'psgix.session.options'} or return 0 ;
+		return exists $options->{id} ? $options->{id} : 0,
+	},
+	lazy => 1,
+	clearer => '_clear_session_id',
+);
+
+=head2 request
+
+The plack request
+
+=cut
+
+has 'request' => (
+	is => 'ro',
+	isa => 'Plack::Request',
+	default => sub {
+		my $self = shift;
+		return Plack::Request->new($self->env);
+	},
+	lazy => 1,
+	clearer => '_clear_request',
+);
+
+=head2 navigator
+
+The plack navigator
+
+=cut
+
+has navigator => (
+	is => 'ro',
+	isa => 'Djet::Navigator',
+	handles => [qw/
+		basenode
+		datanodes
+		datanode_by_basetype
+		rest_path
+		raw_rest_path
+	/],
+	default => sub {
+		my $self = shift;
+		my $navigator = Djet::Navigator->new(
+			model => $self,
+		);
+	},
+	lazy => 1,
+	clearer => '_clear_navigator',
+);
+
+=head2 payload
+
+The plack payload
+
+=cut
+
+has payload => (
+	is => 'ro',
+	isa => 'Djet::Payload',
+	default => sub {
+		my $self = shift;
+		return $self->payload_class->new(
+			model => $self,
+		);
+	},
+	lazy => 1,
+	clearer => '_clear_payload',
+);
+
+=head2 stash
+
+The stash keeps data throughout a request cycle
+
+=cut
+
+has stash => (
+	isa => 'HashRef',
+	traits => ['Hash'],
+	is => 'ro',
+	default => sub { {} },
+	lazy => 1,
+	handles => {
+		'set_stash' => 'set',
+		'_clear_stash' => 'clear',
+	},
+);
+
+
+=head1 METHODS
+
 =head2 basetype_by_name
 
 Returns a basetype from the cache, given a name

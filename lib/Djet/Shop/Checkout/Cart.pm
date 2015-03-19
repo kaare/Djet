@@ -21,14 +21,15 @@ Returns 1 if all the necessary data is entered correctly
 
 sub has_all_data {
 	my $self = shift;
-	my $stash = $self->stash;
-	my $params = $self->request->body_parameters;
+	my $model = $self->model;
+	my $stash = $model->stash;
+	my $params = $model->request->body_parameters;
 	my %items = map {
 		my $param = $_;
 		my ($identifier, $sku) = split/_/, $param;
 		$sku => $params->{$param};
 	} grep {/^qty_/} keys %$params;
-	my $cart = $self->stash->{payload}->cart;
+	my $cart = $model->payload->cart;
 	$cart->update(%items);
 
 	return if $params->{update}; # Just update the cart

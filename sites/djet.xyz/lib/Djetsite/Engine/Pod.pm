@@ -25,10 +25,11 @@ Renders pod as web pages for the Djet.xyz site
 
 before to_html => sub {
 	my $self = shift;
-	my $stash = $self->stash;
+	my $model = $self->model;
+	my $stash = $model->stash;
 	my $search = Pod::Simple::Search->new;
 
-	my $module = $self->rest_path || 'Djet::Manual';
+	my $module = $model->rest_path || 'Djet::Manual';
 	return unless my $path = $search->find($module);
 
 	my $p = Pod::Simple::XHTML->new;

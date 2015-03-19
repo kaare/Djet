@@ -2,10 +2,10 @@
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title><: $payload.basenode.title :></title>
+	<title><: $payload.model.basenode.title :></title>
 </head>
 <body>
 
-<h1><: $payload.basenode.title :></h1>
+<h1><: $payload.model.basenode.title :></h1>
 </body>
 </html>

@@ -65,17 +65,18 @@ Decide if we're creating a new node, and where in the process we are.
 
 after 'set_base_object' => sub {
 	my $self = shift;
-	my $request = $self->request;
+	my $model = $self->model;
+	my $request = $model->request;
 	return unless my $basetype_id = $request->parameters->{basetype_id};
 	return $self->choose_basetype if $basetype_id eq 'child';
 
-	my $parent_id = $self->rest_path;
-	$self->set_object($self->model->resultset('Djet::DataNode')->new({
+	my $parent_id = $model->rest_path;
+	$self->set_object($model->resultset('Djet::DataNode')->new({
 		basetype_id => $basetype_id,
 		parent_id => $parent_id,
 		datacolumns => '{}',
 	}));
-	my $stash = $self->stash;
+	my $stash = $model->stash;
 	$stash->{basetype_id} = $basetype_id;
 	$stash->{parent_id} = $parent_id;
 	$self->is_new(1);
@@ -121,8 +122,9 @@ before 'data' => sub {
 			},
 		]
 	};
-	$self->stash->{basecols} = $basecols;
-	$self->stash->{node} = $object;
+	my $model = $self->model;
+	$model->stash->{basecols} = $basecols;
+	$model->stash->{node} = $object;
 };
 
 =head2 before post_is_create
@@ -133,7 +135,8 @@ Decide if we're creating a new node
 
 before 'post_is_create' => sub {
 	my $self = shift;
-	my $request = $self->request;
+	my $model = $self->model;
+	my $request = $model->request;
 	if ($request->parameters->{cancel}) {
 		$self->response->location('/djet/tree');
 		return;
@@ -162,8 +165,9 @@ Put parameters on the stash for the choose_basetype template
 
 sub choose_basetype {
 	my ($self, $parent_path) = @_;
-	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values $self->model->basetypes;
-	$self->stash->{basetypes_choice} = \@basetypes;
+	my $model = $self->model;
+	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values $model->basetypes;
+	$model->stash->{basetypes_choice} = \@basetypes;
 	$self->template('/config/basenode_choose_basetype.tx');
 }
 

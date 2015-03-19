@@ -42,7 +42,7 @@ around to_json => sub {
 	$self->data;
 	return $self->return_value if $self->has_return_value;
 
-	return $self->renderer->render($self->stash);
+	return $self->renderer->render($self->model->stash);
 };
 
 no Moose::Role;

@@ -18,6 +18,17 @@ This class produces the nodedataclasses of the different basetypes, based on
 
 =head1 ATTRIBUTES
 
+=head2 model
+
+The Djet model
+
+=cut
+
+has model => (
+	is => 'ro',
+	isa => 'Djet::Model',
+);
+
 =head2 datacolumns
 
 The raw data columns, an arrayref. Each array element is a hashref with the basetype id as key and the basetype row as value
@@ -38,6 +49,12 @@ The Djet configuration
 has config => (
 	is => 'ro',
 	isa => 'Djet::Config',
+	default => sub {
+		my $self = shift;
+		my $model = $self->model;
+		return $model->config;
+	},
+	lazy => 1,
 );
 
 =head2 name

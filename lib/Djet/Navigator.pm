@@ -7,10 +7,8 @@ use namespace::autoclean;
 use Try::Tiny;
 use List::Util qw/first/;
 
-use Djet::Failure;
-use Djet::Response;
-
 with qw/
+	Djet::Part::Basic
 	Djet::Part::Generic::Urify
 /;
 
@@ -24,38 +22,7 @@ Attributes and methods to navigate the World.
 
 =head1 ATTRIBUTES
 
-=head2 request
-
-The request
-
-=cut
-
-has request => (
-	is => 'ro',
-	isa => 'Plack::Request',
-);
-
-=head2 session
-
-The session
-
-=cut
-
-has session => (
-	is => 'ro',
-	isa => 'HashRef',
-);
-
-=head2 schema
-
-The schema
-
-=cut
-
-has model => (
-	is => 'ro',
-	isa => 'Djet::Model',
-);
+See L<Djet::Part::Basic> for the basic attributes
 
 =head2 basenode
 
@@ -92,7 +59,7 @@ has rest_path => (
 	 isa => 'Str',
 	 default => sub {
 		 my $self = shift;
-		 my $raw = $self->raw_rest_path or return '';
+		 my $raw = $self->model->raw_rest_path or return '';
 
 		 $raw =~ s/^index.html$//;
 		 return $raw;
@@ -173,19 +140,19 @@ sub check_route {
 	my $self = shift;
 	my $model = $self->model;
 	my $config = $model->config;
-	my $path = $self->request->path_info;
+	my $path = $model->request->path_info;
 	$model->log->debug("Node path: $path");
 	my $datanodes = $self->find_basenode($path);
 	my $basenode = $datanodes->[0];
 	$self->_set_datanodes($datanodes);
 	return if $self->check_node_redirect($basenode);
 
-	return $self->login($datanodes, $config, $path) unless my $user = $model->acl->check_login($self->session, $datanodes);
+	return $self->login($datanodes, $config, $path) unless my $user = $model->acl->check_login($model->session, $datanodes);
 
 	$model->log->debug("Acting as $user");
 	$self->_set_basenode($basenode);
 
-	my $rest_path = $self->rest_path;
+	my $rest_path = $model->rest_path;
 	$model->log->debug('Found node ' . $basenode->name . ' and rest path ' . $rest_path);
 }
 
@@ -201,7 +168,7 @@ sub check_node_redirect {
 	my ($self, $basenode) = @_;
 	return unless first {$_ eq 'redirect'} @ { $basenode->nodedata->fieldnames };
 	return unless my $redirect = $basenode->nodedata->redirect;
-	return if $self->request->parameters->{noredirect};
+	return if $self->model->request->parameters->{noredirect};
 
 	my $uri = $self->urify({node => $basenode, path => $redirect});
 	return $self->set_result([ 302, [ Location => $uri ], [] ]);
@@ -217,12 +184,13 @@ If there is a login node in the current domain, it will be used. Otherwise, any 
 
 sub login {
 	my ($self, $datanodes, $config, $original_path) = @_;
-	$self->session->{redirect_uri} = $original_path;
+	my $model = $self->model;
+	$model->session->{redirect_uri} = $original_path;
 
-	my $login_basetype = $self->model->basetype_by_name('login') or return;
+	my $login_basetype = $model->basetype_by_name('login') or return;
 
-	my $domain_basetype = $self->model->basetype_by_name('domain');
-	my $domain_node = $self->datanode_by_basetype($domain_basetype);
+	my $domain_basetype = $model->basetype_by_name('domain');
+	my $domain_node = $model->datanode_by_basetype($domain_basetype);
 	my $find = {
 		basetype_id => $login_basetype->id,
 		node_path => {'<@' => [$domain_node->node_path, '/']},
@@ -231,7 +199,7 @@ sub login {
 		order_by => \'length(node_path)',
 		rows => 1,
 	};
-	my $login_node = $self->model->resultset('Djet::DataNode')->find($find, $options) or return;
+	my $login_node = $model->resultset('Djet::DataNode')->find($find, $options) or return;
 
 	my $uri = $self->urify($login_node, $domain_node);
 	$self->set_result([ 302, [ Location => $uri ], [] ]);
@@ -247,7 +215,8 @@ returns the first node from the datanodes, given a basetype or a basetype id
 sub datanode_by_basetype {
 	my ($self, $basetype) = @_;
 	my $basetype_id = ref $basetype ? $basetype->id : $basetype;
-	return first {$_->basetype_id == $basetype_id} @ { $self->datanodes };
+	my $model = $self->model;
+	return first {$_->basetype_id == $basetype_id} @ { $model->datanodes };
 }
 
 __PACKAGE__->meta->make_immutable;

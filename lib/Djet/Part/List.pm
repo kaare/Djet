@@ -101,21 +101,23 @@ Find the nodes with the parameters given
 
 before 'data' => sub {
 	my $self = shift;
-	$self->stash->{$self->list_name} = $self->_find_list;
+	my $model = $self->model;
+	$model->stash->{$self->list_name} = $self->_find_list;
 };
 
 sub _find_list {
 	my $self = shift;
 	return if $self->limit < 0;
 
+	my $model = $self->model;
 	my $options = $self->options;
 	$options->{rows} = $self->limit;
-	my $page = $self->request->param('page') // 1;
+	my $page = $model->request->param('page') // 1;
 	$options->{page} = $page;
-	my $search = $self->model->resultset('Djet::DataNode')->search($self->search, $options);
+	my $search = $model->resultset('Djet::DataNode')->search($self->search, $options);
 	return $search unless $self->has_fts;
 
-	my $config = $self->config;
+	my $config = $model->config;
 	my $fts_config = $config->config->{fts_config};
 	return $search->ft_search($fts_config, $self->fts);
 }

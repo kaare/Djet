@@ -333,10 +333,9 @@ This class is instantiated for each data or datanode requesting datacolumns from
 sub _build_nodedata {
 	my $self= shift;
 	my $model = $self->result_source->schema;
-	my $config = $model->config;
 	my $factory = Djet::NodeData::Factory->new(
 		name => $self->name,
-		config => $config,
+		model => $model,
 		datacolumns => $self->datacolumns,
 	);
 	return $factory->nodedata_class;

@@ -14,7 +14,7 @@ with 'Djet::Part';
 
 =cut
 
-requires qw/stash request basenode response/;
+requires qw/model/;
 
 no Moose::Role;
 

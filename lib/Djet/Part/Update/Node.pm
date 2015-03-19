@@ -61,11 +61,12 @@ Set the object to the basenode
 
 sub set_base_object {
 	my $self = shift;
-	my $rest_path = $self->rest_path;
-	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $self->model->resultset('Djet::DataNode')->find({node_id => $rest_path})) {
+	my $model = $self->model;
+	my $rest_path = $model->rest_path;
+	if (defined($rest_path) and $rest_path =~ /^\d+$/a and my $node = $model->resultset('Djet::DataNode')->find({node_id => $rest_path})) {
 		$self->set_object($node);
 	}
-	$self->set_object($self->basenode) unless $self->has_object;
+	$self->set_object($model->basenode) unless $self->has_object;
 }
 
 =head2 _build_dfv
@@ -125,7 +126,7 @@ Get the name to be used for error messages and such
 
 sub get_base_name {
 	my $self = shift;
-	return $self->basenode->basetype->name;
+	return $self->model->basenode->basetype->name;
 }
 
 =head2 create_path
@@ -136,8 +137,9 @@ Process the POST request for creating a node
 
 sub create_path {
 	my $self = shift;
-	$self->stash_basic;
-	$self->stash->{payload}->urify($self->object);
+	my $model = $self->model;
+	$model->stash_basic;
+	$model->payload->urify($self->object);
 }
 
 =head2 after edit_update
@@ -148,7 +150,8 @@ Do an update_fts
 
 after 'edit_update' => sub {
 	my ($self, $validation)=@_;
-	my $config = $self->config;
+	my $model = $self->model;
+	my $config = $model->config;
 	my $fts_config = $config->config->{fts_config};
 	my $object = $self->object;
 	$object->update_fts($fts_config);
@@ -162,7 +165,8 @@ Do an update_fts
 
 after 'edit_create' => sub {
 	my ($self, $validation)=@_;
-	my $config = $self->config;
+	my $model = $self->model;
+	my $config = $model->config;
 	my $fts_config = $config->config->{fts_config};
 	my $object = $self->object;
 	$object->update_fts($fts_config);

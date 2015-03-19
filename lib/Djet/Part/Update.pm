@@ -123,7 +123,8 @@ Check if it's a delete request (GET w/ a 'delete' parameter)
 
 before 'view_page' => sub {
 	my $self = shift;
-	my $request = $self->request;
+	my $model = $self->model;
+	my $request = $model->request;
 	$self->set_base_object;
 	if ($request->parameters->{delete}) {
 		$self->delete_submit;
@@ -151,7 +152,7 @@ sub post_is_create {
 
 	$self->set_base_object;
 	$self->edit_submit;
-	return !defined $self->stash->{message};
+	return !defined $self->model->stash->{message};
 }
 
 =head2 process_post
@@ -163,7 +164,8 @@ Process the edit POST
 sub process_post {
 	my ($self) = @_;
 	$self->stash_basic;
-	my $request = $self->request;
+	my $model = $self->model;
+	my $request = $model->request;
 	$self->_stash_defaults;
 	$self->response->body($self->view_page);
 }
@@ -206,8 +208,9 @@ sub delete_submit {
 	my $error=$@;
 
 	if ($error) {
-		$self->config->log->debug($error);
-		$self->stash->{message} = $error;
+		my $model = $self->model;
+		$model->config->log->debug($error);
+		$model->stash->{message} = $error;
 	} else {
 		# XXX $self->flash->{notice} = $object->name . ' deleted.';
 		$self->response->redirect($self->response->uri_for("/")); # XXX Where to redirect to? Might be parent ??
@@ -285,7 +288,7 @@ project and user components save the parameter in _text
 sub edit_validation {
 	my $self = shift;
 	my $validator = $self->get_validator;
-	my $params = $self->request->body_parameters;
+	my $params = $self->model->request->body_parameters;
 	return $validator->validate($params);
 }
 
@@ -298,14 +301,15 @@ Is called if the validation failed
 sub edit_failed_validation {
 	my ($self, $validation)=@_;
 	my %msgs = %{ $validation->msgs };
-	$self->stash->{msgs} //= {};
-	@{ $self->stash->{msgs} }{ keys %msgs } = values %msgs;
+	my $model = $self->model;
+	$model->stash->{msgs} //= {};
+	@{ $model->stash->{msgs} }{ keys %msgs } = values %msgs;
 
-	$self->log->debug("Failed validation:\n\t" . join ("\n\t" , map {$_ . ' => ' . $msgs{$_}} keys %msgs)) if %msgs;
+	$model->log->debug("Failed validation:\n\t" . join ("\n\t" , map {$_ . ' => ' . $msgs{$_}} keys %msgs)) if %msgs;
 	my $node_type = $self->get_base_name;
 	my $error = "Could not save $node_type information - see detailed information by positioning your mouse over the fields marked with orange background (same as this box) in the table below:";
-	$self->log->error($error);
-	$self->stash->{message} ||= $error;
+	$model->log->error($error);
+	$model->stash->{message} ||= $error;
 }
 
 =head2 edit_update
@@ -381,17 +385,19 @@ sub edit_failed_update {
 	my ($self, $validation, $error)=@_;
 	die "Transaction AND Rollback failed!" if ($error =~ /Rollback failed/);
 
-	$self->stash->{message} = $error;
-	$self->log->debug($error);
-	$self->stash->{title}='Could not update ' . $self->object->title;
+	my $model = $self->model;
+	$model->stash->{message} = $error;
+	$model->log->debug($error);
+	$model->stash->{title}='Could not update ' . $self->object->title;
 }
 
 sub _stash_defaults {
 	my ($self) = @_;
-	my $request = $self->request;
-	$self->stash->{defaults} = $request->parameters->as_hashref;
+	my $model = $self->model;
+	my $request = $model->request;
+	$model->stash->{defaults} = $request->parameters->as_hashref;
 	while (my ($fieldname, $upload) = each %{ $request->uploads }) {
-		$self->stash->{defaults}{$fieldname} = $upload->filename;
+		$model->stash->{defaults}{$fieldname} = $upload->filename;
 	}
 }
 

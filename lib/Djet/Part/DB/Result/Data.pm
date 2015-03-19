@@ -35,7 +35,7 @@ sub field_inflate {
 
 =head2 nodedata
 
-Aa Djet::NodeData object filled with the datacolumns data
+A Djet::NodeData object filled with the datacolumns data
 
 =cut
 
@@ -47,9 +47,12 @@ has 'nodedata' => (
 
 sub _build_nodedata {
 	my $self= shift;
-	my $schema = $self->result_source->schema;
-	my $basetype = $schema->basetypes->{$self->basetype_id};
-	return $basetype->nodedata->new( datacolumns =>  $self->datacolumns );
+	my $model = $self->result_source->schema;
+	my $basetype = $model->basetypes->{$self->basetype_id};
+	return $basetype->nodedata->new(
+		model =>  $model,
+		datacolumns =>  $self->datacolumns,
+	);
 }
 
 =head2 field_deflate

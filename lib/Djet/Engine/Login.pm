@@ -35,12 +35,13 @@ This is processed when the login is submitted.
 
 sub process_post {
 	my $self = shift;
-	my $params = $self->request->body_parameters;
+	my $model = $self->model;
+	my $params = $model->request->body_parameters;
 	return $self->response->body($self->view_page) unless my $username = $params->{username} and my $password = $params->{password};
-	return $self->response->body($self->view_page) unless $self->acl->check_user(user => $username, password => $password);
+	return $self->response->body($self->view_page) unless $model->acl->check_user(user => $username, password => $password);
 
-	$self->session->{djet_user} = $username;
-	my $redirect_uri = delete $self->session->{redirect_uri} // '/';
+	$model->session->{djet_user} = $username;
+	my $redirect_uri = delete $model->session->{redirect_uri} // '/';
 	$self->response->header('Location' => $redirect_uri);
 	return \302;
 }

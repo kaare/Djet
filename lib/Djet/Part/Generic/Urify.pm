@@ -27,8 +27,9 @@ has 'domain_node' => (
 	isa => 'Djet::Schema::Result::Djet::DataNode',
 	default => sub {
 		my $self = shift;
-		my $domain_basetype = $self->model->basetype_by_name('domain');
-		return $self->datanode_by_basetype($domain_basetype);
+		my $model = $self->model;
+		my $domain_basetype = $model->basetype_by_name('domain');
+		return $model->datanode_by_basetype($domain_basetype);
 	},
 	lazy => 1,
 );
@@ -75,7 +76,7 @@ sub urify {
 	return $path if defined $path and $path =~ m{^\w*://}; # FQDN
 
 	my $model = $self->model;
-	$node ||= $self->basenode;
+	$node ||= $model->basenode;
 	$domain_node ||= $self->domain_node;
 	if (defined $path and $path =~ m{^/\w}) { # Absolute path
 		$node = $domain_node;
@@ -91,7 +92,7 @@ sub urify {
 		return $node_path ? "//$node_path" : $node_path;
 	} else {
 		$node_path = join '/', $node_path, $path if $path;
-		my $uri = '//' . $self->request->uri->host_port . $node_path;
+		my $uri = '//' . $model->request->uri->host_port . $node_path;
 		return $uri;
 	}
 }
