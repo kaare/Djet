@@ -128,6 +128,18 @@ sub get_base_name {
 	return $self->basenode->basetype->name;
 }
 
+=head2 create_path
+
+Process the POST request for creating a node
+
+=cut
+
+sub create_path {
+	my $self = shift;
+	$self->stash_basic;
+	$self->stash->{payload}->urify($self->object);
+}
+
 =head2 after edit_update
 
 Do an update_fts

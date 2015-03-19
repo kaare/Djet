@@ -5,9 +5,9 @@ use Moose;
 
 extends 'Djet::Engine::Default';
 with qw/
+	Role::Pg::Notify
 	Djet::Part::Update::Basetype
 	Djet::Part::Config::Topmenu
-	Role::Pg::Notify
 /;
 
 =head1 DESCRIPTION
@@ -17,6 +17,19 @@ Djet::Engine::Admin::Basetype configures Djet basetypes.
 =head1 ATTRIBUTES
 
 =head1 METHODS
+
+=head2 _build_notify_dbh
+
+Build the notify dbh from the model's storage.
+
+Keeps Role::Pg::Notify happy.
+
+=cut
+
+sub _build_notify_dbh {
+	my $self = shift;
+	return $self->model->storage->dbh;
+}
 
 =head2 set_base_object
 

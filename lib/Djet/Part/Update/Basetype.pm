@@ -155,4 +155,16 @@ sub get_base_name {
 	return $self->object->name;
 }
 
+=head2 create_path
+
+Process the POST request for creating a node
+
+=cut
+
+sub create_path {
+	my $self = shift;
+	$self->stash_basic;
+	return '/djet/basetype/' . $self->object->name;
+}
+
 1;

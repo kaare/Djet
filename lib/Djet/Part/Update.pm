@@ -168,18 +168,6 @@ sub process_post {
 	$self->response->body($self->view_page);
 }
 
-=head2 create_path
-
-Process the POST request for creating a node
-
-=cut
-
-sub create_path {
-	my $self = shift;
-	$self->stash_basic;
-	$self->stash->{payload}->urify($self->object);
-}
-
 =head2 create_by_post
 
 We go here if a x-www-form-urlencoded post wants to create a new node
