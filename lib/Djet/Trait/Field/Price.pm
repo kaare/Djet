@@ -22,11 +22,12 @@ sub formatted_value {
 	my $self = shift;
 	my $currency = 'DKK';
 	my $decpt = ',';
+	my $decdigits = 2;
 	my $value = $self->value;
 	if ($value =~ m/(\d+)[,.]?(\d*)/) {
 		my $int = $1;
-		my $frac = $2 || '-';
-		$value = "$currency $1$decpt$frac";
+		my $frac = substr(sprintf("%.$decdigits" . 'f', ".$2"), 2, $decdigits) || '-';
+		$value = "$currency $int$decpt$frac";
 	}
 	return $value;
 }
