@@ -85,9 +85,9 @@ validation.
 
 before 'post_is_create' => sub  {
 	my $self = shift;
+	my $model = $self->model;
 	return if $model->basenode->basetype->name eq 'user';
 
-	my $model = $self->model;
 	my $user_basetype = $model->basetype_by_name('user') or die "No basetype: user";
 
 	$self->stash_user($user_basetype);

@@ -8,6 +8,6 @@
 : include 'generic/1col.tx' {groups => [{columns => $blog_reply.nodedata.fields} ] };
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
-    <input type="hidden" name="am" value="<: $payload.basenode.id :>">
+    <input type="hidden" name="am" value="<: $payload.model.basenode.id :>">
   </form>
 <div><: $payload.flash.status :></div></div>

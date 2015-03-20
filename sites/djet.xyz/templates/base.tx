@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-	<title><: $payload.basenode.title :><: if $title { ' - ' ~ $title } :></title>
+	<title><: $payload.model.basenode.title :><: if $title { ' - ' ~ $title } :></title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -67,7 +67,7 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="site-heading">
-						<h1><: $payload.basenode.title :></h1>
+						<h1><: $payload.model.basenode.title :></h1>
                         <hr class="small">
                         <span class="subheading">
 : block subheading -> {

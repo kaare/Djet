@@ -7,6 +7,7 @@ extends 'Djet::Payload';
 
 with qw/
 	Djet::Part::Topmenu
+	Djet::Part::Payload::Basic
 /;
 
 =head1 NAME

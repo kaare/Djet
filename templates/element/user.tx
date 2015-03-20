@@ -7,7 +7,7 @@
 : if $template_display != 'view' {
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
-    <.model.input type="hidden" name="am" value="<: $payload.model.basenode.id :>">
+    <input type="hidden" name="am" value="<: $payload.model.basenode.id :>">
   </form>
 : }
 </div>

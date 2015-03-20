@@ -7,7 +7,7 @@
 <div id="basenode">
   <h2><: $node.get_column('title') :></h2>
   <div class="message"><: $message :></div>
-  <form method="post" id="edit-basenode" action="<: $payload.request.path_info :>">
+  <form method="post" id="edit-basenode" action="<: $payload.model.request.path_info :>">
 : include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.nodedata.fields} ] };
 : include 'generic/okcancel.tx';
 : if $basetype_id || $parent_id {

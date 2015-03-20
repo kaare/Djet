@@ -95,7 +95,7 @@ sub send_mail {
 	my $user = $model->payload->user;
 	my $to = $nodedata->recipients->value;
 	push @$to, $user->email->value;
-	$self->stash->{template_display} = 'view';
+	$model->stash->{template_display} = 'view';
 	$mailer->send(
 		template => $nodedata->mail_template->value,
 		to => $to,

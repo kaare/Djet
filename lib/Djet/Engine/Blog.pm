@@ -95,7 +95,7 @@ Redirect to the blog post
 sub create_path {
 	my ($self, $validation)=@_;
 	my $blog_post = $self->object->parent;
-	$model->stash->{payload}->urify($blog_post);
+	$self->model->payload->urify($blog_post);
 }
 
 __PACKAGE__->meta->make_immutable;

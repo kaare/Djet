@@ -112,7 +112,8 @@ Checks all steps up to the wanted step to see if data are entered correctly.
 before 'data' => sub {
 	my $self = shift;
 	my $checkout = $self->checkout;
-	my $next_step = $self->rest_path || 1;
+	my $model = $self->model;
+	my $next_step = $model->rest_path || 1;
 	$next_step = 1 unless $next_step =~ /^\d+$/;
 	my $steps = $self->steps;
 	for my $step (1 .. $next_step) {
@@ -121,7 +122,6 @@ before 'data' => sub {
 			last;
 		}
 	}
-	my $model = $self->model;
 	$model->session->{checkout}{next_step} = $next_step;
 	my $current_step = $next_step == @$steps ? $model->basenode : $steps->[$next_step - 1];
 
@@ -205,7 +205,7 @@ sub create_path {
 	my $self = shift;
 	my $model = $self->model;
 	my $step = $model->session->{checkout}{next_step};
-	my $url = $model->stash->{payload}->urify;
+	my $url = $model->payload->urify;
 	$url .= '/' unless $url =~ m|/$|;
 	$url .= $step;
 	return $url;

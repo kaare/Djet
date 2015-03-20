@@ -33,11 +33,11 @@ sub _build_dfv {
 	my $self = shift;
 	my $nodedata = $self->object->nodedata;
 	my $dfv = $nodedata->dfv;
-	$dfv->{required} = [qw/
+	push @{ $dfv->{required} }, qw/
 		part
 		name
 		title
-	/];
+	/;
 	return $dfv;
 }
 

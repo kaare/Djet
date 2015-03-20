@@ -1,1 +1,1 @@
-<textarea id='<: $field.name :>_hidden' name='<: $field.name :>' class='editHtml'><: $defaults[$field.name] || $field.value :></textarea>
+<textarea id='<: $field.name :>' name='<: $field.name :>' class='editHtml'><: $defaults[$field.name] || $field.value :></textarea>

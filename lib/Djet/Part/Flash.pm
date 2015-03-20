@@ -4,8 +4,6 @@ use 5.010;
 use Moose::Role;
 use namespace::autoclean;
 
-requires qw/session/;
-
 =head1 NAME
 
 Djet::Part::Flash
