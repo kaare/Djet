@@ -26,7 +26,7 @@ after 'init_data' => sub  {
 	my $search_phrase = decode('utf-8', $model->request->parameters->{search_phrase});
 	return unless $search_phrase;
 
-	$self->add_search(node_path => {'<@', $model->stash->{payload}->domain_node->node_path});
+	$self->add_search(node_path => {'<@', $model->payload->domain_node->node_path});
 	$self->set_fts($search_phrase);
 	$self->set_list_name('search_nodes');
 	$model->stash->{search_phrase} = $search_phrase;
