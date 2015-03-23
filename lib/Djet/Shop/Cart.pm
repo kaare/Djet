@@ -37,18 +37,6 @@ has uid => (
 	predicate => 'has_uid',
 );
 
-=head2 session_id
-
-Session session_id of the cart
-
-=cut
-
-has session_id => (
-	is => 'ro',
-	isa => 'Str',
-	predicate => 'has_session_id',
-);
-
 =head2 cart_name
 
 Name of the cart

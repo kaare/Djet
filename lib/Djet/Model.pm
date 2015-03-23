@@ -166,6 +166,7 @@ has session_id => (
 	},
 	lazy => 1,
 	clearer => '_clear_session_id',
+	predicate => 'has_session_id',
 );
 
 =head2 request
