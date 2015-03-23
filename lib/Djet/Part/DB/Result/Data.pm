@@ -50,7 +50,7 @@ sub _build_nodedata {
 	my $model = $self->result_source->schema;
 	my $basetype = $model->basetypes->{$self->basetype_id};
 	return $basetype->nodedata->new(
-		model =>  $model,
+		model => $model,
 		datacolumns =>  $self->datacolumns,
 	);
 }

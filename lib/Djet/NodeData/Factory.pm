@@ -120,6 +120,7 @@ sub nodedata_class {
 			is => 'ro',
 			isa => 'Djet::Field',
 			writer => "set_$colname",
+			traits => $traits,
 			default => sub {
 				my $self = shift;
 				my $cols = $self->datacolumns; # This is the data datacolumns, NOT to be confused with the basetype datacolumns
@@ -133,9 +134,8 @@ sub nodedata_class {
 				$params{type} = $coltype if $coltype;
 				$params{default} = $column->{default} if exists $column->{default};
 				$params{css_class} = $column->{css_class} if exists $column->{css_class};
-				return $traits ?
-					Djet::Field->with_traits(@$traits)->new(%params) :
-					Djet::Field->new(%params);
+				my $field = Djet::Field->new(%params);
+				return $field;
 			},
 			lazy => 1,
 		));

@@ -17,13 +17,29 @@ Djet::Field - Attributes and feature for Djet Fields
 
 =head1 ATTRIBUTES
 
+=head2 model
+
+The Djet model
+
+=cut
+
+has 'test' => (
+	is => 'ro',
+	isa => 'Str',
+);
+
+has 'model' => (
+	is => 'ro',
+	isa => 'Djet::Model',
+);
+
 =head2 type
 
 The field's type
 
 =cut
 
-has type => (
+has 'type' => (
 	is => 'ro',
 	isa => 'Str',
 	default => 'Text',
@@ -35,7 +51,7 @@ The field's name
 
 =cut
 
-has name => (
+has 'name' => (
 	is => 'ro',
 	isa => 'Str',
 );
@@ -46,7 +62,7 @@ The field's title
 
 =cut
 
-has title => (
+has 'title' => (
 	is => 'ro',
 	isa => 'Str',
 );
@@ -57,7 +73,7 @@ The field's value
 
 =cut
 
-has value => (
+has 'value' => (
 	is => 'ro',
 );
 
@@ -67,7 +83,7 @@ The field's default value
 
 =cut
 
-has default => (
+has 'default' => (
 	is => 'ro',
 	predicate => 'has_default',
 );
@@ -78,7 +94,7 @@ Switch to tell if the field is required
 
 =cut
 
-has required => (
+has 'required' => (
 	is => 'ro',
 	isa => 'Bool',
 	default => 1,
@@ -90,7 +106,7 @@ Switch to tell if the field is searchable
 
 =cut
 
-has searchable => (
+has 'searchable' => (
 	is => 'ro',
 	isa => 'Bool',
 	default => 1,
@@ -102,7 +118,7 @@ Switch to tell if the field is updatable
 
 =cut
 
-has updatable => (
+has 'updatable' => (
 	is => 'ro',
 	isa => 'Bool',
 	default => 1,
@@ -114,7 +130,7 @@ The field's css class
 
 =cut
 
-has css_class => (
+has 'css_class' => (
 	is => 'ro',
 	predicate => 'has_css_class',
 );

@@ -13,8 +13,6 @@ Structured data. Input format is expected as pseudo yaml (yaml w/o the initial -
 
 =cut
 
-requires qw/value/;
-
 =head1 ATTRIBUTES
 
 =head2 validated_value

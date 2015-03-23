@@ -12,8 +12,6 @@ Text data. Differs from Str in that it's represented as a Textarea.
 
 =cut
 
-requires qw/value/;
-
 =head1 METHODS
 
 =cut

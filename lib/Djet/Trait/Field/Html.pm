@@ -9,8 +9,6 @@ Djet::Trait::Field::Html - decorate the html field
 
 =cut
 
-requires qw/value/;
-
 =head1 ATTRIBUTES
 
 =head2 formatter

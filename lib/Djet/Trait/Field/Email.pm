@@ -10,8 +10,6 @@ Djet::Trait::Field::Email - decorate the email field
 
 =cut
 
-requires qw/value/;
-
 =head1 METHODS
 
 =head2 constraint_methods
