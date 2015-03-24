@@ -77,8 +77,13 @@ sub scale_image {
 	my ($filename, $scale) = @_;
 	return '' unless $filename;
 
-	my ($name, $ext) = split /\./, $filename;
+	my @file = split /\./, $filename;
+	return $filename unless @file > 1;
+
+	my $ext = pop @file;
+	my $name = join '.', @file;
 	return $name . '_' . $scale . '.' . $ext;
+
 }
 
 =head2 url_encode
