@@ -22,6 +22,8 @@ Djet::Engine::Default is the basic Djet Engine.
 
 It includes the roles L<Djet::Part::Engine Djet::Part::Engine::Html>, L<Djet::Part::Engine::Json>, L<Djet::Part::Treeview>.
 
+=cut
+
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT
