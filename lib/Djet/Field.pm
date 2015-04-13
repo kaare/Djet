@@ -23,11 +23,6 @@ The Djet model
 
 =cut
 
-has 'test' => (
-	is => 'ro',
-	isa => 'Str',
-);
-
 has 'model' => (
 	is => 'ro',
 	isa => 'Djet::Model',
