@@ -130,6 +130,7 @@ sub nodedata_class {
 					title => $coltitle,
 					required => defined($column->{required}) && $column->{required} eq 'on',
 					searchable => defined($column->{searchable}) && $column->{searchable} eq 'on',
+					updatable => !defined($column->{updatable}) || defined($column->{updatable}) && $column->{updatable} eq 'on',
 				);
 				$params{type} = $coltype if $coltype;
 				$params{default} = $column->{default} if exists $column->{default};
