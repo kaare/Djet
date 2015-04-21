@@ -74,7 +74,7 @@ sub view_page {
 	try {
 		my $stash = $model->stash;
 		my $payload = $model->payload;
-		$result = $self->renderer->render($self->template, {%$stash, payload => $payload});
+		$result = $self->renderer->render({%$stash, payload => $payload}, $self->template);
 	} catch {
 		my $e = shift;
 		$model->log->error($e);

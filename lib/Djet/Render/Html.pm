@@ -114,7 +114,7 @@ Renders the output as HTML
 =cut
 
 sub render {
-	my ($self, $template, $stash) = @_;
+	my ($self, $stash, $template) = @_;
 	return $self->tx->render($template, $stash);
 }
 

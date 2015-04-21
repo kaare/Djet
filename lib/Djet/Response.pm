@@ -159,7 +159,7 @@ sub render {
 	my $request = $model->request;
 	$request->log->info(join ' ', 'Rendering', $self->template, 'as', $self->type);
 	$request->log->debug('Stashed items: ' . join ', ', keys %{ $model->stash });
-	my $output = $self->renderer->render($self->template, $model->stash);
+	my $output = $self->renderer->render($model->stash, $self->template);
 	$self->output([ $output ]);
 }
 
