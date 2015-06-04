@@ -155,6 +155,17 @@ sub unpack {
 	return $value;
 }
 
+=head2 TO_JSON
+
+Return the field value in order for the serializer to work
+
+=cut
+
+sub TO_JSON {
+	my $self = shift;
+	return $self->value;
+}
+
 =head2 as_json
 
 Return the field (type, title, value) as JSON

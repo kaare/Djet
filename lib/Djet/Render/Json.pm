@@ -30,7 +30,7 @@ has json => (
 	lazy => 1,
 	default => sub {
 		my $self = shift;
-		return JSON->new->pretty;
+		return JSON->new->convert_blessed->pretty;
 	},
 );
 
