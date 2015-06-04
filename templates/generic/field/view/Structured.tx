@@ -1,1 +1,1 @@
-<: $field.value | html :>
+: include 'generic/field/view/Text.tx'

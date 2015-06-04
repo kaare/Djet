@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 : include 'generic/field/view/Str.tx'
-=======
-<: $field.value :>
->>>>>>> Add Number field templates.

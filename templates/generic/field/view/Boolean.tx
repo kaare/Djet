@@ -1,1 +1,1 @@
-<div id="<: $name || $field.name :>"<: if $field.class { ' class="$class"' } :>><: if $field.value {'&#10003;'} :></div>
+<div id="<: $name || $field.name :>"<: if $field.css_class { ' class="$field.css_class"' } :>><: if $field.value {'&#10003;'} :></div>
