@@ -1,4 +1,4 @@
-<table>
+<table class="table">
   <th>
     <td><: $header :></td>
   </th>
@@ -7,6 +7,7 @@
     <th><: $header :></th>
 : }
   </tr>
+: $startlines;
 : for $fields.rows -> $row {
 : my $prefix = $fields.prefix ~ '_' ~ $~row.index ~ '_';
   <tr>
@@ -18,5 +19,6 @@
     </td>
 :   }
 </tr>
+: $endlines;
 : }
 </table>
