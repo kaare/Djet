@@ -105,6 +105,28 @@ sub display_fields {
 	return $self->fields;
 }
 
+=head2 field_values
+
+Return the fields' values
+
+=cut
+
+sub field_values {
+	my $self = shift;
+	return { map { $_->name => $_->value } @{ $self->fields } };
+}
+
+=head2 field_titles
+
+Return the fields' titles as an arrayref
+
+=cut
+
+sub field_titles {
+	my $self = shift;
+	return [ map { $_->title } @{ $self->fields } ];
+}
+
 =head2 fields_as_json
 
 Return the fields (type, title, value) as JSON

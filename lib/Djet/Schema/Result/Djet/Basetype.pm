@@ -298,6 +298,8 @@ has nodedata => (
 	lazy_build => 1,
 	handles => [qw/
 		dfv
+		field_titles
+		field_values
 	/],
 );
 
