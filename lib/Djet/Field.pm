@@ -26,6 +26,7 @@ The Djet model
 has 'model' => (
 	is => 'ro',
 	isa => 'Djet::Model',
+	weak_ref => 1,
 );
 
 =head2 type

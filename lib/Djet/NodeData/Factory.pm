@@ -89,6 +89,7 @@ Furthermore, the individual columns, or fields, can be amended with traits, eith
 
 sub nodedata_class {
 	my $self = shift;
+	my $model = $self->model;
 	my $config = $self->config->config;
 	my %meta_params = (superclasses => [$config->{djet_config}{nodedata_class} || 'Djet::NodeData']);
 	if (my $roles_prefix = $config->{djet_config}{nodedata_roles}) {
@@ -110,21 +111,22 @@ sub nodedata_class {
 		my $coltitle = $column->{title} // ucfirst $colname;
 		my $coltype = $column->{type};
 
-		my $traits = !$column->{traits} || ref $column->{traits} eq 'ARRAY' ? $column->{traits} : [ $column->{traits} ];
+		my @traits;
+		@traits = ref $column->{traits} eq 'ARRAY' ? @{ $column->{traits} } : $column->{traits} if $column->{traits};
 		my $fieldtraitname = "Djet::Trait::Field::$column->{type}";
 		eval "require $fieldtraitname";
-		push @$traits, $fieldtraitname unless $@;
+		push @traits, $fieldtraitname unless $@;
 
 		push @fieldnames, $colname;
 		$meta_class->add_attribute($colname => (
 			is => 'ro',
 			isa => 'Djet::Field',
 			writer => "set_$colname",
-			traits => $traits,
 			default => sub {
 				my $self = shift;
 				my $cols = $self->datacolumns; # This is the data datacolumns, NOT to be confused with the basetype datacolumns
 				my %params = (
+					model => $model, # The model when called from basetype
 					value => $cols->{$colname},
 					name => $colname,
 					title => $coltitle,
@@ -135,7 +137,7 @@ sub nodedata_class {
 				$params{type} = $coltype if $coltype;
 				$params{default} = $column->{default} if exists $column->{default};
 				$params{css_class} = $column->{css_class} if exists $column->{css_class};
-				my $field = Djet::Field->new(%params);
+				my $field = Djet::Field->with_traits(@traits)->new(%params);
 				return $field;
 			},
 			lazy => 1,
