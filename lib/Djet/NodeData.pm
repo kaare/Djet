@@ -29,6 +29,18 @@ has 'model' => (
 	isa => 'Djet::Model',
 );
 
+=head2 node
+
+The node itself
+
+=cut
+
+has 'node' => (
+	is => 'ro',
+	isa => 'Djet::Schema::Result::Djet::DataNode',
+	weak_ref => 1,
+);
+
 =head2 datacolumns
 
 The raw data columns

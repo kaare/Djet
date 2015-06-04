@@ -51,6 +51,7 @@ sub _build_nodedata {
 	my $basetype = $model->basetypes->{$self->basetype_id};
 	return $basetype->nodedata->new(
 		model => $model,
+		node =>  $self,
 		datacolumns =>  $self->datacolumns,
 	);
 }
