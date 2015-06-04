@@ -75,6 +75,7 @@ The field's value
 
 has 'value' => (
 	is => 'ro',
+	writer => '_set_value',
 );
 
 =head2 default
