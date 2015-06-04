@@ -38,7 +38,7 @@ sub ft_search {
 
 	my $q = $self->result_source->schema->storage->dbh->quote( join '|',  @words );
 	return $self->search( {
-			fts => \"@@ to_tsquery( '$search_language', $q )",
+			'me.fts' => \"@@ to_tsquery( '$search_language', $q )",
 		}
 	);
 }
