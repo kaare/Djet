@@ -1,1 +1,2 @@
-<input type="password" name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>">
+: my $css_class = $field_class || $field.css_class;
+<input type="password" name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"<: if $css_class { ' class="' ~ $css_class ~'"' | raw } :>>

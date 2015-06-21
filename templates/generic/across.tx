@@ -9,13 +9,15 @@
   </tr>
 : $startlines;
 : for $fields.rows -> $row {
-: my $prefix = $fields.prefix ~ '_' ~ $~row.index ~ '_';
+: my $prefix = (defined $fields.prefix ? $field.prefix : '') ~ '_' ~ $~row.index ~ '_';
   <tr>
 :   for $row -> $field {
 : my $field_name = $prefix ~ $field.name;
 :     my $elm = 'generic/field/' ~ ($field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
+:# Assign the name to the css class in a row environment
+: my $field_class = $field.has_css_class ? $field.css_class ~ ' ' ~ $field.name : $field.name;
     <td>
-: include $elm {field => $field, name => $field_name};
+: include $elm {field => $field, name => $field_name, field_class => $field_class};
     </td>
 :   }
 </tr>

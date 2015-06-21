@@ -1,1 +1,2 @@
-<input type="text" id="<: $name || $field.name :>"  name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"<: if $field.css_class { ' class="' ~ $field.css_class ~'"' | raw } :><: if $field.name == 'barcode' { ' tabindex="2"' | raw } :>>
+: my $css_class = $field_class || $field.css_class;
+<input type="text" id="<: $name || $field.name :>"  name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"<: if $css_class { ' class="' ~ $css_class ~'"' | raw } :><: if $field.name == 'barcode' { ' tabindex="2"' | raw } :>>

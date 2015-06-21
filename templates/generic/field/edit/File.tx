@@ -1,4 +1,5 @@
-<div class="left file_chosen" style="float:left;">
+: my $css_class = $field_class || $field.css_class;
+<div class="left file_chosen<: if $css_class { ' ' ~ $css_class ~'"' | raw } :>" style="float:left;">
 	<input type="text" name="<: $name || $field.name :>" value="<: $field.value :>">
 </div>
 <div style="float: right;">

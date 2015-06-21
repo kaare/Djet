@@ -1,1 +1,2 @@
-<input type="text" id="<: $field.name :>" name="<: $field.name :>" value='<: $defaults[$field.name] || $field.value | raw :>' class="datepicker">
+: my $css_class = $field_class || $field.css_class;
+<input type="text" id="<: $field.name :>" name="<: $field.name :>" value='<: $defaults[$field.name] || $field.value | raw :>' class="datepicker<: if $css_class { ' ' ~ $css_class ~'"' | raw } :>">

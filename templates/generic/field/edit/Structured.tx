@@ -1,1 +1,2 @@
-<textarea id="<: $name || $field.name :>" name="<: $name || $field.name :>"><: $defaults[$field.name] || $field.value_for_editing | html :></textarea>
+: my $css_class = $field_class || $field.css_class;
+<textarea id="<: $name || $field.name :>" name="<: $name || $field.name :>"<: if $css_class { ' class="' ~ $css_class ~'"' | raw } :>><: $defaults[$field.name] || $field.value_for_editing | html :></textarea>

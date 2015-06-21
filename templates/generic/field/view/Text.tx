@@ -1,1 +1,2 @@
-<span id="<: $name || $field.name :>"><: $field.value | html :></span>
+: my $css_class = $field_class || $field.css_class;
+<span id="<: $name || $field.name :>"<: if $css_class { ' class="' ~ $css_class ~'"' | raw } :>><: $field.value | html :></span>
