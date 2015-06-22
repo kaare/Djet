@@ -76,6 +76,13 @@ sub urify {
 
 	my $domain_name = $model->http_host;
 	my $node_path = defined $node ? $node->node_path : $path;
+
+	if ($model->config->config->{environment} eq 'live') {
+		my $domain_node = $self->domain_node;
+		my $domain_path = $domain_node->node_path;
+		$node_path =~ s/^$domain_path/$domain_name/;
+	}
+
 	my $uri = join '/', '/', $domain_name, $node_path;
 	return $uri;
 }
