@@ -80,7 +80,7 @@ sub urify {
 	if ($model->config->config->{environment} eq 'live') {
 		my $domain_node = $self->domain_node;
 		my $domain_path = $domain_node->node_path;
-		$node_path =~ s/^$domain_path/$domain_name/;
+		$node_path =~ s/^$domain_path//;
 	}
 
 	my $uri = join '/', '/', $domain_name, $node_path;
