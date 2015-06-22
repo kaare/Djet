@@ -140,6 +140,7 @@ sub check_route {
 	my $self = shift;
 	my $model = $self->model;
 	my $config = $model->config;
+
 	my $path = $model->request->path_info;
 	$model->log->debug("Node path: $path");
 	my $datanodes = $self->find_basenode($path);
@@ -170,15 +171,13 @@ sub check_node_redirect {
 	return unless my $redirect = $basenode->nodedata->redirect;
 	return if $self->model->request->parameters->{noredirect};
 
-	my $uri = $self->urify({node => $basenode, path => $redirect});
+	my $uri = $self->urify($redirect->value);
 	return $self->set_result([ 302, [ Location => $uri ], [] ]);
 }
 
 =head2 login
 
 Redirect to the login page
-
-If there is a login node in the current domain, it will be used. Otherwise, any login node (there's probably only one) is used.
 
 =cut
 
@@ -191,17 +190,13 @@ sub login {
 
 	my $domain_basetype = $model->basetype_by_name('domain');
 	my $domain_node = $model->datanode_by_basetype($domain_basetype);
+
 	my $find = {
 		basetype_id => $login_basetype->id,
-		node_path => {'<@' => [$domain_node->node_path, '/']},
+		node_path => {'<@' => $domain_node->node_path},
 	};
-	my $options = {
-		order_by => \'length(node_path)',
-		rows => 1,
-	};
-	my $login_node = $model->resultset('Djet::DataNode')->find($find, $options) or return;
-
-	my $uri = $self->urify($login_node, $domain_node);
+	my $login_node = $model->resultset('Djet::DataNode')->find($find) // 'login';
+	my $uri = $self->urify($login_node);
 	$self->set_result([ 302, [ Location => $uri ], [] ]);
 	return;
 }

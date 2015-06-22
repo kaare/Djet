@@ -121,6 +121,7 @@ has 'env' => (
 	isa => 'HashRef',
 	trigger => sub {
 		my $self = shift;
+		$self->_clear_http_host;
 		$self->_clear_session;
 		$self->_clear_session_id;
 		$self->_clear_request;
@@ -129,6 +130,25 @@ has 'env' => (
 		$self->_clear_stash;
 	},
 	writer => '_set_env',
+);
+
+=head2 http_host
+
+http host could be (would be) set in the front web server (e.g. nginx) and should point to the 
+actual requested host.
+
+=cut
+
+has 'http_host' => (
+	is => 'ro',
+	isa => 'Str',
+	default => sub {
+		my $self = shift;
+		my $env = $self->env;
+		return $env->{'HTTP_HOST'} // '';
+	},
+	lazy => 1,
+	clearer => '_clear_http_host',
 );
 
 =head2 session
