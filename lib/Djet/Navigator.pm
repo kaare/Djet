@@ -171,7 +171,8 @@ sub check_node_redirect {
 	return unless my $redirect = $basenode->nodedata->redirect;
 	return if $self->model->request->parameters->{noredirect};
 
-	my $uri = $self->urify($redirect->value);
+	my $node_path = join '/', $basenode->node_path, $redirect->value;
+	my $uri = $self->urify($node_path);
 	return $self->set_result([ 302, [ Location => $uri ], [] ]);
 }
 

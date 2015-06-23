@@ -83,6 +83,7 @@ sub urify {
 		$node_path =~ s/^$domain_path//;
 	}
 
+	$node_path =~ s|/|| if $node_path =~ m|^/|;
 	my $uri = join '/', '/', $domain_name, $node_path;
 	return $uri;
 }
