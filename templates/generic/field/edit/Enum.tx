@@ -1,5 +1,5 @@
 : my $css_class = $field_class || $field.css_class;
-<select id="<: $name || $field_name || $field.name :>" name="<: $name || $field_name || $field.name :>" class="edit<: if $css_class { ' ' ~ $css_class ~'"' | raw } :>">
+<select id="<: $name || $field_name || $field.name :>" name="<: $name || $field_name || $field.name :>" class="edit<: if $css_class { ' ' ~ $css_class ~'"' | raw } :>" <: if $field.multiple { ' multiple' } :>>
 : for $field.default -> $field_enum {
 : 	if is_hash_ref($field_enum) {
   <option value="<: $field_enum.id :>" <: if $field_enum.id == $field.id { 'selected="selected"' | raw } :>><: $field_enum.title :></option>
