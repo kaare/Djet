@@ -1,4 +1,4 @@
--- Djet basetypes and nodes for the Import Feature
+-- Djet basetypes and nodes for the Import / Export Feature
 
 BEGIN;
 
@@ -18,6 +18,11 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 INSERT INTO basetype (feature_id, name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'upload', 'Uploaded File','[
 	{"name":"mime_type","title":"Mime Type","type":"Str"}
 ]','Djet::Engine::Import::File');
+
+-- Export
+
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'export','Export Page','[
+]','Djet::Engine::Export','basetype/export.tx');
 
 -- Data Nodes
 
