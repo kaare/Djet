@@ -258,6 +258,26 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 descendants
+
+Type: has_many
+
+Related object: L<Djet::Schema::Result::Djet::DataNode>
+
+=cut
+
+__PACKAGE__->has_many(
+  "descendants",
+  "Djet::Schema::Result::Djet::DataNode",
+  sub {
+	  my $args = shift;
+	  return {
+		  "$args->{foreign_alias}.node_path" => {'<@' => {'-ident' =>  "$args->{self_alias}.node_path" }},
+	  };
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 parent
 
 Type: belongs_to
