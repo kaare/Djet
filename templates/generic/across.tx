@@ -9,7 +9,7 @@
   </tr>
 : $startlines;
 : for $fields.rows -> $row {
-: my $prefix = (defined $fields.prefix ? $field.prefix : '') ~ '_' ~ $~row.index ~ '_';
+: my $prefix = (defined $fields.prefix ? $fields.prefix : '') ~ '_' ~ $~row.index ~ '_';
   <tr>
 :   for $row -> $field {
 : my $field_name = $prefix ~ $field.name;
