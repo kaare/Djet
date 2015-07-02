@@ -7,6 +7,46 @@ use utf8;
 
 =head1 METHODS
 
+=head1 search modifying methods
+
+Add an attribute to the search
+
+=head2 rows
+
+Limit the search to the given number of rows.
+
+10 is an often used limit so that is the default.
+
+=cut
+
+sub rows {
+	my ($self, $limit) = @_;
+	$limit ||= 10;
+	return $self->search({}, { rows => $limit })
+}
+
+=head2 data_modified_lowest_first
+
+Sort by data_modified, lowest first
+
+=cut
+
+sub data_modified_lowest_first {
+	my $self = shift;
+	return $self->search({}, { order_by => 'data_modified' })
+}
+
+=head2 data_modified_highest_first
+
+Sort by data_modified, highest first
+
+=cut
+
+sub data_modified_highest_first {
+	my $self = shift;
+	return $self->search({}, { order_by => {-desc => 'data_modified'} })
+}
+
 =head2 all_ref
 
 Returns all rows, as an arrayref
