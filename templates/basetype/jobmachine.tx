@@ -1,0 +1,28 @@
+<h1><: $title :></h1>
+: if $stats {
+<form method="post" enctype="multipart/form-data">
+<table>
+	<tr>
+		<td>Statuses:</td>
+		<td>
+: include 'generic/field/edit/Enum.tx' {name => 'status', field => $stats}
+		</td>
+	</tr>
+	<tr>
+		<td>Classes</td>
+		<td>
+: include 'generic/field/edit/Enum.tx' {name => 'class', field => $classes}
+		</td>
+	</tr>
+	<tr>
+: include 'generic/across.tx' {header => 'Tasks', fields => $tasks };
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: center"><input type="submit" value="Filter" /></td>
+	</tr>
+</table>
+</form>
+: } else {
+: include 'generic/1col.tx' {groups => [{columns => $task} ] }
+: include 'generic/across.tx' {header => 'Results', fields => $results };
+: }

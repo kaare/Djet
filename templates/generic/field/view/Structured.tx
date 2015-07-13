@@ -1,1 +1,1 @@
-: include 'generic/field/view/Text.tx'
+: include 'generic/field/view/Text.tx' {value => $field.value_for_editing}

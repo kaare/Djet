@@ -85,6 +85,17 @@ has 'default' => (
 	predicate => 'has_default',
 );
 
+=head2 link
+
+The field's link
+
+=cut
+
+has 'link' => (
+	is => 'ro',
+	isa => 'Str',
+);
+
 =head2 required
 
 Switch to tell if the field is required

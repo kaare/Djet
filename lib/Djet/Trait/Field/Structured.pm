@@ -51,7 +51,6 @@ Unpack a structured field
 
 sub unpack {
 	my ($self, $value) = @_;
-warn 1;
 	$value //= $self->value;
 	return $self->_has_validated_value ? $self->validated_value : $value;
 }

@@ -17,7 +17,13 @@
 :# Assign the name to the css class in a row environment
 : my $field_class = $field.has_css_class ? $field.css_class ~ ' ' ~ $field.name : $field.name;
     <td>
+: if $fields.link == $~field.count {
+<a href="<: $field.link :>">
+: }
 : include $elm {field => $field, name => $field_name, field_class => $field_class};
+: if $fields.link == $~field.count {
+</a>
+: }
     </td>
 :   }
 </tr>
