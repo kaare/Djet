@@ -71,10 +71,14 @@ sub post_is_create { return 0 }
 before data => sub {
 	my $self = shift;
 	my $model = $self->model;
+
+	# Dispatch to show_result or show_task
+	my @path = split '/', $self->model->rest_path;
+	return $self->show_result($path[3]) if $path[2] eq 'result' and $path[3];
+	return $self->show_task if $self->model->rest_path;
+
 	my $jm = $self->jm;
 	my $stash = $model->stash;
-
-	return $self->show_task if $self->model->rest_path;
 
 	$stash->{title} = 'Jobs';
 	$stash->{stats} = $jm->list_statuses;
@@ -106,9 +110,31 @@ sub show_task {
 	my $stash = $model->stash;
 
 	my ($task, $results) = $self->jm->one_task;
-#	$stash->{title} = join ' - ', $task->{name}, $task->{task_id};
 	$stash->{task} = $task;
 	$stash->{results} = $results;
+}
+
+=head2 show_result
+
+Display one result
+
+=cut
+
+sub show_result {
+	my ($self, $result_id) = @_;
+	my $model = $self->model;
+	my $stash = $model->stash;
+
+	my ($result, $type, $headers) = $self->jm->one_result($result_id) or return;
+
+	if ($type) {
+		$self->content_type($type);
+		while (my ($key, $value) = each %$headers) {$self->response->header($key, $value)};
+		$self->response->body($result);
+		$self->return_value(\200);
+	} else {
+		$stash->{result} = $result;
+	}
 }
 
 __PACKAGE__->meta->make_immutable;

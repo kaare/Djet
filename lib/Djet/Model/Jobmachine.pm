@@ -113,6 +113,19 @@ has 'task_path' => (
 	lazy => 1,
 );
 
+=head2 result_path
+
+The path, from the task path, where the results are found
+
+=cut
+
+has 'result_path' => (
+	is => 'ro',
+	isa => 'Str',
+	default => 'result',
+	lazy => 1,
+);
+
 =head2 task_id
 
 Id of the task
@@ -132,7 +145,7 @@ The uri of the job. The task_id might be the optional parameter.
 
 has 'job_uri' => (
 	is => 'ro',
-	isa => 'Djet::Schema::Result::Djet::DataNode',
+	isa => 'Str',
 	default => sub {
 		my $self = shift;
 		my $model = $self->model;
@@ -239,7 +252,7 @@ sub one_task {
 		$parms{value} = $stats->{$parms{value}} if $field eq 'status';
 		my $fieldtraitname = "Djet::Trait::Field::$type";
 		eval "require $fieldtraitname";
-		$@ ? 
+		$@ ?
 			Djet::Field->new(%parms) :
 			Djet::Field->with_traits($fieldtraitname)->new(%parms);
 	} @fields ];
@@ -249,14 +262,83 @@ sub one_task {
 		header => \@headers, 
 		rows => [ map {
 			my $row = $_;
-			[ map {
-				my $field = $_;
-				my %parms = (name => $field, value => $row, updatable => 0);
-				Djet::Field->new(%parms)
-			} @headers ]
+			[ $self->result_field($row) ];
 		} @$results ],
 	};
 	return ($task_flds, $result_list);
+}
+
+=head2 result_field
+
+Return a field for each result column
+
+=cut
+
+sub result_field {
+	my ($self, $result) = @_;
+	my $stats = $self->stats;
+
+	my ($type, $value, $fieldtraitname, $url);
+	if (exists($result->{type})) {
+		$type = 'Link';
+		$value = $result->{result}{file_name};
+		$fieldtraitname = "Djet::Trait::Field::Link";
+		my $model = $self->model;
+		my $base_path = $self->basenode->node_path;
+
+		my @elements = ($base_path, $self->task_path, $self->task_id, $self->result_path, $result->{id});
+		$url = $self->urify(join '/', @elements);
+	} else {
+		$type = 'Structured';
+		$value = $result->{result};
+	}
+	my $name = "result $result->{id}";
+	my %parms = (name => $name, title => ucfirst $name, value => $value, updatable => 0, type => $type);
+	$parms{uri} = $url if $url;
+	$fieldtraitname ?
+		Djet::Field->with_traits($fieldtraitname)->new(%parms) :
+		Djet::Field->new(%parms);
+}
+
+=head2 one_result
+
+Return one result
+
+=cut
+
+sub one_result {
+	my ($self, $result_id) = @_;
+	my $model = $self->model;
+	my $db = $self->jobdb;
+	my $result = $db->fetch_result($result_id) or return;
+
+	if ($result->{resulttype}) {
+		my $type = $result->{resulttype};
+		my $file_name = $result->{result}{name};
+		my $headers = {
+			'Content-Type' => $type,
+			'Content-Disposition' => qq{attachment; filename="$file_name"},
+		};
+		return ($result->{result}{file}, $type, $headers);
+	}
+
+	return $result->{result};
+}
+
+=head2 result_download
+
+
+=cut
+
+sub result_download {
+	my $self = shift;
+	my $result;# = $self->make_csv([\@export_fields, @products]);
+
+	$self->content_type('application/csv');
+	$self->response->header('Content-Type' => 'application/csv');
+	$self->response->header('Content-Disposition' => 'attachment; filename="export.csv"');
+	$self->response->body($result);
+	$self->return_value(\200);
 }
 
 __PACKAGE__->meta->make_immutable;
