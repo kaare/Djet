@@ -35,4 +35,6 @@ sub for_search {
 	return $self->value ? $self->formatter->format_from_string($self->value) : $self->value;
 }
 
+no Moose::Role;
+
 1;

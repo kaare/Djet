@@ -21,4 +21,6 @@ sub constraint_methods {
 	return $self->name => email();
 }
 
+no Moose::Role;
+
 1;

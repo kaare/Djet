@@ -97,4 +97,6 @@ sub value_for_editing {
 	}
 }
 
+no Moose::Role;
+
 1;

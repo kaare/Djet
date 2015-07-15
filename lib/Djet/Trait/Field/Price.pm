@@ -45,4 +45,6 @@ sub add {
 	$self->_set_value($self->value + $add);
 }
 
+no Moose::Role;
+
 1;
