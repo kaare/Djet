@@ -5,9 +5,12 @@ use Moose;
 use JSON;
 use File::Copy;
 use File::Path;
-use Job::Machine::Client;
 
 extends 'Djet::Engine::Default';
+
+with qw/
+	Djet::Part::Job::Client
+/;
 
 =head1 NAME
 
@@ -104,12 +107,7 @@ Create the Djet nodes. Optionally (if the import node has a queue defined), crea
 sub create_nodes {
 	my $self = shift;
 	my $model = $self->model;
-	my $dbh = $model->storage->dbh;
-	my $queue = $model->basenode->queue->value;
-	my $client = Job::Machine::Client->new(
-		dbh => $dbh,
-		queue => $queue,
-	) if defined($queue);
+	my $client = $self->jobclient;
 
 	my $parent_id = $model->basenode->id;
 	my $uploadtype = $model->basetype_by_name('import');
@@ -129,10 +127,8 @@ sub create_nodes {
 		my $node_id = $file_node->node_id;
 		my $file_path = $self->file_placement($upload->path, $model->basenode->path, $node_id);
 		$file_node->update({part => $node_id});
-		if (defined($queue)) {
-			$data->{file_path} = $file_path;
-			$client->send($data);
-		}
+		$data->{file_path} = $file_path;
+		$client->send($data);
 	}
 }
 
