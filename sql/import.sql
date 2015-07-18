@@ -16,12 +16,15 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"topmenu","title":"Topmenu","type":"Boolean"}
 ]','Djet::Engine::Import','basetype/import.tx');
 INSERT INTO basetype (feature_id, name,title,datacolumns,handler) VALUES (currval('feature_id_seq'), 'upload', 'Uploaded File','[
+	{"name":"file_path","title":"File Path","type":"Str"},
 	{"name":"mime_type","title":"Mime Type","type":"Str"}
 ]','Djet::Engine::Import::File');
 
 -- Export
 
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'export','Export Page','[
+	{"name":"queue","title":"Queue","required":"on","type":"Str"},
+	{"type":"Boolean","title":"Topmenu","name":"topmenu","required":"on"}
 ]','Djet::Engine::Export','basetype/export.tx');
 
 -- Data Nodes

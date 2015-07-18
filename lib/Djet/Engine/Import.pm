@@ -22,7 +22,10 @@ Djet::Engine::Import controls import of files to the system.
 
 It displays a form with one or more upload files and accepts a POST request with that form.
 
-The files are stored in a private path, a node is created for each, and an import job is created, using Job::Machine.
+The files are stored in a private path, and for each file a node is created, and an import job is (optionally) created, using Job::Machine.
+
+The jobs are created if there is a queue name on the import node. If there isn't, it's supposed that the file is just to be uploaded
+with no extra processing.
 
 =head1 ATTRIBUTES
 
@@ -102,6 +105,10 @@ sub create_path {
 
 Create the Djet nodes. Optionally (if the import node has a queue defined), create a JobMachine task
 
+The mime_type and (private) file_path is remembered on the data node.
+All POST parameters are saved in the job, together with the node_id of the file node (upload_node_id),
+and the node_id of the import node (import_node_id).
+
 =cut
 
 sub create_nodes {
@@ -110,25 +117,36 @@ sub create_nodes {
 	my $client = $self->jobclient;
 
 	my $parent_id = $model->basenode->id;
-	my $uploadtype = $model->basetype_by_name('import');
+	my $uploadtype = $model->basetype_by_name('upload');
 	my $basetype_id = $uploadtype->id;
 	my $request = $model->request;
 	for my $upload ($request->uploads->get_all('uploadedfile')) {
 		my $uploadfile = $upload->path;
-		my $data = {
+		my $datacolumns = {
+			mime_type => $upload->content_type,
+		};
+		my $file_node = $model->resultset('Djet::DataNode')->create({
 			parent_id => $parent_id,
 			basetype_id => $basetype_id,
 			name => $upload->filename,
 			title => $upload->filename,
-			datacolumns => $self->json->encode({ mime_type => $upload->content_type}),
-		};
-		my $file_node = $model->resultset('Djet::DataNode')->create($data);
+			datacolumns => $datacolumns,
+		});
+
 		$file_node->discard_changes;
 		my $node_id = $file_node->node_id;
 		my $file_path = $self->file_placement($upload->path, $model->basenode->path, $node_id);
-		$file_node->update({part => $node_id});
-		$data->{file_path} = $file_path;
-		$client->send($data);
+		$datacolumns->{file_path} = $file_path;
+
+		$file_node->update({
+			part => $node_id,
+			datacolumns => $datacolumns,
+		});
+
+		my $jobdata = $request->body_parameters->mixed;
+		$jobdata->{upload_node_id} = $node_id;
+		$jobdata->{import_node_id} = $model->basenode->node_id;
+		$client->send($jobdata);
 	}
 }
 

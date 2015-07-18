@@ -6,8 +6,6 @@ use Moose;
 use Djet::Model::Jobmachine;
 
 extends 'Djet::Engine::Default';
-# with qw/
-# /;
 
 =head1 DESCRIPTION
 

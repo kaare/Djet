@@ -4,6 +4,7 @@ use 5.010;
 use Moose;
 use namespace::autoclean;
 
+use List::Util qw/any/;
 use JSON;
 
 use Djet::Field;
@@ -98,11 +99,18 @@ has dfv => (
 
 Returns an arrayref with all the fields to display
 
+The optional argument except can take either a scalar or an arrayref with the name(s) of the fields to be excluded.
+
 =cut
 
 sub display_fields {
-	my $self = shift;
-	return $self->fields;
+	my ($self, %args) = @_;
+	my $fields = $self->fields;
+	if (my $except = $args{except}) {
+		$except = [$except] unless ref $except;
+		$fields = [ grep {my $field = $_; any {$_ ne $field->name} @$except} @$fields ];
+	}
+	return $fields;
 }
 
 =head2 field_values
