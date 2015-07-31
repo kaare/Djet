@@ -1,0 +1,2 @@
+: my $css_class = $field_class || $field.css_class;
+<a id="<: $name || $field.name :>"<: if $css_class { ' class="' ~ $css_class ~'"' | raw } :> href="<: $field.uri :>"><: $field.title :></a>
