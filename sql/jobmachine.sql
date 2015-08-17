@@ -16,6 +16,6 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler) VALUES (currval
 
 -- Data Nodes
 
--- Tables from Jon::Machine should be installed
+-- Tables from Job::Machine should be installed
 
 COMMIT;
