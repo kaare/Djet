@@ -31,7 +31,7 @@ CREATE SCHEMA global;
 
 SET search_path=global, public;
 
-CREATE TABLE sessions (
+CREATE UNLOGGED TABLE sessions (
     id           CHAR(72) PRIMARY KEY,
     session_data TEXT,
 	created      timestamptz default now(),
