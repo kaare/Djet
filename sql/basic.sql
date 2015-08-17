@@ -33,7 +33,21 @@ SET search_path=global, public;
 
 CREATE TABLE sessions (
     id           CHAR(72) PRIMARY KEY,
-    session_data TEXT
+    session_data TEXT,
+	created      timestamptz default now(),
+	expires      timestamptz default now() + '3 hours'
 );
+
+CREATE OR REPLACE FUNCTION update_expires()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.expires = now() + '3 hours';
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_expires BEFORE UPDATE ON sessions FOR EACH ROW EXECUTE PROCEDURE update_expires();
+
+$$ language 'plpgsql';
 
 COMMIT;
