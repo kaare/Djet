@@ -57,7 +57,7 @@ role {
 		my $rest_path = $model->rest_path;
 		return unless any {$rest_path eq $_} @{ $params->methods };
 
-warn "Dispatch to $rest_path"; # TODO should be log
+        $model->log->debug("Dispatch to $rest_path");
 		return $self->$rest_path;
 	};
 };

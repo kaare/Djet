@@ -101,7 +101,7 @@ has payload_class => (
 		my $payload_class = $self->config->{config}{djet_config}{payload_class} || 'Djet::Payload';
 		$self->log->debug("Payload Class: $payload_class");
 		eval "require $payload_class";
-		warn $@ if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up
+		$self->log->debug($@) if $@; # The logical thing would be to die, but we're in Web::Machine country, and it seems to eat it up
 
 		return $payload_class;
 	},

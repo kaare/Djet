@@ -68,7 +68,7 @@ sub render {
 		} elsif (!ref($expose)) {
 			$single_key = $expose;
 		} else {
-# FIXME			$c->log->warn("expose_stash should be an array referernce or Regexp object.");
+			$self->model->log->warning("expose_stash should be an array referernce or Regexp object.");
 		}
 	}
 
