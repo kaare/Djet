@@ -142,7 +142,7 @@ has session_handler => (
             dbh => $self->model->storage->dbh,
             serializer   => sub { JSON->new->allow_nonref->encode(shift); },
             deserializer => sub { JSON->new->allow_nonref->decode(shift); },
-			table_name   => $self->config->config->{session}{table_name} // 'global.sessions',
+			table_name   => $self->config->config->{session}{table_name} // 'global.session',
         );
 	},
 	lazy => 1,

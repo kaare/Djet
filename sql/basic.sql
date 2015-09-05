@@ -46,7 +46,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_expires BEFORE UPDATE ON sessions FOR EACH ROW EXECUTE PROCEDURE update_expires();
+CREATE TRIGGER update_expires BEFORE UPDATE ON session FOR EACH ROW EXECUTE PROCEDURE update_expires();
 
 $$ language 'plpgsql';
 
