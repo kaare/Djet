@@ -25,9 +25,6 @@ h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 800;
 }
-a {
-  color: #404040;
-}
 a:hover,
 a:focus {
   color: #0085a1;
@@ -371,6 +368,9 @@ form .row:first-child .floating-label-form-group {
   color: #808080;
   background-color: #404040;
   cursor: not-allowed;
+}
+.required {
+  font-weight: bold;
 }
 ::-moz-selection {
   color: white;
