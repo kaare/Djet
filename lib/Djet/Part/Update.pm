@@ -196,10 +196,12 @@ sub delete_resource {
 
 Delete the object in question.
 
+Optionally redirect to the specified parameter
+
 =cut
 
 sub delete_submit {
-	my ($self) = @_;
+	my ($self, $redirect) = @_;
 	my $object = $self->object;
 	my $transaction = sub {
 		$self->delete_object($self->object);
@@ -213,7 +215,7 @@ sub delete_submit {
 		$model->stash->{message} = $error;
 	} else {
 		# XXX $self->flash->{notice} = $object->name . ' deleted.';
-		$self->response->redirect($self->response->uri_for("/")); # XXX Where to redirect to? Might be parent ??
+		$self->response->redirect($self->response->uri_for($redirect)) if $redirect;
 	}
 }
 

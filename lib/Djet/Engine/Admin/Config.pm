@@ -67,6 +67,11 @@ after 'set_base_object' => sub {
 	my $self = shift;
 	my $model = $self->model;
 	my $request = $model->request;
+	if (my $action = $request->parameters->{action}) {
+		my $stash = $model->stash;
+		$stash->{action} = $action;
+		$stash->{template_display} = 'view' if $action eq 'delete';
+	}
 	return unless my $basetype_id = $request->parameters->{basetype_id};
 	return $self->choose_basetype if $basetype_id eq 'child';
 
@@ -139,6 +144,11 @@ before 'post_is_create' => sub {
 	my $request = $model->request;
 	if ($request->parameters->{cancel}) {
 		$self->response->location('/djet/tree');
+		return;
+	}
+	if ($request->parameters->{delete}) {
+		$self->set_base_object;
+		$self->delete_submit('/djet/tree');
 		return;
 	}
 

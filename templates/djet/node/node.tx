@@ -9,7 +9,11 @@
   <div class="message"><: $message :></div>
   <form method="post" id="edit-basenode" action="<: $payload.model.request.path_info :>">
 : include 'generic/1col.tx' {update => 0, groups => [$basecols, {header => 'Fields', columns => $node.nodedata.fields} ] };
+: if $action == 'delete' {
+: include 'generic/deletecancel.tx';
+: } else {
 : include 'generic/okcancel.tx';
+: }
 : if $basetype_id || $parent_id {
     <input type="hidden" name="basetype_id" value="<: $basetype_id :>">
     <input type="hidden" name="parent_id" value="<: $parent_id :>">
