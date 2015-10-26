@@ -25,6 +25,7 @@ Set the list name to 'news_feed'
 before 'init_data' => sub  {
 	my $self = shift;
 	$self->set_list_name('news_feed');
+	$self->add_options('order_by', {'-desc' => 'node_modified'});
 };
 
 =head2 after data
