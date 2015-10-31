@@ -10,5 +10,3 @@
 	<figcaption class="djet_file_name"></figcaption>
 	<button onClick="$('.file_chosen input').val($('.djet_file_name').html());return false">OK</button>
 </div>
-</script>
-
