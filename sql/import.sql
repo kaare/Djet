@@ -27,8 +27,16 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"type":"Boolean","title":"Topmenu","name":"topmenu","required":"on"}
 ]','Djet::Engine::Export','basetype/export.tx');
 
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) SELECT f.id, 'files','File Handling','[
+	{"name":"path","title":"Path","type":"Str"},
+	{"name":"topmenu","title":"Topmenu","type":"Boolean"}
+]','Djet::Engine::Admin::File','basetype/import.tx'
+FROM feature f
+WHERE f.name='import';
+
 -- Data Nodes
 
--- INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT id,1,'import','Import','Import Data','{"path":"private/files","topmenu":"on"}' FROM basetype WHERE name="import";
+-- INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT id,1,'import','Import','Import Data','{"path":"private/files","topmenu":"on"}' FROM basetype WHERE name='import';
+-- INSERT INTO data_node (basetype_id,parent_id,part,name,title,datacolumns) SELECT id,2,'files','file handling','File Handling','{"path":"public/img","topmenu":"on"}' FROM basetype WHERE name='files';
 
 COMMIT;

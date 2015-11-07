@@ -10,6 +10,9 @@ UL.jqueryFileTree {
 	line-height: 18px;
 	padding: 0px;
 	margin: 0px;
+    max-height: 200px;
+    overflow: scroll;
+
 }
 
 UL.jqueryFileTree LI {
