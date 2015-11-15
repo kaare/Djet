@@ -2,7 +2,7 @@
   <th>
     <td><: $header :></td>
   </th>
-  <tr>
+  <tr class="table_header">
 : for $fields.header -> $header {
     <th><: $header :></th>
 : }
@@ -10,7 +10,7 @@
 : $startlines;
 : for $fields.rows -> $row {
 : my $prefix = (defined $fields.prefix ? $fields.prefix : '') ~ '_' ~ $~row.index ~ '_';
-  <tr>
+  <tr class="table_row">
 :   for $row -> $field {
 : my $field_name = $prefix ~ $field.name;
 :     my $elm = 'generic/field/' ~ ($field.updatable ? 'edit/' : 'view/') ~ $field.type ~ '.tx';
