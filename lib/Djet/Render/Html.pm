@@ -1,11 +1,12 @@
 package Djet::Render::Html;
 
-use 5.010;
+use 5.014;
 use Moose;
 use namespace::autoclean;
 
 use Text::Xslate;
 use URI::Escape;
+use HTML::Escape 'escape_html';
 
 with 'Djet::Part::Log';
 
@@ -56,6 +57,9 @@ has tx => (
 				url_encode => sub {
 					return url_encode(@_);
 				},
+				linkify => sub {
+					return linkify(@_);
+				},
 			},
 		);
 	},
@@ -83,7 +87,61 @@ sub scale_image {
 	my $ext = pop @file;
 	my $name = join '.', @file;
 	return $name . '_' . $scale . '.' . $ext;
+}
 
+=head2 linkify
+
+Xslate function to change markdown style links to local links
+
+Write something like
+
+  <: html text with marked links | linkify :>
+
+    [Produkt vi har](product:<link>),
+    [Produkt vi har](product),
+    [Søgning](search:<link>),
+    [Søgning](search),
+    [List produkter](list:<link>),
+    [List produkter](list),
+
+in the template.
+
+=cut
+
+sub linkify {
+	my ($html) = @_;
+	return '' unless $html;
+
+	$html =~ s/
+        \[ (.+?) \]                 # Catch [Some text] as $1
+        \(
+            (product|search|list)   # Define what kind of markup we have in $2
+            (?: : (.+?) )?          # Optionally have a link (as $3)
+        \)
+    /make_href($1, $2, $3)/xige;
+
+	return $html;
+}
+
+=head2 make_href
+
+Return an url from a linked text
+
+=cut
+
+sub make_href {
+    my ($text, $type, $link) = @_;
+    $link //= $text;
+    my $href;
+    for ($type) {
+        $href = $link // $text when /^product$/;
+        $href = "/search?search_phrase=$link" when /^search$/;
+        $href = "/list/$link" when /^list$/;
+        default { $href = '' }
+    }
+
+    my $a = qq{<a href="$href">$text</a>};
+    return $a;
 }
 
 =head2 url_encode
