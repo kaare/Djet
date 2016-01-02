@@ -29,6 +29,11 @@ Init the list part
 after 'init_data' => sub {
 	my $self = shift;
 	$self->add_search(parent_id => $self->model->basenode->node_id);
+
+	return unless my $search_phrase = $self->model->request->parameters->{list_search_phrase} or return 1;
+
+	$self->model->stash->{search_phrase} = $search_phrase;
+	$self->set_fts($search_phrase);
 };
 
 __PACKAGE__->meta->make_immutable;

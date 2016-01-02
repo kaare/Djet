@@ -1,0 +1,10 @@
+<div id="quicksearch">
+	<form method="get" name="list_search" onSubmit="return (document.list_search.search_phrase.value != list_search_str);">
+		<input type="hidden" name="exclude" value="">
+		<input type="text" class="text" name="list_search_phrase" size="20" onFocus="if (this.value == list_search_str) this.value=''" value="Skriv søgeord"><input type="submit" class="submit" name="submit" value="Søg">
+	</form>
+
+	<script type="text/javascript">
+		var list_search_str = document.list_search.list_search_phrase.value;
+	</script>
+</div>

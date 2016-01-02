@@ -21,3 +21,5 @@ UPDATE basetype SET
 	]',
 	handler = 'Djet::Engine::Directory'
 	WHERE feature_id = 1 AND name = 'directory';
+
+COMMIT;
