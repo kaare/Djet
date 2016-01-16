@@ -41,12 +41,14 @@
 : }
     <div id="body" class="container-fluid">
       <div class="row">
+: block container -> {
 : block leftside -> {
 : } # leftside
 	    <div class='main col-sm-9'>
 : block content -> {
 : } # content
 	    </div><!-- span9-->
+: } # container
 	  </div>
     </div>
 
