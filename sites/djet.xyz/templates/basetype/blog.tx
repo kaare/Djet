@@ -4,5 +4,6 @@
 : } # content
 : override content -> {
 		<: $payload.model.basenode.content_text | raw :>
+	<p class="post-meta">Posted by <a href="#"><: $payload.model.basenode.node_owner_name :></a> on <: $payload.model.basenode.publish_date :></p>
 : include '/element/blog_comments.tx'
 : } # content
