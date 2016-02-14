@@ -82,7 +82,7 @@ has basetypes => (
 	isa => 'HashRef',
 	default => sub {
 		my $self = shift;
-		return { map { $_->id =>  $_} $self->resultset('Djet::Basetype')->search };
+		return { map {$_->nodedata; $_->id =>  $_} $self->resultset('Djet::Basetype')->search };
 	},
 	lazy => 1,
 );

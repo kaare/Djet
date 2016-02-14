@@ -23,8 +23,7 @@ Find the nodes based on the search string
 after 'init_data' => sub  {
 	my $self = shift;
 	my $model = $self->model;
-	my $search_phrase = decode('utf-8', $model->request->parameters->{search_phrase});
-	return unless $search_phrase;
+	return unless my $search_phrase = decode('utf-8', $model->request->parameters->{search_phrase});
 
 	$self->add_search(node_path => {'<@', $model->payload->domain_node->node_path});
 	$self->set_fts($search_phrase);

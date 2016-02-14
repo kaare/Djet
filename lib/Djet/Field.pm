@@ -186,7 +186,7 @@ Return the field (type, title, value) as JSON
 
 sub as_json {
 	my $self = shift;
-	my $hash = { map {$_ => $self->$_} qw/type title value/ };
+	my $hash = { map {$_ => $self->$_} qw/name type title value/ };
 	return JSON->new->encode($hash);
 }
 

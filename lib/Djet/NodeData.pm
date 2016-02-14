@@ -132,7 +132,7 @@ Return the fields' titles as an arrayref
 
 sub field_titles {
 	my $self = shift;
-	return [ map { $_->title } @{ $self->fields } ];
+	return [ map { { $_->name => $_->title } } @{ $self->fields } ];
 }
 
 =head2 fields_as_json
