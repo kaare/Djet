@@ -138,7 +138,7 @@ Process the POST request for creating a node
 sub create_path {
 	my $self = shift;
 	my $model = $self->model;
-	$model->stash_basic;
+	$self->stash_basic;
 	$model->payload->urify($self->object);
 }
 
