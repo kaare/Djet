@@ -176,7 +176,7 @@ Put parameters on the stash for the choose_basetype template
 sub choose_basetype {
 	my ($self, $parent_path) = @_;
 	my $model = $self->model;
-	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values $model->basetypes;
+	my @basetypes = sort {$a->{id} <=> $b->{id}} map{{id => $_->id, title => $_->title}} values %{ $model->basetypes };
 	$model->stash->{basetypes_choice} = \@basetypes;
 	$self->template('/config/basenode_choose_basetype.tx');
 }

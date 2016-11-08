@@ -48,6 +48,4 @@ $$ language 'plpgsql';
 
 CREATE TRIGGER update_expires BEFORE UPDATE ON session FOR EACH ROW EXECUTE PROCEDURE update_expires();
 
-$$ language 'plpgsql';
-
 COMMIT;
