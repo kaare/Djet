@@ -65,7 +65,7 @@ sub send {
 	my ($self, %args) = @_;
 	my $model = $self->model;
 	my $stash = $model->stash;
-	my $mailbody = $self->renderer->render($args{template}, $stash);
+	my $mailbody = $self->renderer->render($stash, $args{template});
 	my @to = ref $args{to} && ref $args{to} eq 'ARRAY' ? @{ $args{to} } : ($args{to});
 	$self->mailer->from($args{from})
 		->to(@to)

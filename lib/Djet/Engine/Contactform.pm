@@ -66,7 +66,7 @@ before 'process_post' => sub  {
 		datacolumns => {},
 	});
 	$self->set_object($contactform);
-	$self->stash->{contactform} = $contactform;
+	$model->stash->{contactform} = $contactform;
 	$self->is_new(1);
 };
 
@@ -98,7 +98,10 @@ before 'edit_updated' => sub {
 
 =head2 send_mail
 
-Actually send the email
+Actually send the email to
+
+ - The owner emails: nodedata->recipient
+ - The user: in_fields->email
 
 =cut
 
@@ -107,8 +110,10 @@ sub send_mail {
 	my $mailer = $self->mailer;
 	my $model = $self->model;
 	my $nodedata = $model->basenode->nodedata;
-	my $in_fields = $self->object->fields;
-	my @to = $nodedata->recipient->value, $in_fields->email->value;
+	my $in_fields = $self->object->nodedata;
+	my $owners = $nodedata->recipient->value;
+	my @to = ref $owners eq 'ARRAY' ? @$owners : $owners;
+	push @to, $in_fields->email->value;
 	$model->stash->{template_display} = 'view';
 	$self->object->discard_changes;
 	$model->stash->{contactform} = $self->object;
