@@ -4,6 +4,8 @@ use 5.010;
 use Moose::Role;
 use namespace::autoclean;
 
+use JSON;
+
 =head1 NAME
 
 Djet::Part::Topmenu
@@ -57,6 +59,12 @@ sub _build_topmenu {
 		order_by => [qw/node_id/],
 	};
 	return [ map {$_->current(1) if index($current_path, $_->node_path) > -1; $_} $menu_node->children->search($search, $options)->all ];
+}
+
+sub topmenu_as_json {
+    my $self = shift;
+    my $topmenu = [ map { {path => $_->node_path, title => $_->title} } @{$self->topmenu} ];
+    return JSON::encode_json($topmenu);
 }
 
 no Moose::Role;

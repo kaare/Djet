@@ -5,8 +5,11 @@ use Moose;
 use File::Basename;
 use File::Copy "move";
 use File::Path;
+use JSON;
 
 extends 'Djet::Engine::Default';
+
+with 'Djet::Part::File';
 
 =head1 NAME
 
@@ -43,6 +46,29 @@ sub allowed_methods {
 	return [qw/GET POST/];
 }
 
+=head2 before data
+
+Control what to send when it's Djet config
+
+=cut
+
+before 'to_json' => sub {
+	my $self = shift;
+    my $model = $self->model;
+    my $basenode = $model->navigator->basenode;
+
+    my $basedir = $basenode->path;
+    my $path = $model->request->param('path');
+    my $dir = join '/', $basedir, $path;
+    my ($dirs, $files) = $self->file_list($dir);
+    $model->stash->{dir_info} = {
+        dirs => $dirs,
+        files => $files,
+    };
+    $self->content_type('json');
+    $self->renderer->set_expose_stash('dir_info');
+};
+
 =head2 post_is_create
 
 No new node is created
@@ -61,15 +87,15 @@ sub process_post {
 	my $self = shift;
 	my $model = $self->model;
 	my $request = $model->request;
-	my $file_name = $self->model->request->parameters->{upload_path} or return 1;
+	my $path = $self->model->request->parameters->{path} or return 1;
 
-	my ($name,$path,$suffix) = fileparse($file_name);
-	for my $upload ($request->uploads->get_all('uploadedfile')) {
-		move $upload->path, $path . $upload->filename;
+	for my $upload ($request->uploads->values) {
 		my $destination = join '/', $model->config->app_root, $model->basenode->nodedata->path, $path, $upload->filename;
-		move $upload->path, $destination;
+        $destination =~ s|//|/|g;
+        move $upload->path, $destination;
 	}
-	$self->response->body($self->view_page);
+    my $json = JSON->new;
+    $self->response->body($json->encode({status => 'ok'}));
 }
 
 __PACKAGE__->meta->make_immutable;

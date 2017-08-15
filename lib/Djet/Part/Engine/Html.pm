@@ -149,7 +149,7 @@ sub template_name {
 	my $prefix;
 	if ($domain_node) {
 		$prefix = $domain_node->node_path;
-		$node_path =~ s/^$prefix//;
+		$node_path =~ s/^$prefix// if length($prefix) > 1;
 	}
 	$prefix .= '/node';
 	$node_path =~ s/\.html$//;

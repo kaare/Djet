@@ -68,7 +68,7 @@ before data => sub {
 	my $self = shift;
 	my $model = $self->model;
 	my $stash = $model->stash;
-	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values $model->basetypes ];
+	$stash->{sorted_basetypes} = [ sort {$a->name cmp $b->name} values %{ $model->basetypes } ];
 	if ($self->has_object) {
 		$stash->{title} ||= $self->object->title;
 		$stash->{current_basetype} = $self->object;
