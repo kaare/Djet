@@ -16,7 +16,7 @@
     <td class="<: if $field.required { :>required<: } :>">
 		<: l($field.title) :>
 	</td>
-    <td class="<: if $msgs[$field.name] { :>error<: } :>">
+    <td class="<: if $msgs[$field.name] { $msgs[$field.name] } :>">
 : include $elm {name => $field_prefix ~ $field.name, field => $field};
     </td>
 </tr>

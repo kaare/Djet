@@ -4,7 +4,8 @@ use Moose;
 use MooseX::NonMoose;
 use DBIx::Class::ResultClass::HashRefInflator;
 
-extends 'Nitesi::Cart';
+extends 'Interchange6::Cart';
+with 'Djet::Part::Log';
 
 =head1 NAME
 
@@ -79,11 +80,6 @@ Create the cart
 
 =cut
 
-sub BUILD {
-	my $self = shift;
-	$self->cart_row;
-}
-
 =head2 save
 
 No-op, as all cart changes are saved through hooks to the database.
@@ -115,7 +111,7 @@ sub _load_cart {
 	}, {
 		result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 	});
-	$self->seed([$cart_products->all]);
+	$self->seed([map {delete $_->{cart};$_} $cart_products->all]);
 	return $cart_row;
 }
 
@@ -135,6 +131,7 @@ before add => sub {
 			name => $args{name},
 			price => $args{price},
 			quantity => $args{quantity},
+			weight => $args{weight},
 			position => 0
 		});
 	}
@@ -178,13 +175,16 @@ before clear => sub {
 	});
 };
 
+=pod
 
-before items => sub {
+before products => sub {
 	my $self = shift;
-	my $items = $self->{items} || return;
+	my $products = $self->{products} || return;
 
-	map {$_->{total} = $_->{quantity} * $_->{price}} @$items;
+	map {$_->{total} = $_->{quantity} * $_->{price}} @$products;
 };
+
+=cut
 
 __PACKAGE__->meta->make_immutable;
 

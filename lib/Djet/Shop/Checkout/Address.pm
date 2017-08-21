@@ -23,6 +23,11 @@ sub has_all_data {
 	my $self = shift;
 	my $checkout = $self->checkout;
 	my $params = $self->model->request->body_parameters->as_hashref;
+    if (my @missing = grep {$_->{required} && !$params->{$_->{name}}} (@{ $self->step->basetype->datacolumns })) {
+        $self->model->stash->{msgs} = { map {$_->{name} => 'required'} @missing };
+        return;
+    }
+
 	my $step_name = $self->step->name;
 	$checkout->{data}{$step_name} = $params;
 	return 1;

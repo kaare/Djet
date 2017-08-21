@@ -73,6 +73,11 @@ __PACKAGE__->table("djet.cart_products");
   default_value: 1
   is_nullable: 0
 
+=head2 weight
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =head2 priority
 
   data_type: 'integer'
@@ -99,6 +104,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "quantity",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
+  "weight",
+  { data_type => "integer", is_nullable => 1 },
   "priority",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
@@ -135,8 +142,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vwoWOF6LRy8UN1rbnpInTw
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-21 11:23:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3wCme1SUCuZQNkoSf/AGSw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

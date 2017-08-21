@@ -29,6 +29,8 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"city","title":"City","type":"Str", "required": "on"},
 	{"name":"phone","title":"Telephone","type":"Str"}
 ]','Djet::Shop::Checkout::Address','<domain>/basetype/checkout/address.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_delivery','Checkout Delivery','[
+]','Djet::Shop::Checkout::Delivery','<domain>/basetype/checkout/delivery.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_payment','Checkout Payment','[
 ]','Djet::Shop::Checkout::Payment','<domain>/basetype/checkout/payment.tx');
 
@@ -61,6 +63,7 @@ CREATE TABLE cart_products (
   price decimal(10,2) NOT NULL DEFAULT 0,
   "position" integer NOT NULL,
   quantity integer DEFAULT 1 NOT NULL,
+  weight integer,
   priority integer DEFAULT 0 NOT NULL,
   PRIMARY KEY (cart, sku)
 );

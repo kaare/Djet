@@ -1,4 +1,4 @@
-<div id="minicart"<: if (!$payload.cart.count) { ' class="hidden"' | raw } :>>
+<div id="minicart"<: if ($payload.cart.is_empty) { ' class="hidden"' | raw } :>>
   <a href="<: $payload.checkout_base_url :>">
     <label for="minicart-quantity"><: l('Count') :></label><span id="minicart-quantity"><: $payload.cart.quantity :></span>
     <label for="minicart-total"><: l('Total') :></label><span id="minicart-total"><: $payload.cart.total :></span>

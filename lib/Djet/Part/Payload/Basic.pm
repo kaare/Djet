@@ -82,6 +82,7 @@ sub _build_cart {
 		session_id => $model->session_id,
 		uid => $session->{djet_user} // '',
 	);
+	$cart->cart_row; # Necessary for some unknown reason
 	return $cart;
 }
 
