@@ -128,9 +128,16 @@ before 'data' => sub {
 	$model->stash->{steps} = $steps;
 	$model->stash->{current_step} = $current_step;
 	my $step_name = $current_step->name;
-	$model->stash->{defaults} = $checkout->{data}{$step_name} if $checkout->{data}{$step_name};
+
+    # Give the step the possibility to do sth first
+    my $step_object = $self->_make_step($current_step);
+    $step_object->data;
+
+	$model->stash->{defaults} = $checkout->{data}{$step_name} if exists $checkout->{data}{$step_name};
+	$model->stash->{checkout_data} = $checkout->{data} if exists $checkout->{data};
 
 	my $template //= $current_step->basetype->template;
+
 	$template = $self->template_substitute($template) if defined($template) and $template =~ /<.+>/;
 	$self->template($template);
 };
@@ -152,22 +159,27 @@ sub post_is_create {
 	my $steps = $self->steps;
 	$step = @$steps - 1 if $step >= @$steps;
 	my $current_step = $steps->[$step-1];
-	my $handler = $current_step->basetype->handler;
-	eval "require $handler" or die "No handler $handler";
-
-	my $model = $self->model;
-	my $step_object = $handler->new(
-		model => $model,
-		mailer => $self->mailer,
-		checkout => $checkout,
-		step => $current_step,
-	);
+    my $step_object = $self->_make_step($current_step);
 	return unless my $step_ok = $step_object->has_all_data;
 
 	$checkout->{ok}[$step-1] = $step_ok;
 	$checkout->{next_step} = $step + 1 unless $checkout->{next_step} >= @$steps;
-	$model->session->{checkout} = $checkout;
+	$self->model->session->{checkout} = $checkout;
 	return 1;
+}
+
+
+sub _make_step {
+    my ($self, $step) = @_;
+	my $handler = $step->basetype->handler;
+	eval "require $handler" or die "No handler $handler: $@";
+
+	return $handler->new(
+		model => $self->model,
+		mailer => $self->mailer,
+		checkout => $self->checkout,
+		step => $step,
+	);
 }
 
 =head2 process_post

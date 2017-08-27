@@ -50,11 +50,18 @@ has mailer => (
 
 =head1 METHODS
 
+=head2 data
+
+=cut
+
+sub data { }
+
+
 =head2 has_all_data
 
 =cut
 
-sub has_all_data { }
+sub has_all_data { 1 }
 
 __PACKAGE__->meta->make_immutable;
 

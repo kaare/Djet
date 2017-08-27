@@ -27,6 +27,7 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 	{"name":"street","title":"Address","type":"Str", "required": "on"},
 	{"name":"postalcode","title":"Postal Code","type":"Int", "required": "on"},
 	{"name":"city","title":"City","type":"Str", "required": "on"},
+	{"name":"email","title":"Email","type":"Email", "required": "on"},
 	{"name":"phone","title":"Telephone","type":"Str"}
 ]','Djet::Shop::Checkout::Address','<domain>/basetype/checkout/address.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_delivery','Checkout Delivery','[
