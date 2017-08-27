@@ -135,6 +135,7 @@ before 'data' => sub {
 
 	$model->stash->{defaults} = $checkout->{data}{$step_name} if exists $checkout->{data}{$step_name};
 	$model->stash->{checkout_data} = $checkout->{data} if exists $checkout->{data};
+    $model->stash->{checkout_step} = $next_step;
 
 	my $template //= $current_step->basetype->template;
 
