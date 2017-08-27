@@ -149,6 +149,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 cart_products
+
+Type: has_many
+
+Related object: L<Djet::Schema::Result::Djet::CartProduct>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cart_products",
+  "Djet::Schema::Result::Djet::CartProduct",
+  { "foreign.sku" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 data
 
 Type: belongs_to
@@ -205,8 +220,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-02-07 04:21:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cIKo1ebLImjrTip4wzid4w
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-27 07:16:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iuGU1iFd2JeT04c1FVgB4g
 
 with 'Djet::Part::DB::Result::Node';
 

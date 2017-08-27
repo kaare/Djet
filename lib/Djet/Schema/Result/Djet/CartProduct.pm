@@ -46,7 +46,8 @@ __PACKAGE__->table("djet.cart_products");
 
 =head2 sku
 
-  data_type: 'text'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 name
@@ -90,7 +91,7 @@ __PACKAGE__->add_columns(
   "cart",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "sku",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
   { data_type => "text", default_value => "", is_nullable => 0 },
   "price",
@@ -141,9 +142,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 sku
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-21 11:23:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3wCme1SUCuZQNkoSf/AGSw
+Type: belongs_to
+
+Related object: L<Djet::Schema::Result::Djet::Node>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "sku",
+  "Djet::Schema::Result::Djet::Node",
+  { id => "sku" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-27 07:16:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AgpZMJZAmnqo/pQQf8JNcQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

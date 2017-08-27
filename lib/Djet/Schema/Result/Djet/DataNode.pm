@@ -36,6 +36,7 @@ __PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 =cut
 
 __PACKAGE__->table("djet.data_node");
+__PACKAGE__->result_source_instance->view_definition(" SELECT d.id AS data_id,\n    d.basetype_id,\n    d.name,\n    d.title,\n    d.datacolumns,\n    d.acl,\n    d.fts,\n    d.created AS data_created,\n    d.modified AS data_modified,\n    d.created_by AS data_created_by,\n    d.modified_by AS data_modified_by,\n    n.id AS node_id,\n    n.parent_id,\n    n.part,\n    n.node_path,\n    n.created AS node_created,\n    n.modified AS node_modified,\n    n.created_by AS node_created_by,\n    n.modified_by AS node_modified_by\n   FROM (djet.data d\n     JOIN djet.node n ON ((d.id = n.data_id)))");
 
 =head1 ACCESSORS
 
@@ -178,8 +179,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2015-02-07 04:21:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2jatFbQnKsY9TTMUHVFlzQ
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-27 07:12:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iPRSOk5vvF/Bz7ZkJvWyrg
 
 use JSON;
 

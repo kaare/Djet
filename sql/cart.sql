@@ -59,7 +59,7 @@ CREATE TABLE cart_products (
   cart integer NOT NULL REFERENCES carts
 	ON DELETE CASCADE
 	ON UPDATE CASCADE,
-  sku text NOT NULL,
+  sku int NOT NULL REFERENCES djet.node(id),
   name text NOT NULL DEFAULT '',
   price decimal(10,2) NOT NULL DEFAULT 0,
   "position" integer NOT NULL,
