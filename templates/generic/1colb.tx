@@ -1,0 +1,17 @@
+<div id="required_description">
+: if $template_display != 'view' {
+<: l('Fields in bold are mandatory') :>
+: }
+</div>
+<div class="col-md-12">
+: for $groups -> $group {
+:   if $group.header {
+:   }
+:   for $group.columns -> $field {
+  <div class="form-group">
+    <label class="control-label"><: l($field.title) :></label>
+    <input maxlength="200" type="text"<: if $field.required { :> required="required"<: } :> class="form-control" placeholder="" id="<: $name || $field.name :>"  name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"/>
+  </div>
+:   }
+: }
+</div>
