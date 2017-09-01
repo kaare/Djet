@@ -52,7 +52,7 @@ has 'steps' => (
 		my @steps = $model->resultset('Djet::DataNode')->search({
 			parent_id => $model->basenode->node_id,
 		},{
-			order_by => 'node_modified',
+			order_by => 'node_path',
 		});
 		push @steps, {title => $model->basenode->basetype->attributes->{step_name}};
 		return \@steps;

@@ -10,7 +10,7 @@
 :   for $group.columns -> $field {
   <div class="form-group">
     <label class="control-label"><: l($field.title) :></label>
-    <input maxlength="200" type="text"<: if $field.required { :> required="required"<: } :> class="form-control" placeholder="" id="<: $name || $field.name :>"  name="<: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"/>
+    <input maxlength="200" type="text" class="form-control" placeholder="" id="<: $field_prefix || '' :><: $name || $field.name :>"  name="<: $field_prefix || '' :><: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"/>
   </div>
 :   }
 : }
