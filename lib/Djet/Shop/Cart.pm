@@ -50,6 +50,18 @@ has cart_name => (
 	default => 'cart',
 );
 
+=head2 product_class
+
+Name of the product class
+
+=cut
+
+has product_class => (
+	is => 'ro',
+	isa => 'Str',
+	default => 'Djet::Shop::Cart::Product',
+);
+
 =head2 cart_row
 
 The cart row
@@ -111,7 +123,7 @@ sub _load_cart {
 	}, {
 		result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 	});
-	$self->seed([map {delete $_->{cart};$_} $cart_products->all]);
+	$self->seed([map {$_->{cart} = $self;$_} $cart_products->all]);
 	return $cart_row;
 }
 
