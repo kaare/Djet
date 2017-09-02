@@ -34,6 +34,8 @@ INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES
 ]','Djet::Shop::Checkout::Delivery','<domain>/basetype/checkout/delivery.tx');
 INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_payment','Checkout Payment','[
 ]','Djet::Shop::Checkout::Payment','<domain>/basetype/checkout/payment.tx');
+INSERT INTO basetype (feature_id,name,title,datacolumns,handler,template) VALUES (currval('feature_id_seq'), 'checkout_receipt','Checkout Receipt','[
+]','Djet::Shop::Checkout::Receipt','<domain>/basetype/checkout/receipt.tx');
 
 -- Data Nodes
 

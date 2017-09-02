@@ -54,7 +54,6 @@ has 'steps' => (
 		},{
 			order_by => 'node_path',
 		});
-		push @steps, {title => $model->basenode->basetype->attributes->{step_name}};
 		return \@steps;
 	},
 	lazy => 1,
@@ -123,7 +122,7 @@ before 'data' => sub {
 		}
 	}
 	$model->session->{checkout}{next_step} = $next_step;
-	my $current_step = $next_step == @$steps ? $model->basenode : $steps->[$next_step - 1];
+	my $current_step = $steps->[$next_step - 1];
 
 	$model->stash->{steps} = $steps;
 	$model->stash->{current_step} = $current_step;
