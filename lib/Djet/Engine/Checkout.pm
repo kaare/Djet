@@ -137,7 +137,7 @@ before 'data' => sub {
 	$model->stash->{checkout_data} = $checkout->{data} if exists $checkout->{data};
     $model->stash->{checkout_step} = $next_step;
 
-	my $template //= $current_step->basetype->template;
+	my $template = $current_step->basetype->template;
 
 	$template = $self->template_substitute($template) if defined($template) and $template =~ /<.+>/;
 	$self->template($template);
