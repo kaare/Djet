@@ -26,6 +26,9 @@ msgstr "Firma"
 msgid "Count"
 msgstr "Antal"
 
+msgid "Delivery"
+msgstr "Levering"
+
 msgid "Email Address"
 msgstr "Email"
 
