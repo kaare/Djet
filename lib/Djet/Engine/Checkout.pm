@@ -157,8 +157,9 @@ sub post_is_create {
 	my $checkout = $self->checkout;
 	my $step = $checkout->{next_step} // $self->rest_path || 1;
 	my $steps = $self->steps;
-	$step = @$steps - 1 if $step >= @$steps;
+	$step = @$steps - 1 if $step > @$steps;
 	my $current_step = $steps->[$step-1];
+    warn "Step " . $current_step->name;
     my $step_object = $self->_make_step($current_step);
 	return unless my $step_ok = $step_object->has_all_data;
 
