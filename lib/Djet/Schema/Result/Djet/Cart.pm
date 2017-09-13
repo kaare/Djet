@@ -75,11 +75,11 @@ __PACKAGE__->table("djet.carts");
   default_value: 0
   is_nullable: 0
 
-=head2 type
+=head2 order_id
 
-  data_type: 'text'
-  default_value: (empty string)
-  is_nullable: 0
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
 
 =head2 approved
 
@@ -112,8 +112,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => 0, is_nullable => 0 },
   "last_modified",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
-  "type",
-  { data_type => "text", default_value => "", is_nullable => 0 },
+  "order_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "approved",
   { data_type => "boolean", is_nullable => 1 },
   "status",
@@ -149,9 +149,29 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 order
 
-# Created by DBIx::Class::Schema::Loader v0.07040 @ 2014-12-03 20:20:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zblZ/YAINu8nR2MH97mRkA
+Type: belongs_to
+
+Related object: L<Djet::Schema::Result::Djet::Node>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "order",
+  "Djet::Schema::Result::Djet::Node",
+  { id => "order_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-03 07:47:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I1pUVADVabFIIMBqfnSAIA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

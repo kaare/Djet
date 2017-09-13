@@ -50,7 +50,7 @@ CREATE TABLE carts (
    session_id text DEFAULT '' NOT NULL,
    created integer DEFAULT 0 NOT NULL,
    last_modified integer DEFAULT 0 NOT NULL,
-   type text DEFAULT '' NOT NULL,
+   order_id int REFERENCES djet.node(id),
    approved boolean,
    status text DEFAULT '' NOT NULL
 );

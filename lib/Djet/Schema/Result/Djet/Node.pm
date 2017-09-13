@@ -164,6 +164,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 carts
+
+Type: has_many
+
+Related object: L<Djet::Schema::Result::Djet::Cart>
+
+=cut
+
+__PACKAGE__->has_many(
+  "carts",
+  "Djet::Schema::Result::Djet::Cart",
+  { "foreign.order_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 data
 
 Type: belongs_to
@@ -220,8 +235,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-27 07:16:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iuGU1iFd2JeT04c1FVgB4g
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-03 07:47:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:o0FDRD+8LvTG69fplBN3LA
 
 with 'Djet::Part::DB::Result::Node';
 
