@@ -22,7 +22,7 @@ Return a nicely formatted value
 sub formatted_value {
 	my $self = shift;
 	my %params = @_;
-	my $language = $self->model->config->config->{language_price};
+	my $language = $params{language} || $self->model->config->config->{language_price};
 	my $old_locale = setlocale(LC_MONETARY);
 	setlocale(LC_MONETARY, $language);
 

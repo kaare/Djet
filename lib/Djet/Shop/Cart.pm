@@ -5,7 +5,10 @@ use MooseX::NonMoose;
 use DBIx::Class::ResultClass::HashRefInflator;
 
 extends 'Interchange6::Cart';
-with 'Djet::Part::Log';
+with qw/
+    Djet::Part::Log
+    Djet::Trait::Field::Price
+/;
 
 =head1 NAME
 
@@ -186,6 +189,35 @@ before clear => sub {
 		sku => $args{sku},
 	});
 };
+
+=head2 value
+
+The price, total, ...
+
+=cut
+
+has value => (
+	is => 'rw',
+	isa => 'Str',
+);
+
+sub formatted_cost {
+    my $self = shift;
+    $self->value($self->cost(shift));
+    return $self->formatted_value(@_);
+}
+
+sub formatted_subtotal {
+    my $self = shift;
+    $self->value($self->subtotal);
+    return $self->formatted_value(@_);
+}
+
+sub formatted_total {
+    my $self = shift;
+    $self->value($self->total);
+    return $self->formatted_value(@_);
+}
 
 =pod
 
