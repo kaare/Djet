@@ -11,7 +11,7 @@
   <div class="form-group">
     <label class="control-label col-sm-2" for="<: $field_prefix || '' :><: $name || $field.name :>"><: l($field.title) :></label>
     <div class="col-sm-10">
-      <input maxlength="200" type="text" class="form-control" placeholder="" id="<: $field_prefix || '' :><: $name || $field.name :>"  name="<: $field_prefix || '' :><: $name || $field.name :>" value="<: $defaults[$field.name] || $field.value :>"/>
+      <input maxlength="200" type="text" class="form-control" placeholder="" id="<: $field_prefix || '' :><: $name || $field.name :>"  name="<: $field_prefix || '' :><: $name || $field.name :>" value="<: $defaults[($field_prefix || '') ~ $field.name] || $field.value :>"/>
     </div>
   </div>
 :   }
