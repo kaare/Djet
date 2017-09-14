@@ -40,11 +40,6 @@ sub formatted_value {
 	return $value;
 }
 
-sub add {
-	my ($self, $add) = @_;
-	$self->_set_value($self->value + $add);
-}
-
 no Moose::Role;
 
 1;
