@@ -35,6 +35,9 @@ msgstr "Email"
 msgid "Fields in bold are mandatory"
 msgstr "Felter markeret med <span class="form-horizontal required"></span> er obligatoriske"
 
+msgid "Field is Required"
+msgstr "Feltet skal udfyldes"
+
 msgid "Name"
 msgstr "Navn"
 
