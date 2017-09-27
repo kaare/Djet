@@ -33,7 +33,7 @@ msgid "Email Address"
 msgstr "Email"
 
 msgid "Fields in bold are mandatory"
-msgstr "Felter markeret med fed er obligatoriske"
+msgstr "Felter markeret med <span class="form-horizontal required"></span> er obligatoriske"
 
 msgid "Name"
 msgstr "Navn"
