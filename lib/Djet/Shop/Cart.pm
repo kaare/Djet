@@ -89,21 +89,7 @@ sub _build_cart_row {
 
 =head1 METHODS
 
-=head2 BUILD
-
-Create the cart
-
 =cut
-
-=head2 save
-
-No-op, as all cart changes are saved through hooks to the database.
-
-=cut
-
-sub save {
-	return 1;
-}
 
 # creates cart in database
 sub _create_cart {
@@ -127,6 +113,11 @@ sub _load_cart {
 		result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 	});
 	$self->seed([map {$_->{cart} = $self;$_} $cart_products->all]);
+    if (ref $cart_row->costs eq 'ARRAY') {
+        for my $cost (@{ $cart_row->costs || [] }) {
+            $self->apply_cost(%$cost);
+        }
+    }
 	return $cart_row;
 }
 
@@ -189,6 +180,35 @@ before clear => sub {
 		sku => $args{sku},
 	});
 };
+
+=head2 set_cost
+
+Make sure costs are saved
+
+=cut
+
+sub set_cost  {
+	my ($self, %args) = @_;
+    $self->clear_costs;
+    my @cost_fields = qw/ relative amount label compound name inclusive /;
+    my @costs = $self->get_costs;
+    my @values;
+    my $cost_found = 0;
+    for my $cost (@costs) {
+        my $value = { map { $_ => $cost->$_ } @cost_fields };
+        if ($args{name} eq $value->{name}) {
+            $value->{amount} = $args{amount} if $args{name} eq $value->{name};
+            $cost_found = 1;
+        }
+        push @values, $value;
+    }
+    if (!$cost_found) {
+        $self->apply_cost(%args);
+        push @values, \%args;
+    }
+	$self->cart_row->costs(\@values);
+	$self->cart_row->update;
+}
 
 =head2 value
 

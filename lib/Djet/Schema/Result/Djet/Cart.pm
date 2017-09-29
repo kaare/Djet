@@ -63,22 +63,15 @@ __PACKAGE__->table("djet.carts");
   default_value: (empty string)
   is_nullable: 0
 
-=head2 created
-
-  data_type: 'integer'
-  default_value: 0
-  is_nullable: 0
-
-=head2 last_modified
-
-  data_type: 'integer'
-  default_value: 0
-  is_nullable: 0
-
 =head2 order_id
 
   data_type: 'integer'
   is_foreign_key: 1
+  is_nullable: 1
+
+=head2 costs
+
+  data_type: 'jsonb'
   is_nullable: 1
 
 =head2 approved
@@ -91,6 +84,29 @@ __PACKAGE__->table("djet.carts");
   data_type: 'text'
   default_value: (empty string)
   is_nullable: 0
+
+=head2 created
+
+  data_type: 'timestamp with time zone'
+  default_value: current_timestamp
+  is_nullable: 1
+  original: {default_value => \"now()"}
+
+=head2 modified
+
+  data_type: 'timestamp with time zone'
+  is_nullable: 1
+
+=head2 created_by
+
+  data_type: 'text'
+  default_value: "current_user"()
+  is_nullable: 1
+
+=head2 modified_by
+
+  data_type: 'text'
+  is_nullable: 1
 
 =cut
 
@@ -108,16 +124,31 @@ __PACKAGE__->add_columns(
   { data_type => "text", default_value => "", is_nullable => 0 },
   "session_id",
   { data_type => "text", default_value => "", is_nullable => 0 },
-  "created",
-  { data_type => "integer", default_value => 0, is_nullable => 0 },
-  "last_modified",
-  { data_type => "integer", default_value => 0, is_nullable => 0 },
   "order_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "costs",
+  { data_type => "jsonb", is_nullable => 1 },
   "approved",
   { data_type => "boolean", is_nullable => 1 },
   "status",
   { data_type => "text", default_value => "", is_nullable => 0 },
+  "created",
+  {
+    data_type     => "timestamp with time zone",
+    default_value => \"current_timestamp",
+    is_nullable   => 1,
+    original      => { default_value => \"now()" },
+  },
+  "modified",
+  { data_type => "timestamp with time zone", is_nullable => 1 },
+  "created_by",
+  {
+    data_type     => "text",
+    default_value => \"\"current_user\"()",
+    is_nullable   => 1,
+  },
+  "modified_by",
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -170,9 +201,15 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-03 07:47:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I1pUVADVabFIIMBqfnSAIA
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-29 15:53:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QoAduVZ3eRuTSWeJ6coQ1A
 
+use JSON;
+
+__PACKAGE__->inflate_column('costs'=>{
+	inflate=>sub { JSON->new->allow_nonref->decode(shift); },
+	deflate=>sub { JSON->new->allow_nonref->encode(shift); },
+});
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
