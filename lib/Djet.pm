@@ -118,7 +118,7 @@ has model => (
 		die 'No database connection information' unless $connect_info && @$connect_info;
 
 		my $model_name = $self->model_name;
-		eval "require $model_name" or die "No model named $model_name";
+		eval "require $model_name" or die "No model named $model_name: $@e";
 
 		my $model = $model_name->connect(@$connect_info);
 		$model->config($self->config);
