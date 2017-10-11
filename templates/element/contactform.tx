@@ -1,9 +1,9 @@
 <div id="contactform">
-  <h2><: $payload.model.basenode.title :></h2>
+  <h3><: $payload.model.basenode.title :></h3>
 : if $template_display != 'view' {
-  <form method="post" id="edit-contactform" action="<: $payload.urify :>">
+  <form class="form-horizontal" method="post" id="edit-contactform" action="<: $payload.urify :>">
 : }
-: include 'generic/1col.tx' {groups => [{columns => $contactform.nodedata.fields} ] };
+: include 'generic/1colb.tx' {groups => [{columns => $contactform.nodedata.fields} ] };
 : if $template_display != 'view' {
 : include 'generic/okcancel.tx';
     <input type="hidden" name="sp" value="">
