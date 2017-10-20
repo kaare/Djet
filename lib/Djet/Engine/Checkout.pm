@@ -128,13 +128,13 @@ before 'data' => sub {
 	$model->stash->{current_step} = $current_step;
 	my $step_name = $current_step->name;
 
-    # Give the step the possibility to do sth first
-    my $step_object = $self->_make_step($current_step);
-    $step_object->data;
-
 	$model->stash->{defaults} = $checkout->{data}{$step_name} if exists $checkout->{data}{$step_name};
 	$model->stash->{checkout_data} = $checkout->{data} if exists $checkout->{data};
     $model->stash->{checkout_step} = $next_step;
+
+    # Give the step the possibility to do sth first
+    my $step_object = $self->_make_step($current_step);
+    $step_object->data;
 
 	my $template = $model->payload->cart->is_empty ? $model->basenode->empty_template->value : $current_step->basetype->template;
 
@@ -142,6 +142,13 @@ before 'data' => sub {
 	$self->template($template);
 };
 
+after 'to_html' => sub {
+	my $self = shift;
+	my $model = $self->model;
+	my $current_step = $model->stash->{current_step};
+    my $step_object = $self->_make_step($current_step);
+    $step_object->cleanup;
+};
 
 =head2 post_is_create
 

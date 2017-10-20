@@ -56,6 +56,7 @@ has mailer => (
 
 sub data { }
 
+sub cleanup { }
 
 =head2 has_all_data
 

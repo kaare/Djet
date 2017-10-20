@@ -65,11 +65,13 @@ sub send {
 	my ($self, %args) = @_;
 	my $model = $self->model;
 	my $stash = $model->stash;
-	my $mailbody = $self->renderer->render($stash, $args{template});
+	my $payload = $model->payload;
+	my $mailbody = $self->renderer->render({%$stash, payload => $payload}, $args{template});
 	my @to = ref $args{to} && ref $args{to} eq 'ARRAY' ? @{ $args{to} } : ($args{to});
+    my $subject = $args{subject} // $model->basenode->title;
 	$self->mailer->from($args{from})
 		->to(@to)
-		->subject($model->basenode->title)
+		->subject($subject)
 		->html_body($mailbody)
 		->send;
 }
