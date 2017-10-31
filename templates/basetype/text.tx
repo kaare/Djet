@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title><: $payload.model.basenode.title :></title>
+</head>
+<body>
+
+<h1><: $payload.model.basenode.title :></h1>
+<: $payload.model.basenode.text | raw :>
+</body>
+</html>
