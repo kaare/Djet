@@ -82,7 +82,7 @@ sub _build_cart_row {
 	my $model = $self->model;
 	die "Neither user nor session id" unless $self->has_uid or $model->has_session_id;
 
-	my $where = $self->has_uid ? {uid => $self->uid} : {session_id => $model->session_id};
+	my $where = $self->has_uid && $self->uid ? {uid => $self->uid} : {session_id => $model->session_id};
 	my $cart_row = $model->resultset('Djet::Cart')->find($where);
 	return $cart_row ? $self->_load_cart($cart_row) : $self->_create_cart;
 }
