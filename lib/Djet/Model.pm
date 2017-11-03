@@ -189,6 +189,18 @@ has session_id => (
 	predicate => 'has_session_id',
 );
 
+=head2 expire_session
+
+Set to true if session should expire
+
+=cut
+
+has expire_session => (
+	is => 'rw',
+	isa => 'Bool',
+	default => 0,
+);
+
 =head2 request
 
 The plack request

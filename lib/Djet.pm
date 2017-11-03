@@ -182,7 +182,14 @@ has app => (
 				resource_args => $resource_args,
 				tracing => 1,
 			);
-			return $app->call($env);
+			my $result = $app->call($env);
+            $self->session_handler->remove($model->session_id) if $model->expire_session;
+            if ($model->expire_session) {
+                $env->{'psgix.session.options'}{change_id} = 1;
+                $env->{'psgix.session.options'}{expire} = 1;
+                $model->expire_session(0);
+            }
+            return $result;
 		};
 	},
 	lazy => 1,

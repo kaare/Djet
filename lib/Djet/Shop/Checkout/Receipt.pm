@@ -35,7 +35,8 @@ Reset data, session checkout and cart
 sub cleanup {
 	my $self = shift;
 	warn "reset session";
-	warn "reset cart";
+    $self->model->expire_session(1);
+
 }
 
 =head2 send_mail
