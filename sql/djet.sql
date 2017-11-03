@@ -155,7 +155,6 @@ $$ language plpgsql;
 CREATE TRIGGER data_node_insert INSTEAD OF INSERT ON data_node FOR EACH ROW EXECUTE PROCEDURE djet.data_node_insert();
 
 CREATE OR REPLACE FUNCTION data_node_update() RETURNS trigger AS $$
-DECLARE
 BEGIN
 	UPDATE djet.data
 		SET basetype_id=NEW.basetype_id, name=NEW.name, title=NEW.title, datacolumns=NEW.datacolumns, acl=NEW.acl, fts=NEW.fts
@@ -170,7 +169,6 @@ $$ language plpgsql;
 CREATE TRIGGER data_node_update INSTEAD OF UPDATE ON data_node FOR EACH ROW EXECUTE PROCEDURE djet.data_node_update();
 
 CREATE OR REPLACE FUNCTION data_node_delete() RETURNS trigger AS $$
-DECLARE
 BEGIN
 	DELETE FROM djet.data
 		WHERE id=OLD.data_id;
@@ -204,7 +202,7 @@ BEGIN
 		IF (COALESCE(OLD.parent_id,0) != COALESCE(NEW.parent_id,0) OR NEW.data_id != OLD.data_id OR NEW.part != OLD.part) THEN
 			-- update all nodes that are children of this one including this one
 			UPDATE djet.node SET node_path = djet.get_calculated_node_path(id)
-				WHERE node_path @> node.node_path;
+				WHERE node_path <@ OLD.node_path;
 		END IF;
 	ELSIF TG_OP = 'INSERT' THEN
 		UPDATE djet.node SET node_path = djet.get_calculated_node_path(NEW.id) WHERE node.id = NEW.id;
