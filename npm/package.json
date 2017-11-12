@@ -1,0 +1,36 @@
+{
+  "name": "djet",
+  "version": "1.0.0",
+  "description": "React test",
+  "dependencies": {
+    "react": ">=15.0.0",
+    "react-dom": ">=15.0.0",
+    "react-hot-loader": "^1.3.0",
+    "//": {
+      "rc-menu": "^5.0.9"
+    },
+    "react-dropzone": "^3.12.3",
+    "react-treeview": "^0.4.6",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0"
+  },
+  "main": "build.js",
+  "devDependencies": {
+    "babel-core": "^6.3.17",
+    "babel-loader": "^6.2.0",
+    "webpack": "^1.12.9",
+    "enzyme": "^2.4.1",
+    "react-addons-test-utils": "^15.3.0",
+    "react-scripts": "^0.4.0"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack -dw --devtool cheap-module-eval-source-map",
+    "dev": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/react-scripts/config/eslint.js"
+  },
+  "author": "Kaare Rasmussen",
+  "license": "ISC"
+}
