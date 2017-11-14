@@ -27,44 +27,36 @@ Control what to send when it's JSON
 before to_json => sub {
 	my $self = shift;
 	my $model = $self->model;
-	if (my ($template) = $model->request->parameters->{template} =~ /^tree(top|view)$/) {
-		my $basenode = $model->basenode;
-		my $domain_basetype = $model->basetype_by_name('domain');
-		my $domain_node = $model->datanode_by_basetype($domain_basetype);
-		my $payload = $model->payload;
-		my $dynadata;
-		if ($template eq 'top') {
-			my $folder = $domain_node->has_children ? 1 : undef;
-			my $path = $payload->urify;
-			$dynadata = [ {
-				title => $domain_node->title,
+    my $parameters = $model->request->parameters;
+	if (my ($template) = $parameters->{template} =~ /^tree(top|view)$/) {
+use Data::Dumper 'Dumper';
+$Data::Dumper::Maxdepth = 4;
+warn Dumper([ $parameters ]), ' ';
+       my $find = {
+            node_path => {'@>' => $parameters->{path}},
+        };
+        my $options = {
+           order_by => { -desc => \'length(node_path)' },
+           rows => 1,
+       };
+        my $node = $model->resultset('Djet::DataNode')->search($find, $options)->first;
+		my $child_data = [ map {
+			my $folder = $_->has_children ? 1 : undef;
+			{
+				title => $_->title,
+				path => $_->node_path,
+				id   => $_->node_id,
 				folder => $folder,
 				lazy => $folder,
-				path => $path,
-				id   => $domain_node->node_id,
-			} ];
-		} else { # treeview
-			my $node;
-			if ($basenode->node_path =~ /index.html$/) {
-				$node = $model->datanodes->[-2];
-			} else {
-				$node = $basenode;
 			}
-			$dynadata = [ map {
-				my $folder = $_->has_children ? 1 : undef;
-				my $path = $payload->urify($_);
-				{
-					title => $_->part,
-					path => $path,
-					id   => $_->node_id,
-					folder => $folder,
-					lazy => $folder,
-				}
-			} $node->children ],
-		}
-		$model->stash->{dynadata} = $dynadata;
+		} $node->children ];
+		$model->stash->{data} = {
+            title => $node->title,
+            path => $node->node_path,
+            children => $child_data,
+        };
 		$self->content_type('json');
-		$self->renderer->set_expose_stash('dynadata');
+		$self->renderer->set_expose_stash('data');
 	}
 };
 
