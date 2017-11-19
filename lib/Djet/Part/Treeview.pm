@@ -29,11 +29,9 @@ before to_json => sub {
 	my $model = $self->model;
     my $parameters = $model->request->parameters;
 	if (my ($template) = $parameters->{template} =~ /^tree(top|view)$/) {
-use Data::Dumper 'Dumper';
-$Data::Dumper::Maxdepth = 4;
-warn Dumper([ $parameters ]), ' ';
+        my $path = $parameters->{path} // '/';
        my $find = {
-            node_path => {'@>' => $parameters->{path}},
+            node_path => {'@>' => $path},
         };
         my $options = {
            order_by => { -desc => \'length(node_path)' },
@@ -41,14 +39,13 @@ warn Dumper([ $parameters ]), ' ';
        };
         my $node = $model->resultset('Djet::DataNode')->search($find, $options)->first;
 		my $child_data = [ map {
-			my $folder = $_->has_children ? 1 : undef;
-			{
+			my $child = {
 				title => $_->title,
 				path => $_->node_path,
 				id   => $_->node_id,
-				folder => $folder,
-				lazy => $folder,
-			}
+			};
+            $child->{children} = [{}] if $_->has_children;
+            $child
 		} $node->children ];
 		$model->stash->{data} = {
             title => $node->title,

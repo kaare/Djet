@@ -1,0 +1,77 @@
+.m-tree {
+  position: relative;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.m-draggable {
+  position: absolute;
+  opacity: 0.8;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.m-node.placeholder > * {
+  visibility: hidden;
+}
+.m-node.placeholder {
+  border: 1px dashed #ccc;
+}
+.m-node .inner {
+  position: relative;
+  cursor: pointer;
+  padding-left: 10px;
+  color: #9DA5B4;
+  font-size: 12px;
+  font-family: Menlo;
+}
+.m-node .caret-right:before {
+  position: absolute;
+  color: #9DA5B4;
+  content: '\25B8';
+}
+.m-node .caret-down:before {
+  position: absolute;
+  color: #9DA5B4;
+  content: '\25BE';
+}
+.m-node .collapse {
+  display: inline;
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+}
+.tree {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: #9DA5B4;
+  background-color: #21252B;
+}
+.m-node.placeholder {
+  border: 1px dashed #1385e5;
+}
+.m-node .node {
+  display: inline-block;
+  width: 100%;
+  padding: 4px 5px;
+}
+.m-node .node.is-active {
+  background-color: #31363F;
+}
+.inspector {
+  margin-left: 400px;
+}
+.inspector pre {
+  font-family: Menlo;
+  font-size: 13px;
+}

@@ -6,7 +6,7 @@ var path = require('path'),
 
 module.exports = {
     entry: {
-		filetree: root + '/containers/filetree.jsx',
+//		filetree: root + '/containers/filetree.jsx',
 		nodetree: root + '/containers/nodetree.jsx',
 //		topmenu: root + '/containers/topmenu.jsx',
 	},
@@ -21,8 +21,8 @@ module.exports = {
                 loader: 'babel-loader',
                 exclude: /node_modules/,
                 query: {
-                    presets: ['es2015', 'react']
-                }
+                   presets: ['env', 'react', "stage-0"]
+               }
             }
         ]
     }
