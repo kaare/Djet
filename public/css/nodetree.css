@@ -68,10 +68,13 @@
 .m-node .node.is-active {
   background-color: #31363F;
 }
-.inspector {
+.node-data {
   margin-left: 400px;
 }
-.inspector pre {
+.node-data pre {
   font-family: Menlo;
   font-size: 13px;
+}
+.node-data a {
+  display: block;
 }

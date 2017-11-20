@@ -1,7 +1,3 @@
-
-// import '../lib/react-ui-tree.less';
-// import './theme.less';
-// import './app.less';
 import cx from 'classnames';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -37,12 +33,20 @@ class NodeTree extends Component {
   };
 
   onClickNode = node => {
-    if (typeof node.children != "undefined") {
-      this.getNodeData(node);
-    }
+    this.setState({
+      active: node
+    });
   };
 
   render() {
+    const node = this.state.active;
+    const html = node === null ? '' :
+      <div>
+        <h1>{node.title}</h1>
+        <a href="/djet/node/ { node.id } ">Edit node</a>
+        <a href="/djet/node/ { node.id } ?action=delete">Delete node</a>
+        <a href="/djet/node/ { node.id } ?basetype_id=child">Add child</a>
+      </div>;
     return (
       <div className="app">
         <div className="tree">
@@ -55,12 +59,8 @@ class NodeTree extends Component {
             renderNode={this.renderNode}
           />
         </div>
-        <div className="inspector">
-          <h1>
-            Test
-          </h1>
-          <button onClick={this.updateTree}>update tree</button>
-          <pre>{JSON.stringify(this.state.tree, null, '  ')}</pre>
+        <div className="node-data">
+          {html}
         </div>
       </div>
     );
