@@ -48,7 +48,7 @@ class NodeTree extends Component {
         <a href="/djet/node/ { node.id } ?basetype_id=child">Add child</a>
       </div>;
     return (
-      <div className="app">
+      <div className="djet">
         <div className="tree">
           <Tree
             paddingLeft={20}
@@ -67,13 +67,6 @@ class NodeTree extends Component {
   }
 
   handleChange = tree => {
-    this.setState({
-      tree: tree
-    });
-  };
-
-  updateTree = () => {
-    const { tree } = this.state;
     this.setState({
       tree: tree
     });

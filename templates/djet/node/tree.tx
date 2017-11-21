@@ -6,3 +6,6 @@
 <h1><: $title :></h1>
 <div id="node-tree"></div>
 : }
+: after javascript -> {
+<script src="/js/built/nodetree.js"></script>
+: }

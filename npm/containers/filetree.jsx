@@ -1,95 +1,94 @@
-import React from 'react';
+import cx from 'classnames';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import TreeView from 'react-treeview';
+import Tree from 'react-ui-tree';
 import Dropzone from 'react-dropzone';
 
-class DirView extends React.Component {
-  emptyDir()  {
+class DirView extends Component {
+  emptyDir(title, path)  {
     return {
+      title: title,
+      path: path,
       collapsed: true,
-      updated: false,
-      dirs: [],
-      files: []
+      children: [],
     }
   }
 
-  handleClick(node, callback) {
-    node.collapsed = !node.collapsed;
-    this.setState({current: node.name});
-    callback(this.props.node.path + '/' + node.name);
-//    this.getDirData(node);
+  state = {
+    active: null,
+    tree: this.emptyDir('root', '/')
+  };
+
+  constructor(props) {
+    super(props);
+    this.state.globalState = props.callback;
+    this.getDirData(this.state.tree);
   }
 
-  collapseAll() {
+  renderNode = node => {
+    return (
+      <span
+        className={cx('node', {
+          'is-active': node === this.state.active
+        })}
+        onClick={this.onClickNode.bind(null, node)}
+      >
+        {node.title}
+      </span>
+    );
+  };
+
+  renderCollapse = node => {
+    if (!node.collapsed) this.getDirData(node);
+  };
+
+  onClickNode = node => {
+    if (typeof(node.path) !== "undefined") this.state.globalState(node.path);
     this.setState({
-      collapsedBookkeeping: this.state.collapsedBookkeeping.map(() => true),
+      active: node
     });
+  };
+
+  render() {
+    const node = this.state.active;
+    return (
+          <Tree
+            paddingLeft={20}
+            tree={this.state.tree}
+            onChange={this.handleChange}
+            isNodeCollapsed={this.isNodeCollapsed}
+            changeNodeCollapsed={this.renderCollapse}
+            renderNode={this.renderNode}
+          />
+    );
   }
+
+  handleChange = tree => {
+    this.setState({
+      tree: tree
+    });
+  };
 
   getDirData(node) {
     const self = this;
     $.get('/djet/files',
       {
-        path: node.name
+        path: node.path
       },
       function(result) {
         result.collapsed = true;
-        node.dirs = result.dirs.map((dirName) => {
-          var dir = self.emptyDir();
-          dir.name = dirName;
+        node.children = result.dirs.map((dirName) => {
+          var dir = self.emptyDir(dirName, node.path + dirName + '/');
           return dir
         })
-        node.files = result.files;
+        for (var file in result.files) {
+          node.children.push({title: result.files[file], leaf: true});
+        }
         node.updated = true;
-        self.setState({node: node});
+        self.setState({tree: self.state.tree});
       },
       'json'
     )
-  }
-
-  constructor(props) {
-    super(props);
-    if (typeof props.node.dirs === "undefined") {
-      var node  = this.emptyDir();
-      node.name = props.node.path;
-      this.state = {
-          node: node
-      };
-    } else {
-      this.state = {
-          node: props.node
-      };
-    }
-    if (!this.state.node.updated) this.getDirData(this.state.node);
-  }
-
-  render() {
-
-//    const collapsedBookkeeping = this.state.collapsedBookkeeping;
-  const { callback } = this.props;
-  const { node } = this.state;
-    return (
-      <div>
-        {node.dirs.map((leaf) => {
-          // Let's make it so that the tree also toggles when we click the
-          // label. Controlled components make this effortless.
-          const label =
-            <span className="node" onClick={this.handleClick.bind(this, leaf, callback)}>
-              {leaf.name}
-            </span>;
-          return (
-            <TreeView
-              key={leaf.name}
-              nodeLabel={label}
-              collapsed={leaf.collapsed}
-              onClick={this.handleClick.bind(this, leaf)}>
-              <DirView node={{path: node.name + '/' + leaf.name}} callback={this.props.callback}/>
-            </TreeView>
-          );
-        })}
-        {node.files.map(entry => <div className="info" key={entry}>{entry}</div>) }
-      </div>
-    );
   }
 };
 
@@ -97,8 +96,8 @@ class Dropfiles extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        callback: props.callback,
-        files: []
+      callback: props.callback,
+      files: []
     };
   }
 
@@ -113,11 +112,11 @@ class Dropfiles extends React.Component {
         url: '/djet/files',
         type: 'POST',
         xhr: function() {
-            var myXhr = $.ajaxSettings.xhr();
-            return myXhr;
+          var myXhr = $.ajaxSettings.xhr();
+          return myXhr;
         },
         success: function (data) {
-            console.log(data);
+          console.log(data);
         },
         data: fd,
         dataType: 'json',
@@ -175,11 +174,13 @@ export class FileTree extends React.Component {
     const topDir = '/';
     const current = this.state.current;
     return (
-      <div>
-        Current: { current }
-        <button onClick={this.collapseAll}>Collapse all</button>
-        <DirView node={{path: topDir}} callback={this.setCurrent.bind(this)}/>
-        <Dropfiles callback={this.Current.bind(this)} />
+      <div className="djet">
+        <div className="tree">
+          <DirView node={{path: topDir}} callback={this.setCurrent.bind(this)}/>
+        </div>
+        <div className="node-data">
+          <Dropfiles callback={this.Current.bind(this)} />
+        </div>
       </div>
     );
   }

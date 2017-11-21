@@ -7,7 +7,6 @@
 : block css -> {
 	<link rel='stylesheet' type='text/css' href='/css/djet.css'>
 	<link rel='stylesheet' href='/css/bootstrap.css'>
-    <link rel='stylesheet' href='/css/jqueryFileTree.css'>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="/css/jquery.cleditor.css" />
 : }
@@ -62,7 +61,6 @@
 	  $(".editHtml").cleditor();
 	});
 </script>
-<script src="/js/built/djet.js"></script>
 : } # javascript
 </body>
 </html>

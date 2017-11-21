@@ -6,12 +6,12 @@ var path = require('path'),
 
 module.exports = {
     entry: {
-//		filetree: root + '/containers/filetree.jsx',
+		filetree: root + '/containers/filetree.jsx',
 		nodetree: root + '/containers/nodetree.jsx',
 //		topmenu: root + '/containers/topmenu.jsx',
 	},
     output: {
-        filename: "../public/js/built/djet.js",
+        filename: "../public/js/built/[name].js",
         chunkFilename: '[id].chunk.js'
     },
     module: {

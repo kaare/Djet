@@ -1,5 +1,11 @@
 : cascade 'config/base.tx';
+: after css -> {
+	<link rel="stylesheet" type="text/css" href="/css/nodetree.css" />
+: }
 : override content -> {
 <h1><: $title :></h1>
 <div id="file-tree"></div>
+: }
+: after javascript -> {
+<script src="/js/built/filetree.js"></script>
 : }
