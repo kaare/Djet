@@ -43,9 +43,9 @@ class NodeTree extends Component {
     const html = node === null ? '' :
       <div>
         <h1>{node.title}</h1>
-        <a href="/djet/node/ { node.id } ">Edit node</a>
-        <a href="/djet/node/ { node.id } ?action=delete">Delete node</a>
-        <a href="/djet/node/ { node.id } ?basetype_id=child">Add child</a>
+        <a href={ '/djet/node/' + node.id }>Edit node</a>
+        <a href={ '/djet/node/' + node.id + '?action=delete' }>Delete node</a>
+        <a href={ '/djet/node/' + node.id + '?basetype_id=child' }>Add child</a>
       </div>;
     return (
       <div className="djet">
