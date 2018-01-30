@@ -75,6 +75,8 @@ has cart_row => (
 	is => 'ro',
 	isa => 'Djet::Schema::Result::Djet::Cart',
 	lazy_build => 1,
+    writer => 'set_cart_row',
+    predicate => 'has_cart_row',
 );
 
 sub _build_cart_row {
@@ -106,6 +108,7 @@ sub _create_cart {
 # loads cart from database
 sub _load_cart {
 	my ($self, $cart_row) = @_;
+    $self->set_cart_row($cart_row) unless $self->has_cart_row;
 	# build query for item retrieval
 	my $cart_products = $self->model->resultset('Djet::CartProduct')->search({
 		cart => $cart_row->code,

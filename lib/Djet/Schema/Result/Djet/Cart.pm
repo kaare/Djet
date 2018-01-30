@@ -204,6 +204,27 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-29 15:53:04
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QoAduVZ3eRuTSWeJ6coQ1A
 
+=head2 orderdata
+
+Type: belongs_to
+
+Related object: L<Djet::Schema::Result::Djet::Node>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "orderdata",
+  "Djet::Schema::Result::Djet::DataNode",
+  { node_id => "order_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
 use JSON;
 
 __PACKAGE__->inflate_column('costs'=>{

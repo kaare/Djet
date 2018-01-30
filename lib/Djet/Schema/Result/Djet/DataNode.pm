@@ -279,6 +279,36 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 cart_products
+
+Type: has_many
+
+Related object: L<Djet::Schema::Result::Djet::CartProduct>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cart_products",
+  "Djet::Schema::Result::Djet::CartProduct",
+  { "foreign.sku" => "self.node_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 carts
+
+Type: has_many
+
+Related object: L<Djet::Schema::Result::Djet::Cart>
+
+=cut
+
+__PACKAGE__->has_many(
+  "carts",
+  "Djet::Schema::Result::Djet::Cart",
+  { "foreign.order_id" => "self.node_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 parent
 
 Type: belongs_to
