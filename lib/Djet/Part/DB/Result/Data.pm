@@ -72,9 +72,33 @@ sub field_deflate {
 	}
 }
 
+=head2 fts_text
+
+Returns a text with all the searchable fields catenated
+
+=cut
+
+sub fts_text {
+    my $self = shift;
+	my $fts = $self->title;
+	for my $field (@{ $self->nodedata->fields }) {
+		next unless $field->searchable;
+
+		$fts .= ' ' . ($field->for_search // '');
+	}
+    if ($self->nodedata->can('additional_fts')) {
+        $fts .=  ' ' . $self->nodedata->additional_fts;
+    }
+    return $fts;
+}
+
 =head2 update_fts
 
-Update the fts columns with the relevant data from fields
+Update the fts columns with the relevant data.
+
+From the datanode, all the 'searchable' fields are indexed.
+If the connected nodedata (<project>::Part::NodeData::<basetype name>) has an
+'additional_fts' method, it can inject text to be indexed.
 
 update_fts takes one optional parameter, the config. If not given, 'english' is assumed.
 
@@ -82,20 +106,13 @@ update_fts takes one optional parameter, the config. If not given, 'english' is 
 
 sub update_fts {
 	my ($self, $config) = @_;
-	# djet.basetype
-	my $basetype = $self->basetype;
 
-	my $fts = $self->title;
-	for my $field (@{ $self->nodedata->fields }) {
-		next unless $field->searchable;
-
-		$fts .= ' ' . ($field->for_search // '');
-	}
+    my $text = $self->fts_text;
 
 	$config ||= 'english';
-	$fts =~ s/[,-\/:)(']/ /g;
-	$fts = lc $fts;
-	my $q = qq{to_tsvector('$config', '$fts')};
+	$text =~ s/[,-\/:)(']/ /g;
+	$text = lc $text;
+	my $q = qq{to_tsvector('$config', '$text')};
 	$self->update({fts => \$q });
 }
 
