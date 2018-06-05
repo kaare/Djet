@@ -89,7 +89,10 @@ Tell the machine that we can handle html
 
 after BUILD => sub {
 	my $self = shift;
-	$self->add_accepted_content_type( { 'application/x-www-form-urlencoded' => 'create_by_post' });
+	$self->add_accepted_content_type(
+        { 'application/x-www-form-urlencoded' => 'create_by_post' },
+        { 'multipart/form-data' => 'create_by_post' },
+    );
 };
 
 =head2 _build_validator

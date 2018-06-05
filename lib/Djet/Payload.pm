@@ -63,6 +63,22 @@ has 'flash' => (
 	lazy => 1,
 );
 
+=head2 site
+
+The site configuration data
+
+=cut
+
+has 'site' => (
+	is => 'ro',
+	isa => 'HashRef',
+	default => sub {
+		my $self = shift;
+		return $self->config->{config}{site};
+	},
+	lazy => 1,
+);
+
 __PACKAGE__->meta->make_immutable;
 
 # COPYRIGHT

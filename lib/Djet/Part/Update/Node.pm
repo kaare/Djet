@@ -168,7 +168,7 @@ after 'edit_create' => sub {
 	my $model = $self->model;
 	my $config = $model->config;
 	my $fts_config = $config->config->{fts_config};
-	my $object = $self->object;
+	my $object = $self->object->discard_changes;
 	$object->update_fts($fts_config);
 };
 

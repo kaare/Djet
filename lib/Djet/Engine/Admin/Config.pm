@@ -7,6 +7,7 @@ extends 'Djet::Engine::Default';
 with qw/
 	Djet::Part::Log
 	Djet::Part::Update::Node
+    Djet::Part::Upload
 /;
 
 =head1 NAME

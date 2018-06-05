@@ -46,8 +46,8 @@ CREATE TABLE basetype (
 	name					text NOT NULL UNIQUE,
 	title					text NOT NULL,
 	parent					int[],
-	datacolumns				json NOT NULL default '[]',
-	attributes 				json NOT NULL default '{}',
+	datacolumns				jsonb NOT NULL default '[]',
+	attributes 				jsonb NOT NULL default '{}',
 	searchable				text[],
 	handler					text,
 	template				text,
@@ -75,10 +75,10 @@ CREATE TABLE data (
 	basetype_id				int NOT NULL REFERENCES basetype(id)
 							ON DELETE restrict
 							ON UPDATE restrict,
-	name					text NOT NULL,
+	name					text NOT NULL DEFAULT currval('djet.data_id_seq'::regclass),
 	title					text NOT NULL,
-	datacolumns				json NOT NULL default '{}',
-	acl						json NOT NULL default '{}',
+	datacolumns				jsonb NOT NULL default '{}',
+	acl						jsonb NOT NULL default '{}',
 	fts						tsvector,
 	created					timestamptz default now(),
 	modified				timestamptz,
@@ -103,7 +103,7 @@ CREATE TABLE node (
 	parent_id				int REFERENCES node(id)
 							ON DELETE cascade
 							ON UPDATE cascade,
-	part					text,
+	part					text DEFAULT currval('djet.node_id_seq'::regclass),
 	node_path				prefix_range,
 	created					timestamptz default now(),
 	modified				timestamptz,
@@ -133,18 +133,26 @@ JOIN djet.node n ON d.id=n.data_id;
 
 CREATE OR REPLACE FUNCTION data_node_insert() RETURNS trigger AS $$
 DECLARE
+	d_id INT;
 	n_id INT;
+	name text;
 	part text;
 	n RECORD;
 BEGIN
+	SELECT nextval('djet.data_id_seq') INTO d_id;
 	SELECT nextval('djet.node_id_seq') INTO n_id;
+	IF NEW.name IS NULL THEN
+		name := d_id;
+	ELSE
+		name := NEW.name;
+	END IF;
 	IF NEW.part IS NULL THEN
 		part := n_id;
 	ELSE
 		part := NEW.part;
 	END IF;
 	WITH new_data AS (
-		INSERT INTO djet.data (basetype_id, name, title, datacolumns, acl, fts) VALUES (NEW.basetype_id, NEW.name, NEW.title, coalesce(NEW.datacolumns, '{}'), coalesce(NEW.acl, '{}'), NEW.fts) RETURNING id
+		INSERT INTO djet.data (basetype_id, name, title, datacolumns, acl, fts) VALUES (NEW.basetype_id, name, NEW.title, coalesce(NEW.datacolumns, '{}'), coalesce(NEW.acl, '{}'), NEW.fts) RETURNING id
 	)
 	INSERT INTO djet.node (id, data_id, parent_id, part, node_path) SELECT n_id, id, NEW.parent_id, part, NEW.node_path FROM new_data;
 	SELECT * INTO n FROM djet.data_node WHERE node_id = n_id;

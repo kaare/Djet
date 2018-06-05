@@ -142,7 +142,7 @@ sub check_route {
 	my $config = $model->config;
 
 	my $path = $model->request->path_info;
-	$model->log->debug("Node path: $path");
+	$model->log->debug($model->request->method . " to: $path");
 	my $datanodes = $self->find_basenode($path);
 	my $basenode = $datanodes->[0];
 	$self->_set_datanodes($datanodes);
