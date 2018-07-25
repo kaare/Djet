@@ -1,1 +1,3 @@
-: include 'generic/field/view/Str.tx'
+<div>
+  <: $field.value.filename :>
+</div>

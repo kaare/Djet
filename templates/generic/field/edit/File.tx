@@ -2,11 +2,8 @@
 <div class="left file_chosen<: if $css_class { ' ' ~ $css_class ~'"' | raw } :>" style="float:left;">
 	<input type="file" name="<: $name || $field.name :>" value="<: $field.value :>">
 </div>
+: if $field.value {
 <div style="float: right;">
-	<a href="#" class="fhide">[hide]</a>
-	<a href="#" class="fshow">[show]</a>
-	<div class="djet_file_chooser"> </div>
-	<img class="djet_file_image">
-	<figcaption class="djet_file_name"></figcaption>
-	<button onClick="$('.file_chosen input').val($('.djet_file_name').html());return false">OK</button>
+: include 'generic/field/view/File.tx'
 </div>
+: }
