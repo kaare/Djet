@@ -28,7 +28,7 @@ Return the path information
 
 sub path {
     my $self = shift;
-    return unless $self->value;
+    return unless $self->value && ref $self->value eq 'HASH';
 
     my ($x, $y) = @_;
     my $value = (split /\//, $self->value->{path}, 3)[2];
