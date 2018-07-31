@@ -1,9 +1,10 @@
 : my $css_class = $field_class || $field.css_class;
 <div class="left file_chosen<: if $css_class { ' ' ~ $css_class ~'"' | raw } :>" style="float:left;">
-	<input type="file" name="<: $name || $field.name :>" value="<: $field.value :>">
+    <input type="file" name="<: $name || $field.name :>" value="<: $field.value :>">
 </div>
 : if $field.value {
 <div style="float: right;">
 : include 'generic/field/view/File.tx'
+    <input type="checkbox" name="delete_<: $name || $field.name :>" value="1">
 </div>
 : }

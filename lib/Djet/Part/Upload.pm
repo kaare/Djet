@@ -63,15 +63,15 @@ Attach to after, makes sure the upload column is handled
 =cut
 
 after 'post_is_create' => sub {
-	my $self = shift;
+    my $self = shift;
     my $model = $self->model;
-	my $request = $model->request;
-	my $parameters = $request->parameters;
+    my $request = $model->request;
+    my $parameters = $request->parameters;
     my $colname = $self->part_upload_column;
 
     my $object = $self->object;
     my $datacolumns = $object->datacolumns;
-    $datacolumns->{$colname} = $self->save_file;
+    $self->save_file($object, $request, $parameters, $colname);
     $object->update({datacolumns => $datacolumns});
 };
 
@@ -81,18 +81,18 @@ after 'post_is_create' => sub {
 =cut
 
 sub save_file {
-	my $self = shift;
-	my $model = $self->model;
-	my $request = $model->request;
-	my $upload = $request->uploads->{image} or return;
-	my $uploadfile = $upload->path;
+    my ($self, $object, $request, $parameters, $colname) = @_;
+    delete $object->datacolumns->{$colname} if $parameters->{"delete_$colname"};
+
+    my $upload = $request->uploads->{$colname} or return;
+    my $uploadfile = $upload->path;
 
     my $upload_dir = $self->part_upload_location;
-	my $target_dir = join '/', $upload_dir, $self->object->id;
-	mkpath($target_dir);
-	my $file_path = join '/', $target_dir, $upload->filename;
-	move $uploadfile, $file_path;
-    return {
+    my $target_dir = join '/', $upload_dir, $self->object->id;
+    mkpath($target_dir);
+    my $file_path = join '/', $target_dir, $upload->filename;
+    move $uploadfile, $file_path;
+    $object->datacolumns->{$colname} = {
         mime_type => $upload->content_type,
         filename => $upload->filename,
         path => $file_path,
